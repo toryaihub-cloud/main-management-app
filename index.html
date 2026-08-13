@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260813_09">
+  <link rel="stylesheet" href="styles.css?v=20260813_10">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- FontAwesome CDN -->
@@ -270,118 +270,126 @@
       </div>
 
       <div class="modal-body">
-        <!-- Top Row: 3 Cards Grid (Basic Info, Management, Merged Status & Donut Charts) -->
-        <div class="detail-top-row-grid">
-          <!-- Card 1: 기본 시설 정보 -->
-          <div class="detail-box">
-            <h3><i class="fa-solid fa-building"></i> 기본 시설 정보</h3>
-            <p><strong>시설구분:</strong> <span id="detail-category">-</span></p>
-            <p><strong>도로명주소:</strong> <span id="detail-address-doro">-</span></p>
-            <p><strong>지번주소:</strong> <span id="detail-address-jibun">-</span></p>
-            <p><strong>행정동:</strong> <span id="detail-dong">-</span></p>
-            <p><strong>주차면수:</strong> <span id="detail-register">-</span></p>
-            <p><strong>건축허가/승인:</strong> <span id="detail-dates">-</span></p>
-            <p><strong>신축/기축:</strong> <span id="detail-new-old">-</span></p>
-            <p><strong>공공시설 구분:</strong> <span id="detail-ownership">-</span></p>
-          </div>
-
-          <!-- Card 2: 관리 및 기타 정보 -->
-          <div class="detail-box">
-            <h3><i class="fa-solid fa-user-shield"></i> 관리 및 기타 정보</h3>
-            <p><strong>시설 관리자:</strong> <span id="detail-manager-name">-</span></p>
-            <p><strong>관리자 연락처:</strong> <span id="detail-manager-contact">-</span></p>
-            <p><strong>관리주체:</strong> <span id="detail-management-body">-</span></p>
-          </div>
-
-          <!-- Card 3 (Integrated): 주차면수 & 충전시설 현황 + 이행 비율 도넛 차트 -->
-          <div class="detail-box" style="display:flex; flex-direction:column; justify-content:space-between;">
-            <div>
-              <h3><i class="fa-solid fa-chart-pie"></i> 주차면수, 충전시설 현황 & 이행 비율</h3>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
-                <strong>의무설치 이행상태:</strong>
-                <span id="detail-compliance" class="badge badge-emerald">-</span>
-              </div>
-
-              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; font-size:0.83rem; background:#fff; padding:0.6rem; border-radius:6px; border:1px solid var(--border-color); margin-bottom:0.8rem;">
-                <div>
-                  <p style="margin:0.2rem 0;"><strong>주차구역:</strong> <span id="detail-parking-slash-info">0면 / 0면</span></p>
-                  <p style="margin:0.2rem 0;"><strong>미설치 주차:</strong> <span id="detail-parking-uninstalled" style="color:var(--danger); font-weight:bold;">0</span>면</p>
-                </div>
-                <div>
-                  <p style="margin:0.2rem 0;"><strong>충전시설:</strong> <span id="detail-charger-slash-info">0기 / 0기</span></p>
-                  <p style="margin:0.2rem 0;"><strong>미설치 충전:</strong> <span id="detail-charger-uninstalled" style="color:var(--danger); font-weight:bold;">0</span>기</p>
-                  <p style="margin:0.2rem 0;"><strong>급속 미이행:</strong> <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:bold;">0기</span></p>
-                </div>
+        <div class="detail-split-body">
+          <!-- LEFT COLUMN: 3 Info Cards -->
+          <div class="detail-left-column">
+            <!-- Card 1: 기본 시설 정보 -->
+            <div class="detail-box">
+              <h3 style="font-size:0.95rem; margin-bottom:0.4rem;"><i class="fa-solid fa-building"></i> 기본 시설 정보</h3>
+              <div style="font-size:0.83rem; line-height:1.4;">
+                <p style="margin:0.2rem 0;"><strong>시설구분:</strong> <span id="detail-category">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>도로명주소:</strong> <span id="detail-address-doro">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>지번주소:</strong> <span id="detail-address-jibun">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>행정동:</strong> <span id="detail-dong">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>주차면수:</strong> <span id="detail-register">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>건축허가/승인:</strong> <span id="detail-dates">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>신축/기축:</strong> <span id="detail-new-old">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>공공시설 구분:</strong> <span id="detail-ownership">-</span></p>
               </div>
             </div>
 
-            <!-- Integrated Dual Donut Chart -->
-            <div class="card-chart-wrapper-dual" style="padding:0.6rem 0.4rem; margin-top:0.2rem; background:#fff; border-radius:8px;">
-              <!-- Parking Donut -->
-              <div class="donut-box-item">
-                <div class="donut-title-label" style="font-size:0.8rem; font-weight:700;"><i class="fa-solid fa-square-parking"></i> 주차면수</div>
-                <div class="donut-chart-relative" style="width:75px; height:75px;">
-                  <canvas id="modal-detail-donut-p"></canvas>
-                  <div id="modal-detail-pct-p" class="donut-center-pct" style="font-size:0.8rem;">0%</div>
-                </div>
-                <div id="modal-detail-slash-p" class="donut-ratio-slash" style="font-size:0.75rem; margin-top:0.3rem;">0면 / 0면 (설치/의무)</div>
-              </div>
-
-              <!-- Charger Donut -->
-              <div class="donut-box-item">
-                <div class="donut-title-label" style="font-size:0.8rem; font-weight:700;"><i class="fa-solid fa-bolt"></i> 충전기수</div>
-                <div class="donut-chart-relative" style="width:75px; height:75px;">
-                  <canvas id="modal-detail-donut-c"></canvas>
-                  <div id="modal-detail-pct-c" class="donut-center-pct" style="font-size:0.8rem;">0%</div>
-                </div>
-                <div id="modal-detail-slash-c" class="donut-ratio-slash" style="font-size:0.75rem; margin-top:0.3rem;">0기 / 0기 (설치/의무)</div>
+            <!-- Card 2: 관리 및 기타 정보 -->
+            <div class="detail-box">
+              <h3 style="font-size:0.95rem; margin-bottom:0.4rem;"><i class="fa-solid fa-user-shield"></i> 관리 및 기타 정보</h3>
+              <div style="font-size:0.83rem; line-height:1.4;">
+                <p style="margin:0.2rem 0;"><strong>시설 관리자:</strong> <span id="detail-manager-name">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>관리자 연락처:</strong> <span id="detail-manager-contact">-</span></p>
+                <p style="margin:0.2rem 0;"><strong>관리주체:</strong> <span id="detail-management-body">-</span></p>
               </div>
             </div>
 
+            <!-- Card 3: 현황 & 도넛 차트 -->
+            <div class="detail-box" style="display:flex; flex-direction:column; justify-content:space-between;">
+              <div>
+                <h3 style="font-size:0.95rem; margin-bottom:0.4rem;"><i class="fa-solid fa-chart-pie"></i> 주차면수, 충전시설 현황 & 이행 비율</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                  <strong style="font-size:0.83rem;">의무설치 이행상태:</strong>
+                  <span id="detail-compliance" class="badge badge-emerald">-</span>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem; font-size:0.8rem; background:#fff; padding:0.4rem 0.6rem; border-radius:6px; border:1px solid var(--border-color); margin-bottom:0.4rem;">
+                  <div>
+                    <p style="margin:0.15rem 0;"><strong>주차구역:</strong> <span id="detail-parking-slash-info">0면 / 0면</span></p>
+                    <p style="margin:0.15rem 0;"><strong>미설치 주차:</strong> <span id="detail-parking-uninstalled" style="color:var(--danger); font-weight:bold;">0</span>면</p>
+                  </div>
+                  <div>
+                    <p style="margin:0.15rem 0;"><strong>충전시설:</strong> <span id="detail-charger-slash-info">0기 / 0기</span></p>
+                    <p style="margin:0.15rem 0;"><strong>미설치 충전:</strong> <span id="detail-charger-uninstalled" style="color:var(--danger); font-weight:bold;">0</span>기</p>
+                    <p style="margin:0.15rem 0;"><strong>급속 미이행:</strong> <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:bold;">0기</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Integrated Dual Donut Chart -->
+              <div class="card-chart-wrapper-dual" style="padding:0.4rem; background:#fff; border-radius:8px;">
+                <!-- Parking Donut -->
+                <div class="donut-box-item">
+                  <div class="donut-title-label" style="font-size:0.75rem; font-weight:700;"><i class="fa-solid fa-square-parking"></i> 주차면수</div>
+                  <div class="donut-chart-relative" style="width:65px; height:65px;">
+                    <canvas id="modal-detail-donut-p"></canvas>
+                    <div id="modal-detail-pct-p" class="donut-center-pct" style="font-size:0.75rem;">0%</div>
+                  </div>
+                  <div id="modal-detail-slash-p" class="donut-ratio-slash" style="font-size:0.7rem; margin-top:0.2rem;">0면 / 0면</div>
+                </div>
+
+                <!-- Charger Donut -->
+                <div class="donut-box-item">
+                  <div class="donut-title-label" style="font-size:0.75rem; font-weight:700;"><i class="fa-solid fa-bolt"></i> 충전기수</div>
+                  <div class="donut-chart-relative" style="width:65px; height:65px;">
+                    <canvas id="modal-detail-donut-c"></canvas>
+                    <div id="modal-detail-pct-c" class="donut-center-pct" style="font-size:0.75rem;">0%</div>
+                  </div>
+                  <div id="modal-detail-slash-c" class="donut-ratio-slash" style="font-size:0.7rem; margin-top:0.2rem;">0기 / 0기</div>
+                </div>
+              </div>
+
+            </div>
           </div>
+
+          <!-- RIGHT COLUMN: Prominent Large Photo Gallery -->
+          <div class="detail-right-column">
+            <div class="detail-box photo-gallery-box-split">
+              <h3 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                <span style="font-size:0.95rem;"><i class="fa-solid fa-images"></i> 현장 사진 갤러리</span>
+                <div style="display:flex; align-items:center; gap:0.4rem;">
+                  <input type="file" id="photo-upload-input" accept="image/*" style="display:none;" onchange="handlePhotoUploadSelect(event)">
+                  <button class="btn btn-emerald" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="document.getElementById('photo-upload-input').click()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> 사진 추가
+                  </button>
+                  <button class="btn btn-rose" id="btn-delete-photo" style="padding:0.25rem 0.6rem; font-size:0.75rem; display:none;" onclick="deleteCurrentFacilityPhoto()">
+                    <i class="fa-solid fa-trash-can"></i> 삭제
+                  </button>
+                  <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted);">* 클릭 시 확대</span>
+                </div>
+              </h3>
+
+              <div class="photo-slider-wrapper">
+                <button class="slider-nav-btn prev" onclick="prevFacilityPhoto()" title="이전 사진">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div id="main-photo-view" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:0.5rem;">
+                  <img id="current-photo-img" src="" alt="현장 사진" style="max-height:360px; max-width:96%; object-fit:contain; cursor:pointer; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.25);" onclick="openLightboxCurrent()">
+                  <div id="no-photo-msg" class="no-photo-text" style="color:#94A3B8;">
+                    <i class="fa-regular fa-image" style="font-size:2.5rem; margin-bottom:0.4rem; display:block;"></i>
+                    지정된 폴더에 시설 관련 사진이 없습니다.
+                  </div>
+                </div>
+
+                <button class="slider-nav-btn next" onclick="nextFacilityPhoto()" title="다음 사진">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+                <div id="photo-counter-badge" class="photo-counter-badge">0 / 0</div>
+              </div>
+
+              <div id="photo-thumbnails-list" class="thumbnails-bar" style="display:flex; gap:0.5rem; overflow-x:auto; padding:0.4rem 0; margin-top:0.4rem;">
+                <!-- Thumbnails populated dynamically -->
+              </div>
+            </div>
+          </div>
+
         </div>
-
-        <!-- Bottom Row: Wide Large Photo Carousel Slider -->
-        <div class="detail-box" style="margin-top:0.5rem;">
-          <h3 style="display:flex; justify-content:space-between; align-items:center;">
-            <span><i class="fa-solid fa-images"></i> 현장 사진 갤러리 (Supabase Storage Cloud)</span>
-            <div style="display:flex; align-items:center; gap:0.5rem;">
-              <input type="file" id="photo-upload-input" accept="image/*" style="display:none;" onchange="handlePhotoUploadSelect(event)">
-              <button class="btn btn-emerald" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="document.getElementById('photo-upload-input').click()">
-                <i class="fa-solid fa-cloud-arrow-up"></i> 사진 추가
-              </button>
-              <button class="btn btn-rose" id="btn-delete-photo" style="padding:0.25rem 0.6rem; font-size:0.75rem; display:none;" onclick="deleteCurrentFacilityPhoto()">
-                <i class="fa-solid fa-trash-can"></i> 삭제
-              </button>
-              <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted);">* 클릭 시 전체화면 확대</span>
-            </div>
-          </h3>
-
-          <div class="photo-slider-wrapper">
-            <button class="slider-nav-btn prev" onclick="prevFacilityPhoto()" title="이전 사진 (Left Arrow)">
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-
-            <div id="main-photo-view" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
-              <img id="current-photo-img" src="" alt="현장 사진" style="max-height:120px; max-width:85%; object-fit:contain; cursor:pointer; border-radius:6px;" onclick="openLightboxCurrent()">
-              <div id="no-photo-msg" class="no-photo-text" style="color:#94A3B8;">
-                <i class="fa-regular fa-image" style="font-size:2rem; margin-bottom:0.4rem; display:block;"></i>
-                지정된 폴더에 시설 관련 사진이 없습니다.
-              </div>
-            </div>
-
-            <button class="slider-nav-btn next" onclick="nextFacilityPhoto()" title="다음 사진 (Right Arrow)">
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
-
-            <div id="photo-counter-badge" class="photo-counter-badge">0 / 0</div>
-          </div>
-
-          <div id="photo-thumbnails-list" class="thumbnails-bar" style="display:flex; gap:0.6rem; overflow-x:auto; padding:0.6rem 0; margin-top:0.6rem;">
-            <!-- Thumbnails populated dynamically -->
-          </div>
-        </div>
-
       </div>
 
       <div class="modal-footer">
@@ -829,6 +837,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260813_09"></script>
+  <script src="app.js?v=20260813_10"></script>
 </body>
 </html>
