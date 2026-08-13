@@ -747,7 +747,11 @@ function openFacilityDetailModal(key) {
   };
 
   // 2. Open Modal Pop-up Instantly (All-in-One 3-column Layout)
-  document.getElementById("modal-facility-detail").classList.add("active");
+  const detailModalElem = document.getElementById("modal-facility-detail");
+  if (detailModalElem) {
+    detailModalElem.style.display = "flex";
+    detailModalElem.classList.add("active");
+  }
   renderModalDetailDonutChart(facility);
 
   // 3. Load Photos Non-blocking in Background
@@ -2469,6 +2473,7 @@ function closeModal(modalId) {
   const elem = document.getElementById(modalId);
   if (elem) {
     elem.classList.remove("active");
+    elem.style.display = "none";
     elem.scrollTop = 0;
     const body = elem.querySelector(".modal-body");
     if (body) body.scrollTop = 0;
