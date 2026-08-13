@@ -613,8 +613,8 @@ function renderFacilitiesCards(data) {
 
     const reqFast = parseInt(f.charger_fast_req_cnt) || 0;
     const actFast = parseInt(f.charger_fast_cnt) || 0;
-    const fastDiff = reqFast - actFast;
-    const isFastNonCompliant = fastDiff > 0;
+    const isFastNonCompliant = (reqFast > 0) && (actFast < reqFast) && (f.compliance_status !== '이행완료');
+    const fastDiff = isFastNonCompliant ? (reqFast - actFast) : 0;
 
     const colorP = pctP === 100 ? '#059669' : '#E11D48';
     const colorC = pctC === 100 ? '#059669' : '#E11D48';
@@ -623,7 +623,10 @@ function renderFacilitiesCards(data) {
       <div>
         <div class="facility-card-header">
           <span class="facility-card-key">${f.facility_key}</span>
-          <span class="badge ${badgeClass}">${f.compliance_status || '-'}</span>
+          <div style="display:flex; gap:0.3rem; align-items:center;">
+            ${isFastNonCompliant ? `<span class="badge badge-rose" style="font-size:0.7rem; padding:0.2rem 0.4rem;"><i class="fa-solid fa-triangle-exclamation"></i> 급속미이행 ${fastDiff}기</span>` : ''}
+            <span class="badge ${badgeClass}">${f.compliance_status || '-'}</span>
+          </div>
         </div>
         <div class="facility-card-title">${f.facility_name}</div>
         <div class="facility-card-category">${f.facility_category || '구분 미지정'} | ${f.dong_name || '-'}</div>
@@ -727,12 +730,18 @@ function openFacilityDetailModal(key) {
   const chargerUnElem = document.getElementById("detail-charger-uninstalled");
   if (chargerUnElem) chargerUnElem.innerText = facility.charger_uninstalled_cnt || 0;
 
-  // Fast Charger Uninstalled Count
+  // Fast Charger Uninstalled Count (Exact Rule)
   const reqFast = parseInt(facility.charger_fast_req_cnt) || 0;
   const actFast = parseInt(facility.charger_fast_cnt) || 0;
-  const uninstalledFast = Math.max(0, reqFast - actFast);
+  let uninstalledFast = 0;
+  if (reqFast > 0 && facility.compliance_status !== '이행완료') {
+    uninstalledFast = Math.max(0, reqFast - actFast);
+  }
   const fastUnElem = document.getElementById("detail-fast-uninstalled");
-  if (fastUnElem) fastUnElem.innerText = `${uninstalledFast}기`;
+  if (fastUnElem) {
+    fastUnElem.innerText = `${uninstalledFast}기`;
+    fastUnElem.style.color = uninstalledFast > 0 ? 'var(--danger)' : 'var(--text-main)';
+  }
 
   const decName = (facility.manager_name_decrypted && !facility.manager_name_decrypted.startsWith("gAAAAA")) ? facility.manager_name_decrypted : (facility.manager_name || '-');
   const decContact = (facility.manager_contact_decrypted && !facility.manager_contact_decrypted.startsWith("gAAAAA")) ? facility.manager_contact_decrypted : (facility.manager_contact || '-');
