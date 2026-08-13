@@ -1598,8 +1598,8 @@ function openDispositionDetailModal(key) {
               <span class="badge ${fac.compliance_status === '이행완료' ? 'badge-emerald' : 'badge-rose'}">${fac.compliance_status || '-'}</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="color:var(--text-muted); font-weight:600;">의무급속미이행:</span>
-              ${isFastNonCompliant ? `<span style="color:#E11D48; font-weight:800;"><i class="fa-solid fa-triangle-exclamation"></i> 미이행 ${fastDiff}기</span>` : '<span style="color:#059669; font-weight:bold;">정상</span>'}
+              <span style="color:var(--text-muted); font-weight:600;">의무급속:</span>
+              ${isFastNonCompliant ? `<span style="color:#E11D48; font-weight:800;"><i class="fa-solid fa-triangle-exclamation"></i> 미이행 ${fastDiff}기</span>` : '<span style="color:#059669; font-weight:bold;">이행</span>'}
             </div>
           </div>
 
