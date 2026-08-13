@@ -613,8 +613,8 @@ function renderFacilitiesCards(data) {
 
     const reqFast = parseInt(f.charger_fast_req_cnt) || 0;
     const actFast = parseInt(f.charger_fast_cnt) || 0;
-    const isFastNonCompliant = (reqFast > 0) && (actFast < reqFast) && (f.compliance_status !== '이행완료');
-    const fastDiff = isFastNonCompliant ? (reqFast - actFast) : 0;
+    const fastDiff = Math.max(0, reqFast - actFast);
+    const isFastNonCompliant = fastDiff > 0;
 
     const colorP = pctP === 100 ? '#059669' : '#E11D48';
     const colorC = pctC === 100 ? '#059669' : '#E11D48';
@@ -730,13 +730,10 @@ function openFacilityDetailModal(key) {
   const chargerUnElem = document.getElementById("detail-charger-uninstalled");
   if (chargerUnElem) chargerUnElem.innerText = facility.charger_uninstalled_cnt || 0;
 
-  // Fast Charger Uninstalled Count (Exact Rule)
+  // Fast Charger Uninstalled Count (Exact Formula: reqFast - actFast)
   const reqFast = parseInt(facility.charger_fast_req_cnt) || 0;
   const actFast = parseInt(facility.charger_fast_cnt) || 0;
-  let uninstalledFast = 0;
-  if (reqFast > 0 && facility.compliance_status !== '이행완료') {
-    uninstalledFast = Math.max(0, reqFast - actFast);
-  }
+  const uninstalledFast = Math.max(0, reqFast - actFast);
   const fastUnElem = document.getElementById("detail-fast-uninstalled");
   if (fastUnElem) {
     fastUnElem.innerText = `${uninstalledFast}기`;
