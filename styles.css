@@ -656,14 +656,14 @@ header {
 }
 
 .detail-modal-content {
-  max-width: 1420px;
-  width: 94vw;
+  max-width: 1400px;
+  width: 92vw;
   background: #FFFFFF;
-  max-height: 88vh !important;
+  max-height: 82vh !important;
   height: auto;
   display: flex;
   flex-direction: column;
-  padding: 0.8rem 1.2rem !important;
+  padding: 0.6rem 1rem !important;
   overflow: hidden !important;
   border-radius: 14px;
 }

@@ -882,7 +882,7 @@ async function loadFacilityPhotos(key, name) {
     if (currentFacilityDetail && currentFacilityDetail.facility_key === key) {
       let fetchedPhotos = data.photos || [];
       
-      // Fallback for real photos if empty
+      // Smart Fallback for real photos if backend returns empty list
       if (fetchedPhotos.length === 0 && cleanKey) {
         const cloudBase = API_BASE_URL.replace(/\/api$/, '');
         fetchedPhotos = [
@@ -960,20 +960,22 @@ function updatePhotoSliderDisplay() {
     targetUrl = targetUrl.replace(/http:\/\/localhost:8081/g, cloudBase);
   }
 
-  if (noPhotoMsg) noPhotoMsg.style.display = "none";
   if (mainImg) {
     mainImg.onerror = function() {
-      const currentSrc = this.src || "";
-      if (currentSrc.includes('/facility-photos/') && currentSrc.split('/facility-photos/')[1].includes('/')) {
-        const parts = currentSrc.split('/facility-photos/')[1].split('/');
-        const filename = parts[parts.length - 1];
-        this.src = `https://vijiacxcmtfekbmegjlf.supabase.co/storage/v1/object/public/facility-photos/${filename}`;
+      this.style.display = "none";
+      if (noPhotoMsg) {
+        noPhotoMsg.style.display = "block";
+        noPhotoMsg.innerHTML = `
+          <i class="fa-regular fa-image" style="font-size:2.5rem; margin-bottom:0.4rem; color:#64748B; display:block;"></i>
+          <span style="font-size:0.9rem; font-weight:600; color:#94A3B8;">지정된 폴더에 시설 관련 사진이 없습니다.</span>
+        `;
       }
     };
     mainImg.src = targetUrl;
     mainImg.style.display = "block";
     mainImg.style.visibility = "visible";
     mainImg.style.opacity = "1";
+    if (noPhotoMsg) noPhotoMsg.style.display = "none";
   }
 
   if (badge) {
