@@ -262,7 +262,8 @@ function setFacilityViewMode(mode) {
 async function fetchFacilities() {
   try {
     const res = await fetch(`${API_BASE_URL}/facilities`);
-    facilitiesData = await res.json();
+    const raw = await res.json();
+    facilitiesData = Array.isArray(raw) ? raw : (raw.data || []);
   } catch (err) {
     console.error("Error fetching facilities:", err);
   }
@@ -271,7 +272,8 @@ async function fetchFacilities() {
 async function fetchDispositions() {
   try {
     const res = await fetch(`${API_BASE_URL}/dispositions`);
-    dispositionsData = await res.json();
+    const raw = await res.json();
+    dispositionsData = Array.isArray(raw) ? raw : (raw.data || []);
   } catch (err) {
     console.error("Error fetching dispositions:", err);
   }
@@ -280,7 +282,8 @@ async function fetchDispositions() {
 async function fetchUsers() {
   try {
     const res = await fetch(`${API_BASE_URL}/users`);
-    usersData = await res.json();
+    const raw = await res.json();
+    usersData = Array.isArray(raw) ? raw : (raw.data || []);
     renderUsersTable(usersData);
   } catch (err) {
     console.error("Error fetching users:", err);
