@@ -1,0 +1,9 @@
+[
+  {
+    "username": "ADMIN",
+    "password_hash": "38a277ba1327f4fac5d6e94d755568a593b34c6b4f7eb7d03b3c07f03a9094f1",
+    "name": "최고 관리자",
+    "role": "ADMIN",
+    "created_at": "2026-08-05 00:00:00"
+  }
+]

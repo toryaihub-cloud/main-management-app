@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
+  <link rel="stylesheet" href="styles.css?v=20260813_09">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Login Screen Overlay -->
+  <div id="login-screen" class="login-overlay active">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo">EV</div>
+        <h2>통합 관리 시스템 로그인</h2>
+        <p>인증 후 대시보드 및 행정처분 관리가 가능합니다.</p>
+      </div>
+      <div id="form-login">
+        <div class="form-group">
+          <label class="form-label">아이디</label>
+          <input type="text" id="login-username" class="input-box" placeholder="아이디 입력 (예: ADMIN)" required onkeyup="if(event.key==='Enter') executeLogin()">
+        </div>
+        <div class="form-group" style="margin-top: 1rem;">
+          <label class="form-label">비밀번호</label>
+          <input type="password" id="login-password" class="input-box" placeholder="비밀번호 입력 (예: ECOCAR)" required onkeyup="if(event.key==='Enter') executeLogin()">
+        </div>
+        <div id="login-error" class="login-error-msg" style="color:#E11D48; font-size:0.85rem; margin-top:0.8rem; font-weight:600;"></div>
+        <button type="button" class="btn btn-block" onclick="executeLogin()" style="margin-top: 1.5rem; width: 100%; justify-content: center; padding: 0.8rem;">
+          <i class="fa-solid fa-right-to-bracket"></i> 로그인하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">EV</div>
+      <div class="brand-title">
+        <h1>친환경차 주차·충전시설 통합 관제</h1>
+        <p>통합시설관리 & 행정처분 스마트 관리</p>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('dashboard')">
+        <i class="fa-solid fa-chart-pie"></i> 대시보드
+      </button>
+      <button class="tab-btn" onclick="switchTab('facilities')">
+        <i class="fa-solid fa-building"></i> 통합 시설 관리
+      </button>
+      <button class="tab-btn" onclick="switchTab('dispositions')">
+        <i class="fa-solid fa-gavel"></i> 행정처분 내역 관리
+      </button>
+      <button id="tab-users" class="tab-btn admin-only" onclick="switchTab('users')" style="display: none;">
+        <i class="fa-solid fa-users-gear"></i> 계정 관리 (ADMIN)
+      </button>
+    </nav>
+
+    <div class="user-profile">
+      <span id="user-display-info" class="user-info-text"><i class="fa-solid fa-user-shield"></i> 관리자</span>
+      <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="handleLogout()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- 1. Dashboard View -->
+    <section id="view-dashboard" class="view-section active">
+      
+      <!-- ECO-CAR style Progress Bar -->
+      <div class="progress-section">
+        <div class="prog-header">
+          <span class="prog-title">전체 의무설치 달성 이행률</span>
+          <span id="overall-prog-percent" class="prog-percent">0.0%</span>
+        </div>
+        <div class="prog-bar-bg">
+          <div id="overall-prog-fill" class="prog-bar-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-header">
+            <span class="stat-title">총 관리 시설</span>
+            <div class="stat-icon"><i class="fa-solid fa-city" style="color: var(--purple);"></i></div>
+          </div>
+          <div class="stat-value" id="stat-total-facilities">0</div>
+          <div class="stat-desc">BU KEY 기준 관리 시설 수</div>
+        </div>
+
+        <div class="stat-card emerald">
+          <div class="stat-header">
+            <span class="stat-title">의무설치 이행완료</span>
+            <div class="stat-icon"><i class="fa-solid fa-circle-check" style="color: var(--success);"></i></div>
+          </div>
+          <div class="stat-value" id="stat-completed-facilities">0</div>
+          <div class="stat-desc">주차구역 및 충전시설 이행</div>
+        </div>
+
+        <div class="stat-card rose">
+          <div class="stat-header">
+            <span class="stat-title">미이행 시설</span>
+            <div class="stat-icon"><div style="display:flex; gap:4px;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i></div></div>
+          </div>
+          <div class="stat-value" id="stat-uninstalled-facilities">0</div>
+          <div class="stat-desc">시정명령 및 행정처분 대상</div>
+        </div>
+
+        <div class="stat-card amber">
+          <div class="stat-header">
+            <span class="stat-title">총 미설치 수량</span>
+            <div class="stat-icon"><i class="fa-solid fa-charging-station" style="color: var(--warning);"></i></div>
+          </div>
+          <div class="stat-value" id="stat-uninstalled-counts">0면 / 0기</div>
+          <div class="stat-desc">주차 미설치면수 / 충전 미설치기수</div>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">시설 구분별 미이행 현황</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-category"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">의무설치 이행 비율</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-status"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Facilities View -->
+    <section id="view-facilities" class="view-section">
+      <div class="toolbar">
+        <div class="search-filter-group">
+          <!-- Search Input with Magnifying Glass Icon -->
+          <div class="search-box-wrapper" style="position:relative; display:flex; align-items:center;">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:0.8rem; color:var(--text-muted); font-size:0.9rem;"></i>
+            <input type="text" id="facility-search" class="input-box" placeholder="검색..." oninput="filterFacilities()" style="padding-left:2.3rem;">
+          </div>
+
+          <!-- Advanced Filters (Only Category & Compliance Status) -->
+          <select id="facility-filter-category" class="select-box" onchange="filterFacilities()">
+            <option value="">시설구분 전체</option>
+          </select>
+
+          <select id="facility-filter-status" class="select-box" onchange="filterFacilities()">
+            <option value="">이행여부 전체</option>
+            <option value="이행완료">이행완료</option>
+            <option value="미이행">미이행</option>
+            <option value="면제">면제</option>
+          </select>
+
+          <span id="facility-result-count" class="result-badge">총 0건 검색</span>
+        </div>
+
+        <button class="btn" onclick="openFacilityModal()"><i class="fa-solid fa-plus"></i> 신규 시설 등록</button>
+      </div>
+
+      <!-- Facility Card View (Default & Only View) -->
+      <div id="facilities-card-grid" class="cards-grid">
+        <!-- Dynamically Populated Cards -->
+      </div>
+    </section>
+
+    <!-- 3. Dispositions View -->
+    <section id="view-dispositions" class="view-section">
+      <div class="toolbar">
+        <div class="search-filter-group">
+          <div class="search-box-wrapper" style="position:relative; display:flex; align-items:center;">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:0.8rem; color:var(--text-muted); font-size:0.9rem;"></i>
+            <input type="text" id="disposition-search" class="input-box" placeholder="검색..." oninput="filterDispositions()" style="padding-left:2.3rem;">
+          </div>
+          
+          <select id="disposition-filter-status" class="select-box" onchange="filterDispositions()">
+            <option value="">현상태 전체</option>
+          </select>
+
+          <select id="disposition-filter-target" class="select-box" onchange="filterDispositions()">
+            <option value="">구분 전체</option>
+            <option value="시설" selected>시설</option>
+            <option value="소유자">소유자</option>
+            <option value="관리자">관리자</option>
+            <option value="법인대표">법인대표</option>
+            <option value="분양사">분양사</option>
+            <option value="사내이사">사내이사</option>
+          </select>
+
+          <span id="disp-result-count" class="result-badge">총 0건 검색</span>
+        </div>
+
+        <button class="btn" onclick="openDispositionModal()"><i class="fa-solid fa-plus"></i> 신규등록</button>
+      </div>
+
+      <!-- Disposition Card View (Default & Only View) -->
+      <div id="dispositions-card-grid" class="cards-grid">
+        <!-- Dynamically Populated Cards -->
+      </div>
+    </section>
+
+    <!-- 4. Account Management View (ADMIN Only) -->
+    <section id="view-users" class="view-section">
+      <div class="toolbar">
+        <div class="search-filter-group">
+          <div style="font-weight: 600; font-size: 1rem; color: var(--text-main);">
+            <i class="fa-solid fa-user-gear"></i> 시스템 사용자 계정 및 권한 관리
+          </div>
+        </div>
+        <button class="btn" onclick="openUserModal()"><i class="fa-solid fa-user-plus"></i> 신규 계정 추가</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>아이디 (Username)</th>
+                <th>성명</th>
+                <th>권한 (Role)</th>
+                <th>생성일시</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Facility Detail Popup Modal (ECO-CAR style) -->
+  <div id="modal-facility-detail" class="modal-backdrop" style="overflow:hidden !important; align-items:center; justify-content:center; padding:0 !important;">
+    <div class="modal-content detail-modal-content" style="max-height:78vh !important; height:auto !important; overflow:hidden !important; margin:auto !important;">
+      <div class="modal-header">
+        <div class="detail-header-info">
+          <span id="detail-key-badge" class="badge badge-blue">K0001</span>
+          <h2 id="detail-facility-name" class="detail-title">시설명</h2>
+        </div>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <button class="btn btn-secondary" style="padding:0.4rem 0.8rem; font-size:0.8rem;" onclick="printReportCurrent()">
+            <i class="fa-solid fa-print"></i> 리포트 인쇄
+          </button>
+          <button class="modal-close" onclick="closeModal('modal-facility-detail')">&times;</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Top Row: 3 Cards Grid (Basic Info, Management, Merged Status & Donut Charts) -->
+        <div class="detail-top-row-grid">
+          <!-- Card 1: 기본 시설 정보 -->
+          <div class="detail-box">
+            <h3><i class="fa-solid fa-building"></i> 기본 시설 정보</h3>
+            <p><strong>시설구분:</strong> <span id="detail-category">-</span></p>
+            <p><strong>도로명주소:</strong> <span id="detail-address-doro">-</span></p>
+            <p><strong>지번주소:</strong> <span id="detail-address-jibun">-</span></p>
+            <p><strong>행정동:</strong> <span id="detail-dong">-</span></p>
+            <p><strong>주차면수:</strong> <span id="detail-register">-</span></p>
+            <p><strong>건축허가/승인:</strong> <span id="detail-dates">-</span></p>
+            <p><strong>신축/기축:</strong> <span id="detail-new-old">-</span></p>
+            <p><strong>공공시설 구분:</strong> <span id="detail-ownership">-</span></p>
+          </div>
+
+          <!-- Card 2: 관리 및 기타 정보 -->
+          <div class="detail-box">
+            <h3><i class="fa-solid fa-user-shield"></i> 관리 및 기타 정보</h3>
+            <p><strong>시설 관리자:</strong> <span id="detail-manager-name">-</span></p>
+            <p><strong>관리자 연락처:</strong> <span id="detail-manager-contact">-</span></p>
+            <p><strong>관리주체:</strong> <span id="detail-management-body">-</span></p>
+          </div>
+
+          <!-- Card 3 (Integrated): 주차면수 & 충전시설 현황 + 이행 비율 도넛 차트 -->
+          <div class="detail-box" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <h3><i class="fa-solid fa-chart-pie"></i> 주차면수, 충전시설 현황 & 이행 비율</h3>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+                <strong>의무설치 이행상태:</strong>
+                <span id="detail-compliance" class="badge badge-emerald">-</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; font-size:0.83rem; background:#fff; padding:0.6rem; border-radius:6px; border:1px solid var(--border-color); margin-bottom:0.8rem;">
+                <div>
+                  <p style="margin:0.2rem 0;"><strong>주차구역:</strong> <span id="detail-parking-slash-info">0면 / 0면</span></p>
+                  <p style="margin:0.2rem 0;"><strong>미설치 주차:</strong> <span id="detail-parking-uninstalled" style="color:var(--danger); font-weight:bold;">0</span>면</p>
+                </div>
+                <div>
+                  <p style="margin:0.2rem 0;"><strong>충전시설:</strong> <span id="detail-charger-slash-info">0기 / 0기</span></p>
+                  <p style="margin:0.2rem 0;"><strong>미설치 충전:</strong> <span id="detail-charger-uninstalled" style="color:var(--danger); font-weight:bold;">0</span>기</p>
+                  <p style="margin:0.2rem 0;"><strong>급속 미이행:</strong> <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:bold;">0기</span></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Integrated Dual Donut Chart -->
+            <div class="card-chart-wrapper-dual" style="padding:0.6rem 0.4rem; margin-top:0.2rem; background:#fff; border-radius:8px;">
+              <!-- Parking Donut -->
+              <div class="donut-box-item">
+                <div class="donut-title-label" style="font-size:0.8rem; font-weight:700;"><i class="fa-solid fa-square-parking"></i> 주차면수</div>
+                <div class="donut-chart-relative" style="width:75px; height:75px;">
+                  <canvas id="modal-detail-donut-p"></canvas>
+                  <div id="modal-detail-pct-p" class="donut-center-pct" style="font-size:0.8rem;">0%</div>
+                </div>
+                <div id="modal-detail-slash-p" class="donut-ratio-slash" style="font-size:0.75rem; margin-top:0.3rem;">0면 / 0면 (설치/의무)</div>
+              </div>
+
+              <!-- Charger Donut -->
+              <div class="donut-box-item">
+                <div class="donut-title-label" style="font-size:0.8rem; font-weight:700;"><i class="fa-solid fa-bolt"></i> 충전기수</div>
+                <div class="donut-chart-relative" style="width:75px; height:75px;">
+                  <canvas id="modal-detail-donut-c"></canvas>
+                  <div id="modal-detail-pct-c" class="donut-center-pct" style="font-size:0.8rem;">0%</div>
+                </div>
+                <div id="modal-detail-slash-c" class="donut-ratio-slash" style="font-size:0.75rem; margin-top:0.3rem;">0기 / 0기 (설치/의무)</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Bottom Row: Wide Large Photo Carousel Slider -->
+        <div class="detail-box" style="margin-top:0.5rem;">
+          <h3 style="display:flex; justify-content:space-between; align-items:center;">
+            <span><i class="fa-solid fa-images"></i> 현장 사진 갤러리 (Supabase Storage Cloud)</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <input type="file" id="photo-upload-input" accept="image/*" style="display:none;" onchange="handlePhotoUploadSelect(event)">
+              <button class="btn btn-emerald" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="document.getElementById('photo-upload-input').click()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> 사진 추가
+              </button>
+              <button class="btn btn-rose" id="btn-delete-photo" style="padding:0.25rem 0.6rem; font-size:0.75rem; display:none;" onclick="deleteCurrentFacilityPhoto()">
+                <i class="fa-solid fa-trash-can"></i> 삭제
+              </button>
+              <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted);">* 클릭 시 전체화면 확대</span>
+            </div>
+          </h3>
+
+          <div class="photo-slider-wrapper">
+            <button class="slider-nav-btn prev" onclick="prevFacilityPhoto()" title="이전 사진 (Left Arrow)">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div id="main-photo-view" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+              <img id="current-photo-img" src="" alt="현장 사진" style="max-height:120px; max-width:85%; object-fit:contain; cursor:pointer; border-radius:6px;" onclick="openLightboxCurrent()">
+              <div id="no-photo-msg" class="no-photo-text" style="color:#94A3B8;">
+                <i class="fa-regular fa-image" style="font-size:2rem; margin-bottom:0.4rem; display:block;"></i>
+                지정된 폴더에 시설 관련 사진이 없습니다.
+              </div>
+            </div>
+
+            <button class="slider-nav-btn next" onclick="nextFacilityPhoto()" title="다음 사진 (Right Arrow)">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <div id="photo-counter-badge" class="photo-counter-badge">0 / 0</div>
+          </div>
+
+          <div id="photo-thumbnails-list" class="thumbnails-bar" style="display:flex; gap:0.6rem; overflow-x:auto; padding:0.6rem 0; margin-top:0.6rem;">
+            <!-- Thumbnails populated dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-facility-detail')">닫기</button>
+        <button class="btn" id="btn-edit-from-detail"><i class="fa-solid fa-pen-to-square"></i> 정보 수정</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Photo Zoom Fullscreen Overlay with Prev/Next Navigation -->
+  <div id="lightboxOverlay" class="lightbox-overlay">
+    <button class="lightbox-nav-btn prev" onclick="prevLightboxPhoto()" title="이전 사진"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="lightbox-controls">
+      <button class="lightbox-btn" onclick="zoomLightbox(0.2)"><i class="fa-solid fa-plus"></i></button>
+      <button class="lightbox-btn" onclick="zoomLightbox(-0.2)"><i class="fa-solid fa-minus"></i></button>
+      <button class="lightbox-btn" onclick="resetLightbox()"><i class="fa-solid fa-rotate-left"></i></button>
+      <button class="lightbox-btn" onclick="closeLightbox()">&times;</button>
+    </div>
+    <div class="lightbox-content">
+      <img id="lightboxImage" src="" alt="확대 현장 사진">
+    </div>
+    <button class="lightbox-nav-btn next" onclick="nextLightboxPhoto()" title="다음 사진"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+
+  <!-- Settings Modal (Supabase Cloud Storage 통합 상태) -->
+  <div id="modal-settings" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 550px;">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-cloud"></i> Supabase Storage 클라우드 관리</div>
+        <button class="modal-close" onclick="closeModal('modal-settings')">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align:center; padding:1.5rem 1rem;">
+        <div style="background:#EFF6FF; border:1px solid #BFDBFE; padding:1.2rem; border-radius:0.6rem; text-align:left; margin-bottom:1rem;">
+          <div style="font-weight:700; color:#1D4ED8; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+            <i class="fa-solid fa-cloud-check" style="font-size:1.2rem;"></i> Supabase Storage 버킷 연결 완료
+          </div>
+          <p style="font-size:0.85rem; color:#1E40AF; margin:0; line-height:1.5;">
+            모든 현장 사진은 <b>Supabase Cloud Storage (Public Bucket: <code>facility-photos</code>)</b>에 실시간 저장/관리됩니다. 로컬 경로 설정 없이 전 세계 어디서나 동일한 현장 사진을 초고속으로 조회할 수 있습니다.
+          </p>
+        </div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">
+          * 상세 팝업 창의 <b>[📷 사진 추가]</b> 및 <b>[🗑️ 삭제]</b> 버튼을 통해 실시간으로 클라우드 사진을 관리하실 수 있습니다.
+        </div>
+        <button class="btn btn-secondary" style="margin-top: 1.2rem; width: 100%; justify-content: center;" onclick="closeModal('modal-settings')">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Facility Register/Edit Modal (Comprehensive All Fields) -->
+  <div id="modal-facility" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-facility-title">시설 정보 등록/수정</div>
+        <button class="modal-close" onclick="closeModal('modal-facility')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-facility" style="display:flex; flex-direction:column; gap:1.2rem;">
+          <!-- Section 1: 기본 관리 정보 -->
+          <div class="form-section-card" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:1.1rem; border-radius:0.5rem;">
+            <div style="font-weight:700; color:#0F172A; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-building" style="color:var(--primary);"></i> 1. 기본 시설 정보
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">BU KEY *</label>
+                <input type="text" id="fac-key" class="input-box" required placeholder="예: K0500">
+              </div>
+              <div class="form-group">
+                <label class="form-label">시설명 *</label>
+                <input type="text" id="fac-name" class="input-box" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">시설구분</label>
+                <input type="text" id="fac-category" class="input-box" placeholder="공공시설, 공동주택 등">
+              </div>
+              <div class="form-group">
+                <label class="form-label">의무설치 이행상태</label>
+                <select id="fac-compliance" class="select-box">
+                  <option value="이행완료">이행완료</option>
+                  <option value="미이행">미이행</option>
+                  <option value="부분이행">부분이행</option>
+                  <option value="면제">면제</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">공공시설 구분</label>
+                <input type="text" id="fac-ownership" class="input-box" placeholder="광주광역시, 광산구 등">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: 주소 및 건축 정보 -->
+          <div class="form-section-card" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:1.1rem; border-radius:0.5rem;">
+            <div style="font-weight:700; color:#0284C7; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-map-location-dot" style="color:#0284C7;"></i> 2. 주소 및 건축 정보
+            </div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label">도로명주소</label>
+                <input type="text" id="fac-address-doro" class="input-box">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">지번주소</label>
+                <input type="text" id="fac-address-jibun" class="input-box">
+              </div>
+              <div class="form-group">
+                <label class="form-label">행정동</label>
+                <input type="text" id="fac-dong" class="input-box" placeholder="예: 신창동">
+              </div>
+              <div class="form-group">
+                <label class="form-label">건축허가일 / 사용승인일</label>
+                <input type="text" id="fac-dates" class="input-box" placeholder="예: 2020-12-31 / -">
+              </div>
+              <div class="form-group">
+                <label class="form-label">신축/기축</label>
+                <select id="fac-new-old" class="select-box">
+                  <option value="신축">신축</option>
+                  <option value="기축">기축</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: 주차구역 & 충전시설 이행 수치 -->
+          <div class="form-section-card" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:1.1rem; border-radius:0.5rem;">
+            <div style="font-weight:700; color:#D97706; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-charging-station" style="color:#D97706;"></i> 3. 주차구역 및 충전시설 수치
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">총 주차면수</label>
+                <input type="number" id="fac-register" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">의무 주차면수</label>
+                <input type="number" id="fac-parking-req" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">설치 주차면수</label>
+                <input type="number" id="fac-parking-inst" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">미설치 주차면수</label>
+                <input type="number" id="fac-parking-uninstalled" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">의무 충전기수</label>
+                <input type="number" id="fac-charger-req" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">설치 충전기수</label>
+                <input type="number" id="fac-charger-inst" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">미설치 충전기수</label>
+                <input type="number" id="fac-charger-uninstalled" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">의무 급속 충전기수</label>
+                <input type="number" id="fac-fast-req" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">설치 급속 충전기수</label>
+                <input type="number" id="fac-fast-cnt" class="input-box" value="0">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: 관리자 및 관리주체 정보 -->
+          <div class="form-section-card" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:1.1rem; border-radius:0.5rem;">
+            <div style="font-weight:700; color:#059669; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-user-gear" style="color:#059669;"></i> 4. 관리자 및 관리주체 정보
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">시설관리자 성명</label>
+                <input type="text" id="fac-manager-name" class="input-box" placeholder="입력 시 자동 암호화 저장">
+              </div>
+              <div class="form-group">
+                <label class="form-label">시설관리자 연락처</label>
+                <input type="text" id="fac-manager-contact" class="input-box" placeholder="입력 시 자동 암호화 저장">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">관리주체</label>
+                <input type="text" id="fac-management-body" class="input-box" placeholder="예: 광주광역시 광산구">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-facility')">취소</button>
+        <button class="btn" onclick="saveFacility()"><i class="fa-solid fa-floppy-disk"></i> 저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disposition Modal (Comprehensive All Fields & Sub-Owner Addition) -->
+  <div id="modal-disposition" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 950px;">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-disposition-title">신규등록</div>
+        <button class="modal-close" onclick="closeModal('modal-disposition')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-disposition" style="display:flex; flex-direction:column; gap:1.25rem;">
+          <input type="hidden" id="disp-id">
+
+          <!-- 1. 기본 관리 정보 Section -->
+          <div class="form-section-card" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:1.1rem; border-radius:0.5rem;">
+            <div style="font-weight:700; color:#0F172A; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-building-user" style="color:var(--primary);"></i> 1. 기본 관리 정보
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">시설 KEY *</label>
+                <input type="text" id="disp-facility-key" class="input-box" required placeholder="예: K0001">
+              </div>
+              <div class="form-group">
+                <label class="form-label">구분 *</label>
+                <select id="disp-target-type" class="select-box">
+                  <option value="시설">시설</option>
+                  <option value="소유자">소유자</option>
+                  <option value="관리자">관리자</option>
+                  <option value="법인대표">법인대표</option>
+                  <option value="분양사">분양사</option>
+                  <option value="사내이사">사내이사</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">현상태</label>
+                <input type="text" id="disp-status" class="input-box" placeholder="예: 7.27.시정명령, 사전통지">
+              </div>
+              <div class="form-group">
+                <label class="form-label">대상자/소유자명 (DB 암호화)</label>
+                <input type="text" id="disp-target-name" class="input-box" placeholder="성명 또는 상호명">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">G열 대상 범위</label>
+                <input type="text" id="disp-notice-target" class="input-box" placeholder="예: 부지/건물, 토지, 건물">
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. 사전통지 & 초본주소 정보 Section -->
+          <div class="form-section-card" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:1.1rem; border-radius:0.5rem;">
+            <div style="font-weight:700; color:#0284C7; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-envelope" style="color:#0284C7;"></i> 2. 사전통지 및 초본주소 정보
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">사전통지 방법</label>
+                <input type="text" id="disp-notice-method" class="input-box" placeholder="등기, 공문 등">
+              </div>
+              <div class="form-group">
+                <label class="form-label">우편발송주소 (DB 암호화)</label>
+                <input type="text" id="disp-mail-address" class="input-box" placeholder="도로명/지번 주소">
+              </div>
+              <div class="form-group">
+                <label class="form-label">우편번호</label>
+                <input type="text" id="disp-zip-code" class="input-box" placeholder="예: 61954">
+              </div>
+              <div class="form-group">
+                <label class="form-label">수신인 (DB 암호화)</label>
+                <input type="text" id="disp-recipient-name" class="input-box" placeholder="수신인 이름">
+              </div>
+              <div class="form-group">
+                <label class="form-label">사전통지 발송일자</label>
+                <input type="date" id="disp-notice-send-date" class="input-box">
+              </div>
+              <div class="form-group">
+                <label class="form-label">사전통지 반송여부</label>
+                <input type="text" id="disp-notice-return-status" class="input-box" placeholder="도달, 반송 등">
+              </div>
+              <div class="form-group">
+                <label class="form-label">초본주소 발송일자</label>
+                <input type="date" id="disp-abstract-send-date" class="input-box">
+              </div>
+              <div class="form-group">
+                <label class="form-label">초본주소 (DB 암호화)</label>
+                <input type="text" id="disp-abstract-address" class="input-box" placeholder="초본 주소">
+              </div>
+              <div class="form-group">
+                <label class="form-label">초본주소 반송여부</label>
+                <input type="text" id="disp-abstract-return-status" class="input-box" placeholder="미도달, 반송 등">
+              </div>
+              <div class="form-group">
+                <label class="form-label">사전 고시/공고</label>
+                <input type="text" id="disp-notice-public" class="input-box">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">사전 고시/공고 기간</label>
+                <input type="text" id="disp-notice-public-period" class="input-box" placeholder="예: 2026.08.01 ~ 2026.08.15">
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 의견제출 & 시정명령 정보 Section -->
+          <div class="form-section-card" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:1.1rem; border-radius:0.5rem;">
+            <div style="font-weight:700; color:#D97706; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-gavel" style="color:#D97706;"></i> 3. 의견제출 및 시정명령 정보
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">의견제출 여부</label>
+                <select id="disp-opinion-submitted" class="select-box">
+                  <option value="X">X (미제출)</option>
+                  <option value="O">O (제출)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">의견제출 일자</label>
+                <input type="date" id="disp-opinion-submit-date" class="input-box">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">의견 내용</label>
+                <input type="text" id="disp-opinion-content" class="input-box" placeholder="의견제출 내용 요약">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Y열 시정명령대상</label>
+                <input type="text" id="disp-correction-order" class="input-box" placeholder="예: 전남광주특별시장">
+              </div>
+              <div class="form-group">
+                <label class="form-label">시정명령일자</label>
+                <input type="date" id="disp-correction-date" class="input-box">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">시정명령 사유 및 내용</label>
+                <textarea id="disp-correction-reason" class="input-box" rows="2" placeholder="시정명령 사유"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">시정기간</label>
+                <input type="text" id="disp-correction-period" class="input-box" placeholder="예: 2026.09.30까지">
+              </div>
+              <div class="form-group">
+                <label class="form-label">시정 통지방법</label>
+                <input type="text" id="disp-correction-notice-method" class="input-box" placeholder="우편등기 등">
+              </div>
+              <div class="form-group">
+                <label class="form-label">시정 통지 반송내역</label>
+                <input type="text" id="disp-correction-return-details" class="input-box" placeholder="반송 사유">
+              </div>
+              <div class="form-group">
+                <label class="form-label">시정 고시/공고</label>
+                <input type="text" id="disp-correction-public" class="input-box">
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. 개인정보 & 비고 Section -->
+          <div class="form-section-card" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:1.1rem; border-radius:0.5rem;">
+            <div style="font-weight:700; color:#059669; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-id-card" style="color:#059669;"></i> 4. 암호화 보안 개인정보 & 비고
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">법인번호(주민번호) (DB 암호화)</label>
+                <input type="text" id="disp-reg-num" class="input-box" placeholder="13자 번호">
+              </div>
+              <div class="form-group">
+                <label class="form-label">연락처 (DB 암호화)</label>
+                <input type="text" id="disp-contact" class="input-box" placeholder="010-0000-0000">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">비고 (DB 비고)</label>
+                <textarea id="disp-note" class="input-box" rows="2" placeholder="기타 특이사항"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. 하위 소유자/대상 동적 추가 컨테이너 -->
+          <div id="disp-sub-owners-container" style="display:flex; flex-direction:column; gap:1rem;"></div>
+
+          <div style="text-align:center; margin-top:0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="addDispositionSubForm()" style="padding:0.5rem 1.25rem; font-size:0.85rem; font-weight:700;">
+              <i class="fa-solid fa-plus-circle" style="color:var(--primary);"></i> 하위 소유자/대상 동시 추가 (+)
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-disposition')">취소</button>
+        <button class="btn" onclick="saveDisposition()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disposition Detail Modal -->
+  <div id="modal-disposition-detail" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 1100px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="modal-title" id="disp-detail-facility-name">시설명 상세 행정처분</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-disposition-detail')">&times;</button>
+      </div>
+      <div class="modal-body" id="disp-detail-modal-body">
+        <!-- Dynamically Populated Disposition Detail Cards and Sub-lists -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-disposition-detail')">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Modal (ADMIN Only) -->
+  <div id="modal-user" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 480px;">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-user-title">계정 등록 / 비밀번호 변경</div>
+        <button class="modal-close" onclick="closeModal('modal-user')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-user" class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="form-group">
+            <label class="form-label">아이디 (Username) *</label>
+            <input type="text" id="user-username" class="input-box" required placeholder="영문/숫자 계정 아이디">
+          </div>
+          <div class="form-group">
+            <label class="form-label">비밀번호 *</label>
+            <input type="password" id="user-password" class="input-box" placeholder="비밀번호 입력">
+          </div>
+          <div class="form-group">
+            <label class="form-label">성명 (Name) *</label>
+            <input type="text" id="user-name" class="input-box" required placeholder="사용자 이름">
+          </div>
+          <div class="form-group">
+            <label class="form-label">권한 (Role) *</label>
+            <select id="user-role" class="select-box">
+              <option value="USER">일반 사용자 (USER)</option>
+              <option value="ADMIN">관리자 (ADMIN)</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-user')">취소</button>
+        <button class="btn" onclick="saveUser()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Container for Report Print -->
+  <div id="print-report-container"></div>
+
+  <script src="app.js?v=20260813_09"></script>
+</body>
+</html>
