@@ -26,8 +26,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "송기현",
     "manager_contact_decrypted": "954-6795",
-    "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0002",
@@ -57,7 +60,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 24,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0003",
@@ -87,7 +93,10 @@
     "manager_name_decrypted": "박상원",
     "manager_contact_decrypted": "010-6462-7445",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0004",
@@ -117,7 +126,10 @@
     "manager_name_decrypted": "윤재박",
     "manager_contact_decrypted": "712-6775",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0005",
@@ -146,8 +158,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "오시완",
     "manager_contact_decrypted": "960-2622",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0006",
@@ -176,8 +191,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "송다은",
     "manager_contact_decrypted": "010-5603-4708",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0007",
@@ -207,7 +225,10 @@
     "manager_name_decrypted": "신주혁",
     "manager_contact_decrypted": "960-7216",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0008",
@@ -236,8 +257,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "김강민",
     "manager_contact_decrypted": "602-3321",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 5,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0009",
@@ -266,8 +290,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "정인서",
     "manager_contact_decrypted": "010-2698-0447",
-    "parking_installed_cnt": 17,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 19,
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 4,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0010",
@@ -297,7 +324,10 @@
     "manager_name_decrypted": "허경수",
     "manager_contact_decrypted": "949-2162",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0011",
@@ -327,7 +357,10 @@
     "manager_name_decrypted": "강정묵",
     "manager_contact_decrypted": "010-4608-6731",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0012",
@@ -357,7 +390,10 @@
     "manager_name_decrypted": "양준형",
     "manager_contact_decrypted": "980-0787",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 3,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0013",
@@ -387,7 +423,10 @@
     "manager_name_decrypted": "김호동",
     "manager_contact_decrypted": "010-6251-9664",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0014",
@@ -417,7 +456,10 @@
     "manager_name_decrypted": "이수호",
     "manager_contact_decrypted": "010-3643-2131",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 3,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0015",
@@ -447,7 +489,10 @@
     "manager_name_decrypted": "조만열",
     "manager_contact_decrypted": "613-7022",
     "parking_installed_cnt": 14,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 3,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0016",
@@ -477,7 +522,10 @@
     "manager_name_decrypted": "홍서영",
     "manager_contact_decrypted": "950-1127",
     "parking_installed_cnt": 7,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0017",
@@ -506,8 +554,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "이승은",
     "manager_contact_decrypted": "970-1111",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0018",
@@ -537,7 +588,10 @@
     "manager_name_decrypted": "최정윤",
     "manager_contact_decrypted": "010-8810-8873",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0019",
@@ -567,7 +621,10 @@
     "manager_name_decrypted": "김주환",
     "manager_contact_decrypted": "010-4158-4462",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0020",
@@ -597,7 +654,10 @@
     "manager_name_decrypted": "문효석",
     "manager_contact_decrypted": "010-2955-6034",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0021",
@@ -626,10 +686,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "이정석",
     "manager_contact_decrypted": "613-8923",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1,
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
-    "charger_fast_cnt": 0
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0022",
@@ -659,7 +720,10 @@
     "manager_name_decrypted": "김도영",
     "manager_contact_decrypted": "010-2650-3970",
     "parking_installed_cnt": 79,
-    "charger_installed_cnt": 32
+    "charger_installed_cnt": 32,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 6,
+    "charger_slow_cnt": 26
   },
   {
     "facility_key": "K0023",
@@ -689,7 +753,10 @@
     "manager_name_decrypted": "김성로",
     "manager_contact_decrypted": "613-5274",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0024",
@@ -719,7 +786,10 @@
     "manager_name_decrypted": "김진영",
     "manager_contact_decrypted": "010-9918-3405",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0025",
@@ -749,7 +819,10 @@
     "manager_name_decrypted": "정우영",
     "manager_contact_decrypted": "010-8625-8119",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0026",
@@ -779,7 +852,10 @@
     "manager_name_decrypted": "박부선",
     "manager_contact_decrypted": "600-9220",
     "parking_installed_cnt": 10,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0027",
@@ -809,7 +885,10 @@
     "manager_name_decrypted": "윤인수",
     "manager_contact_decrypted": "010-4930-3326",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0028",
@@ -838,8 +917,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "김용길",
     "manager_contact_decrypted": "010-8497-4565",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 8,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0029",
@@ -868,8 +950,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "김가혜",
     "manager_contact_decrypted": "010-7601-8579",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0030",
@@ -898,8 +983,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "서정환",
     "manager_contact_decrypted": "010-3644-6126",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 3,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0031",
@@ -929,7 +1017,10 @@
     "manager_name_decrypted": "김준식",
     "manager_contact_decrypted": "010-3618-0081",
     "parking_installed_cnt": 20,
-    "charger_installed_cnt": 20
+    "charger_installed_cnt": 20,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 19
   },
   {
     "facility_key": "K0032",
@@ -959,7 +1050,10 @@
     "manager_name_decrypted": "최상훈",
     "manager_contact_decrypted": "010-3911-5481",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0033",
@@ -989,7 +1083,10 @@
     "manager_name_decrypted": "오지연",
     "manager_contact_decrypted": "010-4566-5359",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0034",
@@ -1019,7 +1116,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0035",
@@ -1049,7 +1149,10 @@
     "manager_name_decrypted": "김수열",
     "manager_contact_decrypted": "010-7927-1806",
     "parking_installed_cnt": 19,
-    "charger_installed_cnt": 19
+    "charger_installed_cnt": 19,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 17
   },
   {
     "facility_key": "K0036",
@@ -1078,8 +1181,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "이귀선",
     "manager_contact_decrypted": "010-3705-5627",
-    "parking_installed_cnt": 31,
-    "charger_installed_cnt": 31
+    "parking_installed_cnt": 33,
+    "charger_installed_cnt": 31,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 30
   },
   {
     "facility_key": "K0037",
@@ -1109,7 +1215,10 @@
     "manager_name_decrypted": "김명완",
     "manager_contact_decrypted": "970-0026",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0038",
@@ -1139,7 +1248,10 @@
     "manager_name_decrypted": "박은혜",
     "manager_contact_decrypted": "973-2255",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0039",
@@ -1169,7 +1281,10 @@
     "manager_name_decrypted": "김진태",
     "manager_contact_decrypted": "010-3632-9885",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0040",
@@ -1199,7 +1314,10 @@
     "manager_name_decrypted": "김나영",
     "manager_contact_decrypted": "010-3666-4557",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0041",
@@ -1229,7 +1347,10 @@
     "manager_name_decrypted": "윤종민",
     "manager_contact_decrypted": "010-7440-5710",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0042",
@@ -1259,7 +1380,10 @@
     "manager_name_decrypted": "최기선",
     "manager_contact_decrypted": "010-3602-0706",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0043",
@@ -1289,7 +1413,10 @@
     "manager_name_decrypted": "김진문",
     "manager_contact_decrypted": "010-6690-4000",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0044",
@@ -1319,7 +1446,10 @@
     "manager_name_decrypted": "안준철",
     "manager_contact_decrypted": "010-2625-7422",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0045",
@@ -1348,8 +1478,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "서금식",
     "manager_contact_decrypted": "974-9167",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0046",
@@ -1363,10 +1496,10 @@
     "approval_date": null,
     "is_new_building": null,
     "facility_ownership_type": "",
-    "parking_required_cnt": 0,
-    "parking_uninstalled_cnt": 0,
+    "parking_required_cnt": 6,
+    "parking_uninstalled_cnt": 3,
     "parking_status": null,
-    "charger_required_cnt": 0,
+    "charger_required_cnt": 2,
     "charger_uninstalled_cnt": 0,
     "charger_status": null,
     "compliance_status": "미이행",
@@ -1378,12 +1511,13 @@
     "updated_at": "2026-08-06T01:47:18.856999+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0,
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 2,
     "building_approval_dates": "",
     "building_new_old_type": "신축",
-    "charger_fast_req_cnt": 0,
-    "charger_fast_cnt": 0
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0047",
@@ -1413,7 +1547,10 @@
     "manager_name_decrypted": "김현명",
     "manager_contact_decrypted": "010-6392-9593",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0048",
@@ -1443,7 +1580,10 @@
     "manager_name_decrypted": "임동휴",
     "manager_contact_decrypted": "959-6278",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0049",
@@ -1473,7 +1613,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0050",
@@ -1503,7 +1646,10 @@
     "manager_name_decrypted": "최상운",
     "manager_contact_decrypted": "010-3911-5481",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0051",
@@ -1532,8 +1678,11 @@
     "updated_at": "2026-08-04T07:33:14.964328+00:00",
     "manager_name_decrypted": "김성관",
     "manager_contact_decrypted": "010-4795-3824",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0052",
@@ -1563,7 +1712,10 @@
     "manager_name_decrypted": "박대인",
     "manager_contact_decrypted": "010-5812-8826",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0053",
@@ -1593,7 +1745,10 @@
     "manager_name_decrypted": "양만송",
     "manager_contact_decrypted": "010-5664-7204",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0054",
@@ -1622,8 +1777,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "장병양",
     "manager_contact_decrypted": "010-6340-2929",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0055",
@@ -1652,8 +1810,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "김용민",
     "manager_contact_decrypted": "950-9500",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0056",
@@ -1683,7 +1844,10 @@
     "manager_name_decrypted": "홍보경",
     "manager_contact_decrypted": "010-2372-1110",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0057",
@@ -1713,7 +1877,10 @@
     "manager_name_decrypted": "신동석",
     "manager_contact_decrypted": "010-5493-5899",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0058",
@@ -1742,8 +1909,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "김충현",
     "manager_contact_decrypted": "010-9440-9937",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0059",
@@ -1772,8 +1942,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "정영호",
     "manager_contact_decrypted": "010-4608-3026",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0060",
@@ -1802,8 +1975,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "노기록",
     "manager_contact_decrypted": "974-5570",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0061",
@@ -1832,8 +2008,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "조병열",
     "manager_contact_decrypted": "010-5628-0500",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0062",
@@ -1862,8 +2041,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "한성남",
     "manager_contact_decrypted": "010-2420-5434",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0063",
@@ -1892,8 +2074,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "이덕호",
     "manager_contact_decrypted": "010-9899-4553",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0064",
@@ -1923,7 +2108,10 @@
     "manager_name_decrypted": "강명자",
     "manager_contact_decrypted": "010-2608-1359",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0065",
@@ -1953,7 +2141,10 @@
     "manager_name_decrypted": "전의종",
     "manager_contact_decrypted": "010-3350-4900",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0066",
@@ -1983,7 +2174,10 @@
     "manager_name_decrypted": "조아라",
     "manager_contact_decrypted": "010-4326-5060",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0067",
@@ -2013,7 +2207,10 @@
     "manager_name_decrypted": "윤재복",
     "manager_contact_decrypted": "010-7175-1868",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0068",
@@ -2043,7 +2240,10 @@
     "manager_name_decrypted": "김진영",
     "manager_contact_decrypted": "010-9298-4321",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0069",
@@ -2073,7 +2273,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "010-5678-0027",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0070",
@@ -2103,7 +2306,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "381-3222",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0071",
@@ -2133,7 +2339,10 @@
     "manager_name_decrypted": "김수현",
     "manager_contact_decrypted": "973-6505",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0072",
@@ -2163,7 +2372,10 @@
     "manager_name_decrypted": "오서연",
     "manager_contact_decrypted": "956-0099",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0073",
@@ -2192,8 +2404,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "정기찬",
     "manager_contact_decrypted": "010-4600-6200",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0074",
@@ -2223,7 +2438,10 @@
     "manager_name_decrypted": "최재영",
     "manager_contact_decrypted": "010-5542-4000",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0075",
@@ -2253,7 +2471,10 @@
     "manager_name_decrypted": "김수환",
     "manager_contact_decrypted": "010-3698-4255",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0076",
@@ -2282,8 +2503,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "김원록",
     "manager_contact_decrypted": "010-9019-4223",
-    "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "parking_installed_cnt": 21,
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0077",
@@ -2313,7 +2537,10 @@
     "manager_name_decrypted": "진성욱",
     "manager_contact_decrypted": "010-5294-6796",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0078",
@@ -2343,7 +2570,10 @@
     "manager_name_decrypted": "신현용",
     "manager_contact_decrypted": "010-2629-6900",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0079",
@@ -2372,8 +2602,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "박영선",
     "manager_contact_decrypted": "010-3179-3268",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0080",
@@ -2403,7 +2636,10 @@
     "manager_name_decrypted": "조현종",
     "manager_contact_decrypted": "010-9474-1553",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0081",
@@ -2433,7 +2669,10 @@
     "manager_name_decrypted": "김민규",
     "manager_contact_decrypted": "010-5236-2962",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0082",
@@ -2463,7 +2702,10 @@
     "manager_name_decrypted": "김민규",
     "manager_contact_decrypted": "010-5236-2962",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0083",
@@ -2492,8 +2734,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "김문성",
     "manager_contact_decrypted": "907-4431",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0084",
@@ -2523,7 +2768,10 @@
     "manager_name_decrypted": "이명남",
     "manager_contact_decrypted": "010-9095-3019",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0085",
@@ -2553,7 +2801,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0086",
@@ -2583,7 +2834,10 @@
     "manager_name_decrypted": "변경희",
     "manager_contact_decrypted": "010-6547-0757",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0087",
@@ -2613,7 +2867,10 @@
     "manager_name_decrypted": "문지혁",
     "manager_contact_decrypted": "010-9034-8688",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0088",
@@ -2642,8 +2899,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "곽성진",
     "manager_contact_decrypted": "010-7445-7234",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0089",
@@ -2672,8 +2932,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "양동호",
     "manager_contact_decrypted": "010-5767-1872",
-    "parking_installed_cnt": 13,
-    "charger_installed_cnt": 13
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 13,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 5,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0090",
@@ -2702,8 +2965,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "한수진",
     "manager_contact_decrypted": "010-2622-3899",
-    "parking_installed_cnt": 12,
-    "charger_installed_cnt": 12
+    "parking_installed_cnt": 16,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 7,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0091",
@@ -2733,7 +2999,10 @@
     "manager_name_decrypted": "이재환",
     "manager_contact_decrypted": "010-2744-4307",
     "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 4,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0092",
@@ -2762,8 +3031,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "최진호",
     "manager_contact_decrypted": "958-1292",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0093",
@@ -2793,7 +3065,10 @@
     "manager_name_decrypted": "김선찬",
     "manager_contact_decrypted": "010-5149-7672",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0094",
@@ -2823,7 +3098,10 @@
     "manager_name_decrypted": "조진아",
     "manager_contact_decrypted": "010-5629-5221",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0095",
@@ -2852,8 +3130,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "박정준",
     "manager_contact_decrypted": "010-2670-9087",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0096",
@@ -2883,7 +3164,10 @@
     "manager_name_decrypted": "최성욱",
     "manager_contact_decrypted": "960-4003",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0097",
@@ -2913,7 +3197,10 @@
     "manager_name_decrypted": "장유진",
     "manager_contact_decrypted": "951-5000",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0098",
@@ -2943,7 +3230,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0099",
@@ -2973,7 +3263,10 @@
     "manager_name_decrypted": "김성철",
     "manager_contact_decrypted": "940-3512",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0100",
@@ -3003,7 +3296,10 @@
     "manager_name_decrypted": "문형귀",
     "manager_contact_decrypted": "960-2185",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0101",
@@ -3032,8 +3328,11 @@
     "updated_at": "2026-08-04T07:33:15.558874+00:00",
     "manager_name_decrypted": "최민수",
     "manager_contact_decrypted": "940-5870",
-    "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "parking_installed_cnt": 18,
+    "charger_installed_cnt": 18,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 16
   },
   {
     "facility_key": "K0102",
@@ -3062,8 +3361,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "김중호",
     "manager_contact_decrypted": "950-3517",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 19,
+    "charger_installed_cnt": 19,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 17
   },
   {
     "facility_key": "K0103",
@@ -3092,8 +3394,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "윤태상",
     "manager_contact_decrypted": "958-7537",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0104",
@@ -3123,7 +3428,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "515-0088",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0105",
@@ -3153,7 +3461,10 @@
     "manager_name_decrypted": "김대방",
     "manager_contact_decrypted": "407-0473",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0106",
@@ -3182,8 +3493,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "조은자",
     "manager_contact_decrypted": "526-2422",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0107",
@@ -3213,7 +3527,10 @@
     "manager_name_decrypted": "이대영",
     "manager_contact_decrypted": "010-2258-7155",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0108",
@@ -3243,7 +3560,10 @@
     "manager_name_decrypted": "이홍은",
     "manager_contact_decrypted": "010-3897-3161",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0109",
@@ -3272,8 +3592,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "정광표",
     "manager_contact_decrypted": "942-4499",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0110",
@@ -3302,8 +3625,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "이상진",
     "manager_contact_decrypted": "958-2009",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0111",
@@ -3332,8 +3658,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "김소정",
     "manager_contact_decrypted": "958-1036",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0112",
@@ -3363,7 +3692,10 @@
     "manager_name_decrypted": "박주현",
     "manager_contact_decrypted": "946-2442",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0113",
@@ -3393,7 +3725,10 @@
     "manager_name_decrypted": "송대용",
     "manager_contact_decrypted": "062-972-4499",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0114",
@@ -3422,8 +3757,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "임채용",
     "manager_contact_decrypted": "010-9529-8585",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0115",
@@ -3452,8 +3790,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "최상현",
     "manager_contact_decrypted": "010-4192-1926",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0116",
@@ -3482,8 +3823,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "김형호",
     "manager_contact_decrypted": "010-2128-2223",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0117",
@@ -3513,7 +3857,10 @@
     "manager_name_decrypted": "김명훈",
     "manager_contact_decrypted": "445-7700",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0118",
@@ -3542,8 +3889,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "김경석",
     "manager_contact_decrypted": "010-4422-3201",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0119",
@@ -3573,7 +3923,10 @@
     "manager_name_decrypted": "김병문",
     "manager_contact_decrypted": "010-6348-9100",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0120",
@@ -3602,8 +3955,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "이민지",
     "manager_contact_decrypted": "010-2918-3036",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0121",
@@ -3633,7 +3989,10 @@
     "manager_name_decrypted": "정우철",
     "manager_contact_decrypted": "010-3629-1835",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0122",
@@ -3663,7 +4022,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "010-5090-6884(전에일하던직원)",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0123",
@@ -3693,7 +4055,10 @@
     "manager_name_decrypted": "고효석",
     "manager_contact_decrypted": "010-5259-4190",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0124",
@@ -3722,8 +4087,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "양복식",
     "manager_contact_decrypted": "010-3673-5705",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 6,
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0125",
@@ -3753,7 +4121,10 @@
     "manager_name_decrypted": "김동철",
     "manager_contact_decrypted": "010-9602-2552",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0126",
@@ -3783,7 +4154,10 @@
     "manager_name_decrypted": "이동주",
     "manager_contact_decrypted": "010-9192-8914",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0127",
@@ -3813,7 +4187,10 @@
     "manager_name_decrypted": "최장욱",
     "manager_contact_decrypted": "010-4429-3699",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0128",
@@ -3842,8 +4219,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "정상용",
     "manager_contact_decrypted": "010-9511-1900",
-    "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 44,
+    "charger_installed_cnt": 18,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 16
   },
   {
     "facility_key": "K0130",
@@ -3873,7 +4253,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "955-1919",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0131",
@@ -3903,7 +4286,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "010-5637-9335, 010-3619-9335",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0132",
@@ -3933,7 +4319,10 @@
     "manager_name_decrypted": "명재율",
     "manager_contact_decrypted": "010-4604-8422",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0133",
@@ -3963,7 +4352,10 @@
     "manager_name_decrypted": "고경진",
     "manager_contact_decrypted": "010-2916-0260",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0134",
@@ -3993,7 +4385,10 @@
     "manager_name_decrypted": "김목중",
     "manager_contact_decrypted": "010-6614-1579",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0135",
@@ -4023,7 +4418,10 @@
     "manager_name_decrypted": "김인용",
     "manager_contact_decrypted": "010-8615-1538",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0136",
@@ -4053,7 +4451,10 @@
     "manager_name_decrypted": "이상육",
     "manager_contact_decrypted": "010-5381-4902",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0137",
@@ -4083,7 +4484,10 @@
     "manager_name_decrypted": "백순철",
     "manager_contact_decrypted": "010-4212-1963",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0138",
@@ -4113,7 +4517,10 @@
     "manager_name_decrypted": "김성원",
     "manager_contact_decrypted": "511-0066",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0139",
@@ -4143,7 +4550,10 @@
     "manager_name_decrypted": "배민규",
     "manager_contact_decrypted": "010-2114-3538",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0140",
@@ -4173,7 +4583,10 @@
     "manager_name_decrypted": "강경화",
     "manager_contact_decrypted": "010-7171-9285",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0141",
@@ -4203,7 +4616,10 @@
     "manager_name_decrypted": "백형준",
     "manager_contact_decrypted": "010-3025-4277",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0142",
@@ -4232,8 +4648,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "박조익",
     "manager_contact_decrypted": "010-2873-0748",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0143",
@@ -4262,8 +4681,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "유성인",
     "manager_contact_decrypted": "010-3617-8910",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0144",
@@ -4293,7 +4715,10 @@
     "manager_name_decrypted": "이경란",
     "manager_contact_decrypted": "010-4004-8750",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0145",
@@ -4323,7 +4748,10 @@
     "manager_name_decrypted": "조윤형",
     "manager_contact_decrypted": "954-3456",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0146",
@@ -4353,7 +4781,10 @@
     "manager_name_decrypted": "최정호",
     "manager_contact_decrypted": "010-4550-0430",
     "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "charger_installed_cnt": 16,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0147",
@@ -4382,8 +4813,11 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "최옥주",
     "manager_contact_decrypted": "010-7139-1234",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0148",
@@ -4413,7 +4847,10 @@
     "manager_name_decrypted": "박복희",
     "manager_contact_decrypted": "951-1696",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0149",
@@ -4443,7 +4880,10 @@
     "manager_name_decrypted": "이병은",
     "manager_contact_decrypted": "952-1455",
     "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0150",
@@ -4473,7 +4913,10 @@
     "manager_name_decrypted": "이관열",
     "manager_contact_decrypted": "949-2804",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0151",
@@ -4503,7 +4946,10 @@
     "manager_name_decrypted": "강희영",
     "manager_contact_decrypted": "970-4809",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0152",
@@ -4533,7 +4979,10 @@
     "manager_name_decrypted": "전영욱",
     "manager_contact_decrypted": "010-3582-8343",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0153",
@@ -4563,7 +5012,10 @@
     "manager_name_decrypted": "김조신",
     "manager_contact_decrypted": "717-9306",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0154",
@@ -4593,7 +5045,10 @@
     "manager_name_decrypted": "정유리",
     "manager_contact_decrypted": "713-6208",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0155",
@@ -4623,7 +5078,10 @@
     "manager_name_decrypted": "남효경",
     "manager_contact_decrypted": "949-2308",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0156",
@@ -4653,7 +5111,10 @@
     "manager_name_decrypted": "채지민",
     "manager_contact_decrypted": "949-7504",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0157",
@@ -4683,7 +5144,10 @@
     "manager_name_decrypted": "김선자",
     "manager_contact_decrypted": "970-9506",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0158",
@@ -4713,7 +5177,10 @@
     "manager_name_decrypted": "정은선",
     "manager_contact_decrypted": "950-9804",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0159",
@@ -4743,7 +5210,10 @@
     "manager_name_decrypted": "김유현",
     "manager_contact_decrypted": "960-5862",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0160",
@@ -4773,7 +5243,10 @@
     "manager_name_decrypted": "김영",
     "manager_contact_decrypted": "717-8554",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0161",
@@ -4803,7 +5276,10 @@
     "manager_name_decrypted": "문성철",
     "manager_contact_decrypted": "720-2603",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0162",
@@ -4833,7 +5309,10 @@
     "manager_name_decrypted": "차인정",
     "manager_contact_decrypted": "960-5673",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0163",
@@ -4862,8 +5341,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "나정수",
     "manager_contact_decrypted": "940-8804",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0164",
@@ -4893,7 +5375,10 @@
     "manager_name_decrypted": "최연빈",
     "manager_contact_decrypted": "949-0500",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0165",
@@ -4923,7 +5408,10 @@
     "manager_name_decrypted": "배선호",
     "manager_contact_decrypted": "970-0552",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0166",
@@ -4953,7 +5441,10 @@
     "manager_name_decrypted": "양수연",
     "manager_contact_decrypted": "949-4605",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0167",
@@ -4983,7 +5474,10 @@
     "manager_name_decrypted": "김정아",
     "manager_contact_decrypted": "714-8855",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0168",
@@ -5013,7 +5507,10 @@
     "manager_name_decrypted": "정성연",
     "manager_contact_decrypted": "960-4522",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0169",
@@ -5043,7 +5540,10 @@
     "manager_name_decrypted": "김인영",
     "manager_contact_decrypted": "570-7184",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0170",
@@ -5073,7 +5573,10 @@
     "manager_name_decrypted": "류지애",
     "manager_contact_decrypted": "960-3506",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0171",
@@ -5103,7 +5606,10 @@
     "manager_name_decrypted": "최진익",
     "manager_contact_decrypted": "958-3803",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0172",
@@ -5133,7 +5639,10 @@
     "manager_name_decrypted": "김지연",
     "manager_contact_decrypted": "949-6805",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0173",
@@ -5163,7 +5672,10 @@
     "manager_name_decrypted": "박락순",
     "manager_contact_decrypted": "010-4277-2292",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0174",
@@ -5192,8 +5704,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "장재호",
     "manager_contact_decrypted": "010-4598-7962",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0175",
@@ -5223,7 +5738,10 @@
     "manager_name_decrypted": "박수화",
     "manager_contact_decrypted": "950-9203",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0176",
@@ -5253,7 +5771,10 @@
     "manager_name_decrypted": "황치선",
     "manager_contact_decrypted": "010-2996-5006",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0177",
@@ -5282,8 +5803,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "최명희",
     "manager_contact_decrypted": "010-7162-8278",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0178",
@@ -5312,8 +5836,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "김진남",
     "manager_contact_decrypted": "010-6378-7000",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 10,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0179",
@@ -5342,8 +5869,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "최기연",
     "manager_contact_decrypted": "010-6628-5805",
-    "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "parking_installed_cnt": 19,
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0180",
@@ -5373,7 +5903,10 @@
     "manager_name_decrypted": "김경술",
     "manager_contact_decrypted": "062-945-9991",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0181",
@@ -5403,7 +5936,10 @@
     "manager_name_decrypted": "곽영식",
     "manager_contact_decrypted": "951-6691",
     "parking_installed_cnt": 25,
-    "charger_installed_cnt": 10
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0182",
@@ -5432,8 +5968,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "정진희",
     "manager_contact_decrypted": "062-962-8855",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 13,
+    "charger_installed_cnt": 13,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 13
   },
   {
     "facility_key": "K0183",
@@ -5463,7 +6002,10 @@
     "manager_name_decrypted": "김길중",
     "manager_contact_decrypted": "062-946-1033",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0184",
@@ -5492,8 +6034,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "강전임",
     "manager_contact_decrypted": "062-946-9818",
-    "parking_installed_cnt": 13,
-    "charger_installed_cnt": 13
+    "parking_installed_cnt": 33,
+    "charger_installed_cnt": 33,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 33
   },
   {
     "facility_key": "K0185",
@@ -5523,7 +6068,10 @@
     "manager_name_decrypted": "공한택",
     "manager_contact_decrypted": "961-7626",
     "parking_installed_cnt": 48,
-    "charger_installed_cnt": 19
+    "charger_installed_cnt": 19,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 19
   },
   {
     "facility_key": "K0186",
@@ -5552,8 +6100,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "임형진",
     "manager_contact_decrypted": "062-971-4111",
-    "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0187",
@@ -5583,7 +6134,10 @@
     "manager_name_decrypted": "김혁중",
     "manager_contact_decrypted": "062-971-5559",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0188",
@@ -5612,8 +6166,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "오연수",
     "manager_contact_decrypted": "062-951-2906",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0189",
@@ -5642,8 +6199,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "이관영",
     "manager_contact_decrypted": "010-6603-8500",
-    "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0190",
@@ -5672,8 +6232,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "서만수",
     "manager_contact_decrypted": "062-961-0771",
-    "parking_installed_cnt": 31,
-    "charger_installed_cnt": 31
+    "parking_installed_cnt": 74,
+    "charger_installed_cnt": 74,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 74
   },
   {
     "facility_key": "K0191",
@@ -5703,7 +6266,10 @@
     "manager_name_decrypted": "정승원",
     "manager_contact_decrypted": "062-961-6601",
     "parking_installed_cnt": 25,
-    "charger_installed_cnt": 25
+    "charger_installed_cnt": 25,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 25
   },
   {
     "facility_key": "K0192",
@@ -5732,8 +6298,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "김주서",
     "manager_contact_decrypted": "062-531-6308",
-    "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0193",
@@ -5762,8 +6331,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "정경희",
     "manager_contact_decrypted": "962-3680",
-    "parking_installed_cnt": 13,
-    "charger_installed_cnt": 13
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0194",
@@ -5792,8 +6364,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "김태전",
     "manager_contact_decrypted": "010-8373-0417",
-    "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 12,
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0195",
@@ -5823,7 +6398,10 @@
     "manager_name_decrypted": "박여진",
     "manager_contact_decrypted": "062-941-3619",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0196",
@@ -5853,7 +6431,10 @@
     "manager_name_decrypted": "김경자",
     "manager_contact_decrypted": "062-453-6123",
     "parking_installed_cnt": 18,
-    "charger_installed_cnt": 18
+    "charger_installed_cnt": 18,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 18
   },
   {
     "facility_key": "K0197",
@@ -5882,8 +6463,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "박동이",
     "manager_contact_decrypted": "010-6629-5190",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 20,
+    "charger_installed_cnt": 20,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 20
   },
   {
     "facility_key": "K0198",
@@ -5912,8 +6496,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "박혜리",
     "manager_contact_decrypted": "062-962-8610",
-    "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0199",
@@ -5942,8 +6529,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "배정섭",
     "manager_contact_decrypted": "062-971-6446",
-    "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "parking_installed_cnt": 17,
+    "charger_installed_cnt": 17,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 17
   },
   {
     "facility_key": "K0200",
@@ -5973,7 +6563,10 @@
     "manager_name_decrypted": "김현옥",
     "manager_contact_decrypted": "062-962-9100",
     "parking_installed_cnt": 27,
-    "charger_installed_cnt": 27
+    "charger_installed_cnt": 27,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 27
   },
   {
     "facility_key": "K0201",
@@ -6002,8 +6595,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "박성도",
     "manager_contact_decrypted": "062-962-7770",
-    "parking_installed_cnt": 36,
-    "charger_installed_cnt": 36
+    "parking_installed_cnt": 46,
+    "charger_installed_cnt": 46,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 46
   },
   {
     "facility_key": "K0202",
@@ -6032,8 +6628,11 @@
     "updated_at": "2026-08-04T07:33:17.048879+00:00",
     "manager_name_decrypted": "유훈",
     "manager_contact_decrypted": "062-951-2233",
-    "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "parking_installed_cnt": 33,
+    "charger_installed_cnt": 33,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 33
   },
   {
     "facility_key": "K0203",
@@ -6063,7 +6662,10 @@
     "manager_name_decrypted": "김애경",
     "manager_contact_decrypted": "062-452-1212",
     "parking_installed_cnt": 15,
-    "charger_installed_cnt": 15
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0204",
@@ -6092,8 +6694,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "이성옥",
     "manager_contact_decrypted": "062-961-4466",
-    "parking_installed_cnt": 31,
-    "charger_installed_cnt": 31
+    "parking_installed_cnt": 37,
+    "charger_installed_cnt": 37,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 37
   },
   {
     "facility_key": "K0205",
@@ -6122,8 +6727,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "최경록",
     "manager_contact_decrypted": "010-3649-8042",
-    "parking_installed_cnt": 30,
-    "charger_installed_cnt": 30
+    "parking_installed_cnt": 33,
+    "charger_installed_cnt": 33,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 33
   },
   {
     "facility_key": "K0206",
@@ -6153,7 +6761,10 @@
     "manager_name_decrypted": "유완석",
     "manager_contact_decrypted": "062-952-5002",
     "parking_installed_cnt": 15,
-    "charger_installed_cnt": 15
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0207",
@@ -6182,8 +6793,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "이승용",
     "manager_contact_decrypted": "010-4245-5255",
-    "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0208",
@@ -6212,8 +6826,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "문중재",
     "manager_contact_decrypted": "010-8337-5570",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 12,
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0209",
@@ -6243,7 +6860,10 @@
     "manager_name_decrypted": "김수천",
     "manager_contact_decrypted": "062-962-9950",
     "parking_installed_cnt": 22,
-    "charger_installed_cnt": 22
+    "charger_installed_cnt": 22,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 22
   },
   {
     "facility_key": "K0210",
@@ -6272,8 +6892,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "백재구",
     "manager_contact_decrypted": "062-971-4462",
-    "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "parking_installed_cnt": 41,
+    "charger_installed_cnt": 41,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 41
   },
   {
     "facility_key": "K0211",
@@ -6302,8 +6925,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "허명희",
     "manager_contact_decrypted": "010-2489-1834",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0212",
@@ -6332,8 +6958,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "최정수",
     "manager_contact_decrypted": "010-2412-1074",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0213",
@@ -6362,8 +6991,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "방현식",
     "manager_contact_decrypted": "010-2288-0406",
-    "parking_installed_cnt": 13,
-    "charger_installed_cnt": 13
+    "parking_installed_cnt": 18,
+    "charger_installed_cnt": 18,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 18
   },
   {
     "facility_key": "K0214",
@@ -6393,7 +7025,10 @@
     "manager_name_decrypted": "노애향",
     "manager_contact_decrypted": "062-953-0052",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0215",
@@ -6422,8 +7057,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "류창길",
     "manager_contact_decrypted": "062-961-0422",
-    "parking_installed_cnt": 26,
-    "charger_installed_cnt": 26
+    "parking_installed_cnt": 27,
+    "charger_installed_cnt": 27,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 27
   },
   {
     "facility_key": "K0216",
@@ -6453,7 +7091,10 @@
     "manager_name_decrypted": "이진규",
     "manager_contact_decrypted": "062-952-0212",
     "parking_installed_cnt": 24,
-    "charger_installed_cnt": 24
+    "charger_installed_cnt": 24,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 24
   },
   {
     "facility_key": "K0217",
@@ -6482,8 +7123,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "황인병",
     "manager_contact_decrypted": "010-8780-5984",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0218",
@@ -6512,8 +7156,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "김정희",
     "manager_contact_decrypted": "944-9496",
-    "parking_installed_cnt": 41,
-    "charger_installed_cnt": 41
+    "parking_installed_cnt": 42,
+    "charger_installed_cnt": 42,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 42
   },
   {
     "facility_key": "K0219",
@@ -6542,8 +7189,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "남유진",
     "manager_contact_decrypted": "062-953-0051",
-    "parking_installed_cnt": 17,
-    "charger_installed_cnt": 17
+    "parking_installed_cnt": 26,
+    "charger_installed_cnt": 26,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 26
   },
   {
     "facility_key": "K0220",
@@ -6572,8 +7222,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 28,
-    "charger_installed_cnt": 28
+    "parking_installed_cnt": 42,
+    "charger_installed_cnt": 42,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0221",
@@ -6602,8 +7255,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "노민구",
     "manager_contact_decrypted": "062-962-9380",
-    "parking_installed_cnt": 37,
-    "charger_installed_cnt": 37
+    "parking_installed_cnt": 38,
+    "charger_installed_cnt": 60,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 60
   },
   {
     "facility_key": "K0222",
@@ -6632,8 +7288,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "최정길",
     "manager_contact_decrypted": "062-961-2588",
-    "parking_installed_cnt": 25,
-    "charger_installed_cnt": 25
+    "parking_installed_cnt": 28,
+    "charger_installed_cnt": 38,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 38
   },
   {
     "facility_key": "K0223",
@@ -6662,8 +7321,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "임채헌",
     "manager_contact_decrypted": "010-9298-1053",
-    "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "parking_installed_cnt": 17,
+    "charger_installed_cnt": 17,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 17
   },
   {
     "facility_key": "K0224",
@@ -6692,8 +7354,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "오송",
     "manager_contact_decrypted": "974-0082",
-    "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 12,
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0225",
@@ -6722,8 +7387,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "허대영",
     "manager_contact_decrypted": "062-952-0825",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0226",
@@ -6752,8 +7420,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "박두희",
     "manager_contact_decrypted": "955-7868",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0227",
@@ -6782,8 +7453,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "강귀자",
     "manager_contact_decrypted": "010-2969-2330",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0228",
@@ -6812,8 +7486,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "성영식",
     "manager_contact_decrypted": "062-961-1144",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 6,
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0229",
@@ -6842,8 +7519,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "노미자",
     "manager_contact_decrypted": "062-962-7200",
-    "parking_installed_cnt": 25,
-    "charger_installed_cnt": 25
+    "parking_installed_cnt": 26,
+    "charger_installed_cnt": 26,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 26
   },
   {
     "facility_key": "K0230",
@@ -6873,7 +7553,10 @@
     "manager_name_decrypted": "김민욱",
     "manager_contact_decrypted": "010-2722-4413",
     "parking_installed_cnt": 27,
-    "charger_installed_cnt": 27
+    "charger_installed_cnt": 27,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 27
   },
   {
     "facility_key": "K0231",
@@ -6903,7 +7586,10 @@
     "manager_name_decrypted": "윤경호",
     "manager_contact_decrypted": "973-0256",
     "parking_installed_cnt": 27,
-    "charger_installed_cnt": 27
+    "charger_installed_cnt": 27,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 27,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0232",
@@ -6933,7 +7619,10 @@
     "manager_name_decrypted": "박동근",
     "manager_contact_decrypted": "010-3740-8072",
     "parking_installed_cnt": 25,
-    "charger_installed_cnt": 25
+    "charger_installed_cnt": 25,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 25
   },
   {
     "facility_key": "K0233",
@@ -6962,8 +7651,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "성점용",
     "manager_contact_decrypted": "010-7747-1359",
-    "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0234",
@@ -6993,7 +7685,10 @@
     "manager_name_decrypted": "문상기",
     "manager_contact_decrypted": "951-0937",
     "parking_installed_cnt": 16,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0235",
@@ -7022,8 +7717,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "장용주",
     "manager_contact_decrypted": "062-973-7661",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0236",
@@ -7053,7 +7751,10 @@
     "manager_name_decrypted": "황덕수",
     "manager_contact_decrypted": "942-1231",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0237",
@@ -7082,8 +7783,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "허시영",
     "manager_contact_decrypted": "062-973-2099",
-    "parking_installed_cnt": 13,
-    "charger_installed_cnt": 13
+    "parking_installed_cnt": 33,
+    "charger_installed_cnt": 33,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 33
   },
   {
     "facility_key": "K0238",
@@ -7113,7 +7817,10 @@
     "manager_name_decrypted": "김성희",
     "manager_contact_decrypted": "062-972-6266",
     "parking_installed_cnt": 18,
-    "charger_installed_cnt": 18
+    "charger_installed_cnt": 18,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 18
   },
   {
     "facility_key": "K0239",
@@ -7143,7 +7850,10 @@
     "manager_name_decrypted": "강문일",
     "manager_contact_decrypted": "062-971-3625",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0240",
@@ -7173,7 +7883,10 @@
     "manager_name_decrypted": "서동만",
     "manager_contact_decrypted": "010-9866-6033",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0241",
@@ -7203,7 +7916,10 @@
     "manager_name_decrypted": "김광희",
     "manager_contact_decrypted": "062-953-1311",
     "parking_installed_cnt": 15,
-    "charger_installed_cnt": 15
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0242",
@@ -7232,8 +7948,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "박주환",
     "manager_contact_decrypted": "010-9470-5040",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 13,
+    "charger_installed_cnt": 13,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 13
   },
   {
     "facility_key": "K0243",
@@ -7263,7 +7982,10 @@
     "manager_name_decrypted": "김태우",
     "manager_contact_decrypted": "062-941-6481",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0244",
@@ -7293,7 +8015,10 @@
     "manager_name_decrypted": "배동일",
     "manager_contact_decrypted": "010-5429-7821",
     "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 13
   },
   {
     "facility_key": "K0245",
@@ -7323,7 +8048,10 @@
     "manager_name_decrypted": "강선미",
     "manager_contact_decrypted": "062-943-2200",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0246",
@@ -7352,8 +8080,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "조기석",
     "manager_contact_decrypted": "062-945-9799",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 16,
+    "charger_installed_cnt": 16,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 16
   },
   {
     "facility_key": "K0247",
@@ -7382,8 +8113,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "안병용",
     "manager_contact_decrypted": "010-8613-6168",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0248",
@@ -7412,8 +8146,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0249",
@@ -7442,8 +8179,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "이봉희",
     "manager_contact_decrypted": "062-942-2888",
-    "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0250",
@@ -7472,8 +8212,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "박흥수",
     "manager_contact_decrypted": "010-5623-4387",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0251",
@@ -7502,8 +8245,11 @@
     "updated_at": "2026-08-04T07:33:17.993034+00:00",
     "manager_name_decrypted": "박경이",
     "manager_contact_decrypted": "062-941-2112",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0252",
@@ -7533,7 +8279,10 @@
     "manager_name_decrypted": "임한성",
     "manager_contact_decrypted": "010-2823-7730",
     "parking_installed_cnt": 20,
-    "charger_installed_cnt": 20
+    "charger_installed_cnt": 20,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 20
   },
   {
     "facility_key": "K0253",
@@ -7563,7 +8312,10 @@
     "manager_name_decrypted": "오재관",
     "manager_contact_decrypted": "010-5665-0752",
     "parking_installed_cnt": 12,
-    "charger_installed_cnt": 12
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0254",
@@ -7592,8 +8344,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "강형원",
     "manager_contact_decrypted": "062-962-9613",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0255",
@@ -7622,8 +8377,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김현중",
     "manager_contact_decrypted": "062-959-0283",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0256",
@@ -7652,8 +8410,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김은숙",
     "manager_contact_decrypted": "062-953-0364",
-    "parking_installed_cnt": 22,
-    "charger_installed_cnt": 22
+    "parking_installed_cnt": 30,
+    "charger_installed_cnt": 30,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 30
   },
   {
     "facility_key": "K0257",
@@ -7683,7 +8444,10 @@
     "manager_name_decrypted": "안병헌",
     "manager_contact_decrypted": "010-9216-5278",
     "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0258",
@@ -7713,7 +8477,10 @@
     "manager_name_decrypted": "강병학",
     "manager_contact_decrypted": "945-2600",
     "parking_installed_cnt": 20,
-    "charger_installed_cnt": 8
+    "charger_installed_cnt": 17,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 16
   },
   {
     "facility_key": "K0259",
@@ -7742,8 +8509,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "최규호",
     "manager_contact_decrypted": "010-4088-1062",
-    "parking_installed_cnt": 25,
-    "charger_installed_cnt": 25
+    "parking_installed_cnt": 40,
+    "charger_installed_cnt": 40,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 40
   },
   {
     "facility_key": "K0260",
@@ -7772,8 +8542,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "박명후",
     "manager_contact_decrypted": "010-3673-2110",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 22,
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0261",
@@ -7803,7 +8576,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0262",
@@ -7832,8 +8608,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0263",
@@ -7863,7 +8642,10 @@
     "manager_name_decrypted": "김귀순",
     "manager_contact_decrypted": "062-951-6005",
     "parking_installed_cnt": 12,
-    "charger_installed_cnt": 12
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0264",
@@ -7892,8 +8674,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "고기현",
     "manager_contact_decrypted": "062-942-8965",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0265",
@@ -7923,7 +8708,10 @@
     "manager_name_decrypted": "고현진",
     "manager_contact_decrypted": "010-6415-5886",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0266",
@@ -7952,8 +8740,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "최현철",
     "manager_contact_decrypted": "062-971-5560",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0267",
@@ -7982,8 +8773,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "최두섭",
     "manager_contact_decrypted": "010-8793-2768",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0268",
@@ -8012,8 +8806,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "정윤모",
     "manager_contact_decrypted": "062-971-7783",
-    "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0269",
@@ -8042,8 +8839,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김종경",
     "manager_contact_decrypted": "062-974-4996",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0270",
@@ -8072,8 +8872,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "정덕진",
     "manager_contact_decrypted": "010-7641-4430",
-    "parking_installed_cnt": 28,
-    "charger_installed_cnt": 28
+    "parking_installed_cnt": 42,
+    "charger_installed_cnt": 42,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 42
   },
   {
     "facility_key": "K0271",
@@ -8102,8 +8905,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "나상호",
     "manager_contact_decrypted": "062-973-1021",
-    "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 27,
+    "charger_installed_cnt": 27,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 26
   },
   {
     "facility_key": "K0272",
@@ -8133,7 +8939,10 @@
     "manager_name_decrypted": "최정애",
     "manager_contact_decrypted": "971-0335",
     "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 13
   },
   {
     "facility_key": "K0273",
@@ -8162,8 +8971,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김화자",
     "manager_contact_decrypted": "010-9850-3483",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0274",
@@ -8193,7 +9005,10 @@
     "manager_name_decrypted": "류정",
     "manager_contact_decrypted": "062-953-0588",
     "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0275",
@@ -8223,7 +9038,10 @@
     "manager_name_decrypted": "이기금",
     "manager_contact_decrypted": "973-1099",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0276",
@@ -8252,8 +9070,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "정인명",
     "manager_contact_decrypted": "062-972-7236",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0277",
@@ -8283,7 +9104,10 @@
     "manager_name_decrypted": "변재희",
     "manager_contact_decrypted": "062-974-9738",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 3,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0278",
@@ -8312,8 +9136,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김종원",
     "manager_contact_decrypted": "955-9271",
-    "parking_installed_cnt": 13,
-    "charger_installed_cnt": 13
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0279",
@@ -8343,7 +9170,10 @@
     "manager_name_decrypted": "임성범",
     "manager_contact_decrypted": "951-2586",
     "parking_installed_cnt": 22,
-    "charger_installed_cnt": 22
+    "charger_installed_cnt": 22,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 22
   },
   {
     "facility_key": "K0280",
@@ -8373,7 +9203,10 @@
     "manager_name_decrypted": "윤주영",
     "manager_contact_decrypted": "062-451-5059",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0281",
@@ -8402,8 +9235,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0282",
@@ -8432,8 +9268,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김성식",
     "manager_contact_decrypted": "062-962-8599",
-    "parking_installed_cnt": 18,
-    "charger_installed_cnt": 18
+    "parking_installed_cnt": 19,
+    "charger_installed_cnt": 19,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 19
   },
   {
     "facility_key": "K0283",
@@ -8462,8 +9301,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김승곤",
     "manager_contact_decrypted": "062-961-7722",
-    "parking_installed_cnt": 12,
-    "charger_installed_cnt": 12
+    "parking_installed_cnt": 13,
+    "charger_installed_cnt": 13,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 13
   },
   {
     "facility_key": "K0284",
@@ -8493,7 +9335,10 @@
     "manager_name_decrypted": "백경림",
     "manager_contact_decrypted": "062-942-0027",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0285",
@@ -8523,7 +9368,10 @@
     "manager_name_decrypted": "홍은정",
     "manager_contact_decrypted": "010-4620-4186",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0286",
@@ -8553,7 +9401,10 @@
     "manager_name_decrypted": "김옥희/최정호",
     "manager_contact_decrypted": "062-942-9706/010-4550-0430",
     "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "charger_installed_cnt": 16,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0287",
@@ -8583,7 +9434,10 @@
     "manager_name_decrypted": "신동신",
     "manager_contact_decrypted": "959-3538",
     "parking_installed_cnt": 38,
-    "charger_installed_cnt": 15
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0288",
@@ -8612,8 +9466,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "손희숙",
     "manager_contact_decrypted": "062-954-1490",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0289",
@@ -8643,7 +9500,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 25,
-    "charger_installed_cnt": 25
+    "charger_installed_cnt": 25,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0290",
@@ -8673,7 +9533,10 @@
     "manager_name_decrypted": "윤종주",
     "manager_contact_decrypted": "062-953-7285",
     "parking_installed_cnt": 15,
-    "charger_installed_cnt": 15
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0291",
@@ -8703,7 +9566,10 @@
     "manager_name_decrypted": "장성욱",
     "manager_contact_decrypted": "062-952-1690",
     "parking_installed_cnt": 20,
-    "charger_installed_cnt": 20
+    "charger_installed_cnt": 20,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 20
   },
   {
     "facility_key": "K0292",
@@ -8732,8 +9598,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김효중",
     "manager_contact_decrypted": "062-951-1770",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 16,
+    "charger_installed_cnt": 16,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 16
   },
   {
     "facility_key": "K0293",
@@ -8762,8 +9631,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "박문순",
     "manager_contact_decrypted": "961-7451",
-    "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "parking_installed_cnt": 12,
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0294",
@@ -8792,8 +9664,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "정영천",
     "manager_contact_decrypted": "010-9654-8186",
-    "parking_installed_cnt": 20,
-    "charger_installed_cnt": 20
+    "parking_installed_cnt": 50,
+    "charger_installed_cnt": 50,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 49
   },
   {
     "facility_key": "K0295",
@@ -8822,8 +9697,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "박형선",
     "manager_contact_decrypted": "944-9548",
-    "parking_installed_cnt": 24,
-    "charger_installed_cnt": 24
+    "parking_installed_cnt": 34,
+    "charger_installed_cnt": 34,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 34
   },
   {
     "facility_key": "K0296",
@@ -8852,8 +9730,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "신세연",
     "manager_contact_decrypted": "062-941-2661",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0297",
@@ -8882,8 +9763,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "김옥정",
     "manager_contact_decrypted": "062-973-4777",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0298",
@@ -8912,8 +9796,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "윤미영",
     "manager_contact_decrypted": "062-973-1777",
-    "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0299",
@@ -8942,8 +9829,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "양정열",
     "manager_contact_decrypted": "010-2952-7089",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0300",
@@ -8972,8 +9862,11 @@
     "updated_at": "2026-08-04T07:33:18.524804+00:00",
     "manager_name_decrypted": "이성제",
     "manager_contact_decrypted": "955-0496",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0301",
@@ -9003,7 +9896,10 @@
     "manager_name_decrypted": "박은미",
     "manager_contact_decrypted": "953-2399",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0302",
@@ -9033,7 +9929,10 @@
     "manager_name_decrypted": "한경남",
     "manager_contact_decrypted": "010-5833-6482",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0303",
@@ -9062,8 +9961,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "정환만",
     "manager_contact_decrypted": "010-2364-9892",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 21,
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0304",
@@ -9093,7 +9995,10 @@
     "manager_name_decrypted": "송화석",
     "manager_contact_decrypted": "010-2650-1326",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0305",
@@ -9123,7 +10028,10 @@
     "manager_name_decrypted": "김겸환",
     "manager_contact_decrypted": "070-2608-9409",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0306",
@@ -9152,8 +10060,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "임명숙",
     "manager_contact_decrypted": "062-941-5796",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 6,
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0307",
@@ -9182,8 +10093,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "박희석",
     "manager_contact_decrypted": "010-7601-9989",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0308",
@@ -9212,8 +10126,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "박승호",
     "manager_contact_decrypted": "010-2638-0595",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0309",
@@ -9243,7 +10160,10 @@
     "manager_name_decrypted": "장현정",
     "manager_contact_decrypted": "062-971-2250",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0310",
@@ -9273,7 +10193,10 @@
     "manager_name_decrypted": "이홍석",
     "manager_contact_decrypted": "062-972-3239",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0311",
@@ -9302,8 +10225,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "신영희",
     "manager_contact_decrypted": "062-971-3075",
-    "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0312",
@@ -9332,8 +10258,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "김재경",
     "manager_contact_decrypted": "062-971-2087",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 12,
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0313",
@@ -9362,8 +10291,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "허종숙",
     "manager_contact_decrypted": "010-5731-1524",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0314",
@@ -9393,7 +10325,10 @@
     "manager_name_decrypted": "정상용",
     "manager_contact_decrypted": "961-2122",
     "parking_installed_cnt": 18,
-    "charger_installed_cnt": 7
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0315",
@@ -9423,7 +10358,10 @@
     "manager_name_decrypted": "김영옥",
     "manager_contact_decrypted": "062-972-1574",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0316",
@@ -9452,8 +10390,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "조낙호",
     "manager_contact_decrypted": "062-941-0307",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0317",
@@ -9482,8 +10423,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "전호정",
     "manager_contact_decrypted": "062-946-1122",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0318",
@@ -9512,8 +10456,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "고광옥",
     "manager_contact_decrypted": "010-4355-2922/062-446-1181",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0319",
@@ -9542,8 +10489,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "박병천",
     "manager_contact_decrypted": "062-972-0433",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0320",
@@ -9572,8 +10522,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "이영석",
     "manager_contact_decrypted": "062-972-0396",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0321",
@@ -9602,8 +10555,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "백형수",
     "manager_contact_decrypted": "062-971-5552",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0322",
@@ -9632,8 +10588,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "김선기",
     "manager_contact_decrypted": "062-955-7995",
-    "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0323",
@@ -9662,8 +10621,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "이채현",
     "manager_contact_decrypted": "062-955-6181",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0324",
@@ -9693,7 +10655,10 @@
     "manager_name_decrypted": "김현진",
     "manager_contact_decrypted": "010-3370-1855",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0325",
@@ -9723,7 +10688,10 @@
     "manager_name_decrypted": "고병두",
     "manager_contact_decrypted": "010-4077-9239",
     "parking_installed_cnt": 12,
-    "charger_installed_cnt": 11
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0326",
@@ -9752,8 +10720,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "이정순",
     "manager_contact_decrypted": "062-962-8788",
-    "parking_installed_cnt": 15,
-    "charger_installed_cnt": 15
+    "parking_installed_cnt": 25,
+    "charger_installed_cnt": 25,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 25
   },
   {
     "facility_key": "K0327",
@@ -9782,8 +10753,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "박준호",
     "manager_contact_decrypted": "062-946-2320",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0328",
@@ -9812,8 +10786,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "강명화",
     "manager_contact_decrypted": "062-945-0059",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 17,
+    "charger_installed_cnt": 17,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 17
   },
   {
     "facility_key": "K0329",
@@ -9843,7 +10820,10 @@
     "manager_name_decrypted": "이미례",
     "manager_contact_decrypted": "945-7030",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0330",
@@ -9872,8 +10852,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "박해식",
     "manager_contact_decrypted": "010-6609-4436",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0331",
@@ -9903,7 +10886,10 @@
     "manager_name_decrypted": "김은숙",
     "manager_contact_decrypted": "062-971-0334",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0332",
@@ -9932,8 +10918,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "정형균",
     "manager_contact_decrypted": "062-971-0271",
-    "parking_installed_cnt": 12,
-    "charger_installed_cnt": 12
+    "parking_installed_cnt": 13,
+    "charger_installed_cnt": 13,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 13
   },
   {
     "facility_key": "K0333",
@@ -9962,8 +10951,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "김태균",
     "manager_contact_decrypted": "010-4618-8700",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0334",
@@ -9992,8 +10984,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "이희숙",
     "manager_contact_decrypted": "062-955-0609",
-    "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "parking_installed_cnt": 26,
+    "charger_installed_cnt": 26,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 25
   },
   {
     "facility_key": "K0335",
@@ -10023,7 +11018,10 @@
     "manager_name_decrypted": "최효윤",
     "manager_contact_decrypted": "062-962-8552",
     "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0336",
@@ -10053,7 +11051,10 @@
     "manager_name_decrypted": "양애순",
     "manager_contact_decrypted": "062-454-3191",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0337",
@@ -10083,7 +11084,10 @@
     "manager_name_decrypted": "고은아",
     "manager_contact_decrypted": "010-4690-6924",
     "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0338",
@@ -10113,7 +11117,10 @@
     "manager_name_decrypted": "김인남",
     "manager_contact_decrypted": "010-4653-4661",
     "parking_installed_cnt": 9,
-    "charger_installed_cnt": 9
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0339",
@@ -10142,8 +11149,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "손정아",
     "manager_contact_decrypted": "062-961-0601",
-    "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "parking_installed_cnt": 21,
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0340",
@@ -10173,7 +11183,10 @@
     "manager_name_decrypted": "이관호",
     "manager_contact_decrypted": "010-8608-8107",
     "parking_installed_cnt": 21,
-    "charger_installed_cnt": 21
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0341",
@@ -10203,7 +11216,10 @@
     "manager_name_decrypted": "권용환",
     "manager_contact_decrypted": "955-7183",
     "parking_installed_cnt": 15,
-    "charger_installed_cnt": 14
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0342",
@@ -10232,8 +11248,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "전양호",
     "manager_contact_decrypted": "010-7626-2060",
-    "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0343",
@@ -10262,8 +11281,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "안형연",
     "manager_contact_decrypted": "010-4813-4121",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 6,
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0344",
@@ -10292,8 +11314,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "박미경",
     "manager_contact_decrypted": "951-0180",
-    "parking_installed_cnt": 28,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 29,
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0345",
@@ -10323,7 +11348,10 @@
     "manager_name_decrypted": "서영주",
     "manager_contact_decrypted": "952-3575",
     "parking_installed_cnt": 51,
-    "charger_installed_cnt": 20
+    "charger_installed_cnt": 20,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 20
   },
   {
     "facility_key": "K0346",
@@ -10353,7 +11381,10 @@
     "manager_name_decrypted": "최탁수",
     "manager_contact_decrypted": "954-0577",
     "parking_installed_cnt": 55,
-    "charger_installed_cnt": 22
+    "charger_installed_cnt": 22,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 12,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0347",
@@ -10382,8 +11413,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "전점순",
     "manager_contact_decrypted": "010-5537-5425",
-    "parking_installed_cnt": 18,
-    "charger_installed_cnt": 18
+    "parking_installed_cnt": 27,
+    "charger_installed_cnt": 27,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 26
   },
   {
     "facility_key": "K0348",
@@ -10412,8 +11446,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "양기훈",
     "manager_contact_decrypted": "062-973-7174",
-    "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "parking_installed_cnt": 28,
+    "charger_installed_cnt": 28,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 28
   },
   {
     "facility_key": "K0349",
@@ -10443,7 +11480,10 @@
     "manager_name_decrypted": "김진찬",
     "manager_contact_decrypted": "952-0267",
     "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0350",
@@ -10472,8 +11512,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "최혜미",
     "manager_contact_decrypted": "032-953-0137",
-    "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 22,
+    "charger_installed_cnt": 22,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0351",
@@ -10502,8 +11545,11 @@
     "updated_at": "2026-08-04T07:33:19.064882+00:00",
     "manager_name_decrypted": "한동옥",
     "manager_contact_decrypted": "953-0262",
-    "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 17,
+    "charger_installed_cnt": 17,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 17
   },
   {
     "facility_key": "K0352",
@@ -10533,7 +11579,10 @@
     "manager_name_decrypted": "최상길",
     "manager_contact_decrypted": "010-9655-5885",
     "parking_installed_cnt": 28,
-    "charger_installed_cnt": 11
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0353",
@@ -10562,8 +11611,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "강성욱",
     "manager_contact_decrypted": "956-0820",
-    "parking_installed_cnt": 45,
-    "charger_installed_cnt": 18
+    "parking_installed_cnt": 46,
+    "charger_installed_cnt": 18,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 18
   },
   {
     "facility_key": "K0354",
@@ -10593,7 +11645,10 @@
     "manager_name_decrypted": "박영미",
     "manager_contact_decrypted": "959-1221",
     "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0355",
@@ -10623,7 +11678,10 @@
     "manager_name_decrypted": "김종구",
     "manager_contact_decrypted": "942-0029",
     "parking_installed_cnt": 18,
-    "charger_installed_cnt": 18
+    "charger_installed_cnt": 18,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 18
   },
   {
     "facility_key": "K0356",
@@ -10652,8 +11710,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "이희정",
     "manager_contact_decrypted": "062-953-3027",
-    "parking_installed_cnt": 12,
-    "charger_installed_cnt": 12
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0357",
@@ -10683,7 +11744,10 @@
     "manager_name_decrypted": "유상민",
     "manager_contact_decrypted": "062-959-7869",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0358",
@@ -10712,8 +11776,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "문광선",
     "manager_contact_decrypted": "010-2632-1608",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0359",
@@ -10743,7 +11810,10 @@
     "manager_name_decrypted": "이미현",
     "manager_contact_decrypted": "062-952-9992",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0360",
@@ -10772,8 +11842,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "차상국",
     "manager_contact_decrypted": "062-954-1135",
-    "parking_installed_cnt": 20,
-    "charger_installed_cnt": 20
+    "parking_installed_cnt": 33,
+    "charger_installed_cnt": 33,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 33
   },
   {
     "facility_key": "K0361",
@@ -10802,8 +11875,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "이규남",
     "manager_contact_decrypted": "062-956-3788",
-    "parking_installed_cnt": 20,
-    "charger_installed_cnt": 20
+    "parking_installed_cnt": 21,
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 20
   },
   {
     "facility_key": "K0362",
@@ -10833,7 +11909,10 @@
     "manager_name_decrypted": "홍희수",
     "manager_contact_decrypted": "962-1693",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0363",
@@ -10862,8 +11941,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "이성인",
     "manager_contact_decrypted": "955-0015",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 20,
+    "charger_installed_cnt": 20,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 20
   },
   {
     "facility_key": "K0364",
@@ -10893,7 +11975,10 @@
     "manager_name_decrypted": "강대현",
     "manager_contact_decrypted": "010-9720-8562",
     "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0365",
@@ -10923,7 +12008,10 @@
     "manager_name_decrypted": "김태수",
     "manager_contact_decrypted": "062-961-0916",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0366",
@@ -10953,7 +12041,10 @@
     "manager_name_decrypted": "이선숙",
     "manager_contact_decrypted": "953-6567",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0367",
@@ -10983,7 +12074,10 @@
     "manager_name_decrypted": "양정남",
     "manager_contact_decrypted": "955-0926",
     "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0368",
@@ -11012,8 +12106,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "송영선",
     "manager_contact_decrypted": "032-944-0582",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0369",
@@ -11043,7 +12140,10 @@
     "manager_name_decrypted": "김상길",
     "manager_contact_decrypted": "010-3999-0476",
     "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0370",
@@ -11073,7 +12173,10 @@
     "manager_name_decrypted": "조옥희",
     "manager_contact_decrypted": "062-941-0150",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0371",
@@ -11103,7 +12206,10 @@
     "manager_name_decrypted": "서미자",
     "manager_contact_decrypted": "941-2322",
     "parking_installed_cnt": 61,
-    "charger_installed_cnt": 24
+    "charger_installed_cnt": 24,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 24
   },
   {
     "facility_key": "K0372",
@@ -11132,8 +12238,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "이현교",
     "manager_contact_decrypted": "942-2399",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0373",
@@ -11163,7 +12272,10 @@
     "manager_name_decrypted": "이기용",
     "manager_contact_decrypted": "010-5092-7859",
     "parking_installed_cnt": 14,
-    "charger_installed_cnt": 14
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 13
   },
   {
     "facility_key": "K0374",
@@ -11192,8 +12304,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "지양하",
     "manager_contact_decrypted": "010-3627-2854",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0375",
@@ -11223,7 +12338,10 @@
     "manager_name_decrypted": "임재윤",
     "manager_contact_decrypted": "062-955-2029",
     "parking_installed_cnt": 22,
-    "charger_installed_cnt": 22
+    "charger_installed_cnt": 22,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 22
   },
   {
     "facility_key": "K0376",
@@ -11252,8 +12370,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "염애라",
     "manager_contact_decrypted": "062-954-6802",
-    "parking_installed_cnt": 12,
-    "charger_installed_cnt": 12
+    "parking_installed_cnt": 21,
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0377",
@@ -11282,8 +12403,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "김중성",
     "manager_contact_decrypted": "062-942-2347",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0378",
@@ -11312,8 +12436,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "김지숙",
     "manager_contact_decrypted": "062-941-9009",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0379",
@@ -11342,8 +12469,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "추영우",
     "manager_contact_decrypted": "010-7173-5488",
-    "parking_installed_cnt": 12,
-    "charger_installed_cnt": 12
+    "parking_installed_cnt": 29,
+    "charger_installed_cnt": 29,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 29
   },
   {
     "facility_key": "K0380",
@@ -11372,8 +12502,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "윤정호",
     "manager_contact_decrypted": "062-942-6660",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 3,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0381",
@@ -11403,7 +12536,10 @@
     "manager_name_decrypted": "박장훈",
     "manager_contact_decrypted": "010-3623-3216",
     "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0382",
@@ -11433,7 +12569,10 @@
     "manager_name_decrypted": "조정화",
     "manager_contact_decrypted": "010-8629-1130",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0383",
@@ -11462,8 +12601,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "임인호",
     "manager_contact_decrypted": "010-4137-6430",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 21,
+    "charger_installed_cnt": 21,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 21
   },
   {
     "facility_key": "K0384",
@@ -11492,8 +12634,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "신국선",
     "manager_contact_decrypted": "010-5032-1090",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 7
+    "parking_installed_cnt": 19,
+    "charger_installed_cnt": 19,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 19
   },
   {
     "facility_key": "K0385",
@@ -11523,7 +12668,10 @@
     "manager_name_decrypted": "김제웅",
     "manager_contact_decrypted": "062-973-5908",
     "parking_installed_cnt": 10,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0386",
@@ -11552,8 +12700,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "이공환",
     "manager_contact_decrypted": "062-971-2006",
-    "parking_installed_cnt": 13,
-    "charger_installed_cnt": 13
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 14,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 14
   },
   {
     "facility_key": "K0387",
@@ -11583,7 +12734,10 @@
     "manager_name_decrypted": "이현희",
     "manager_contact_decrypted": "062-954-1153",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0388",
@@ -11613,7 +12767,10 @@
     "manager_name_decrypted": "홍영신",
     "manager_contact_decrypted": "062-953-9396",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0389",
@@ -11643,7 +12800,10 @@
     "manager_name_decrypted": "김창준",
     "manager_contact_decrypted": "062-531-6210",
     "parking_installed_cnt": 15,
-    "charger_installed_cnt": 15
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0390",
@@ -11672,8 +12832,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "김미라",
     "manager_contact_decrypted": "062-956-3117",
-    "parking_installed_cnt": 11,
-    "charger_installed_cnt": 11
+    "parking_installed_cnt": 12,
+    "charger_installed_cnt": 12,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0391",
@@ -11702,8 +12865,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "서재유",
     "manager_contact_decrypted": "010-5312-7299",
-    "parking_installed_cnt": 17,
-    "charger_installed_cnt": 17
+    "parking_installed_cnt": 18,
+    "charger_installed_cnt": 18,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 18
   },
   {
     "facility_key": "K0392",
@@ -11733,7 +12899,10 @@
     "manager_name_decrypted": "신소영",
     "manager_contact_decrypted": "062-956-5586",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 6
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0393",
@@ -11762,8 +12931,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "유옥숙",
     "manager_contact_decrypted": "062-973-5200",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0394",
@@ -11793,7 +12965,10 @@
     "manager_name_decrypted": "김현자",
     "manager_contact_decrypted": "062-972-0984",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0395",
@@ -11822,8 +12997,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "임기재",
     "manager_contact_decrypted": "062-456-1210",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0396",
@@ -11853,7 +13031,10 @@
     "manager_name_decrypted": "김영숙",
     "manager_contact_decrypted": "010-9882-2197",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0397",
@@ -11882,8 +13063,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "민동육",
     "manager_contact_decrypted": "010-8255-9902",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0398",
@@ -11913,7 +13097,10 @@
     "manager_name_decrypted": "양동교",
     "manager_contact_decrypted": "010-9809-8052",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0399",
@@ -11943,7 +13130,10 @@
     "manager_name_decrypted": "박민경",
     "manager_contact_decrypted": "972-7684",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0400",
@@ -11972,8 +13162,11 @@
     "updated_at": "2026-08-04T07:33:19.627965+00:00",
     "manager_name_decrypted": "변은숙",
     "manager_contact_decrypted": "062-955-0315",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0401",
@@ -12003,7 +13196,10 @@
     "manager_name_decrypted": "고희숙",
     "manager_contact_decrypted": "010-4552-1985",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0402",
@@ -12033,7 +13229,10 @@
     "manager_name_decrypted": "박미경",
     "manager_contact_decrypted": "062-943-5625",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0403",
@@ -12063,7 +13262,10 @@
     "manager_name_decrypted": "이강돈",
     "manager_contact_decrypted": "010-8240-9569",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0404",
@@ -12093,7 +13295,10 @@
     "manager_name_decrypted": "오유진",
     "manager_contact_decrypted": "062-941-0057",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0405",
@@ -12122,8 +13327,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "김수윤",
     "manager_contact_decrypted": "010-3854-1234",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0406",
@@ -12152,8 +13360,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "조정아",
     "manager_contact_decrypted": "062-942-9080",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 7
   },
   {
     "facility_key": "K0407",
@@ -12182,8 +13393,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "진순옥",
     "manager_contact_decrypted": "062-944-7707",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0408",
@@ -12213,7 +13427,10 @@
     "manager_name_decrypted": "조필선",
     "manager_contact_decrypted": "010-4299-8119",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0409",
@@ -12242,8 +13459,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "남상채",
     "manager_contact_decrypted": "010-2356-8670",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0410",
@@ -12272,8 +13492,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "정광호",
     "manager_contact_decrypted": "010-8921-5676",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0411",
@@ -12303,7 +13526,10 @@
     "manager_name_decrypted": "박선미",
     "manager_contact_decrypted": "062-942-7520",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0412",
@@ -12333,7 +13559,10 @@
     "manager_name_decrypted": "송효석",
     "manager_contact_decrypted": "062-953-9901",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0413",
@@ -12362,8 +13591,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "오원균",
     "manager_contact_decrypted": "010-2881-3987",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0414",
@@ -12393,7 +13625,10 @@
     "manager_name_decrypted": "고영인",
     "manager_contact_decrypted": "062-456-0446",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0415",
@@ -12422,8 +13657,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "정순임",
     "manager_contact_decrypted": "062-946-1942",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 15,
+    "charger_installed_cnt": 15,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 15
   },
   {
     "facility_key": "K0417",
@@ -12452,8 +13690,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "김화용",
     "manager_contact_decrypted": "010-5243-2571",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0418",
@@ -12482,8 +13723,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "최광우",
     "manager_contact_decrypted": "010-3634-3520",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0419",
@@ -12513,7 +13757,10 @@
     "manager_name_decrypted": "김현",
     "manager_contact_decrypted": "062-945-4307",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0420",
@@ -12542,8 +13789,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "김화용",
     "manager_contact_decrypted": "010-5243-2571",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0421",
@@ -12573,7 +13823,10 @@
     "manager_name_decrypted": "반재복",
     "manager_contact_decrypted": "062-945-1012",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0422",
@@ -12603,7 +13856,10 @@
     "manager_name_decrypted": "김점자",
     "manager_contact_decrypted": "062-945-5018",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0423",
@@ -12632,8 +13888,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "변명숙",
     "manager_contact_decrypted": "010-9165-2439",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0424",
@@ -12663,7 +13922,10 @@
     "manager_name_decrypted": "강영민",
     "manager_contact_decrypted": "010-6690-5439",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0425",
@@ -12692,8 +13954,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "오설아",
     "manager_contact_decrypted": "062-971-5355",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0426",
@@ -12723,7 +13988,10 @@
     "manager_name_decrypted": "관리사무소",
     "manager_contact_decrypted": "942-3412",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0427",
@@ -12752,8 +14020,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "양율섭",
     "manager_contact_decrypted": "010-5655-6622",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 5,
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0428",
@@ -12782,8 +14053,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "김갑식",
     "manager_contact_decrypted": "062-972-6868",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 10,
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 10
   },
   {
     "facility_key": "K0429",
@@ -12812,8 +14086,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "김보원",
     "manager_contact_decrypted": "062-942-5565",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0430",
@@ -12842,8 +14119,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "주경희",
     "manager_contact_decrypted": "062-971-8377",
-    "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 3,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0431",
@@ -12873,7 +14153,10 @@
     "manager_name_decrypted": "김여기",
     "manager_contact_decrypted": "954-3633",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0432",
@@ -12902,8 +14185,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "임남아",
     "manager_contact_decrypted": "010-6800-0434",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 9,
+    "charger_installed_cnt": 9,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 9
   },
   {
     "facility_key": "K0433",
@@ -12932,8 +14218,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "박송환",
     "manager_contact_decrypted": "010-8607-5020",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 8
   },
   {
     "facility_key": "K0434",
@@ -12962,8 +14251,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "김형미",
     "manager_contact_decrypted": "062-951-5256",
-    "parking_installed_cnt": 8,
-    "charger_installed_cnt": 8
+    "parking_installed_cnt": 13,
+    "charger_installed_cnt": 13,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 12
   },
   {
     "facility_key": "K0435",
@@ -12993,7 +14285,10 @@
     "manager_name_decrypted": "지경아",
     "manager_contact_decrypted": "943-1133",
     "parking_installed_cnt": 11,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0436",
@@ -13023,7 +14318,10 @@
     "manager_name_decrypted": "이혜련",
     "manager_contact_decrypted": "944-9884",
     "parking_installed_cnt": 14,
-    "charger_installed_cnt": 5
+    "charger_installed_cnt": 5,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0437",
@@ -13052,8 +14350,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "최성숙",
     "manager_contact_decrypted": "062-972-2289",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 11,
+    "charger_installed_cnt": 11,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 11
   },
   {
     "facility_key": "K0438",
@@ -13083,7 +14384,10 @@
     "manager_name_decrypted": "김기태",
     "manager_contact_decrypted": "010-3335-7955",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0439",
@@ -13113,7 +14417,10 @@
     "manager_name_decrypted": "김미정",
     "manager_contact_decrypted": "974-4564",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0440",
@@ -13143,7 +14450,10 @@
     "manager_name_decrypted": "김민용",
     "manager_contact_decrypted": "010-3616-4026",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0441",
@@ -13173,7 +14483,10 @@
     "manager_name_decrypted": "김미정",
     "manager_contact_decrypted": "974-4564",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 1
   },
   {
     "facility_key": "K0442",
@@ -13203,7 +14516,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 4
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 4,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0443",
@@ -13233,7 +14549,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0444",
@@ -13262,8 +14581,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 2
+    "parking_installed_cnt": 6,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0445",
@@ -13293,7 +14615,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 3,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0446",
@@ -13322,8 +14647,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 7,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 8,
+    "charger_installed_cnt": 4,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 4,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0447",
@@ -13353,7 +14681,10 @@
     "manager_name_decrypted": "이종현",
     "manager_contact_decrypted": "062-616-5846",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0448",
@@ -13383,7 +14714,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0449",
@@ -13413,7 +14747,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 2,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0450",
@@ -13443,7 +14780,10 @@
     "manager_name_decrypted": "양진석",
     "manager_contact_decrypted": "010-2499-9661",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0451",
@@ -13473,7 +14813,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0452",
@@ -13503,7 +14846,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "charger_installed_cnt": 10,
+    "charger_fast_req_cnt": 5,
+    "charger_fast_cnt": 5,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0453",
@@ -13532,8 +14878,11 @@
     "updated_at": "2026-08-04T07:33:20.141923+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 4,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 3,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0454",
@@ -13563,7 +14912,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0455",
@@ -13593,7 +14945,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0456",
@@ -13623,7 +14978,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0457",
@@ -13653,7 +15011,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0458",
@@ -13683,7 +15044,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0459",
@@ -13713,7 +15077,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0460",
@@ -13742,8 +15109,11 @@
     "updated_at": "2026-08-04T07:33:20.663746+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 4
+    "parking_installed_cnt": 14,
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 6,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0461",
@@ -13773,7 +15143,10 @@
     "manager_name_decrypted": "양진석",
     "manager_contact_decrypted": "010-2499-9661",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 1
+    "charger_installed_cnt": 1,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0462",
@@ -13803,7 +15176,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 4,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0463",
@@ -13833,7 +15209,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 5,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0464",
@@ -13863,7 +15242,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0465",
@@ -13893,7 +15275,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0466",
@@ -13923,7 +15308,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 6,
-    "charger_installed_cnt": 2
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0467",
@@ -13953,7 +15341,10 @@
     "manager_name_decrypted": "최성갑",
     "manager_contact_decrypted": "062-960-9913",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0468",
@@ -13983,7 +15374,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 8,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 8,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 4,
+    "charger_slow_cnt": 4
   },
   {
     "facility_key": "K0469",
@@ -14013,7 +15407,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0470",
@@ -14043,7 +15440,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0471",
@@ -14073,7 +15473,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 2,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0472",
@@ -14103,7 +15506,10 @@
     "manager_name_decrypted": "김성주",
     "manager_contact_decrypted": "010-6607-8922",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 1,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0473",
@@ -14133,7 +15539,10 @@
     "manager_name_decrypted": "김주일",
     "manager_contact_decrypted": "952-0571",
     "parking_installed_cnt": 7,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0474",
@@ -14162,8 +15571,11 @@
     "updated_at": "2026-08-04T07:33:20.663746+00:00",
     "manager_name_decrypted": "김사인",
     "manager_contact_decrypted": "010-2209-1538",
-    "parking_installed_cnt": 10,
-    "charger_installed_cnt": 10
+    "parking_installed_cnt": 24,
+    "charger_installed_cnt": 24,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 23
   },
   {
     "facility_key": "K0475",
@@ -14193,7 +15605,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "385-5294 / 010-3203-8409(유연수전무)/010-8028-4348(주식회사노블힐스)/010-2299-1209(주식회사노블힐스실무자)",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   },
   {
     "facility_key": "K0476",
@@ -14222,8 +15637,11 @@
     "updated_at": "2026-08-04T07:33:20.663746+00:00",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 2,
+    "charger_installed_cnt": 2,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 2
   },
   {
     "facility_key": "K0477",
@@ -14252,8 +15670,11 @@
     "updated_at": "2026-08-04T07:33:20.663746+00:00",
     "manager_name_decrypted": "오가인",
     "manager_contact_decrypted": "062-940-3275",
-    "parking_installed_cnt": 1,
-    "charger_installed_cnt": 1
+    "parking_installed_cnt": 7,
+    "charger_installed_cnt": 7,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 2,
+    "charger_slow_cnt": 5
   },
   {
     "facility_key": "K0478",
@@ -14282,8 +15703,11 @@
     "updated_at": "2026-08-04T07:33:20.663746+00:00",
     "manager_name_decrypted": "이승용",
     "manager_contact_decrypted": "010-7170-6242",
-    "parking_installed_cnt": 16,
-    "charger_installed_cnt": 16
+    "parking_installed_cnt": 26,
+    "charger_installed_cnt": 26,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 1,
+    "charger_slow_cnt": 25
   },
   {
     "facility_key": "K0479",
@@ -14312,8 +15736,11 @@
     "updated_at": "2026-08-04T07:33:20.663746+00:00",
     "manager_name_decrypted": "김희중",
     "manager_contact_decrypted": "010-6602-8775",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "parking_installed_cnt": 6,
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0480",
@@ -14343,7 +15770,10 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "",
     "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3
+    "charger_installed_cnt": 3,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 3
   },
   {
     "facility_key": "K0481",
@@ -14372,8 +15802,11 @@
     "updated_at": "2026-08-04T07:33:20.663746+00:00",
     "manager_name_decrypted": "김현진",
     "manager_contact_decrypted": "945-7677",
-    "parking_installed_cnt": 5,
-    "charger_installed_cnt": 5
+    "parking_installed_cnt": 6,
+    "charger_installed_cnt": 6,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 6
   },
   {
     "facility_key": "K0482",
@@ -14403,6 +15836,9 @@
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "010-6677-0993",
     "parking_installed_cnt": 0,
-    "charger_installed_cnt": 0
+    "charger_installed_cnt": 0,
+    "charger_fast_req_cnt": 0,
+    "charger_fast_cnt": 0,
+    "charger_slow_cnt": 0
   }
 ]

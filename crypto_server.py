@@ -176,35 +176,18 @@ PHOTO_INDEX_CACHE = {}
 
 def process_facility_item(item):
     # 1. Smart decrypt manager fields
-    enc_name = item.get("manager_name_encrypted")
-    enc_contact = item.get("manager_contact_encrypted")
+    if not item: return item
     
-    dec_name = decrypt_data(enc_name) if enc_name else ""
-    dec_contact = decrypt_data(enc_contact) if enc_contact else ""
-    
-    item["manager_name_decrypted"] = dec_name if dec_name else (item.get("manager_name_decrypted") or "")
-    item["manager_contact_decrypted"] = dec_contact if dec_contact else (item.get("manager_contact_decrypted") or "")
+    def smart_dec(val):
+        if not val or not isinstance(val, str): return ""
+        val = val.strip()
+        if val.startswith("gAAAAA"):
+            dec = decrypt_data(val)
+            return dec if (dec and not dec.startswith("gAAAAA")) else ""
+        return val
 
-    # 2. Smart calculate installed counts if missing
-    req_p = safe_int(item.get("parking_required_cnt"))
-    un_p = safe_int(item.get("parking_uninstalled_cnt"))
-    act_p = safe_int(item.get("parking_installed_cnt"), -1)
-    if act_p < 0:
-        if item.get("compliance_status") == "이행완료":
-            act_p = req_p
-        else:
-            act_p = max(0, req_p - un_p)
-    item["parking_installed_cnt"] = act_p
-
-    req_c = safe_int(item.get("charger_required_cnt"))
-    un_c = safe_int(item.get("charger_uninstalled_cnt"))
-    act_c = safe_int(item.get("charger_installed_cnt"), -1)
-    if act_c < 0:
-        if item.get("compliance_status") == "이행완료":
-            act_c = req_c
-        else:
-            act_c = max(0, req_c - un_c)
-    item["charger_installed_cnt"] = act_c
+    item["manager_name_decrypted"] = smart_dec(item.get("manager_name_encrypted")) or item.get("manager_name") or ""
+    item["manager_contact_decrypted"] = smart_dec(item.get("manager_contact_encrypted")) or item.get("manager_contact") or ""
 
     return item
 
