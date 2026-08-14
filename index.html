@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260814_14">
+  <link rel="stylesheet" href="styles.css?v=20260814_15">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- FontAwesome CDN -->
@@ -783,9 +783,16 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-disposition')">취소</button>
-        <button class="btn" onclick="saveDisposition()">저장하기</button>
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <button type="button" class="btn btn-rose admin-only" id="btn-delete-disp-form" style="display:none;" onclick="deleteDispositionFromForm()">
+            <i class="fa-solid fa-trash-can"></i> 레코드 삭제
+          </button>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-secondary" onclick="closeModal('modal-disposition')">취소</button>
+          <button class="btn" onclick="saveDisposition()">저장하기</button>
+        </div>
       </div>
     </div>
   </div>
@@ -855,6 +862,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260814_14"></script>
+  <script src="app.js?v=20260814_15"></script>
 </body>
 </html>

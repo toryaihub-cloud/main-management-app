@@ -2161,7 +2161,11 @@ function openDispositionModal(id = null) {
   const container = document.getElementById("disp-sub-owners-container");
   if (container) container.innerHTML = "";
 
+  const delBtn = document.getElementById("btn-delete-disp-form");
+  const isAdmin = currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN");
+
   if (id) {
+    if (delBtn) delBtn.style.display = isAdmin ? "inline-flex" : "none";
     const item = dispositionsData.find(d => d.id === id);
     if (item) {
       const fac = facilitiesData.find(f => f.facility_key === item.facility_key) || {};
@@ -2215,6 +2219,7 @@ function openDispositionModal(id = null) {
       document.getElementById("disp-note").value = item.note || "";
     }
   } else {
+    if (delBtn) delBtn.style.display = "none";
     document.getElementById("modal-disposition-title").innerText = "신규등록";
     document.getElementById("disp-id").value = "";
   }
@@ -2508,4 +2513,14 @@ function closeModal(modalId) {
     const content = elem.querySelector(".modal-content");
     if (content) content.scrollTop = 0;
   }
+}
+
+async function deleteDispositionFromForm() {
+  const dispId = document.getElementById("disp-id").value;
+  if (!dispId) {
+    alert("삭제할 레코드 ID가 존재하지 않습니다.");
+    return;
+  }
+  await deleteSingleDispositionRecord(dispId);
+  closeModal("modal-disposition");
 }
