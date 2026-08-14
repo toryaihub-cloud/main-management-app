@@ -213,7 +213,10 @@ def process_disposition_item(item):
     item["abstract_address_decrypted"] = smart_dec(item.get("abstract_address_encrypted")) or item.get("abstract_address") or ""
 
     return item
+
+def update_local_facility_cache(payload):
     global FACILITIES_CACHE
+    if not payload: return
     key = payload.get("facility_key")
     if not key: return
 
@@ -228,8 +231,8 @@ def process_disposition_item(item):
 
         try:
             with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
-                json.dump(FACILITIES_CACHE["data"], f, ensure_ascii=False)
-            print(f"Updated local facilities_cache.json for key {key}")
+                json.dump(FACILITIES_CACHE["data"], f, ensure_ascii=False, indent=2)
+            print(f"Successfully saved facility {key} to facilities_cache.json")
         except Exception as e:
             print("Error updating local facilities file cache:", e)
 
