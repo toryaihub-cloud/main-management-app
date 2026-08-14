@@ -708,6 +708,62 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
             self.wfile.write(res.content if res.content else b'{"success":true}')
+
+        elif path == "/api/photos/upload":
+            facility_key = req_json.get("facility_key", "").strip()
+            filename = req_json.get("filename", "").strip()
+            file_data = req_json.get("file_data", "").strip()
+
+            if not facility_key or not file_data:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "message": "필수 데이터 누락"}, ensure_ascii=False).encode('utf-8'))
+                return
+
+            try:
+                import base64, time
+                if "," in file_data:
+                    file_data = file_data.split(",", 1)[1]
+                
+                img_bytes = base64.b64decode(file_data)
+                
+                base_dir = os.path.dirname(os.path.abspath(__file__))
+                photo_dir = os.path.join(base_dir, "사진")
+                if not os.path.exists(photo_dir):
+                    os.makedirs(photo_dir, exist_ok=True)
+                
+                if not filename:
+                    filename = f"{facility_key}_{int(time.time()*1000)}.jpg"
+                elif not filename.startswith(facility_key):
+                    filename = f"{facility_key}_{filename}"
+
+                save_path = os.path.join(photo_dir, filename)
+                with open(save_path, "wb") as f:
+                    f.write(img_bytes)
+
+                k_upper = facility_key.upper()
+                if k_upper not in PHOTO_KEY_MAP:
+                    PHOTO_KEY_MAP[k_upper] = []
+                
+                photo_obj = {
+                    "filename": filename,
+                    "url": f"/api/photo_file?path={save_path}",
+                    "thumb_url": f"/api/photo_file?path={save_path}&thumb=1"
+                }
+                PHOTO_KEY_MAP[k_upper].append(photo_obj)
+
+                response = {"success": True, "filename": filename, "url": photo_obj["url"]}
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps(response, ensure_ascii=False).encode('utf-8'))
+            except Exception as e:
+                print("Photo upload error:", e)
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "message": str(e)}, ensure_ascii=False).encode('utf-8'))
         else:
             super().do_POST()
 
