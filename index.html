@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260813_19">
+  <link rel="stylesheet" href="styles.css?v=20260814_01">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- FontAwesome CDN -->
@@ -363,24 +363,30 @@
                 </div>
               </h3>
 
-              <div class="photo-slider-wrapper">
-                <button class="slider-nav-btn prev" onclick="prevFacilityPhoto()" title="이전 사진">
-                  <i class="fa-solid fa-chevron-left"></i>
-                </button>
-
-                <div id="main-photo-view" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:0.3rem;">
-                  <img id="current-photo-img" src="" alt="현장 사진" style="max-height:265px; max-width:96%; object-fit:contain; cursor:pointer; border-radius:6px; box-shadow:0 4px 10px rgba(0,0,0,0.25);" onclick="openLightboxCurrent()">
-                  <div id="no-photo-msg" class="no-photo-text" style="color:#94A3B8;">
-                    <i class="fa-regular fa-image" style="font-size:2.5rem; margin-bottom:0.4rem; display:block;"></i>
-                    지정된 폴더에 시설 관련 사진이 없습니다.
+              <div class="photo-slider-container" style="display:flex; flex-direction:column; width:100%; height:100%; min-height:0;">
+                <!-- Main Photo Viewing Box (Fills Space, Maximize Photo Size) -->
+                <div class="photo-slider-wrapper-new" style="flex:1; width:100%; background:#0F172A; border-radius:8px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; min-height:280px; padding:0.4rem;">
+                  <div id="main-photo-view" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                    <img id="current-photo-img" src="" alt="현장 사진" style="width:100%; height:100%; max-height:340px; object-fit:contain; cursor:pointer; border-radius:6px;" onclick="openLightboxCurrent()">
+                    <div id="no-photo-msg" class="no-photo-text" style="color:#94A3B8; text-align:center;">
+                      <i class="fa-regular fa-image" style="font-size:2.5rem; margin-bottom:0.4rem; display:block;"></i>
+                      지정된 폴더에 시설 관련 사진이 없습니다.
+                    </div>
                   </div>
                 </div>
 
-                <button class="slider-nav-btn next" onclick="nextFacilityPhoto()" title="다음 사진">
-                  <i class="fa-solid fa-chevron-right"></i>
-                </button>
+                <!-- Bottom Photo Control Bar (Arrow buttons moved below photo) -->
+                <div class="photo-bottom-control-bar" style="display:flex; align-items:center; justify-content:space-between; background:#1E293B; padding:0.4rem 0.8rem; border-radius:6px; margin-top:0.4rem;">
+                  <button class="btn btn-secondary photo-nav-btn-bottom" onclick="prevFacilityPhoto()" style="padding:0.25rem 0.7rem; font-size:0.8rem; display:flex; align-items:center; gap:0.3rem;">
+                    <i class="fa-solid fa-chevron-left"></i> 이전 사진
+                  </button>
+                  
+                  <div id="photo-counter-badge" style="color:#F8FAFC; font-weight:700; font-size:0.85rem; letter-spacing:1px;">0 / 0</div>
 
-                <div id="photo-counter-badge" class="photo-counter-badge">0 / 0</div>
+                  <button class="btn btn-secondary photo-nav-btn-bottom" onclick="nextFacilityPhoto()" style="padding:0.25rem 0.7rem; font-size:0.8rem; display:flex; align-items:center; gap:0.3rem;">
+                    다음 사진 <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
               </div>
 
               <div id="photo-thumbnails-list" class="thumbnails-bar" style="display:flex; gap:0.5rem; overflow-x:auto; padding:0.4rem 0; margin-top:0.4rem;">
@@ -837,6 +843,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260813_19"></script>
+  <script src="app.js?v=20260814_01"></script>
 </body>
 </html>
