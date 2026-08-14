@@ -692,25 +692,27 @@ function openFacilityDetailModal(key) {
 
   currentFacilityDetail = facility;
 
-  // 1. Populate Text Information Instantly
-  const keyElem = document.getElementById("detail-key");
-  if (keyElem) keyElem.innerText = facility.facility_key;
-  
-  document.getElementById("detail-key-badge").innerText = facility.facility_key;
-  document.getElementById("detail-facility-name").innerText = facility.facility_name;
-  
-  document.getElementById("detail-category").innerText = facility.facility_category || '-';
-  document.getElementById("detail-address-doro").innerText = facility.address_doro || '-';
-  document.getElementById("detail-address-jibun").innerText = facility.address_jibun || '-';
-  document.getElementById("detail-dong").innerText = facility.dong_name || '-';
-  document.getElementById("detail-register").innerText = facility.parking_installed_cnt !== undefined ? `${facility.parking_installed_cnt}면` : (facility.building_register_num || '-');
-  document.getElementById("detail-dates").innerText = `${facility.permission_date || '-'} / ${facility.approval_date || '-'}`;
-  document.getElementById("detail-new-old").innerText = facility.is_new_building || '-';
-  document.getElementById("detail-ownership").innerText = facility.facility_ownership_type || '-';
+  // 1. Populate Text Information Instantly (Safe Null Check)
+  const safeSetText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = (val !== undefined && val !== null && val !== '') ? val : '-';
+  };
+
+  safeSetText("detail-key", facility.facility_key);
+  safeSetText("detail-key-badge", facility.facility_key);
+  safeSetText("detail-facility-name", facility.facility_name);
+  safeSetText("detail-category", facility.facility_category);
+  safeSetText("detail-address-doro", facility.address_doro);
+  safeSetText("detail-address-jibun", facility.address_jibun);
+  safeSetText("detail-dates", `${facility.permission_date || '-'} / ${facility.approval_date || '-'}`);
+  safeSetText("detail-new-old", facility.is_new_building);
+  safeSetText("detail-ownership", facility.facility_ownership_type);
 
   const compElem = document.getElementById("detail-compliance");
-  compElem.innerText = facility.compliance_status || '-';
-  compElem.className = `badge ${facility.compliance_status === '이행완료' ? 'badge-emerald' : (facility.compliance_status === '미이행' ? 'badge-rose' : 'badge-amber')}`;
+  if (compElem) {
+    compElem.innerText = facility.compliance_status || '-';
+    compElem.className = `badge ${facility.compliance_status === '이행완료' ? 'badge-emerald' : (facility.compliance_status === '미이행' ? 'badge-rose' : 'badge-amber')}`;
+  }
 
   // Parking & Charger Slash Ratio Info
   const reqP = parseInt(facility.parking_required_cnt) || 0;
@@ -750,9 +752,9 @@ function openFacilityDetailModal(key) {
   const decName = (facility.manager_name_decrypted && !facility.manager_name_decrypted.startsWith("gAAAAA")) ? facility.manager_name_decrypted : (facility.manager_name || '-');
   const decContact = (facility.manager_contact_decrypted && !facility.manager_contact_decrypted.startsWith("gAAAAA")) ? facility.manager_contact_decrypted : (facility.manager_contact || '-');
 
-  document.getElementById("detail-manager-name").innerText = decName;
-  document.getElementById("detail-manager-contact").innerText = decContact;
-  document.getElementById("detail-management-body").innerText = facility.management_body || '-';
+  safeSetText("detail-manager-name", decName);
+  safeSetText("detail-manager-contact", decContact);
+  safeSetText("detail-management-body", facility.management_body);
   
   const invElem = document.getElementById("detail-investigation-status");
   if (invElem) invElem.innerText = facility.investigation_status || '-';
