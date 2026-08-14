@@ -2247,36 +2247,6 @@ function openDispositionModal(id = null) {
 
 function editDisposition(id) { openDispositionModal(id); }
 
-async function encryptFieldText(val) {
-  if (!val) return null;
-  try {
-    const res = await fetch(`${API_BASE_URL}/encrypt`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: val })
-    });
-    const result = await res.json();
-    return result.result || null;
-  } catch (e) {
-    return null;
-  }
-}
-
-async function decryptFieldText(val) {
-  if (!val || typeof val !== 'string' || !val.startsWith('gAAAAA')) return val || '';
-  try {
-    const res = await fetch(`${API_BASE_URL}/decrypt`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: val })
-    });
-    const result = await res.json();
-    return (result.result && !result.result.startsWith('gAAAAA')) ? result.result : val;
-  } catch (e) {
-    return val;
-  }
-}
-
 async function saveDisposition() {
   const id = document.getElementById("disp-id").value;
   const facilityKey = document.getElementById("disp-facility-key").value.trim();
