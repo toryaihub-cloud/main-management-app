@@ -1963,18 +1963,19 @@ async function saveFacility() {
 
   alert("성공적으로 저장되었습니다.");
   closeModal('modal-facility');
-  filterFacilities();
-  updateDashboardStats();
-  openFacilityDetailModal(key);
-
-  // Async Background DB Sync
+  
+  // Async Background DB Sync with await
   try {
-    fetch(`${API_BASE_URL}/facilities/save`, {
+    await fetch(`${API_BASE_URL}/facilities/save`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
   } catch (err) { console.error(err); }
+
+  filterFacilities();
+  updateDashboardStats();
+  openFacilityDetailModal(key);
 }
 
 async function deleteFacility(key) {
