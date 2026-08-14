@@ -1753,7 +1753,6 @@ function openDispositionDetailModal(key) {
               <button class="btn btn-secondary" style="padding:0.25rem 0.65rem; font-size:0.75rem;" onclick="editDisposition(${d.id})">
                 <i class="fa-solid fa-pen-to-square"></i> 레코드 수정
               </button>
-              ${currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN") ? `<button class="btn btn-rose admin-only" style="padding:0.25rem 0.65rem; font-size:0.75rem; margin-left:0.4rem;" onclick="deleteSingleDispositionRecord(${d.id})"><i class="fa-solid fa-trash-can"></i> 레코드 삭제</button>` : ''}
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; font-size: 0.85rem;">

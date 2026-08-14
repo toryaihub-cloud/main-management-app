@@ -169,10 +169,36 @@ def save_settings(settings):
 
 LOCAL_FACILITIES_FILE = os.path.join(os.path.dirname(__file__), "facilities_cache.json")
 LOCAL_DISPOSITIONS_FILE = os.path.join(os.path.dirname(__file__), "dispositions_cache.json")
+DELETED_KEYS_FILE = os.path.join(os.path.dirname(__file__), "deleted_keys_cache.json")
 
 DISPOSITIONS_CACHE = {"data": None, "time": 0}
 FACILITIES_CACHE = {"data": None, "time": 0}
 PHOTO_INDEX_CACHE = {}
+
+DELETED_FACILITY_KEYS = set()
+DELETED_DISPOSITION_IDS = set()
+
+def load_deleted_keys():
+    global DELETED_FACILITY_KEYS, DELETED_DISPOSITION_IDS
+    if os.path.exists(DELETED_KEYS_FILE):
+        try:
+            with open(DELETED_KEYS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                DELETED_FACILITY_KEYS = set(data.get("facilities", []))
+                DELETED_DISPOSITION_IDS = set(str(x) for x in data.get("dispositions", []))
+        except Exception: pass
+
+def save_deleted_keys():
+    try:
+        with open(DELETED_KEYS_FILE, "w", encoding="utf-8") as f:
+            json.dump({
+                "facilities": list(DELETED_FACILITY_KEYS),
+                "dispositions": list(DELETED_DISPOSITION_IDS)
+            }, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Error saving deleted keys file:", e)
+
+load_deleted_keys()
 
 def process_facility_item(item):
     # 1. Smart decrypt manager fields
@@ -220,6 +246,10 @@ def update_local_facility_cache(payload):
     key = payload.get("facility_key")
     if not key: return
 
+    if key in DELETED_FACILITY_KEYS:
+        DELETED_FACILITY_KEYS.remove(key)
+        save_deleted_keys()
+
     processed_item = process_facility_item(payload)
 
     if FACILITIES_CACHE["data"] is None:
@@ -248,6 +278,10 @@ def update_local_disposition_cache(payload):
     global DISPOSITIONS_CACHE
     if not payload: return
     disp_id = payload.get("id")
+
+    if disp_id and str(disp_id) in DELETED_DISPOSITION_IDS:
+        DELETED_DISPOSITION_IDS.remove(str(disp_id))
+        save_deleted_keys()
 
     processed_item = process_disposition_item(payload)
 
@@ -377,7 +411,8 @@ init_server_cache()
 def get_cached_facilities():
     global FACILITIES_CACHE
     if FACILITIES_CACHE["data"]:
-        return FACILITIES_CACHE["data"], 200
+        filtered = [f for f in FACILITIES_CACHE["data"] if f.get("facility_key") not in DELETED_FACILITY_KEYS]
+        return filtered, 200
 
     try:
         req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
@@ -396,6 +431,7 @@ def get_cached_facilities():
                             processed.append(process_facility_item(loc))
                 except Exception: pass
 
+            processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
             FACILITIES_CACHE["data"] = processed
             try:
                 with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
@@ -405,12 +441,14 @@ def get_cached_facilities():
     except Exception as e:
         print("Facilities fetch exception:", e)
 
-    return FACILITIES_CACHE["data"] or [], 200
+    filtered = [f for f in (FACILITIES_CACHE["data"] or []) if f.get("facility_key") not in DELETED_FACILITY_KEYS]
+    return filtered, 200
 
 def get_cached_dispositions():
     global DISPOSITIONS_CACHE
     if DISPOSITIONS_CACHE["data"]:
-        return DISPOSITIONS_CACHE["data"], 200
+        filtered = [d for d in DISPOSITIONS_CACHE["data"] if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
+        return filtered, 200
 
     try:
         req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
@@ -429,6 +467,7 @@ def get_cached_dispositions():
                             processed.append(process_disposition_item(loc))
                 except Exception: pass
 
+            processed = [d for d in processed if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
             DISPOSITIONS_CACHE["data"] = processed
             try:
                 with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
@@ -438,7 +477,8 @@ def get_cached_dispositions():
     except Exception as e:
         print("Dispositions fetch exception:", e)
 
-    return DISPOSITIONS_CACHE["data"] or [], 200
+    filtered = [d for d in (DISPOSITIONS_CACHE["data"] or []) if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
+    return filtered, 200
 
 class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -910,6 +950,9 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
         elif path == "/api/facilities/delete":
             key = params.get("key", [None])[0]
             if key:
+                DELETED_FACILITY_KEYS.add(key)
+                save_deleted_keys()
+
                 # Remove from local FACILITIES_CACHE and JSON file
                 global FACILITIES_CACHE
                 if FACILITIES_CACHE["data"] is not None:
@@ -929,10 +972,20 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 return
 
         elif path == "/api/dispositions/delete":
+            global DISPOSITIONS_CACHE
             disp_id = params.get("id", [None])[0]
             facility_key = params.get("facility_key", [None])[0]
             
-            global DISPOSITIONS_CACHE
+            if disp_id:
+                DELETED_DISPOSITION_IDS.add(str(disp_id))
+            elif facility_key:
+                # Add all disposition IDs associated with this facility
+                if DISPOSITIONS_CACHE["data"] is not None:
+                    for d in DISPOSITIONS_CACHE["data"]:
+                        if d.get("facility_key") == facility_key:
+                            DELETED_DISPOSITION_IDS.add(str(d.get("id")))
+            save_deleted_keys()
+
             if DISPOSITIONS_CACHE["data"] is not None:
                 if disp_id:
                     DISPOSITIONS_CACHE["data"] = [d for d in DISPOSITIONS_CACHE["data"] if str(d.get("id")) != str(disp_id)]
