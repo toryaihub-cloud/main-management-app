@@ -1712,13 +1712,6 @@ function openDispositionDetailModal(key) {
           return;
         }
 
-        // Clean string without Lock emojis
-        const targetNameStr = d.target_name_decrypted || d.target_name_encrypted || '-';
-        const recipientStr = d.recipient_name_decrypted || d.recipient_name_encrypted || '-';
-        const regNumStr = d.reg_num_decrypted || d.reg_num_encrypted || '-';
-        const contactStr = d.contact_decrypted || d.contact_encrypted || '-';
-        const mailAddrStr = d.mail_address_decrypted || d.mail_address_encrypted || '-';
-        const abstractAddrStr = d.abstract_address_decrypted || d.abstract_address_encrypted || '-';
 
         // Return Status Badge (🟢 도달 / 🔴 반송)
         let returnBadgeStr = '-';
@@ -1753,6 +1746,7 @@ function openDispositionDetailModal(key) {
               <button class="btn btn-secondary" style="padding:0.25rem 0.65rem; font-size:0.75rem;" onclick="editDisposition(${d.id})">
                 <i class="fa-solid fa-pen-to-square"></i> 레코드 수정
               </button>
+              ${currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN") ? `<button class="btn btn-rose admin-only" style="padding:0.25rem 0.65rem; font-size:0.75rem; margin-left:0.4rem;" onclick="deleteSingleDispositionRecord(${d.id})"><i class="fa-solid fa-trash-can"></i> 레코드 삭제</button>` : ''}
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; font-size: 0.85rem;">
