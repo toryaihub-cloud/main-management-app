@@ -95,12 +95,14 @@ function showMainApp() {
     
     const userInfoText = document.getElementById("user-display-info");
     if (userInfoText && currentUser) {
-      userInfoText.innerHTML = `<i class="fa-solid fa-user-check"></i> ${currentUser.name || '최고 관리자'} (${currentUser.username || 'ADMIN'})`;
+      const roleBadge = (currentUser.role === "ADMIN" || currentUser.username === "ADMIN") ? "최고 관리자" : "일반 사용자";
+      userInfoText.innerHTML = `<i class="fa-solid fa-user-check"></i> ${roleBadge} (${currentUser.username || 'USER'})`;
     }
     
     const adminTab = document.getElementById("tab-users");
     if (adminTab) {
-      adminTab.style.display = "flex";
+      const isAdmin = currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN");
+      adminTab.style.display = isAdmin ? "flex" : "none";
     }
 
     loadData();
@@ -126,25 +128,29 @@ async function executeLogin() {
       return;
     }
 
-    // 아이디 저장 (다음 접속 시 자동 채우기용)
-    localStorage.setItem("savedUsername", uVal);
+    // 백엔드 /api/login 서버 인증 요청
+    const res = await fetch(`${API_BASE_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: uVal, password: pVal })
+    });
 
-    currentUser = {
-      username: uVal.toUpperCase() || "ADMIN",
-      name: "최고 관리자",
-      role: "ADMIN"
-    };
-
-    const loginScreen = document.getElementById("login-screen");
-    if (loginScreen) {
-      loginScreen.classList.remove("active");
-      loginScreen.style.display = "none";
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.user) {
+        currentUser = data.user;
+        localStorage.setItem("savedUsername", uVal);
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        showMainApp();
+        return;
+      }
     }
 
-    showMainApp();
+    if (errorMsg) errorMsg.innerText = "아이디 또는 비밀번호가 올바르지 않습니다.";
   } catch (err) {
     console.error("Error in executeLogin:", err);
-    showLoginScreen();
+    const errorMsg = document.getElementById("login-error");
+    if (errorMsg) errorMsg.innerText = "로그인 처리 중 오류가 발생했습니다.";
   }
 }
 
