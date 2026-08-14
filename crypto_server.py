@@ -222,19 +222,27 @@ def update_local_facility_cache(payload):
 
     processed_item = process_facility_item(payload)
 
-    if FACILITIES_CACHE["data"] is not None:
-        idx = next((i for i, f in enumerate(FACILITIES_CACHE["data"]) if f.get("facility_key") == key), -1)
-        if idx >= 0:
-            FACILITIES_CACHE["data"][idx] = {**FACILITIES_CACHE["data"][idx], **processed_item}
+    if FACILITIES_CACHE["data"] is None:
+        if os.path.exists(LOCAL_FACILITIES_FILE):
+            try:
+                with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as f:
+                    FACILITIES_CACHE["data"] = json.load(f)
+            except Exception: FACILITIES_CACHE["data"] = []
         else:
-            FACILITIES_CACHE["data"].insert(0, processed_item)
+            FACILITIES_CACHE["data"] = []
 
-        try:
-            with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
-                json.dump(FACILITIES_CACHE["data"], f, ensure_ascii=False, indent=2)
-            print(f"Successfully saved facility {key} to facilities_cache.json")
-        except Exception as e:
-            print("Error updating local facilities file cache:", e)
+    idx = next((i for i, f in enumerate(FACILITIES_CACHE["data"]) if f.get("facility_key") == key), -1)
+    if idx >= 0:
+        FACILITIES_CACHE["data"][idx] = {**FACILITIES_CACHE["data"][idx], **processed_item}
+    else:
+        FACILITIES_CACHE["data"].insert(0, processed_item)
+
+    try:
+        with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
+            json.dump(FACILITIES_CACHE["data"], f, ensure_ascii=False, indent=2)
+        print(f"Successfully saved facility {key} to facilities_cache.json")
+    except Exception as e:
+        print("Error updating local facilities file cache:", e)
 
 def update_local_disposition_cache(payload):
     global DISPOSITIONS_CACHE
@@ -243,26 +251,34 @@ def update_local_disposition_cache(payload):
 
     processed_item = process_disposition_item(payload)
 
-    if DISPOSITIONS_CACHE["data"] is not None:
-        if disp_id:
-            idx = next((i for i, d in enumerate(DISPOSITIONS_CACHE["data"]) if str(d.get("id")) == str(disp_id)), -1)
-            if idx >= 0:
-                DISPOSITIONS_CACHE["data"][idx] = {**DISPOSITIONS_CACHE["data"][idx], **processed_item}
-            else:
-                DISPOSITIONS_CACHE["data"].insert(0, processed_item)
+    if DISPOSITIONS_CACHE["data"] is None:
+        if os.path.exists(LOCAL_DISPOSITIONS_FILE):
+            try:
+                with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as f:
+                    DISPOSITIONS_CACHE["data"] = json.load(f)
+            except Exception: DISPOSITIONS_CACHE["data"] = []
         else:
-            import time
-            new_id = int(time.time() * 1000)
-            processed_item["id"] = new_id
-            payload["id"] = new_id
-            DISPOSITIONS_CACHE["data"].insert(0, processed_item)
+            DISPOSITIONS_CACHE["data"] = []
 
-        try:
-            with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
-                json.dump(DISPOSITIONS_CACHE["data"], f, ensure_ascii=False, indent=2)
-            print(f"Successfully saved disposition to dispositions_cache.json")
-        except Exception as e:
-            print("Error updating local dispositions file cache:", e)
+    if disp_id:
+        idx = next((i for i, d in enumerate(DISPOSITIONS_CACHE["data"]) if str(d.get("id")) == str(disp_id)), -1)
+        if idx >= 0:
+            DISPOSITIONS_CACHE["data"][idx] = {**DISPOSITIONS_CACHE["data"][idx], **processed_item}
+        else:
+            DISPOSITIONS_CACHE["data"].insert(0, processed_item)
+    else:
+        import time
+        new_id = int(time.time() * 1000)
+        processed_item["id"] = new_id
+        payload["id"] = new_id
+        DISPOSITIONS_CACHE["data"].insert(0, processed_item)
+
+    try:
+        with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
+            json.dump(DISPOSITIONS_CACHE["data"], f, ensure_ascii=False, indent=2)
+        print(f"Successfully saved disposition to dispositions_cache.json")
+    except Exception as e:
+        print("Error updating local dispositions file cache:", e)
 
 THUMB_DIR = os.path.join(os.path.dirname(__file__), "photo_thumbs_cache")
 if not os.path.exists(THUMB_DIR):

@@ -1712,6 +1712,13 @@ function openDispositionDetailModal(key) {
           return;
         }
 
+        // Clean string without Lock emojis
+        const targetNameStr = d.target_name_decrypted || d.target_name_encrypted || '-';
+        const recipientStr = d.recipient_name_decrypted || d.recipient_name_encrypted || '-';
+        const regNumStr = d.reg_num_decrypted || d.reg_num_encrypted || '-';
+        const contactStr = d.contact_decrypted || d.contact_encrypted || '-';
+        const mailAddrStr = d.mail_address_decrypted || d.mail_address_encrypted || '-';
+        const abstractAddrStr = d.abstract_address_decrypted || d.abstract_address_encrypted || '-';
 
         // Return Status Badge (🟢 도달 / 🔴 반송)
         let returnBadgeStr = '-';
