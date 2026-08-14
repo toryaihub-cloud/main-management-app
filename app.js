@@ -759,6 +759,12 @@ function openFacilityDetailModal(key) {
   const invElem = document.getElementById("detail-investigation-status");
   if (invElem) invElem.innerText = facility.investigation_status || '-';
 
+  const delFacBtn = document.getElementById("btn-delete-facility");
+  if (delFacBtn) {
+    const isAdmin = currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN");
+    delFacBtn.style.display = isAdmin ? "inline-flex" : "none";
+  }
+
   document.getElementById("btn-edit-from-detail").onclick = () => {
     closeModal("modal-facility-detail");
     openFacilityModal(key);
@@ -1528,6 +1534,13 @@ function safeStr(val) {
 
 function openDispositionDetailModal(key) {
   try {
+    currentDispositionDetailKey = key;
+    const delDispBtn = document.getElementById("btn-delete-disposition-all");
+    if (delDispBtn) {
+      const isAdmin = currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN");
+      delDispBtn.style.display = isAdmin ? "inline-flex" : "none";
+    }
+
     const fac = facilitiesData.find(f => f.facility_key === key) || {};
     const dispItems = dispositionsData.filter(d => d.facility_key === key);
 
@@ -1699,13 +1712,6 @@ function openDispositionDetailModal(key) {
           return;
         }
 
-        // Clean string without Lock emojis
-        const targetNameStr = d.target_name_decrypted || d.target_name_encrypted || '-';
-        const recipientStr = d.recipient_name_decrypted || d.recipient_name_encrypted || '-';
-        const regNumStr = d.reg_num_decrypted || d.reg_num_encrypted || '-';
-        const contactStr = d.contact_decrypted || d.contact_encrypted || '-';
-        const mailAddrStr = d.mail_address_decrypted || d.mail_address_encrypted || '-';
-        const abstractAddrStr = d.abstract_address_decrypted || d.abstract_address_encrypted || '-';
 
         // Return Status Badge (🟢 도달 / 🔴 반송)
         let returnBadgeStr = '-';

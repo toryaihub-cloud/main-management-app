@@ -872,18 +872,50 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
         elif path == "/api/facilities/delete":
             key = params.get("key", [None])[0]
             if key:
-                res = requests.delete(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{key}", headers=HEADERS)
-                self.send_response(res.status_code)
+                # Remove from local FACILITIES_CACHE and JSON file
+                global FACILITIES_CACHE
+                if FACILITIES_CACHE["data"] is not None:
+                    FACILITIES_CACHE["data"] = [f for f in FACILITIES_CACHE["data"] if f.get("facility_key") != key]
+                    try:
+                        with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
+                            json.dump(FACILITIES_CACHE["data"], f, ensure_ascii=False, indent=2)
+                    except Exception as e: print("Facility delete local cache save note:", e)
+                
+                try: requests.delete(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{key}", headers=HEADERS, timeout=3)
+                except Exception: pass
+
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
+                self.wfile.write(json.dumps({"success": True}, ensure_ascii=False).encode('utf-8'))
                 return
 
         elif path == "/api/dispositions/delete":
             disp_id = params.get("id", [None])[0]
-            if disp_id:
-                res = requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=HEADERS)
-                self.send_response(res.status_code)
-                self.end_headers()
-                return
+            facility_key = params.get("facility_key", [None])[0]
+            
+            global DISPOSITIONS_CACHE
+            if DISPOSITIONS_CACHE["data"] is not None:
+                if disp_id:
+                    DISPOSITIONS_CACHE["data"] = [d for d in DISPOSITIONS_CACHE["data"] if str(d.get("id")) != str(disp_id)]
+                elif facility_key:
+                    DISPOSITIONS_CACHE["data"] = [d for d in DISPOSITIONS_CACHE["data"] if d.get("facility_key") != facility_key]
+                
+                try:
+                    with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
+                        json.dump(DISPOSITIONS_CACHE["data"], f, ensure_ascii=False, indent=2)
+                except Exception as e: print("Disposition delete local cache save note:", e)
+
+            try:
+                if disp_id: requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=HEADERS, timeout=3)
+                elif facility_key: requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?facility_key=eq.{facility_key}", headers=HEADERS, timeout=3)
+            except Exception: pass
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": True}, ensure_ascii=False).encode('utf-8'))
+            return
 
         self.send_response(400)
         self.end_headers()

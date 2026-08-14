@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260814_10">
+  <link rel="stylesheet" href="styles.css?v=20260814_11">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- FontAwesome CDN -->
@@ -396,9 +396,16 @@
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-facility-detail')">닫기</button>
-        <button class="btn" id="btn-edit-from-detail"><i class="fa-solid fa-pen-to-square"></i> 정보 수정</button>
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <button class="btn btn-rose admin-only" id="btn-delete-facility" style="display:none;" onclick="deleteFacilityFromDetail()">
+            <i class="fa-solid fa-trash-can"></i> 시설 삭제
+          </button>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-secondary" onclick="closeModal('modal-facility-detail')">닫기</button>
+          <button class="btn" id="btn-edit-from-detail"><i class="fa-solid fa-pen-to-square"></i> 정보 수정</button>
+        </div>
       </div>
     </div>
   </div>
@@ -795,8 +802,15 @@
       <div class="modal-body" id="disp-detail-modal-body">
         <!-- Dynamically Populated Disposition Detail Cards and Sub-lists -->
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-disposition-detail')">닫기</button>
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <button class="btn btn-rose admin-only" id="btn-delete-disposition-all" style="display:none;" onclick="deleteDispositionFromDetail()">
+            <i class="fa-solid fa-trash-can"></i> 행정처분 전체 삭제
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-secondary" onclick="closeModal('modal-disposition-detail')">닫기</button>
+        </div>
       </div>
     </div>
   </div>
@@ -841,6 +855,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260814_10"></script>
+  <script src="app.js?v=20260814_11"></script>
 </body>
 </html>
