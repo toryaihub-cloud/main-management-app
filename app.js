@@ -51,18 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
   setupLightboxEvents();
 });
 
-// 1. Authentication Logic
+// 1. Authentication Logic (Always Show Login Screen + Remember Username)
 function checkLoginSession() {
-  const savedUser = localStorage.getItem("currentUser");
-  if (savedUser) {
-    try {
-      currentUser = JSON.parse(savedUser);
-      showMainApp();
-      return;
-    } catch (e) {
-      localStorage.removeItem("currentUser");
-    }
-  }
+  // 항상 로그인 화면 노출 (세션 자동 바이패스 해제)
+  currentUser = null;
+  localStorage.removeItem("currentUser");
   showLoginScreen();
 }
 
@@ -72,8 +65,24 @@ function showLoginScreen() {
     loginScreen.classList.add("active");
     loginScreen.style.display = "flex";
   }
+
   const uInput = document.getElementById("login-username");
-  if (uInput) uInput.focus();
+  const pInput = document.getElementById("login-password");
+  const errorMsg = document.getElementById("login-error");
+
+  if (errorMsg) errorMsg.innerText = "";
+
+  // 이전 저장된 아이디 복원 (기본값 ADMIN)
+  const savedUsername = localStorage.getItem("savedUsername") || "ADMIN";
+  if (uInput) {
+    uInput.value = savedUsername;
+  }
+
+  // 비밀번호 입력칸 초기화 및 즉시 커서 포커스
+  if (pInput) {
+    pInput.value = "";
+    setTimeout(() => pInput.focus(), 100);
+  }
 }
 
 function showMainApp() {
@@ -117,12 +126,14 @@ async function executeLogin() {
       return;
     }
 
+    // 아이디 저장 (다음 접속 시 자동 채우기용)
+    localStorage.setItem("savedUsername", uVal);
+
     currentUser = {
       username: uVal.toUpperCase() || "ADMIN",
       name: "최고 관리자",
       role: "ADMIN"
     };
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
 
     const loginScreen = document.getElementById("login-screen");
     if (loginScreen) {
@@ -133,11 +144,7 @@ async function executeLogin() {
     showMainApp();
   } catch (err) {
     console.error("Error in executeLogin:", err);
-    const loginScreen = document.getElementById("login-screen");
-    if (loginScreen) {
-      loginScreen.classList.remove("active");
-      loginScreen.style.display = "none";
-    }
+    showLoginScreen();
   }
 }
 
