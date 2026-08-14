@@ -12,7 +12,7 @@ from crypto_utils import encrypt_data, decrypt_data
 
 PORT = int(os.environ.get("PORT", 8081))
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://vijiacxcmtfekbmegjlf.supabase.co")
-SECRET_KEY = os.environ.get("SECRET_KEY", "sb_secret_5RYQ46qS31rzPgmB_Ck9Jg_34IKc34t")
+SECRET_KEY = os.environ.get("SECRET_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpamlhY3hjbXRmZWtibWVnamxmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTgyMzgyNiwiZXhwIjoyMTAxMzk5ODI2fQ.Noa3eCRZLGLp67fRYu4ZlsFC4_d2X1C7KxQ_g2_zP00")
 SALT = "EcoCarManagement_Salt_2026!"
 
 HEADERS = {
@@ -432,7 +432,7 @@ def get_cached_facilities():
         filtered = [f for f in FACILITIES_CACHE["data"] if f.get("facility_key") not in DELETED_FACILITY_KEYS]
         return filtered, 200
 
-    if SUPABASE_URL and SECRET_KEY and not SECRET_KEY.startswith("sb_secret_"):
+    if SUPABASE_URL and SECRET_KEY:
         try:
             req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
             res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=3)
@@ -469,7 +469,7 @@ def get_cached_dispositions():
         filtered = [d for d in DISPOSITIONS_CACHE["data"] if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
         return filtered, 200
 
-    if SUPABASE_URL and SECRET_KEY and not SECRET_KEY.startswith("sb_secret_"):
+    if SUPABASE_URL and SECRET_KEY:
         try:
             req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
             res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=3)
@@ -782,13 +782,39 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             fac_key = req_json.get("facility_key")
             update_local_facility_cache(req_json)
 
+            # Supabase DB에 저장할 때 DB에 존재하는 컬럼만 필터링
+            FACILITIES_DB_COLS = {
+                "facility_key", "facility_name", "facility_category", "compliance_status",
+                "facility_ownership_type", "address_doro", "address_jibun", "dong_name",
+                "building_approval_dates", "building_new_old_type", "building_register_num",
+                "parking_required_cnt", "parking_installed_cnt", "parking_uninstalled_cnt",
+                "parking_status", "charger_required_cnt", "charger_installed_cnt",
+                "charger_uninstalled_cnt", "charger_status", "charger_fast_req_cnt",
+                "charger_fast_cnt", "investigation_status", "is_new_building",
+                "permission_date", "approval_date", "management_body",
+                "manager_name_encrypted", "manager_contact_encrypted"
+            }
+            db_payload = {}
+            for k, v in req_json.items():
+                if k in FACILITIES_DB_COLS:
+                    db_payload[k] = v
+            # _decrypted 필드를 _encrypted로 변환하여 DB에 저장
+            if req_json.get("manager_name_decrypted"):
+                enc = encrypt_data(req_json["manager_name_decrypted"])
+                if enc: db_payload["manager_name_encrypted"] = enc
+            if req_json.get("manager_contact_decrypted"):
+                enc = encrypt_data(req_json["manager_contact_decrypted"])
+                if enc: db_payload["manager_contact_encrypted"] = enc
+
             try:
                 prefer_headers = {**HEADERS, "Prefer": "return=representation"}
-                res = requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{fac_key}", headers=prefer_headers, json=req_json)
+                res = requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{fac_key}", headers=prefer_headers, json=db_payload, timeout=5)
+                print(f"Supabase facilities PATCH status={res.status_code} key={fac_key}")
                 if res.status_code not in [200, 201, 204] or (res.content and len(json.loads(res.content.decode('utf-8'))) == 0):
-                    requests.post(f"{SUPABASE_URL}/rest/v1/facilities", headers=prefer_headers, json=[req_json])
+                    res2 = requests.post(f"{SUPABASE_URL}/rest/v1/facilities", headers=prefer_headers, json=[db_payload], timeout=5)
+                    print(f"Supabase facilities POST status={res2.status_code} key={fac_key}")
             except Exception as e:
-                print("Supabase async save error:", e)
+                print("Supabase facilities save error:", e)
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
@@ -799,7 +825,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             disp_id = req_json.get("id")
             note_val = req_json.get("note", "")
 
-            # 1. Update Local Disposition Cache & Notes File Instantly (100% Guarantee Success)
+            # 1. Update Local Disposition Cache & Notes File
             update_local_disposition_cache(req_json)
 
             if disp_id and note_val is not None:
@@ -810,23 +836,57 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 except Exception as e:
                     print("Local note save error:", e)
 
-            # 2. Async Sync to Supabase in Background (Non-blocking)
-            try:
-                req_data = {k: v for k, v in req_json.items() if k != "note"}
-                date_fields = ["advance_notice_date", "advance_notice_send_date", "abstract_send_date", "opinion_submit_date", "correction_order_date"]
-                for df in date_fields:
-                    if df in req_data and (req_data[df] == "" or req_data[df] == "None"):
-                        req_data[df] = None
+            # 2. Supabase DB에 저장 - DB 컬럼만 필터링
+            DISPOSITIONS_DB_COLS = {
+                "id", "facility_key", "target_type", "current_status", "seq",
+                "advance_notice_date", "advance_notice_target", "advance_notice_method",
+                "advance_notice_send_date", "advance_notice_return_status",
+                "abstract_send_date", "abstract_return_status",
+                "notice_public", "notice_public_period", "zip_code",
+                "opinion_submitted", "opinion_submit_date", "opinion_content",
+                "correction_order", "correction_order_date", "correction_reason",
+                "correction_period", "correction_notice_method",
+                "correction_return_details", "correction_public",
+                "target_name_encrypted", "recipient_name_encrypted",
+                "mail_address_encrypted", "abstract_address_encrypted",
+                "reg_num_encrypted", "contact_encrypted"
+            }
+            db_payload = {}
+            for k, v in req_json.items():
+                if k in DISPOSITIONS_DB_COLS and k != "id":
+                    db_payload[k] = v
+            # _decrypted 필드를 _encrypted로 변환하여 DB에 저장
+            enc_map = {
+                "target_name_decrypted": "target_name_encrypted",
+                "recipient_name_decrypted": "recipient_name_encrypted",
+                "mail_address_decrypted": "mail_address_encrypted",
+                "abstract_address_decrypted": "abstract_address_encrypted",
+                "reg_num_decrypted": "reg_num_encrypted",
+                "contact_decrypted": "contact_encrypted"
+            }
+            for dec_key, enc_key in enc_map.items():
+                val = req_json.get(dec_key)
+                if val and isinstance(val, str) and val.strip():
+                    enc = encrypt_data(val.strip())
+                    if enc: db_payload[enc_key] = enc
 
+            # 날짜 필드 빈 문자열을 None으로 변환
+            date_fields = ["advance_notice_date", "advance_notice_send_date", "abstract_send_date", "opinion_submit_date", "correction_order_date"]
+            for df in date_fields:
+                if df in db_payload and (db_payload[df] == "" or db_payload[df] == "None"):
+                    db_payload[df] = None
+
+            try:
                 prefer_headers = {**HEADERS, "Prefer": "return=representation"}
                 if disp_id:
-                    requests.patch(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=prefer_headers, json=req_data, timeout=3)
+                    res = requests.patch(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=prefer_headers, json=db_payload, timeout=5)
+                    print(f"Supabase dispositions PATCH status={res.status_code} id={disp_id}")
                 else:
-                    requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[req_data], timeout=3)
+                    res = requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[db_payload], timeout=5)
+                    print(f"Supabase dispositions POST status={res.status_code}")
             except Exception as e:
-                print("Supabase async disposition save note:", e)
+                print("Supabase dispositions save error:", e)
 
-            # Always return 200 OK because local DB persistence is 100% guaranteed!
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
