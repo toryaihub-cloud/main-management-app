@@ -432,32 +432,33 @@ def get_cached_facilities():
         filtered = [f for f in FACILITIES_CACHE["data"] if f.get("facility_key") not in DELETED_FACILITY_KEYS]
         return filtered, 200
 
-    try:
-        req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
-        res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=3)
-        if res.status_code == 200:
-            data = res.json()
-            processed = [process_facility_item(item) for item in data]
-            
-            if os.path.exists(LOCAL_FACILITIES_FILE):
-                try:
-                    with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as f:
-                        local_list = json.load(f)
-                    fetched_keys = {item.get("facility_key") for item in processed}
-                    for loc in local_list:
-                        if loc.get("facility_key") and loc.get("facility_key") not in fetched_keys:
-                            processed.append(process_facility_item(loc))
-                except Exception: pass
+    if SUPABASE_URL and SECRET_KEY and not SECRET_KEY.startswith("sb_secret_"):
+        try:
+            req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=3)
+            if res.status_code == 200:
+                data = res.json()
+                processed = [process_facility_item(item) for item in data]
+                
+                if os.path.exists(LOCAL_FACILITIES_FILE):
+                    try:
+                        with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as f:
+                            local_list = json.load(f)
+                        fetched_keys = {item.get("facility_key") for item in processed}
+                        for loc in local_list:
+                            if loc.get("facility_key") and loc.get("facility_key") not in fetched_keys:
+                                processed.append(process_facility_item(loc))
+                    except Exception: pass
 
-            processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
-            FACILITIES_CACHE["data"] = processed
-            try:
-                with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
-                    json.dump(processed, f, ensure_ascii=False, indent=2)
-            except Exception: pass
-            return processed, 200
-    except Exception as e:
-        print("Facilities fetch exception:", e)
+                processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
+                FACILITIES_CACHE["data"] = processed
+                try:
+                    with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
+                        json.dump(processed, f, ensure_ascii=False, indent=2)
+                except Exception: pass
+                return processed, 200
+        except Exception as e:
+            print("Facilities fetch exception:", e)
 
     filtered = [f for f in (FACILITIES_CACHE["data"] or []) if f.get("facility_key") not in DELETED_FACILITY_KEYS]
     return filtered, 200
@@ -468,32 +469,33 @@ def get_cached_dispositions():
         filtered = [d for d in DISPOSITIONS_CACHE["data"] if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
         return filtered, 200
 
-    try:
-        req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
-        res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=3)
-        if res.status_code == 200:
-            data = res.json()
-            processed = [process_disposition_item(item) for item in data]
-            
-            if os.path.exists(LOCAL_DISPOSITIONS_FILE):
-                try:
-                    with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as f:
-                        local_list = json.load(f)
-                    fetched_ids = {str(item.get("id")) for item in processed}
-                    for loc in local_list:
-                        if loc.get("id") and str(loc.get("id")) not in fetched_ids:
-                            processed.append(process_disposition_item(loc))
-                except Exception: pass
+    if SUPABASE_URL and SECRET_KEY and not SECRET_KEY.startswith("sb_secret_"):
+        try:
+            req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=3)
+            if res.status_code == 200:
+                data = res.json()
+                processed = [process_disposition_item(item) for item in data]
+                
+                if os.path.exists(LOCAL_DISPOSITIONS_FILE):
+                    try:
+                        with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as f:
+                            local_list = json.load(f)
+                        fetched_ids = {str(item.get("id")) for item in processed}
+                        for loc in local_list:
+                            if loc.get("id") and str(loc.get("id")) not in fetched_ids:
+                                processed.append(process_disposition_item(loc))
+                    except Exception: pass
 
-            processed = [d for d in processed if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
-            DISPOSITIONS_CACHE["data"] = processed
-            try:
-                with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
-                    json.dump(processed, f, ensure_ascii=False, indent=2)
-            except Exception: pass
-            return processed, 200
-    except Exception as e:
-        print("Dispositions fetch exception:", e)
+                processed = [d for d in processed if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
+                DISPOSITIONS_CACHE["data"] = processed
+                try:
+                    with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
+                        json.dump(processed, f, ensure_ascii=False, indent=2)
+                except Exception: pass
+                return processed, 200
+        except Exception as e:
+            print("Dispositions fetch exception:", e)
 
     filtered = [d for d in (DISPOSITIONS_CACHE["data"] or []) if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
     return filtered, 200

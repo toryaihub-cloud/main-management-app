@@ -291,41 +291,14 @@ async function fetchDispositions() {
     const raw = await res.json();
     const list = Array.isArray(raw) ? raw : (raw.data || []);
     
-    // Ensure all encrypted fields are decrypted on client side if backend returned ciphertext
-    dispositionsData = await Promise.all(list.map(async (d) => {
-      let tName = d.target_name_decrypted;
-      if (!tName || tName.startsWith("gAAAAA")) {
-        tName = await decryptFieldText(d.target_name_encrypted || tName);
-      }
-      let rName = d.recipient_name_decrypted;
-      if (!rName || rName.startsWith("gAAAAA")) {
-        rName = await decryptFieldText(d.recipient_name_encrypted || rName);
-      }
-      let mAddr = d.mail_address_decrypted;
-      if (!mAddr || mAddr.startsWith("gAAAAA")) {
-        mAddr = await decryptFieldText(d.mail_address_encrypted || mAddr);
-      }
-      let aAddr = d.abstract_address_decrypted;
-      if (!aAddr || aAddr.startsWith("gAAAAA")) {
-        aAddr = await decryptFieldText(d.abstract_address_encrypted || aAddr);
-      }
-      let regN = d.reg_num_decrypted;
-      if (!regN || regN.startsWith("gAAAAA")) {
-        regN = await decryptFieldText(d.reg_num_encrypted || regN);
-      }
-      let conT = d.contact_decrypted;
-      if (!conT || conT.startsWith("gAAAAA")) {
-        conT = await decryptFieldText(d.contact_encrypted || conT);
-      }
-      return {
-        ...d,
-        target_name_decrypted: tName || d.target_name || "",
-        recipient_name_decrypted: rName || d.recipient_name || "",
-        mail_address_decrypted: mAddr || d.mail_address || "",
-        abstract_address_decrypted: aAddr || d.abstract_address || "",
-        reg_num_decrypted: regN || d.reg_num || "",
-        contact_decrypted: conT || d.contact || ""
-      };
+    dispositionsData = list.map(d => ({
+      ...d,
+      target_name_decrypted: (d.target_name_decrypted && !d.target_name_decrypted.startsWith("gAAAAA")) ? d.target_name_decrypted : (d.target_name || ""),
+      recipient_name_decrypted: (d.recipient_name_decrypted && !d.recipient_name_decrypted.startsWith("gAAAAA")) ? d.recipient_name_decrypted : (d.recipient_name || ""),
+      mail_address_decrypted: (d.mail_address_decrypted && !d.mail_address_decrypted.startsWith("gAAAAA")) ? d.mail_address_decrypted : (d.mail_address || ""),
+      abstract_address_decrypted: (d.abstract_address_decrypted && !d.abstract_address_decrypted.startsWith("gAAAAA")) ? d.abstract_address_decrypted : (d.abstract_address || ""),
+      reg_num_decrypted: (d.reg_num_decrypted && !d.reg_num_decrypted.startsWith("gAAAAA")) ? d.reg_num_decrypted : (d.reg_num || ""),
+      contact_decrypted: (d.contact_decrypted && !d.contact_decrypted.startsWith("gAAAAA")) ? d.contact_decrypted : (d.contact || "")
     }));
   } catch (err) {
     console.error("Error fetching dispositions:", err);
@@ -2309,22 +2282,12 @@ async function saveDisposition() {
   const facilityKey = document.getElementById("disp-facility-key").value.trim();
   if (!facilityKey) { alert("시설 KEY는 필수입니다."); return; }
 
-  // Encrypt sensitive fields
   const targetName = document.getElementById("disp-target-name").value.trim();
   const mailAddr = document.getElementById("disp-mail-address").value.trim();
   const recipientName = document.getElementById("disp-recipient-name").value.trim();
   const abstractAddr = document.getElementById("disp-abstract-address").value.trim();
   const regNum = document.getElementById("disp-reg-num").value.trim();
   const contact = document.getElementById("disp-contact").value.trim();
-
-  const [encTarget, encMail, encRecipient, encAbstract, encReg, encContact] = await Promise.all([
-    encryptFieldText(targetName),
-    encryptFieldText(mailAddr),
-    encryptFieldText(recipientName),
-    encryptFieldText(abstractAddr),
-    encryptFieldText(regNum),
-    encryptFieldText(contact)
-  ]);
 
   const payload = {
     facility_key: facilityKey,
@@ -2361,12 +2324,6 @@ async function saveDisposition() {
   };
 
   if (id) payload.id = parseInt(id);
-  if (encTarget) payload.target_name_encrypted = encTarget;
-  if (encMail) payload.mail_address_encrypted = encMail;
-  if (encRecipient) payload.recipient_name_encrypted = encRecipient;
-  if (encAbstract) payload.abstract_address_encrypted = encAbstract;
-  if (encReg) payload.reg_num_encrypted = encReg;
-  if (encContact) payload.contact_encrypted = encContact;
 
   try {
     const res = await fetch(`${API_BASE_URL}/dispositions/save`, {
@@ -2415,15 +2372,6 @@ async function saveDisposition() {
       const subCon = card.querySelector(".sub-contact").value.trim();
       const subNote = card.querySelector(".sub-note").value.trim();
 
-      const [subEncName, subEncMail, subEncRecip, subEncAbstract, subEncReg, subEncCon] = await Promise.all([
-        encryptFieldText(subTargetName),
-        encryptFieldText(subMailAddr),
-        encryptFieldText(subRecipient),
-        encryptFieldText(subAbstractAddr),
-        encryptFieldText(subReg),
-        encryptFieldText(subCon)
-      ]);
-
       const subPayload = {
         facility_key: facilityKey,
         target_type: subTargetType,
@@ -2457,13 +2405,6 @@ async function saveDisposition() {
         reg_num_decrypted: subReg,
         contact_decrypted: subCon
       };
-
-      if (subEncName) subPayload.target_name_encrypted = subEncName;
-      if (subEncMail) subPayload.mail_address_encrypted = subEncMail;
-      if (subEncRecip) subPayload.recipient_name_encrypted = subEncRecip;
-      if (subEncAbstract) subPayload.abstract_address_encrypted = subEncAbstract;
-      if (subEncReg) subPayload.reg_num_encrypted = subEncReg;
-      if (subEncCon) subPayload.contact_encrypted = subEncCon;
 
       await fetch(`${API_BASE_URL}/dispositions/save`, {
         method: "POST",
