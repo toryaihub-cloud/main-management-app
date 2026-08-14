@@ -201,7 +201,6 @@ def save_deleted_keys():
 load_deleted_keys()
 
 def process_facility_item(item):
-    # 1. Smart decrypt manager fields
     if not item: return item
     
     def smart_dec(val):
@@ -212,8 +211,16 @@ def process_facility_item(item):
             return dec if (dec and not dec.startswith("gAAAAA")) else ""
         return val
 
-    item["manager_name_decrypted"] = item.get("manager_name_decrypted") or smart_dec(item.get("manager_name_encrypted")) or item.get("manager_name") or ""
-    item["manager_contact_decrypted"] = item.get("manager_contact_decrypted") or smart_dec(item.get("manager_contact_encrypted")) or item.get("manager_contact") or ""
+    # If manager_name_decrypted itself is an encrypted string (gAAAAA...), force decrypt it
+    mgr_dec = item.get("manager_name_decrypted")
+    if mgr_dec and mgr_dec.startswith("gAAAAA"):
+        mgr_dec = smart_dec(mgr_dec)
+    item["manager_name_decrypted"] = mgr_dec or smart_dec(item.get("manager_name_encrypted")) or item.get("manager_name") or ""
+
+    mgr_con = item.get("manager_contact_decrypted")
+    if mgr_con and mgr_con.startswith("gAAAAA"):
+        mgr_con = smart_dec(mgr_con)
+    item["manager_contact_decrypted"] = mgr_con or smart_dec(item.get("manager_contact_encrypted")) or item.get("manager_contact") or ""
 
     return item
 
@@ -231,12 +238,23 @@ def process_disposition_item(item):
             return dec if (dec and not dec.startswith("gAAAAA")) else ""
         return val
 
-    item["target_name_decrypted"] = item.get("target_name_decrypted") or smart_dec(item.get("target_name_encrypted")) or item.get("target_name") or ""
-    item["recipient_name_decrypted"] = item.get("recipient_name_decrypted") or smart_dec(item.get("recipient_name_encrypted")) or item.get("recipient_name") or ""
-    item["reg_num_decrypted"] = item.get("reg_num_decrypted") or smart_dec(item.get("reg_num_encrypted")) or item.get("reg_num") or ""
-    item["contact_decrypted"] = item.get("contact_decrypted") or smart_dec(item.get("contact_encrypted")) or item.get("contact") or ""
-    item["mail_address_decrypted"] = item.get("mail_address_decrypted") or smart_dec(item.get("mail_address_encrypted")) or item.get("mail_address") or ""
-    item["abstract_address_decrypted"] = item.get("abstract_address_decrypted") or smart_dec(item.get("abstract_address_encrypted")) or item.get("abstract_address") or ""
+    def resolve_dec(dec_key, enc_key, fallback_key):
+        val = item.get(dec_key)
+        if val and isinstance(val, str) and val.strip().startswith("gAAAAA"):
+            dec_res = smart_dec(val)
+            if dec_res: return dec_res
+        if val and not (isinstance(val, str) and val.strip().startswith("gAAAAA")):
+            return val
+        enc_res = smart_dec(item.get(enc_key))
+        if enc_res: return enc_res
+        return item.get(fallback_key) or ""
+
+    item["target_name_decrypted"] = resolve_dec("target_name_decrypted", "target_name_encrypted", "target_name")
+    item["recipient_name_decrypted"] = resolve_dec("recipient_name_decrypted", "recipient_name_encrypted", "recipient_name")
+    item["reg_num_decrypted"] = resolve_dec("reg_num_decrypted", "reg_num_encrypted", "reg_num")
+    item["contact_decrypted"] = resolve_dec("contact_decrypted", "contact_encrypted", "contact")
+    item["mail_address_decrypted"] = resolve_dec("mail_address_decrypted", "mail_address_encrypted", "mail_address")
+    item["abstract_address_decrypted"] = resolve_dec("abstract_address_decrypted", "abstract_address_encrypted", "abstract_address")
 
     return item
 

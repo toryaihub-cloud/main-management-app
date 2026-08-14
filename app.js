@@ -286,7 +286,44 @@ async function fetchDispositions() {
   try {
     const res = await fetch(`${API_BASE_URL}/dispositions`);
     const raw = await res.json();
-    dispositionsData = Array.isArray(raw) ? raw : (raw.data || []);
+    const list = Array.isArray(raw) ? raw : (raw.data || []);
+    
+    // Ensure all encrypted fields are decrypted on client side if backend returned ciphertext
+    dispositionsData = await Promise.all(list.map(async (d) => {
+      let tName = d.target_name_decrypted;
+      if (!tName || tName.startsWith("gAAAAA")) {
+        tName = await decryptFieldText(d.target_name_encrypted || tName);
+      }
+      let rName = d.recipient_name_decrypted;
+      if (!rName || rName.startsWith("gAAAAA")) {
+        rName = await decryptFieldText(d.recipient_name_encrypted || rName);
+      }
+      let mAddr = d.mail_address_decrypted;
+      if (!mAddr || mAddr.startsWith("gAAAAA")) {
+        mAddr = await decryptFieldText(d.mail_address_encrypted || mAddr);
+      }
+      let aAddr = d.abstract_address_decrypted;
+      if (!aAddr || aAddr.startsWith("gAAAAA")) {
+        aAddr = await decryptFieldText(d.abstract_address_encrypted || aAddr);
+      }
+      let regN = d.reg_num_decrypted;
+      if (!regN || regN.startsWith("gAAAAA")) {
+        regN = await decryptFieldText(d.reg_num_encrypted || regN);
+      }
+      let conT = d.contact_decrypted;
+      if (!conT || conT.startsWith("gAAAAA")) {
+        conT = await decryptFieldText(d.contact_encrypted || conT);
+      }
+      return {
+        ...d,
+        target_name_decrypted: tName || d.target_name || "",
+        recipient_name_decrypted: rName || d.recipient_name || "",
+        mail_address_decrypted: mAddr || d.mail_address || "",
+        abstract_address_decrypted: aAddr || d.abstract_address || "",
+        reg_num_decrypted: regN || d.reg_num || "",
+        contact_decrypted: conT || d.contact || ""
+      };
+    }));
   } catch (err) {
     console.error("Error fetching dispositions:", err);
   }
@@ -2246,6 +2283,21 @@ async function encryptFieldText(val) {
     return result.result || null;
   } catch (e) {
     return null;
+  }
+}
+
+async function decryptFieldText(val) {
+  if (!val || typeof val !== 'string' || !val.startsWith('gAAAAA')) return val || '';
+  try {
+    const res = await fetch(`${API_BASE_URL}/decrypt`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: val })
+    });
+    const result = await res.json();
+    return (result.result && !result.result.startsWith('gAAAAA')) ? result.result : val;
+  } catch (e) {
+    return val;
   }
 }
 
