@@ -733,27 +733,45 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 if not os.path.exists(photo_dir):
                     os.makedirs(photo_dir, exist_ok=True)
                 
-                if not filename:
-                    filename = f"{facility_key}_{int(time.time()*1000)}.jpg"
-                elif not filename.startswith(facility_key):
-                    filename = f"{facility_key}_{filename}"
+                # Calculate next sequence number (_01, _02, _03...) for facility_key
+                k_upper = facility_key.upper()
+                existing_photos = PHOTO_KEY_MAP.get(k_upper, [])
+                
+                max_seq = 0
+                import re
+                for p in existing_photos:
+                    fn = p.get("filename", "")
+                    m = re.search(r'_(\d+)\.', fn)
+                    if m:
+                        try:
+                            seq = int(m.group(1))
+                            if seq > max_seq: max_seq = seq
+                        except Exception: pass
+                
+                next_seq = max_seq + 1
+                seq_str = f"{next_seq:02d}"
+                
+                ext = "jpg"
+                if filename and "." in filename:
+                    ext = filename.split(".")[-1].lower()
+                
+                auto_filename = f"{k_upper}_{seq_str}.{ext}"
+                save_path = os.path.join(photo_dir, auto_filename)
 
-                save_path = os.path.join(photo_dir, filename)
                 with open(save_path, "wb") as f:
                     f.write(img_bytes)
 
-                k_upper = facility_key.upper()
                 if k_upper not in PHOTO_KEY_MAP:
                     PHOTO_KEY_MAP[k_upper] = []
                 
                 photo_obj = {
-                    "filename": filename,
+                    "filename": auto_filename,
                     "url": f"/api/photo_file?path={save_path}",
                     "thumb_url": f"/api/photo_file?path={save_path}&thumb=1"
                 }
                 PHOTO_KEY_MAP[k_upper].append(photo_obj)
 
-                response = {"success": True, "filename": filename, "url": photo_obj["url"]}
+                response = {"success": True, "filename": auto_filename, "url": photo_obj["url"]}
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
