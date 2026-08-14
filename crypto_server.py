@@ -365,14 +365,25 @@ def get_cached_facilities():
 
     try:
         req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
-        res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=5)
+        res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=3)
         if res.status_code == 200:
             data = res.json()
             processed = [process_facility_item(item) for item in data]
+            
+            if os.path.exists(LOCAL_FACILITIES_FILE):
+                try:
+                    with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as f:
+                        local_list = json.load(f)
+                    fetched_keys = {item.get("facility_key") for item in processed}
+                    for loc in local_list:
+                        if loc.get("facility_key") and loc.get("facility_key") not in fetched_keys:
+                            processed.append(process_facility_item(loc))
+                except Exception: pass
+
             FACILITIES_CACHE["data"] = processed
             try:
                 with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
-                    json.dump(processed, f, ensure_ascii=False)
+                    json.dump(processed, f, ensure_ascii=False, indent=2)
             except Exception: pass
             return processed, 200
     except Exception as e:
@@ -387,14 +398,25 @@ def get_cached_dispositions():
 
     try:
         req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
-        res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=5)
+        res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=3)
         if res.status_code == 200:
             data = res.json()
             processed = [process_disposition_item(item) for item in data]
+            
+            if os.path.exists(LOCAL_DISPOSITIONS_FILE):
+                try:
+                    with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as f:
+                        local_list = json.load(f)
+                    fetched_ids = {str(item.get("id")) for item in processed}
+                    for loc in local_list:
+                        if loc.get("id") and str(loc.get("id")) not in fetched_ids:
+                            processed.append(process_disposition_item(loc))
+                except Exception: pass
+
             DISPOSITIONS_CACHE["data"] = processed
             try:
                 with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
-                    json.dump(processed, f, ensure_ascii=False)
+                    json.dump(processed, f, ensure_ascii=False, indent=2)
             except Exception: pass
             return processed, 200
     except Exception as e:
