@@ -212,8 +212,8 @@ def process_facility_item(item):
             return dec if (dec and not dec.startswith("gAAAAA")) else ""
         return val
 
-    item["manager_name_decrypted"] = smart_dec(item.get("manager_name_encrypted")) or item.get("manager_name") or ""
-    item["manager_contact_decrypted"] = smart_dec(item.get("manager_contact_encrypted")) or item.get("manager_contact") or ""
+    item["manager_name_decrypted"] = item.get("manager_name_decrypted") or smart_dec(item.get("manager_name_encrypted")) or item.get("manager_name") or ""
+    item["manager_contact_decrypted"] = item.get("manager_contact_decrypted") or smart_dec(item.get("manager_contact_encrypted")) or item.get("manager_contact") or ""
 
     return item
 
@@ -231,12 +231,12 @@ def process_disposition_item(item):
             return dec if (dec and not dec.startswith("gAAAAA")) else ""
         return val
 
-    item["target_name_decrypted"] = smart_dec(item.get("target_name_encrypted")) or item.get("target_name") or ""
-    item["recipient_name_decrypted"] = smart_dec(item.get("recipient_name_encrypted")) or item.get("recipient_name") or ""
-    item["reg_num_decrypted"] = smart_dec(item.get("reg_num_encrypted")) or item.get("reg_num") or ""
-    item["contact_decrypted"] = smart_dec(item.get("contact_encrypted")) or item.get("contact") or ""
-    item["mail_address_decrypted"] = smart_dec(item.get("mail_address_encrypted")) or item.get("mail_address") or ""
-    item["abstract_address_decrypted"] = smart_dec(item.get("abstract_address_encrypted")) or item.get("abstract_address") or ""
+    item["target_name_decrypted"] = item.get("target_name_decrypted") or smart_dec(item.get("target_name_encrypted")) or item.get("target_name") or ""
+    item["recipient_name_decrypted"] = item.get("recipient_name_decrypted") or smart_dec(item.get("recipient_name_encrypted")) or item.get("recipient_name") or ""
+    item["reg_num_decrypted"] = item.get("reg_num_decrypted") or smart_dec(item.get("reg_num_encrypted")) or item.get("reg_num") or ""
+    item["contact_decrypted"] = item.get("contact_decrypted") or smart_dec(item.get("contact_encrypted")) or item.get("contact") or ""
+    item["mail_address_decrypted"] = item.get("mail_address_decrypted") or smart_dec(item.get("mail_address_encrypted")) or item.get("mail_address") or ""
+    item["abstract_address_decrypted"] = item.get("abstract_address_decrypted") or smart_dec(item.get("abstract_address_encrypted")) or item.get("abstract_address") or ""
 
     return item
 

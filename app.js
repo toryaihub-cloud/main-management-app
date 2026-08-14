@@ -2290,7 +2290,13 @@ async function saveDisposition() {
     correction_notice_method: document.getElementById("disp-correction-notice-method").value.trim(),
     correction_return_details: document.getElementById("disp-correction-return-details").value.trim(),
     correction_public: document.getElementById("disp-correction-public").value.trim(),
-    note: document.getElementById("disp-note").value.trim()
+    note: document.getElementById("disp-note").value.trim(),
+    target_name_decrypted: targetName,
+    mail_address_decrypted: mailAddr,
+    recipient_name_decrypted: recipientName,
+    abstract_address_decrypted: abstractAddr,
+    reg_num_decrypted: regNum,
+    contact_decrypted: contact
   };
 
   if (id) payload.id = parseInt(id);
@@ -2382,7 +2388,13 @@ async function saveDisposition() {
         correction_notice_method: subCorrectionNoticeMethod,
         correction_return_details: subCorrectionReturnDetails,
         correction_public: subCorrectionPublic,
-        note: subNote
+        note: subNote,
+        target_name_decrypted: subTargetName,
+        mail_address_decrypted: subMailAddr,
+        recipient_name_decrypted: subRecipient,
+        abstract_address_decrypted: subAbstractAddr,
+        reg_num_decrypted: subReg,
+        contact_decrypted: subCon
       };
 
       if (subEncName) subPayload.target_name_encrypted = subEncName;
