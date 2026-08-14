@@ -402,19 +402,23 @@ header {
   width: 100%;
 }
 
-/* Toolbar & Pill Toggle */
+/* Toolbar & Pill Toggle - Sticky Header Fixed on Scroll */
 .toolbar {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
-  padding: 1rem;
+  padding: 0.85rem 1.25rem;
   margin-bottom: 1.25rem;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 72px;
+  z-index: 100;
+  backdrop-filter: blur(8px);
 }
 
 .search-filter-group {
