@@ -807,6 +807,46 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
                 self.wfile.write(json.dumps({"success": False, "message": str(e)}, ensure_ascii=False).encode('utf-8'))
+
+        elif path == "/api/photos/delete":
+            facility_key = req_json.get("facility_key", "").strip()
+            filename = req_json.get("filename", "").strip()
+
+            if not filename:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "message": "삭제할 파일명 누락"}, ensure_ascii=False).encode('utf-8'))
+                return
+
+            try:
+                base_dir = os.path.dirname(os.path.abspath(__file__))
+                photo_dir = os.path.join(base_dir, "사진")
+                file_path = os.path.join(photo_dir, filename)
+
+                if os.path.exists(file_path):
+                    try: os.remove(file_path)
+                    except Exception as e: print("File delete note:", e)
+
+                if facility_key:
+                    k_upper = facility_key.upper()
+                    if k_upper in PHOTO_KEY_MAP:
+                        PHOTO_KEY_MAP[k_upper] = [p for p in PHOTO_KEY_MAP[k_upper] if p.get("filename") != filename]
+                else:
+                    for k in PHOTO_KEY_MAP:
+                        PHOTO_KEY_MAP[k] = [p for p in PHOTO_KEY_MAP[k] if p.get("filename") != filename]
+
+                response = {"success": True, "message": "사진이 성공적으로 삭제되었습니다."}
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps(response, ensure_ascii=False).encode('utf-8'))
+            except Exception as e:
+                print("Photo delete error:", e)
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "message": str(e)}, ensure_ascii=False).encode('utf-8'))
         else:
             super().do_POST()
 
