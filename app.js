@@ -105,6 +105,9 @@ function showMainApp() {
       adminTab.style.display = isAdmin ? "flex" : "none";
     }
 
+    // Always reset active tab to 'dashboard' on fresh login
+    switchTab('dashboard');
+
     loadData();
     fetchSettings();
   } catch (errShow) {
