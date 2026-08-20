@@ -112,6 +112,22 @@ def hash_password(password: str) -> str:
     return hashlib.sha256((password + SALT).encode('utf-8')).hexdigest()
 
 def load_users():
+    # 1. Supabase DB에서 먼저 조회 시도
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/users?select=username,password_hash,name,role,created_at", headers=HEADERS, timeout=3)
+            if res.status_code == 200:
+                db_users = res.json()
+                if db_users and len(db_users) > 0:
+                    try:
+                        with open(USERS_FILE, "w", encoding="utf-8") as f:
+                            json.dump(db_users, f, ensure_ascii=False, indent=2)
+                    except Exception: pass
+                    return db_users
+        except Exception as e:
+            print("Supabase load users note:", e)
+
+    # 2. 로컬 파일 로드 (Fallback)
     if not os.path.exists(USERS_FILE):
         default_users = [
             {
@@ -120,6 +136,13 @@ def load_users():
                 "name": "최고 관리자",
                 "role": "ADMIN",
                 "created_at": "2026-08-06 00:00:00"
+            },
+            {
+                "username": "USER1",
+                "password_hash": hash_password("ECOCAR"),
+                "name": "일반 사용자 1",
+                "role": "USER",
+                "created_at": "2026-08-20 00:00:00"
             }
         ]
         save_users(default_users)
@@ -736,9 +759,16 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             users = load_users()
             existing = next((u for u in users if u["username"] == username), None)
             
+            db_user_payload = {
+                "username": username,
+                "name": name or username,
+                "role": role
+            }
+
             if existing:
                 if password:
                     existing["password_hash"] = hash_password(password)
+                    db_user_payload["password_hash"] = existing["password_hash"]
                 if name:
                     existing["name"] = name
                 if role:
@@ -748,15 +778,31 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_response(400)
                     self.end_headers()
                     return
+                pw_hash = hash_password(password)
+                db_user_payload["password_hash"] = pw_hash
                 users.append({
                     "username": username,
-                    "password_hash": hash_password(password),
+                    "password_hash": pw_hash,
                     "name": name or username,
                     "role": role,
                     "created_at": "2026-08-06 00:00:00"
                 })
                 
             save_users(users)
+            
+            # Save to Supabase
+            try:
+                if SUPABASE_URL and SECRET_KEY:
+                    prefer_headers = {**HEADERS, "Prefer": "return=representation"}
+                    if existing:
+                        res = requests.patch(f"{SUPABASE_URL}/rest/v1/users?username=eq.{username}", headers=prefer_headers, json=db_payload, timeout=5)
+                        print(f"Supabase users PATCH status={res.status_code}")
+                    else:
+                        res = requests.post(f"{SUPABASE_URL}/rest/v1/users", headers=prefer_headers, json=[db_payload], timeout=5)
+                        print(f"Supabase users POST status={res.status_code}")
+            except Exception as e:
+                print("Supabase users save error:", e)
+
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
@@ -1023,6 +1069,15 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 users = load_users()
                 users = [u for u in users if u["username"] != username]
                 save_users(users)
+                
+                # Delete from Supabase
+                try:
+                    if SUPABASE_URL and SECRET_KEY:
+                        res = requests.delete(f"{SUPABASE_URL}/rest/v1/users?username=eq.{username}", headers=HEADERS, timeout=3)
+                        print(f"Supabase users DELETE status={res.status_code}")
+                except Exception as e:
+                    print("Supabase users delete error:", e)
+                    
                 self.send_response(200)
                 self.end_headers()
                 return
