@@ -2003,9 +2003,24 @@ async function deleteFacility(key) {
     const res = await fetch(`${API_BASE_URL}/facilities/delete?key=${key}`, { method: "DELETE" });
     if (res.ok) {
       alert("삭제되었습니다.");
+      closeModal('modal-facility-detail');
       loadData();
+    } else {
+      alert("삭제에 실패했습니다.");
     }
-  } catch (err) { console.error(err); }
+  } catch (err) {
+    console.error(err);
+    alert("삭제 중 오류가 발생했습니다.");
+  }
+}
+
+// 상세 팝업에서 시설 삭제 버튼 클릭 시 호출
+function deleteFacilityFromDetail() {
+  if (!currentFacilityDetail || !currentFacilityDetail.facility_key) {
+    alert("삭제할 시설 정보를 찾을 수 없습니다.");
+    return;
+  }
+  deleteFacility(currentFacilityDetail.facility_key);
 }
 
 let subOwnerCounter = 0;
