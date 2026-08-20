@@ -165,10 +165,9 @@ def load_settings():
         return SETTINGS_CACHE
 
     default_settings = {
-        "photo_dir_path": "사진"
+        "photo_dir_path": r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진"
     }
 
-    # 1. Supabase DB에서 먼저 조회
     if SUPABASE_URL and SECRET_KEY:
         try:
             res = requests.get(f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.general", headers=HEADERS, timeout=3)
@@ -186,7 +185,6 @@ def load_settings():
         except Exception as e:
             print("Supabase load settings error:", e)
 
-    # 2. 로컬 파일 로드 (Fallback)
     if os.path.exists(SETTINGS_FILE):
         try:
             with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
@@ -207,14 +205,15 @@ def save_settings(settings):
     except Exception as e:
         print("Error saving local settings:", e)
 
-    # Supabase DB 동기화
     if SUPABASE_URL and SECRET_KEY:
         try:
             res = requests.get(f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.general", headers=HEADERS, timeout=3)
             payload = {"key": "general", "value": settings}
             prefer_headers = {**HEADERS, "Prefer": "return=representation"}
-            if res.status_code not in [200, 201, 204] or (res.content and len(json.loads(res.content.decode('utf-8'))) == 0):
-                requests.post(f"{SUPABASE_URL}/rest/v1/system_settings", headers=prefer_headers, json=[{"key": "general", "value": settings}], timeout=3)
+            if res.status_code == 200 and len(res.json()) > 0:
+                requests.patch(f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.general", headers=prefer_headers, json=payload, timeout=3)
+            else:
+                requests.post(f"{SUPABASE_URL}/rest/v1/system_settings", headers=prefer_headers, json=[payload], timeout=3)
         except Exception as e:
             print("Supabase settings sync error:", e)
 
@@ -617,6 +616,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             base_url = f"{proto}://{host}"
 
             photo_urls = []
+            seen_filenames = set()
             if key:
                 k_upper = key.strip().upper()
                 raw_list = PHOTO_KEY_MAP.get(k_upper) or []
@@ -625,11 +625,31 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     full = item["url"]
                     if thumb.startswith("/"): thumb = base_url + thumb
                     if full.startswith("/"): full = base_url + full
-                    photo_urls.append({
-                        "filename": item["filename"],
-                        "thumb_url": thumb,
-                        "url": full
-                    })
+                    fn = item["filename"]
+                    if fn not in seen_filenames:
+                        seen_filenames.add(fn)
+                        photo_urls.append({
+                            "filename": fn,
+                            "thumb_url": thumb,
+                            "url": full
+                        })
+
+                if SUPABASE_URL and SECRET_KEY:
+                    try:
+                        res = requests.get(f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}", headers=HEADERS, timeout=3)
+                        if res.status_code == 200:
+                            db_photos = res.json()
+                            for dp in db_photos:
+                                fn = dp.get("filename")
+                                if fn and fn not in seen_filenames:
+                                    seen_filenames.add(fn)
+                                    photo_urls.append({
+                                        "filename": fn,
+                                        "thumb_url": f"{base_url}/api/photo_file?path={fn}&thumb=1",
+                                        "url": f"{base_url}/api/photo_file?path={fn}"
+                                    })
+                    except Exception as e:
+                        print("Supabase photos get error:", e)
 
             # No fake sample images - return exact real photos
             self.send_response(200)
@@ -1078,16 +1098,20 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     k_upper = facility_key.upper()
                     if k_upper in PHOTO_KEY_MAP:
                         PHOTO_KEY_MAP[k_upper] = [p for p in PHOTO_KEY_MAP[k_upper] if p.get("filename") != filename]
+                    
+                    if SUPABASE_URL and SECRET_KEY:
+                        try:
+                            requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&filename=eq.{filename}", headers=HEADERS, timeout=5)
+                        except Exception as e:
+                            print("Supabase photo delete sync error:", e)
                 else:
                     for k in PHOTO_KEY_MAP:
                         PHOTO_KEY_MAP[k] = [p for p in PHOTO_KEY_MAP[k] if p.get("filename") != filename]
-
-                # Supabase DB facility_photos 테이블에서도 삭제
-                if SUPABASE_URL and SECRET_KEY:
-                    try:
-                        requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{filename}", headers=HEADERS, timeout=3)
-                    except Exception as e:
-                        print("Supabase photo delete note:", e)
+                    if SUPABASE_URL and SECRET_KEY:
+                        try:
+                            requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{filename}", headers=HEADERS, timeout=3)
+                        except Exception as e:
+                            print("Supabase photo delete note:", e)
 
                 response = {"success": True, "message": "사진이 성공적으로 삭제되었습니다."}
                 self.send_response(200)
