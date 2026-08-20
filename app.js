@@ -2000,11 +2000,18 @@ async function saveFacility() {
 async function deleteFacility(key) {
   if (!confirm(`정말 시설 (${key})을 삭제하시겠습니까?`)) return;
   try {
-    const res = await fetch(`${API_BASE_URL}/facilities/delete?key=${key}`, { method: "DELETE" });
+    const res = await fetch(`${API_BASE_URL}/facilities/delete?key=${encodeURIComponent(key)}`, { method: "DELETE" });
     if (res.ok) {
       alert("삭제되었습니다.");
       closeModal('modal-facility-detail');
-      loadData();
+
+      // 로컬 메모리 및 브라우저 캐시에서 즉시 제거
+      facilitiesData = facilitiesData.filter(f => f.facility_key !== key);
+      try {
+        localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
+      } catch(e) {}
+
+      await loadData();
     } else {
       alert("삭제에 실패했습니다.");
     }

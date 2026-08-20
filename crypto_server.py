@@ -478,28 +478,15 @@ init_server_cache()
 
 def get_cached_facilities():
     global FACILITIES_CACHE
-    if FACILITIES_CACHE["data"]:
-        filtered = [f for f in FACILITIES_CACHE["data"] if f.get("facility_key") not in DELETED_FACILITY_KEYS]
-        return filtered, 200
 
+    # 1. Supabase DB에서 최신 데이터 조회 시도
     if SUPABASE_URL and SECRET_KEY:
         try:
             req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
-            res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=3)
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=5)
             if res.status_code == 200:
                 data = res.json()
                 processed = [process_facility_item(item) for item in data]
-                
-                if os.path.exists(LOCAL_FACILITIES_FILE):
-                    try:
-                        with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as f:
-                            local_list = json.load(f)
-                        fetched_keys = {item.get("facility_key") for item in processed}
-                        for loc in local_list:
-                            if loc.get("facility_key") and loc.get("facility_key") not in fetched_keys:
-                                processed.append(process_facility_item(loc))
-                    except Exception: pass
-
                 processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
                 FACILITIES_CACHE["data"] = processed
                 try:
@@ -510,33 +497,25 @@ def get_cached_facilities():
         except Exception as e:
             print("Facilities fetch exception:", e)
 
+    # 2. 로컬 캐시 Fallback
+    if FACILITIES_CACHE["data"]:
+        filtered = [f for f in FACILITIES_CACHE["data"] if f.get("facility_key") not in DELETED_FACILITY_KEYS]
+        return filtered, 200
+
     filtered = [f for f in (FACILITIES_CACHE["data"] or []) if f.get("facility_key") not in DELETED_FACILITY_KEYS]
     return filtered, 200
 
 def get_cached_dispositions():
     global DISPOSITIONS_CACHE
-    if DISPOSITIONS_CACHE["data"]:
-        filtered = [d for d in DISPOSITIONS_CACHE["data"] if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
-        return filtered, 200
 
+    # 1. Supabase DB에서 최신 데이터 조회 시도
     if SUPABASE_URL and SECRET_KEY:
         try:
             req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
-            res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=3)
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=5)
             if res.status_code == 200:
                 data = res.json()
                 processed = [process_disposition_item(item) for item in data]
-                
-                if os.path.exists(LOCAL_DISPOSITIONS_FILE):
-                    try:
-                        with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as f:
-                            local_list = json.load(f)
-                        fetched_ids = {str(item.get("id")) for item in processed}
-                        for loc in local_list:
-                            if loc.get("id") and str(loc.get("id")) not in fetched_ids:
-                                processed.append(process_disposition_item(loc))
-                    except Exception: pass
-
                 processed = [d for d in processed if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
                 DISPOSITIONS_CACHE["data"] = processed
                 try:
@@ -546,6 +525,11 @@ def get_cached_dispositions():
                 return processed, 200
         except Exception as e:
             print("Dispositions fetch exception:", e)
+
+    # 2. 로컬 캐시 Fallback
+    if DISPOSITIONS_CACHE["data"]:
+        filtered = [d for d in DISPOSITIONS_CACHE["data"] if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
+        return filtered, 200
 
     filtered = [d for d in (DISPOSITIONS_CACHE["data"] or []) if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
     return filtered, 200
@@ -1169,9 +1153,20 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                         with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
                             json.dump(FACILITIES_CACHE["data"], f, ensure_ascii=False, indent=2)
                     except Exception as e: print("Facility delete local cache save note:", e)
-                
-                try: requests.delete(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{key}", headers=HEADERS, timeout=3)
-                except Exception: pass
+
+                # Supabase DB에서 시설 및 관련 처분 데이터 삭제
+                if SUPABASE_URL and SECRET_KEY:
+                    try:
+                        # 1. 관련 처분 데이터 먼저 삭제
+                        requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?facility_key=eq.{key}", headers=HEADERS, timeout=5)
+                        # 2. 시설 데이터 삭제
+                        res = requests.delete(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{key}", headers=HEADERS, timeout=5)
+                        print(f"Supabase facilities DELETE key={key} status={res.status_code}")
+                    except Exception as e:
+                        print("Supabase facilities delete error:", e)
+
+                # 캐시 무효화하여 다음 조회 시 Supabase 최신 상태 반영
+                FACILITIES_CACHE["data"] = None
 
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
@@ -1187,7 +1182,6 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             if disp_id:
                 DELETED_DISPOSITION_IDS.add(str(disp_id))
             elif facility_key:
-                # Add all disposition IDs associated with this facility
                 if DISPOSITIONS_CACHE["data"] is not None:
                     for d in DISPOSITIONS_CACHE["data"]:
                         if d.get("facility_key") == facility_key:
@@ -1205,15 +1199,25 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                         json.dump(DISPOSITIONS_CACHE["data"], f, ensure_ascii=False, indent=2)
                 except Exception as e: print("Disposition delete local cache save note:", e)
 
-            try:
-                if disp_id: requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=HEADERS, timeout=3)
-                elif facility_key: requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?facility_key=eq.{facility_key}", headers=HEADERS, timeout=3)
-            except Exception: pass
+            # Supabase DB 삭제
+            if SUPABASE_URL and SECRET_KEY:
+                try:
+                    if disp_id:
+                        res = requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=HEADERS, timeout=5)
+                        print(f"Supabase disposition DELETE id={disp_id} status={res.status_code}")
+                    elif facility_key:
+                        res = requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?facility_key=eq.{facility_key}", headers=HEADERS, timeout=5)
+                        print(f"Supabase disposition DELETE facility_key={facility_key} status={res.status_code}")
+                except Exception as e:
+                    print("Supabase disposition delete error:", e)
+
+            DISPOSITIONS_CACHE["data"] = None
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
             self.wfile.write(json.dumps({"success": True}, ensure_ascii=False).encode('utf-8'))
+            return
             return
 
         self.send_response(400)
