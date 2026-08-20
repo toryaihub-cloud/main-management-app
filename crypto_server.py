@@ -165,9 +165,28 @@ def load_settings():
         return SETTINGS_CACHE
 
     default_settings = {
-        "photo_dir_path": r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진"
+        "photo_dir_path": "사진"
     }
 
+    # 1. Supabase DB에서 먼저 조회
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.general", headers=HEADERS, timeout=3)
+            if res.status_code == 200:
+                data = res.json()
+                if data and len(data) > 0:
+                    val = data[0].get("value", {})
+                    if val:
+                        SETTINGS_CACHE = {**default_settings, **val}
+                        try:
+                            with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
+                                json.dump(SETTINGS_CACHE, f, ensure_ascii=False, indent=2)
+                        except Exception: pass
+                        return SETTINGS_CACHE
+        except Exception as e:
+            print("Supabase load settings error:", e)
+
+    # 2. 로컬 파일 로드 (Fallback)
     if os.path.exists(SETTINGS_FILE):
         try:
             with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
@@ -187,8 +206,17 @@ def save_settings(settings):
             json.dump(settings, f, ensure_ascii=False, indent=2)
     except Exception as e:
         print("Error saving local settings:", e)
-    except Exception as e:
-        pass
+
+    # Supabase DB 동기화
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.general", headers=HEADERS, timeout=3)
+            payload = {"key": "general", "value": settings}
+            prefer_headers = {**HEADERS, "Prefer": "return=representation"}
+            if res.status_code not in [200, 201, 204] or (res.content and len(json.loads(res.content.decode('utf-8'))) == 0):
+                requests.post(f"{SUPABASE_URL}/rest/v1/system_settings", headers=prefer_headers, json=[{"key": "general", "value": settings}], timeout=3)
+        except Exception as e:
+            print("Supabase settings sync error:", e)
 
 LOCAL_FACILITIES_FILE = os.path.join(os.path.dirname(__file__), "facilities_cache.json")
 LOCAL_DISPOSITIONS_FILE = os.path.join(os.path.dirname(__file__), "dispositions_cache.json")
@@ -895,12 +923,14 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "correction_return_details", "correction_public",
                 "target_name_encrypted", "recipient_name_encrypted",
                 "mail_address_encrypted", "abstract_address_encrypted",
-                "reg_num_encrypted", "contact_encrypted"
+                "reg_num_encrypted", "contact_encrypted", "note"
             }
             db_payload = {}
             for k, v in req_json.items():
                 if k in DISPOSITIONS_DB_COLS and k != "id":
                     db_payload[k] = v
+            if note_val is not None:
+                db_payload["note"] = note_val
             # _decrypted 필드를 _encrypted로 변환하여 DB에 저장
             enc_map = {
                 "target_name_decrypted": "target_name_encrypted",
@@ -1000,6 +1030,18 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 }
                 PHOTO_KEY_MAP[k_upper].append(photo_obj)
 
+                # Supabase DB facility_photos 테이블에 영구 저장
+                if SUPABASE_URL and SECRET_KEY:
+                    try:
+                        photo_payload = {
+                            "facility_key": k_upper,
+                            "filename": auto_filename,
+                            "file_data": file_data
+                        }
+                        requests.post(f"{SUPABASE_URL}/rest/v1/facility_photos", headers=HEADERS, json=[photo_payload], timeout=5)
+                    except Exception as e:
+                        print("Supabase photo upload sync note:", e)
+
                 response = {"success": True, "filename": auto_filename, "url": photo_obj["url"]}
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
@@ -1039,6 +1081,13 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 else:
                     for k in PHOTO_KEY_MAP:
                         PHOTO_KEY_MAP[k] = [p for p in PHOTO_KEY_MAP[k] if p.get("filename") != filename]
+
+                # Supabase DB facility_photos 테이블에서도 삭제
+                if SUPABASE_URL and SECRET_KEY:
+                    try:
+                        requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{filename}", headers=HEADERS, timeout=3)
+                    except Exception as e:
+                        print("Supabase photo delete note:", e)
 
                 response = {"success": True, "message": "사진이 성공적으로 삭제되었습니다."}
                 self.send_response(200)
