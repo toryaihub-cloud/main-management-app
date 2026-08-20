@@ -2416,7 +2416,7 @@ async function saveDisposition() {
 async function deleteDisposition(id) {
   if (!confirm(`정말 행정처분 내역 (#${id})을 삭제하시겠습니까?`)) return;
   try {
-    const item = dispositionsData.find(d => d.id === id);
+    const item = dispositionsData.find(d => String(d.id) === String(id));
     const facilityKey = item ? item.facility_key : null;
 
     const res = await fetch(`${API_BASE_URL}/dispositions/delete?id=${id}`, { method: "DELETE" });
@@ -2435,8 +2435,41 @@ async function deleteDisposition(id) {
           }
         }
       }
+    } else {
+      alert("삭제 처리에 실패했습니다.");
     }
-  } catch (err) { console.error(err); }
+  } catch (err) {
+    console.error(err);
+    alert("삭제 중 오류가 발생했습니다.");
+  }
+}
+
+// 행정처분 상세 팝업에서 "행정처분 전체 삭제" 버튼 클릭 시 호출
+async function deleteDispositionFromDetail() {
+  if (!currentDispositionDetailKey) {
+    alert("삭제할 시설/처분 정보를 찾을 수 없습니다.");
+    return;
+  }
+  const items = dispositionsData.filter(d => d.facility_key === currentDispositionDetailKey);
+  if (items.length === 0) {
+    alert("삭제할 행정처분 내역이 없습니다.");
+    return;
+  }
+  if (!confirm(`정말 시설 (${currentDispositionDetailKey})의 행정처분 내역 전체(${items.length}건)를 삭제하시겠습니까?`)) return;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/dispositions/delete?facility_key=${encodeURIComponent(currentDispositionDetailKey)}`, { method: "DELETE" });
+    if (res.ok) {
+      alert("행정처분 내역 전체가 성공적으로 삭제되었습니다.");
+      closeModal('modal-disposition-detail');
+      await loadData();
+    } else {
+      alert("삭제 처리에 실패했습니다.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("삭제 중 오류가 발생했습니다.");
+  }
 }
 
 function openUserModal(username = null) {
@@ -2514,12 +2547,13 @@ function closeModal(modalId) {
   }
 }
 
+// 개별 처분 수정 폼 내부의 삭제 버튼
 async function deleteDispositionFromForm() {
   const dispId = document.getElementById("disp-id").value;
   if (!dispId) {
     alert("삭제할 레코드 ID가 존재하지 않습니다.");
     return;
   }
-  await deleteSingleDispositionRecord(dispId);
   closeModal("modal-disposition");
+  await deleteDisposition(dispId);
 }
