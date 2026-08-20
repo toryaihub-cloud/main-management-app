@@ -144,6 +144,8 @@ async function executeLogin() {
         currentUser = data.user;
         localStorage.setItem("savedUsername", uVal);
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        localStorage.removeItem("cached_facilities");
+        localStorage.removeItem("cached_dispositions");
         showMainApp();
         return;
       }
@@ -165,6 +167,8 @@ function handleLogin(event) {
 function handleLogout() {
   if (confirm("로그아웃 하시겠습니까?")) {
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("cached_facilities");
+    localStorage.removeItem("cached_dispositions");
     currentUser = null;
     const uInput = document.getElementById("login-username");
     const pInput = document.getElementById("login-password");
