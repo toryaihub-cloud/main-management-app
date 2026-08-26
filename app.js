@@ -830,12 +830,14 @@ function renderModalDetailDonutChart(f) {
   modalDetailChartsMap = {};
 
   const reqP = parseInt(f.parking_required_cnt) || 0;
-  const actP = parseInt(f.parking_installed_cnt) || 0;
-  const pctP = reqP > 0 ? Math.min(100, Math.round((actP / reqP) * 100)) : 100;
+  const unP = parseInt(f.parking_uninstalled_cnt) || 0;
+  let actP = (f.parking_installed_cnt !== undefined && f.parking_installed_cnt !== null && f.parking_installed_cnt !== '') ? parseInt(f.parking_installed_cnt) : Math.max(0, reqP - unP);
+  const pctP = reqP > 0 ? Math.min(100, Math.round((actP / reqP) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
 
   const reqC = parseInt(f.charger_required_cnt) || 0;
-  const actC = parseInt(f.charger_installed_cnt) || 0;
-  const pctC = reqC > 0 ? Math.min(100, Math.round((actC / reqC) * 100)) : 100;
+  const unC = parseInt(f.charger_uninstalled_cnt) || 0;
+  let actC = (f.charger_installed_cnt !== undefined && f.charger_installed_cnt !== null && f.charger_installed_cnt !== '') ? parseInt(f.charger_installed_cnt) : Math.max(0, reqC - unC);
+  const pctC = reqC > 0 ? Math.min(100, Math.round((actC / reqC) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
 
   const pctPElem = document.getElementById("modal-detail-pct-p");
   if (pctPElem) {
