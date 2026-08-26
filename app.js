@@ -762,10 +762,16 @@ function openFacilityDetailModal(key) {
   const chargerUnElem = document.getElementById("detail-charger-uninstalled");
   if (chargerUnElem) chargerUnElem.innerText = facility.charger_uninstalled_cnt || 0;
 
-  // Fast Charger Uninstalled Count (Exact Formula: reqFast - actFast)
+  // Fast Charger Counts (Installed & Uninstalled)
   const reqFast = parseInt(facility.charger_fast_req_cnt) || 0;
   const actFast = parseInt(facility.charger_fast_cnt) || 0;
   const uninstalledFast = Math.max(0, reqFast - actFast);
+
+  const fastInstElem = document.getElementById("detail-fast-installed");
+  if (fastInstElem) {
+    fastInstElem.innerText = `${actFast}`;
+  }
+
   const fastUnElem = document.getElementById("detail-fast-uninstalled");
   if (fastUnElem) {
     fastUnElem.innerText = `${uninstalledFast}기`;
