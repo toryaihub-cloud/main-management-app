@@ -25,7 +25,48 @@ HEADERS = {
 USERS_FILE = os.path.join(os.path.dirname(__file__), "users_db.json")
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "settings.json")
 NOTES_FILE = os.path.join(os.path.dirname(__file__), "dispositions_notes.json")
+CORRECTION_ORDERS_FILE = os.path.join(os.path.dirname(__file__), "correction_orders_cache.json")
 ECOCAR_HTML_PATH = r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\ECO-CAR.html"
+
+def load_correction_orders():
+    # 1. Supabase DB 조회 시도
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/correction_orders?select=*&order=id.asc", headers=HEADERS, timeout=3)
+            if res.status_code == 200:
+                orders = res.json()
+                if orders and len(orders) > 0:
+                    meta = {}
+                    for o in orders:
+                        br = o.get("batch_round")
+                        if br not in meta:
+                            meta[br] = {
+                                "batch_round": br,
+                                "batch_label": f"{br} 시정명령",
+                                "batch_title": o.get("batch_title", ""),
+                                "approval_date": o.get("approval_date", ""),
+                                "send_date": o.get("send_date", ""),
+                                "summary_text": "",
+                                "total_facilities": 0,
+                                "official_count": 0,
+                                "mail_count": 0,
+                                "row_count": 0
+                            }
+                        meta[br]["row_count"] += 1
+                        if o.get("notice_method") == "공문":
+                            meta[br]["official_count"] += 1
+                        else:
+                            meta[br]["mail_count"] += 1
+                    return {"meta": meta, "orders": orders}
+        except Exception: pass
+
+    # 2. 로컬 캐시 Fallback
+    if os.path.exists(CORRECTION_ORDERS_FILE):
+        try:
+            with open(CORRECTION_ORDERS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception: pass
+    return {"meta": {}, "orders": []}
 
 def load_notes():
     if os.path.exists(NOTES_FILE):
@@ -590,6 +631,13 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
             self.wfile.write(json.dumps(settings, ensure_ascii=False).encode('utf-8'))
+
+        elif path == "/api/correction_orders":
+            data = load_correction_orders()
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
 
         elif path == "/api/photos":
             key = params.get("key", [None])[0]

@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260826_02">
+  <link rel="stylesheet" href="styles.css?v=20260901_01">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- FontAwesome CDN -->
@@ -59,6 +59,9 @@
       </button>
       <button class="tab-btn" onclick="switchTab('dispositions')">
         <i class="fa-solid fa-gavel"></i> 행정처분 내역 관리
+      </button>
+      <button class="tab-btn" onclick="switchTab('correction-orders')">
+        <i class="fa-solid fa-file-signature"></i> 시정명령
       </button>
       <button id="tab-users" class="tab-btn admin-only" onclick="switchTab('users')" style="display: none;">
         <i class="fa-solid fa-users-gear"></i> 계정 관리 (ADMIN)
@@ -220,7 +223,112 @@
       </div>
     </section>
 
-    <!-- 4. Account Management View (ADMIN Only) -->
+    <!-- 4. Correction Orders View (시정명령) -->
+    <section id="view-correction-orders" class="view-section">
+      <!-- Top Batch Selection Tabs -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <button class="btn btn-primary correction-batch-btn" id="btn-batch-2026-06-30" onclick="switchCorrectionBatch('2026-06-30')">
+            <i class="fa-solid fa-calendar-check"></i> 1차 (2026.06.30)
+          </button>
+          <button class="btn btn-outline correction-batch-btn" id="btn-batch-2026-07-28" onclick="switchCorrectionBatch('2026-07-28')">
+            <i class="fa-solid fa-calendar-check"></i> 2차 (2026.07.28)
+          </button>
+          <button class="btn btn-outline correction-batch-btn" id="btn-batch-2026-08-19" onclick="switchCorrectionBatch('2026-08-19')">
+            <i class="fa-solid fa-calendar-check"></i> 3차 (2026.08.19)
+          </button>
+        </div>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <button class="btn btn-secondary" onclick="exportCorrectionOrdersExcel()">
+            <i class="fa-solid fa-file-excel"></i> 엑셀 다운로드
+          </button>
+          <button class="btn btn-secondary" onclick="printCorrectionOrders()">
+            <i class="fa-solid fa-print"></i> 인쇄
+          </button>
+        </div>
+      </div>
+
+      <!-- Batch Summary Banner Card -->
+      <div id="correction-batch-summary-card" class="card" style="margin-bottom:1rem; padding:1.1rem 1.3rem; background:linear-gradient(135deg, #F8FAFC 0%, #EEF2F6 100%); border-left:4px solid var(--primary);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.8rem;">
+          <div>
+            <h3 id="corr-title-text" style="font-size:1.05rem; font-weight:700; color:#0F172A; margin-bottom:0.3rem;">
+              <i class="fa-solid fa-file-contract" style="color:var(--primary);"></i> 행정처분 내역 (시정명령, 6.29.공문결재, 6.30.등기발송)
+            </h3>
+            <p id="corr-desc-text" style="font-size:0.85rem; color:#64748B; margin:0;">
+              해당 행정처분은 26년 6월 29일에 공문결재를 완료하고, 26년 6월 30일에 등기발송을 완료한 내역입니다.
+            </p>
+          </div>
+          <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+            <div style="background:#fff; border:1px solid #CBD5E1; padding:0.4rem 0.8rem; border-radius:6px; text-align:center;">
+              <div style="font-size:0.75rem; color:#64748B;">총 대상시설</div>
+              <div id="corr-stat-total" style="font-size:1.1rem; font-weight:800; color:var(--primary);">21개소</div>
+            </div>
+            <div style="background:#fff; border:1px solid #CBD5E1; padding:0.4rem 0.8rem; border-radius:6px; text-align:center;">
+              <div style="font-size:0.75rem; color:#64748B;">공문 발송</div>
+              <div id="corr-stat-official" style="font-size:1.1rem; font-weight:800; color:#0284C7;">2개소</div>
+            </div>
+            <div style="background:#fff; border:1px solid #CBD5E1; padding:0.4rem 0.8rem; border-radius:6px; text-align:center;">
+              <div style="font-size:0.75rem; color:#64748B;">우편(등기) 발송</div>
+              <div id="corr-stat-mail" style="font-size:1.1rem; font-weight:800; color:#059669;">19개소</div>
+            </div>
+            <div style="background:#fff; border:1px solid #CBD5E1; padding:0.4rem 0.8rem; border-radius:6px; text-align:center;">
+              <div style="font-size:0.75rem; color:#64748B;">발송 총 건수</div>
+              <div id="corr-stat-rows" style="font-size:1.1rem; font-weight:800; color:#7C3AED;">22건</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search & Filter Controls -->
+      <div class="card" style="margin-bottom:1rem; padding:0.8rem 1rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:0.8rem; flex-wrap:wrap;">
+          <div style="display:flex; gap:0.5rem; align-items:center; flex:1; min-width:260px;">
+            <input type="text" id="corr-search-input" class="input-box" placeholder="시설명, 수신인, 주소, 대상 검색..." oninput="filterCorrectionOrders()">
+            <select id="corr-filter-method" class="input-box" style="width:140px;" onchange="filterCorrectionOrders()">
+              <option value="">통지방법 전체</option>
+              <option value="등기">등기 발송</option>
+              <option value="공문">공문 발송</option>
+            </select>
+            <select id="corr-filter-delivery" class="input-box" style="width:140px;" onchange="filterCorrectionOrders()">
+              <option value="">도달여부 전체</option>
+              <option value="도달">도달 완료</option>
+              <option value="미도달">미도달 / 반송</option>
+            </select>
+          </div>
+          <div style="font-size:0.85rem; color:#64748B;">
+            조회 결과: <strong id="corr-filtered-count" style="color:var(--primary);">0</strong>건
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="card">
+        <div class="table-wrapper" style="overflow-x:auto;">
+          <table id="correction-orders-table">
+            <thead>
+              <tr>
+                <th style="width:50px; text-align:center;">No</th>
+                <th style="width:110px;">시정명령일자</th>
+                <th style="width:200px;">시설명</th>
+                <th>우편발송 도로명주소</th>
+                <th style="width:80px; text-align:center;">우편번호</th>
+                <th style="width:180px;">시정명령대상</th>
+                <th style="width:90px; text-align:center;">통지방법</th>
+                <th style="width:180px;">수신인</th>
+                <th style="width:100px; text-align:center;">우편도달여부</th>
+                <th style="width:130px;">비고</th>
+              </tr>
+            </thead>
+            <tbody id="correction-orders-tbody">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Account Management View (ADMIN Only) -->
     <section id="view-users" class="view-section">
       <div class="toolbar">
         <div class="search-filter-group">
@@ -863,6 +971,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260826_02"></script>
+  <script src="app.js?v=20260901_01"></script>
 </body>
 </html>

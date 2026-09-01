@@ -262,6 +262,10 @@ function switchTab(tabName) {
     document.querySelectorAll(".tab-btn")[2].classList.add("active");
     document.getElementById("view-dispositions").classList.add("active");
     filterDispositions();
+  } else if (tabName === 'correction-orders') {
+    document.querySelectorAll(".tab-btn")[3].classList.add("active");
+    document.getElementById("view-correction-orders").classList.add("active");
+    fetchCorrectionOrders();
   } else if (tabName === 'users') {
     document.getElementById("tab-users").classList.add("active");
     document.getElementById("view-users").classList.add("active");
@@ -2576,3 +2580,276 @@ async function deleteDispositionFromForm() {
   closeModal("modal-disposition");
   await deleteDisposition(dispId);
 }
+
+// ==========================================
+// 8. 시정명령 차수별 관리 로직 (Correction Orders)
+// ==========================================
+let allCorrectionOrders = [];
+let correctionMeta = {};
+let currentCorrectionBatch = '2026-06-30';
+
+async function fetchCorrectionOrders() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/correction_orders`);
+    if (res.ok) {
+      const data = await res.json();
+      allCorrectionOrders = data.orders || [];
+      correctionMeta = data.meta || {};
+      renderCorrectionBatch(currentCorrectionBatch);
+    }
+  } catch (err) {
+    console.error("Error fetching correction orders:", err);
+  }
+}
+
+function switchCorrectionBatch(batchRound) {
+  currentCorrectionBatch = batchRound;
+  
+  // 버튼 스타일 업데이트
+  document.querySelectorAll('.correction-batch-btn').forEach(btn => {
+    btn.classList.remove('btn-primary');
+    btn.classList.add('btn-outline');
+  });
+  const activeBtn = document.getElementById(`btn-batch-${batchRound}`);
+  if (activeBtn) {
+    activeBtn.classList.remove('btn-outline');
+    activeBtn.classList.add('btn-primary');
+  }
+
+  // 검색창 초기화
+  const searchInput = document.getElementById("corr-search-input");
+  if (searchInput) searchInput.value = "";
+  const methodFilter = document.getElementById("corr-filter-method");
+  if (methodFilter) methodFilter.value = "";
+  const delivFilter = document.getElementById("corr-filter-delivery");
+  if (delivFilter) delivFilter.value = "";
+
+  renderCorrectionBatch(batchRound);
+}
+
+function renderCorrectionBatch(batchRound) {
+  const meta = correctionMeta[batchRound] || {
+    batch_title: batchRound === '2026-06-30' ? '6.29.공문결재, 6.30.등기발송' : (batchRound === '2026-07-28' ? '7.27.공문결재, 7.28.등기발송' : '8.19.공문결재, 8.20.등기발송'),
+    approval_date: batchRound === '2026-06-30' ? '2026.06.29' : (batchRound === '2026-07-28' ? '2026.07.27' : '2026.08.19'),
+    send_date: batchRound === '2026-06-30' ? '2026.06.30' : (batchRound === '2026-07-28' ? '2026.07.28' : '2026.08.20'),
+    total_facilities: batchRound === '2026-06-30' ? 21 : (batchRound === '2026-07-28' ? 26 : 15),
+    official_count: batchRound === '2026-06-30' ? 2 : (batchRound === '2026-07-28' ? 14 : 0),
+    mail_count: batchRound === '2026-06-30' ? 19 : (batchRound === '2026-07-28' ? 12 : 15),
+    row_count: batchRound === '2026-06-30' ? 22 : (batchRound === '2026-07-28' ? 29 : 49)
+  };
+
+  // 상단 요약 카드 텍스트 바인딩
+  const titleElem = document.getElementById("corr-title-text");
+  if (titleElem) {
+    titleElem.innerHTML = `<i class="fa-solid fa-file-contract" style="color:var(--primary);"></i> 행정처분 내역 (시정명령, ${meta.batch_title})`;
+  }
+
+  const descElem = document.getElementById("corr-desc-text");
+  if (descElem) {
+    descElem.innerText = `해당 행정처분은 ${meta.approval_date}에 공문결재를 완료하고, ${meta.send_date}에 ${batchRound === '2026-08-19' ? '등기발송' : '발송'}을 완료한 내역입니다.`;
+  }
+
+  const totalElem = document.getElementById("corr-stat-total");
+  if (totalElem) totalElem.innerText = `${meta.total_facilities}개소`;
+
+  const offElem = document.getElementById("corr-stat-official");
+  if (offElem) offElem.innerText = `${meta.official_count}개소`;
+
+  const mailElem = document.getElementById("corr-stat-mail");
+  if (mailElem) mailElem.innerText = `${meta.mail_count}개소`;
+
+  const rowsElem = document.getElementById("corr-stat-rows");
+  if (rowsElem) rowsElem.innerText = `${meta.row_count}건`;
+
+  filterCorrectionOrders();
+}
+
+function filterCorrectionOrders() {
+  const tbody = document.getElementById("correction-orders-tbody");
+  if (!tbody) return;
+
+  const searchKeyword = (document.getElementById("corr-search-input")?.value || "").trim().toLowerCase();
+  const methodFilter = (document.getElementById("corr-filter-method")?.value || "").trim();
+  const deliveryFilter = (document.getElementById("corr-filter-delivery")?.value || "").trim();
+
+  // 현재 차수 데이터 추출
+  const batchList = allCorrectionOrders.filter(o => o.batch_round === currentCorrectionBatch);
+
+  // 검색 및 필터링
+  const filtered = batchList.filter(item => {
+    if (methodFilter && item.notice_method !== methodFilter) return false;
+    if (deliveryFilter) {
+      if (deliveryFilter === '도달' && item.delivery_status !== '도달') return false;
+      if (deliveryFilter === '미도달' && item.delivery_status === '도달') return false;
+    }
+    if (searchKeyword) {
+      const targetStr = `${item.facility_name || ''} ${item.target_name || ''} ${item.recipient_name || ''} ${item.send_address || ''} ${item.note || ''}`.toLowerCase();
+      if (!targetStr.includes(searchKeyword)) return false;
+    }
+    return true;
+  });
+
+  const countElem = document.getElementById("corr-filtered-count");
+  if (countElem) countElem.innerText = filtered.length;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="10" style="text-align:center; padding:2rem; color:var(--text-muted);">
+          <i class="fa-solid fa-circle-info" style="margin-right:0.4rem;"></i> 조건에 해당하는 시정명령 내역이 없습니다.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((item, idx) => {
+    const isOfficial = item.notice_method === '공문';
+    const methodBadge = isOfficial 
+      ? `<span class="badge badge-amber" style="font-size:0.75rem;"><i class="fa-solid fa-envelope-open-text"></i> 공문</span>`
+      : `<span class="badge badge-blue" style="font-size:0.75rem;"><i class="fa-solid fa-paper-plane"></i> 등기</span>`;
+
+    let deliveryBadge = `<span style="color:var(--text-muted);">-</span>`;
+    if (item.delivery_status === '도달') {
+      deliveryBadge = `<span class="badge badge-emerald" style="font-size:0.75rem;"><i class="fa-solid fa-check"></i> 도달</span>`;
+    } else if (item.delivery_status) {
+      deliveryBadge = `<span class="badge badge-rose" style="font-size:0.75rem;">${item.delivery_status}</span>`;
+    }
+
+    const noteTag = item.note ? `<span style="font-size:0.8rem; background:#F1F5F9; padding:0.2rem 0.4rem; border-radius:4px; border:1px solid #E2E8F0; color:#334155;">${item.note}</span>` : '-';
+
+    return `
+      <tr style="transition: background 0.15s ease;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+        <td style="text-align:center; font-weight:600; color:var(--text-muted); font-size:0.8rem;">${idx + 1}</td>
+        <td style="font-size:0.82rem; color:#334155;">${item.order_date || '-'}</td>
+        <td style="font-weight:700; color:#0F172A; font-size:0.88rem;">${item.facility_name || '-'}</td>
+        <td style="font-size:0.82rem; color:#475569; max-width:280px; word-break:break-all;">${item.send_address || '-'}</td>
+        <td style="text-align:center; font-size:0.8rem; color:#64748B;">${item.zip_code || '-'}</td>
+        <td style="font-size:0.82rem; color:#1E293B;">${item.target_name || '-'}</td>
+        <td style="text-align:center;">${methodBadge}</td>
+        <td style="font-size:0.82rem; font-weight:600; color:#0F172A;">${item.recipient_name || '-'}</td>
+        <td style="text-align:center;">${deliveryBadge}</td>
+        <td>${noteTag}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function exportCorrectionOrdersExcel() {
+  const batchList = allCorrectionOrders.filter(o => o.batch_round === currentCorrectionBatch);
+  if (!batchList || batchList.length === 0) {
+    alert("다운로드할 데이터가 없습니다.");
+    return;
+  }
+
+  let csvContent = "\uFEFF"; // UTF-8 BOM
+  csvContent += "No,시정명령일자,시설명,우편발송 도로명주소,우편번호,시정명령대상,통지방법,수신인,우편도달여부,비고\n";
+
+  batchList.forEach((item, idx) => {
+    const row = [
+      idx + 1,
+      `"${item.order_date || ''}"`,
+      `"${(item.facility_name || '').replace(/"/g, '""')}"`,
+      `"${(item.send_address || '').replace(/"/g, '""')}"`,
+      `"${item.zip_code || ''}"`,
+      `"${(item.target_name || '').replace(/"/g, '""')}"`,
+      `"${item.notice_method || ''}"`,
+      `"${(item.recipient_name || '').replace(/"/g, '""')}"`,
+      `"${item.delivery_status || ''}"`,
+      `"${(item.note || '').replace(/"/g, '""')}"`
+    ];
+    csvContent += row.join(",") + "\n";
+  });
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const meta = correctionMeta[currentCorrectionBatch] || {};
+  const filename = `시정명령_내역_${currentCorrectionBatch}_${meta.batch_title || ''}.csv`.replace(/[\/\\?%*:|"<>]/g, '_');
+  link.href = URL.createObjectURL(blob);
+  link.setAttribute("download", filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function printCorrectionOrders() {
+  const meta = correctionMeta[currentCorrectionBatch] || {
+    batch_title: '시정명령 내역',
+    approval_date: '-',
+    send_date: '-',
+    total_facilities: 0,
+    official_count: 0,
+    mail_count: 0
+  };
+  const batchList = allCorrectionOrders.filter(o => o.batch_round === currentCorrectionBatch);
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    alert("팝업 차단을 해제해주세요.");
+    return;
+  }
+
+  let tableRows = batchList.map((item, idx) => `
+    <tr>
+      <td style="text-align:center;">${idx + 1}</td>
+      <td>${item.order_date || '-'}</td>
+      <td style="font-weight:bold;">${item.facility_name || '-'}</td>
+      <td>${item.send_address || '-'}</td>
+      <td style="text-align:center;">${item.zip_code || '-'}</td>
+      <td>${item.target_name || '-'}</td>
+      <td style="text-align:center;">${item.notice_method || '-'}</td>
+      <td>${item.recipient_name || '-'}</td>
+      <td style="text-align:center;">${item.delivery_status || '-'}</td>
+      <td>${item.note || '-'}</td>
+    </tr>
+  `).join('');
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>행정처분 내역 (시정명령, ${meta.batch_title})</title>
+      <style>
+        @page { size: A4 landscape; margin: 12mm; }
+        body { font-family: 'Pretendard', sans-serif; font-size: 11px; color: #1e293b; margin: 0; padding: 10px; }
+        h1 { font-size: 16px; margin: 0 0 8px 0; border-bottom: 2px solid #0f172a; padding-bottom: 6px; }
+        .summary-box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; margin-bottom: 12px; font-size: 11px; display: flex; justify-content: space-between; }
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        th, td { border: 1px solid #94a3b8; padding: 4px 6px; font-size: 10px; }
+        th { background: #f1f5f9; font-weight: 700; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <h1>행정처분 내역 (시정명령, ${meta.batch_title})</h1>
+      <div class="summary-box">
+        <span><strong>결재/발송:</strong> ${meta.approval_date} 공문결재 / ${meta.send_date} 발송</span>
+        <span><strong>통계:</strong> 총 대상 ${meta.total_facilities}개소 (공문 ${meta.official_count}개소, 우편 ${meta.mail_count}개소) / 총 ${batchList.length}건</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30px;">No</th>
+            <th style="width:70px;">명령일자</th>
+            <th style="width:130px;">시설명</th>
+            <th>우편발송 도로명주소</th>
+            <th style="width:50px;">우편번호</th>
+            <th style="width:120px;">시정명령대상</th>
+            <th style="width:50px;">통지방법</th>
+            <th style="width:120px;">수신인</th>
+            <th style="width:50px;">도달여부</th>
+            <th style="width:80px;">비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+      <script>
+        window.onload = function() { window.print(); };
+      </script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
