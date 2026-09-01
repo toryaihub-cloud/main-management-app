@@ -2755,8 +2755,12 @@ function filterCorrectionOrders() {
       <tr style="transition: background 0.15s ease;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
         <td style="text-align:center; font-weight:600; color:var(--text-muted); font-size:0.8rem;">${idx + 1}</td>
         <td style="font-size:0.82rem; color:#334155;">${item.order_date || '-'}</td>
-        <td style="font-weight:700; color:#0F172A; font-size:0.88rem;">${item.facility_name || '-'}</td>
-        <td style="font-size:0.82rem; color:#475569; max-width:280px; word-break:break-all;">${item.send_address || '-'}</td>
+        <td style="font-size:0.88rem;">
+          <span class="clickable-fac-name" onclick="openCorrectionOrderModal(${item.id})" title="클릭하여 내용 수정">
+            <i class="fa-regular fa-pen-to-square" style="font-size:0.75rem; margin-right:0.2rem;"></i>${item.facility_name || '-'}
+          </span>
+        </td>
+        <td style="font-size:0.82rem; color:#475569; max-width:320px; word-break:break-all;">${item.send_address || '-'}</td>
         <td style="text-align:center; font-size:0.8rem; color:#64748B;">${item.zip_code || '-'}</td>
         <td style="font-size:0.82rem; color:#1E293B;">${item.target_name || '-'}</td>
         <td style="text-align:center;">${methodBadge}</td>
@@ -2766,6 +2770,121 @@ function filterCorrectionOrders() {
       </tr>
     `;
   }).join('');
+}
+
+// 시정명령 건별 수정 모달 열기
+function openCorrectionOrderModal(id) {
+  const item = allCorrectionOrders.find(o => String(o.id) === String(id));
+  if (!item) return;
+
+  document.getElementById("corr-edit-id").value = item.id;
+  document.getElementById("corr-edit-batch").value = item.batch_round || currentCorrectionBatch;
+  document.getElementById("corr-edit-date").value = item.order_date || "";
+  document.getElementById("corr-edit-method").value = item.notice_method || "등기";
+  document.getElementById("corr-edit-fac-name").value = item.facility_name || "";
+  document.getElementById("corr-edit-address").value = item.send_address || "";
+  document.getElementById("corr-edit-zip").value = item.zip_code || "";
+  document.getElementById("corr-edit-target").value = item.target_name || "";
+  document.getElementById("corr-edit-recipient").value = item.recipient_name || "";
+  document.getElementById("corr-edit-delivery").value = item.delivery_status || "";
+  document.getElementById("corr-edit-note").value = item.note || "";
+
+  const modal = document.getElementById("modal-correction-order");
+  if (modal) {
+    modal.classList.add("active");
+    modal.style.display = "flex";
+  }
+}
+
+// 시정명령 저장 (수정)
+async function saveCorrectionOrder() {
+  const id = document.getElementById("corr-edit-id").value;
+  const batchRound = document.getElementById("corr-edit-batch").value || currentCorrectionBatch;
+  const orderDate = document.getElementById("corr-edit-date").value.trim();
+  const noticeMethod = document.getElementById("corr-edit-method").value;
+  const facName = document.getElementById("corr-edit-fac-name").value.trim();
+  const address = document.getElementById("corr-edit-address").value.trim();
+  const zip = document.getElementById("corr-edit-zip").value.trim();
+  const target = document.getElementById("corr-edit-target").value.trim();
+  const recipient = document.getElementById("corr-edit-recipient").value.trim();
+  const delivery = document.getElementById("corr-edit-delivery").value;
+  const note = document.getElementById("corr-edit-note").value.trim();
+
+  if (!facName) {
+    alert("시설명을 입력해주세요.");
+    return;
+  }
+
+  const payload = {
+    id: parseInt(id) || id,
+    batch_round: batchRound,
+    order_date: orderDate,
+    notice_method: noticeMethod,
+    facility_name: facName,
+    send_address: address,
+    zip_code: zip,
+    target_name: target,
+    recipient_name: recipient,
+    delivery_status: delivery,
+    note: note
+  };
+
+  // 로컬 메모리 상태 즉시 갱신
+  const idx = allCorrectionOrders.findIndex(o => String(o.id) === String(id));
+  if (idx !== -1) {
+    allCorrectionOrders[idx] = { ...allCorrectionOrders[idx], ...payload };
+  } else {
+    allCorrectionOrders.push(payload);
+  }
+
+  try {
+    localStorage.setItem("cached_correction_orders", JSON.stringify({
+      meta: correctionMeta,
+      orders: allCorrectionOrders
+    }));
+  } catch(e) {}
+
+  closeModal("modal-correction-order");
+  renderCorrectionBatch(currentCorrectionBatch);
+
+  // 백엔드 API 호출
+  try {
+    const res = await fetch(`${API_BASE_URL}/correction_orders/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      alert("시정명령 내용이 저장되었습니다.");
+    }
+  } catch (err) {
+    console.warn("Backend save error:", err);
+  }
+}
+
+// 시정명령 삭제
+async function deleteCurrentCorrectionOrder() {
+  const id = document.getElementById("corr-edit-id").value;
+  if (!id) return;
+  if (!confirm("해당 시정명령 건을 삭제하시겠습니까?")) return;
+
+  allCorrectionOrders = allCorrectionOrders.filter(o => String(o.id) !== String(id));
+  try {
+    localStorage.setItem("cached_correction_orders", JSON.stringify({
+      meta: correctionMeta,
+      orders: allCorrectionOrders
+    }));
+  } catch(e) {}
+
+  closeModal("modal-correction-order");
+  renderCorrectionBatch(currentCorrectionBatch);
+
+  try {
+    await fetch(`${API_BASE_URL}/correction_orders/delete?id=${id}`, { method: "DELETE" });
+    alert("시정명령 건이 삭제되었습니다.");
+  } catch(e) {
+    console.warn("Backend delete error:", e);
+  }
 }
 
 function exportCorrectionOrdersExcel() {

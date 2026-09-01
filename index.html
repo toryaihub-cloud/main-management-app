@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260901_02">
+  <link rel="stylesheet" href="styles.css?v=20260901_03">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- FontAwesome CDN -->
@@ -310,10 +310,10 @@
               <tr>
                 <th style="width:50px; text-align:center;">No</th>
                 <th style="width:110px;">시정명령일자</th>
-                <th style="width:200px;">시설명</th>
-                <th>우편발송 도로명주소</th>
-                <th style="width:80px; text-align:center;">우편번호</th>
-                <th style="width:180px;">시정명령대상</th>
+                <th style="width:180px;">시설명 <span style="font-size:0.75rem; font-weight:normal; color:#64748B;">(클릭시 수정)</span></th>
+                <th style="width:340px;">우편발송 도로명주소</th>
+                <th style="width:90px; text-align:center;">우편번호</th>
+                <th style="width:200px;">시정명령대상</th>
                 <th style="width:90px; text-align:center;">통지방법</th>
                 <th style="width:180px;">수신인</th>
                 <th style="width:100px; text-align:center;">우편도달여부</th>
@@ -968,9 +968,93 @@
     </div>
   </div>
 
+  <!-- Modal: 시정명령 상세 및 수정 -->
+  <div id="modal-correction-order" class="modal-backdrop" style="display:none; align-items:center; justify-content:center;">
+    <div class="modal-content" style="max-width: 650px; width:95%;">
+      <div class="modal-header">
+        <div class="modal-title" style="font-size:1.1rem; font-weight:700;"><i class="fa-solid fa-file-pen" style="color:var(--primary);"></i> 시정명령 상세 및 수정</div>
+        <button class="modal-close" onclick="closeModal('modal-correction-order')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding:1.2rem;">
+        <form id="form-correction-order" onsubmit="event.preventDefault(); saveCorrectionOrder();" style="display:flex; flex-direction:column; gap:1rem;">
+          <input type="hidden" id="corr-edit-id">
+          <input type="hidden" id="corr-edit-batch">
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.8rem;">
+            <div class="form-group">
+              <label class="form-label">시정명령일자 *</label>
+              <input type="text" id="corr-edit-date" class="input-box" required placeholder="예: 2026.8.19.">
+            </div>
+            <div class="form-group">
+              <label class="form-label">통지방법 *</label>
+              <select id="corr-edit-method" class="input-box">
+                <option value="등기">등기</option>
+                <option value="공문">공문</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">시설명 *</label>
+            <input type="text" id="corr-edit-fac-name" class="input-box" required placeholder="시설명 입력">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">우편발송 도로명주소</label>
+            <input type="text" id="corr-edit-address" class="input-box" placeholder="도로명 주소 입력">
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 2fr; gap:0.8rem;">
+            <div class="form-group">
+              <label class="form-label">우편번호</label>
+              <input type="text" id="corr-edit-zip" class="input-box" placeholder="예: 62252">
+            </div>
+            <div class="form-group">
+              <label class="form-label">시정명령대상</label>
+              <input type="text" id="corr-edit-target" class="input-box" placeholder="시정명령대상자/법인">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:0.8rem;">
+            <div class="form-group">
+              <label class="form-label">수신인</label>
+              <input type="text" id="corr-edit-recipient" class="input-box" placeholder="수신인 입력">
+            </div>
+            <div class="form-group">
+              <label class="form-label">우편도달여부</label>
+              <select id="corr-edit-delivery" class="input-box">
+                <option value="">(미입력)</option>
+                <option value="도달">도달</option>
+                <option value="반송">반송</option>
+                <option value="배송중">배송중</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">비고</label>
+            <input type="text" id="corr-edit-note" class="input-box" placeholder="비고 입력 (예: 이행완료, 대표자 추가발송 등)">
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.8rem;">
+            <button type="button" class="btn btn-rose" onclick="deleteCurrentCorrectionOrder()">
+              <i class="fa-solid fa-trash-can"></i> 삭제
+            </button>
+            <div style="display:flex; gap:0.5rem;">
+              <button type="button" class="btn btn-secondary" onclick="closeModal('modal-correction-order')">취소</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> 저장하기
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260901_02"></script>
+  <script src="app.js?v=20260901_03"></script>
 </body>
 </html>

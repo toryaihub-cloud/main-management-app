@@ -68,6 +68,13 @@ def load_correction_orders():
         except Exception: pass
     return {"meta": {}, "orders": []}
 
+def save_correction_orders_data(payload):
+    try:
+        with open(CORRECTION_ORDERS_FILE, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Error saving correction orders cache:", e)
+
 def load_notes():
     if os.path.exists(NOTES_FILE):
         try:
@@ -825,6 +832,43 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps({"success": True, "settings": settings}, ensure_ascii=False).encode('utf-8'))
 
+        elif path == "/api/correction_orders/save":
+            cached_data = load_correction_orders()
+            orders = cached_data.get("orders", [])
+            meta = cached_data.get("meta", {})
+            
+            c_id = req_json.get("id")
+            found = False
+            if c_id:
+                for idx, o in enumerate(orders):
+                    if str(o.get("id")) == str(c_id):
+                        orders[idx].update(req_json)
+                        found = True
+                        break
+            
+            if not found:
+                new_id = max([int(o.get("id", 0)) for o in orders] + [0]) + 1
+                req_json["id"] = new_id
+                orders.append(req_json)
+                c_id = new_id
+
+            cached_data["orders"] = orders
+            save_correction_orders_data(cached_data)
+
+            # Supabase 동기화 시도
+            if SUPABASE_URL and SECRET_KEY:
+                try:
+                    res = requests.patch(f"{SUPABASE_URL}/rest/v1/correction_orders?id=eq.{c_id}", headers=HEADERS, json=req_json, timeout=3)
+                    if res.status_code not in [200, 204]:
+                        requests.post(f"{SUPABASE_URL}/rest/v1/correction_orders", headers=HEADERS, json=[req_json], timeout=3)
+                except Exception as e:
+                    print("Supabase correction order save note:", e)
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": True, "data": req_json}, ensure_ascii=False).encode('utf-8'))
+
         elif path == "/api/users/save":
             username = req_json.get("username", "").strip()
             password = req_json.get("password", "").strip()
@@ -1260,6 +1304,27 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     print("Supabase disposition delete error:", e)
 
             DISPOSITIONS_CACHE["data"] = None
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": True}, ensure_ascii=False).encode('utf-8'))
+            return
+
+        elif path == "/api/correction_orders/delete":
+            order_id = params.get("id", [None])[0]
+            if order_id:
+                cached_data = load_correction_orders()
+                orders = cached_data.get("orders", [])
+                cached_data["orders"] = [o for o in orders if str(o.get("id")) != str(order_id)]
+                save_correction_orders_data(cached_data)
+
+                # Supabase 삭제
+                if SUPABASE_URL and SECRET_KEY:
+                    try:
+                        requests.delete(f"{SUPABASE_URL}/rest/v1/correction_orders?id=eq.{order_id}", headers=HEADERS, timeout=5)
+                    except Exception as e:
+                        print("Supabase correction order delete error:", e)
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
