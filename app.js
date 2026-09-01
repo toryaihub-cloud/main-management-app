@@ -2635,19 +2635,39 @@ async function fetchCorrectionOrders() {
   }
 }
 
+function renderCorrectionBatchTabs() {
+  const container = document.getElementById("correction-batch-tabs-container");
+  if (!container) return;
+
+  // 모든 차수 라운드 수집
+  const roundsSet = new Set();
+  Object.keys(correctionMeta).forEach(r => roundsSet.add(r));
+  allCorrectionOrders.forEach(o => { if (o.batch_round) roundsSet.add(o.batch_round); });
+  
+  const sortedRounds = Array.from(roundsSet).sort();
+  if (sortedRounds.length === 0) {
+    sortedRounds.push('2026-06-30', '2026-07-28', '2026-08-19');
+  }
+
+  if (!sortedRounds.includes(currentCorrectionBatch)) {
+    currentCorrectionBatch = sortedRounds[0];
+  }
+
+  container.innerHTML = sortedRounds.map((r, idx) => {
+    const meta = correctionMeta[r] || {};
+    const label = meta.batch_label || `${idx + 1}차 (${r})`;
+    const isActive = r === currentCorrectionBatch;
+    return `
+      <button class="btn ${isActive ? 'btn-primary' : 'btn-outline'} correction-batch-btn" id="btn-batch-${r}" onclick="switchCorrectionBatch('${r}')">
+        <i class="fa-solid fa-calendar-check"></i> ${label}
+      </button>
+    `;
+  }).join('');
+}
+
 function switchCorrectionBatch(batchRound) {
   currentCorrectionBatch = batchRound;
-  
-  // 버튼 스타일 업데이트
-  document.querySelectorAll('.correction-batch-btn').forEach(btn => {
-    btn.classList.remove('btn-primary');
-    btn.classList.add('btn-outline');
-  });
-  const activeBtn = document.getElementById(`btn-batch-${batchRound}`);
-  if (activeBtn) {
-    activeBtn.classList.remove('btn-outline');
-    activeBtn.classList.add('btn-primary');
-  }
+  renderCorrectionBatchTabs();
 
   // 검색창 초기화
   const searchInput = document.getElementById("corr-search-input");
@@ -2661,40 +2681,210 @@ function switchCorrectionBatch(batchRound) {
 }
 
 function renderCorrectionBatch(batchRound) {
+  renderCorrectionBatchTabs();
+
+  const bOrders = allCorrectionOrders.filter(o => o.batch_round === batchRound);
+  const uniqueFacs = len_unique(bOrders.map(o => o.facility_name));
+  const offCnt = bOrders.filter(o => o.notice_method === '공문').length;
+  const mailCnt = bOrders.length - offCnt;
+
   const meta = correctionMeta[batchRound] || {
-    batch_title: batchRound === '2026-06-30' ? '6.29.공문결재, 6.30.등기발송' : (batchRound === '2026-07-28' ? '7.27.공문결재, 7.28.등기발송' : '8.19.공문결재, 8.20.등기발송'),
-    approval_date: batchRound === '2026-06-30' ? '2026.06.29' : (batchRound === '2026-07-28' ? '2026.07.27' : '2026.08.19'),
-    send_date: batchRound === '2026-06-30' ? '2026.06.30' : (batchRound === '2026-07-28' ? '2026.07.28' : '2026.08.20'),
-    total_facilities: batchRound === '2026-06-30' ? 21 : (batchRound === '2026-07-28' ? 26 : 15),
-    official_count: batchRound === '2026-06-30' ? 2 : (batchRound === '2026-07-28' ? 14 : 0),
-    mail_count: batchRound === '2026-06-30' ? 19 : (batchRound === '2026-07-28' ? 12 : 15),
-    row_count: batchRound === '2026-06-30' ? 22 : (batchRound === '2026-07-28' ? 29 : 49)
+    batch_title: batchRound === '2026-06-30' ? '6.29.공문결재, 6.30.등기발송' : (batchRound === '2026-07-28' ? '7.27.공문결재, 7.28.등기발송' : (batchRound === '2026-08-19' ? '8.19.공문결재, 8.20.등기발송' : `${batchRound} 시정명령`)),
+    approval_date: bOrders[0]?.approval_date || bOrders[0]?.order_date || '-',
+    send_date: bOrders[0]?.send_date || bOrders[0]?.order_date || '-',
+    total_facilities: uniqueFacs,
+    official_count: offCnt,
+    mail_count: mailCnt,
+    row_count: bOrders.length
   };
 
   // 상단 요약 카드 텍스트 바인딩
   const titleElem = document.getElementById("corr-title-text");
   if (titleElem) {
-    titleElem.innerHTML = `<i class="fa-solid fa-file-contract" style="color:var(--primary);"></i> 행정처분 내역 (시정명령, ${meta.batch_title})`;
+    titleElem.innerHTML = `<i class="fa-solid fa-file-contract" style="color:var(--primary);"></i> 행정처분 내역 (시정명령, ${meta.batch_title || batchRound})`;
   }
 
   const descElem = document.getElementById("corr-desc-text");
   if (descElem) {
-    descElem.innerText = `해당 행정처분은 ${meta.approval_date}에 공문결재를 완료하고, ${meta.send_date}에 ${batchRound === '2026-08-19' ? '등기발송' : '발송'}을 완료한 내역입니다.`;
+    descElem.innerText = `해당 행정처분은 ${meta.approval_date || '-'}에 공문결재를 완료하고, ${meta.send_date || '-'}에 발송을 완료한 내역입니다.`;
   }
 
   const totalElem = document.getElementById("corr-stat-total");
-  if (totalElem) totalElem.innerText = `${meta.total_facilities}개소`;
+  if (totalElem) totalElem.innerText = `${meta.total_facilities || uniqueFacs}개소`;
 
   const offElem = document.getElementById("corr-stat-official");
-  if (offElem) offElem.innerText = `${meta.official_count}개소`;
+  if (offElem) offElem.innerText = `${meta.official_count !== undefined ? meta.official_count : offCnt}개소`;
 
   const mailElem = document.getElementById("corr-stat-mail");
-  if (mailElem) mailElem.innerText = `${meta.mail_count}개소`;
+  if (mailElem) mailElem.innerText = `${meta.mail_count !== undefined ? meta.mail_count : mailCnt}개소`;
 
   const rowsElem = document.getElementById("corr-stat-rows");
-  if (rowsElem) rowsElem.innerText = `${meta.row_count}건`;
+  if (rowsElem) rowsElem.innerText = `${meta.row_count || bOrders.length}건`;
 
   filterCorrectionOrders();
+}
+
+function len_unique(arr) {
+  return new Set(arr.filter(Boolean).map(s => String(s).trim())).size;
+}
+
+// 신규 시정명령 건 등록 모달 열기
+function openNewCorrectionOrderModal() {
+  document.getElementById("corr-edit-id").value = "";
+  document.getElementById("corr-edit-batch").value = currentCorrectionBatch || "2026-09-15";
+  document.getElementById("corr-edit-date").value = new Date().toISOString().slice(0, 10).replace(/-/g, '.');
+  document.getElementById("corr-edit-method").value = "등기";
+  document.getElementById("corr-edit-fac-name").value = "";
+  document.getElementById("corr-edit-address").value = "";
+  document.getElementById("corr-edit-zip").value = "";
+  document.getElementById("corr-edit-target").value = "";
+  document.getElementById("corr-edit-recipient").value = "";
+  document.getElementById("corr-edit-delivery").value = "";
+  document.getElementById("corr-edit-note").value = "";
+
+  const modal = document.getElementById("modal-correction-order");
+  if (modal) {
+    modal.classList.add("active");
+    modal.style.display = "flex";
+  }
+}
+
+// 업로드 양식 템플릿 다운로드
+function downloadCorrectionOrdersTemplate() {
+  const csvContent = "\uFEFF차수구분(예: 2026-09-15),시정명령일자,시설명,우편발송 도로명주소,우편번호,시정명령대상,통지방법(등기/공문),수신인,우편도달여부(도달/반송),비고\n" +
+    "2026-09-15,2026.9.15.,샘플시설1,광주광역시 광산구 임방울대로 123,62245,샘플관리단,등기,샘플관리실,도달,샘플비고\n" +
+    "2026-09-15,2026.9.15.,샘플시설2,광주광역시 광산구 무진대로 456,62355,샘플공공기관,공문,샘플기관장,,공문발송\n";
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.setAttribute("download", "시정명령_일괄업로드_표준양식.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// 엑셀/CSV 일괄 업로드 처리기
+async function handleCorrectionOrdersUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      const data = new Uint8Array(e.target.result);
+      if (typeof XLSX === 'undefined') {
+        alert("엑셀 파싱 라이브러리를 로드하는 중입니다. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+      const workbook = XLSX.read(data, { type: 'array' });
+      const parsedItems = [];
+
+      workbook.SheetNames.forEach(sheetName => {
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+        if (!jsonRows || jsonRows.length < 2) return;
+
+        // 헤더 인덱스 찾기
+        let headerRowIdx = -1;
+        let colMap = {};
+
+        for (let r = 0; r < Math.min(jsonRows.length, 10); r++) {
+          const row = jsonRows[r];
+          const rowStr = row.join(' ');
+          if (rowStr.includes('시설명') || rowStr.includes('시정명령')) {
+            headerRowIdx = r;
+            row.forEach((cell, cIdx) => {
+              const cStr = String(cell).replace(/\n/g, '').trim();
+              if (cStr.includes('차수')) colMap['batch'] = cIdx;
+              if (cStr.includes('명령일자') || cStr.includes('일자')) colMap['order_date'] = cIdx;
+              if (cStr.includes('시설명')) colMap['facility_name'] = cIdx;
+              if (cStr.includes('주소') || cStr.includes('도로명')) colMap['send_address'] = cIdx;
+              if (cStr.includes('우편번호')) colMap['zip_code'] = cIdx;
+              if (cStr.includes('대상')) colMap['target_name'] = cIdx;
+              if (cStr.includes('통지방법') || cStr.includes('방법')) colMap['notice_method'] = cIdx;
+              if (cStr.includes('수신인')) colMap['recipient_name'] = cIdx;
+              if (cStr.includes('도달')) colMap['delivery_status'] = cIdx;
+              if (cStr.includes('비고')) colMap['note'] = cIdx;
+            });
+            break;
+          }
+        }
+
+        if (headerRowIdx === -1) return;
+
+        // 차수 기본값 추출 (시트명이나 파일명 기준)
+        let defaultBatch = currentCorrectionBatch;
+        if (sheetName.includes('6.30')) defaultBatch = '2026-06-30';
+        else if (sheetName.includes('7.28')) defaultBatch = '2026-07-28';
+        else if (sheetName.includes('8.19')) defaultBatch = '2026-08-19';
+        else {
+          const matchDate = sheetName.match(/\d{4}[.\-_]\d{1,2}[.\-_]\d{1,2}/);
+          if (matchDate) defaultBatch = matchDate[0].replace(/[._]/g, '-');
+        }
+
+        for (let r = headerRowIdx + 1; r < jsonRows.length; r++) {
+          const row = jsonRows[r];
+          if (!row || row.length === 0) continue;
+          
+          const facName = colMap['facility_name'] !== undefined ? String(row[colMap['facility_name']] || '').trim() : '';
+          if (!facName || facName.startsWith('총 ')) continue;
+
+          const batch = (colMap['batch'] !== undefined && row[colMap['batch']]) ? String(row[colMap['batch']]).trim() : defaultBatch;
+          const orderDate = colMap['order_date'] !== undefined ? String(row[colMap['order_date']] || '').trim() : '';
+          const address = colMap['send_address'] !== undefined ? String(row[colMap['send_address']] || '').trim() : '';
+          const zip = colMap['zip_code'] !== undefined ? String(row[colMap['zip_code']] || '').trim() : '';
+          const target = colMap['target_name'] !== undefined ? String(row[colMap['target_name']] || '').trim() : '';
+          const method = colMap['notice_method'] !== undefined ? String(row[colMap['notice_method']] || '등기').trim() : '등기';
+          const recipient = colMap['recipient_name'] !== undefined ? String(row[colMap['recipient_name']] || '').trim() : '';
+          const delivery = colMap['delivery_status'] !== undefined ? String(row[colMap['delivery_status']] || '').trim() : '';
+          const note = colMap['note'] !== undefined ? String(row[colMap['note']] || '').trim() : '';
+
+          parsedItems.push({
+            batch_round: batch,
+            order_date: orderDate,
+            facility_name: facName,
+            send_address: address,
+            zip_code: zip,
+            target_name: target,
+            notice_method: method,
+            recipient_name: recipient,
+            delivery_status: delivery,
+            note: note
+          });
+        }
+      });
+
+      if (parsedItems.length === 0) {
+        alert("엑셀 파일에서 유효한 시정명령 데이터를 찾지 못했습니다.\n양식 헤더(시설명, 주소, 수신인 등)를 확인해주세요.");
+        return;
+      }
+
+      // 서버 업로드 전송
+      const res = await fetch(`${API_BASE_URL}/correction_orders/batch_upload`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: parsedItems })
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        alert(`🎉 엑셀 일괄 업로드 완료!\n- 추가: ${result.added_count}건\n- 갱신: ${result.updated_count}건`);
+        if (parsedItems[0]?.batch_round) {
+          currentCorrectionBatch = parsedItems[0].batch_round;
+        }
+        await fetchCorrectionOrders();
+      } else {
+        alert("서버 업로드 처리 중 오류가 발생했습니다.");
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  } catch (err) {
+    console.error("Excel upload error:", err);
+    alert("파일을 읽는 중 오류가 발생했습니다: " + err.message);
+  } finally {
+    event.target.value = ""; // reset
+  }
 }
 
 function filterCorrectionOrders() {

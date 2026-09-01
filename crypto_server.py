@@ -869,6 +869,94 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps({"success": True, "data": req_json}, ensure_ascii=False).encode('utf-8'))
 
+        elif path == "/api/correction_orders/batch_upload":
+            new_items = req_json.get("items", [])
+            custom_meta = req_json.get("meta", {})
+
+            if not new_items:
+                self.send_response(400)
+                self.end_headers()
+                return
+
+            cached_data = load_correction_orders()
+            orders = cached_data.get("orders", [])
+            meta = cached_data.get("meta", {})
+
+            max_id = max([int(o.get("id", 0)) for o in orders] + [0])
+            added_count = 0
+            updated_count = 0
+
+            for item in new_items:
+                b_round = item.get("batch_round")
+                fac_name = item.get("facility_name")
+                recip = item.get("recipient_name")
+                
+                # Check for existing match in same batch
+                matched_idx = -1
+                for idx, o in enumerate(orders):
+                    if o.get("batch_round") == b_round and o.get("facility_name") == fac_name and o.get("recipient_name") == recip:
+                        matched_idx = idx
+                        break
+                
+                if matched_idx != -1:
+                    item["id"] = orders[matched_idx]["id"]
+                    orders[matched_idx].update(item)
+                    updated_count += 1
+                else:
+                    max_id += 1
+                    item["id"] = max_id
+                    orders.append(item)
+                    added_count += 1
+
+            # Meta 자동 재계산 및 갱신
+            for b_round in set(o.get("batch_round") for o in orders if o.get("batch_round")):
+                b_orders = [o for o in orders if o.get("batch_round") == b_round]
+                unique_facs = len(set(o.get("facility_name") for o in b_orders if o.get("facility_name")))
+                off_cnt = len([o for o in b_orders if o.get("notice_method") == "공문"])
+                mail_cnt = len(b_orders) - off_cnt
+
+                if b_round not in meta:
+                    meta[b_round] = {
+                        "batch_round": b_round,
+                        "batch_label": custom_meta.get(b_round, {}).get("batch_label") or f"{b_round} 시정명령",
+                        "batch_title": custom_meta.get(b_round, {}).get("batch_title") or f"{b_round} 시정명령",
+                        "approval_date": b_orders[0].get("approval_date") or b_orders[0].get("order_date") or "-",
+                        "send_date": b_orders[0].get("send_date") or b_orders[0].get("order_date") or "-",
+                        "summary_text": f"총 {unique_facs}개소 (공문 {off_cnt}개소, 우편 {mail_cnt}개소)",
+                        "total_facilities": unique_facs,
+                        "official_count": off_cnt,
+                        "mail_count": mail_cnt,
+                        "row_count": len(b_orders)
+                    }
+                else:
+                    meta[b_round]["total_facilities"] = unique_facs
+                    meta[b_round]["official_count"] = off_cnt
+                    meta[b_round]["mail_count"] = mail_cnt
+                    meta[b_round]["row_count"] = len(b_orders)
+                    meta[b_round]["summary_text"] = f"총 {unique_facs}개소 (공문 {off_cnt}개소, 우편 {mail_cnt}개소)"
+
+            cached_data["orders"] = orders
+            cached_data["meta"] = meta
+            save_correction_orders_data(cached_data)
+
+            # Supabase DB 일괄 동기화 시도
+            if SUPABASE_URL and SECRET_KEY:
+                try:
+                    requests.post(f"{SUPABASE_URL}/rest/v1/correction_orders", headers=HEADERS, json=new_items, timeout=5)
+                except Exception as e:
+                    print("Supabase batch sync note:", e)
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "success": True,
+                "added_count": added_count,
+                "updated_count": updated_count,
+                "total_count": len(orders),
+                "meta": meta
+            }, ensure_ascii=False).encode('utf-8'))
+
         elif path == "/api/users/save":
             username = req_json.get("username", "").strip()
             password = req_json.get("password", "").strip()

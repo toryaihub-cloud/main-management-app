@@ -7,9 +7,11 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260901_03">
+  <link rel="stylesheet" href="styles.css?v=20260901_04">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- SheetJS (xlsx) CDN for Excel Upload/Parse -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <!-- FontAwesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -225,24 +227,29 @@
 
     <!-- 4. Correction Orders View (시정명령) -->
     <section id="view-correction-orders" class="view-section">
-      <!-- Top Batch Selection Tabs -->
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-        <div style="display:flex; gap:0.5rem; align-items:center;">
-          <button class="btn btn-primary correction-batch-btn" id="btn-batch-2026-06-30" onclick="switchCorrectionBatch('2026-06-30')">
-            <i class="fa-solid fa-calendar-check"></i> 1차 (2026.06.30)
-          </button>
-          <button class="btn btn-outline correction-batch-btn" id="btn-batch-2026-07-28" onclick="switchCorrectionBatch('2026-07-28')">
-            <i class="fa-solid fa-calendar-check"></i> 2차 (2026.07.28)
-          </button>
-          <button class="btn btn-outline correction-batch-btn" id="btn-batch-2026-08-19" onclick="switchCorrectionBatch('2026-08-19')">
-            <i class="fa-solid fa-calendar-check"></i> 3차 (2026.08.19)
-          </button>
+      <!-- Top Batch Selection Tabs & Actions -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.6rem;">
+        <!-- Dynamic Batch Buttons Container -->
+        <div id="correction-batch-tabs-container" style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
+          <!-- Dynamically Populated Batch Buttons (1차, 2차, 3차, 4차...) -->
         </div>
-        <div style="display:flex; gap:0.5rem; align-items:center;">
-          <button class="btn btn-secondary" onclick="exportCorrectionOrdersExcel()">
+
+        <!-- Action Buttons -->
+        <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
+          <input type="file" id="corr-excel-upload-input" accept=".xlsx,.xls,.csv" style="display:none;" onchange="handleCorrectionOrdersUpload(event)">
+          <button class="btn btn-emerald" style="padding:0.45rem 0.8rem; font-size:0.82rem;" onclick="document.getElementById('corr-excel-upload-input').click()">
+            <i class="fa-solid fa-file-arrow-up"></i> 엑셀 일괄 업로드
+          </button>
+          <button class="btn btn-primary" style="padding:0.45rem 0.8rem; font-size:0.82rem;" onclick="openNewCorrectionOrderModal()">
+            <i class="fa-solid fa-plus"></i> 신규 건 추가
+          </button>
+          <button class="btn btn-secondary" style="padding:0.45rem 0.8rem; font-size:0.82rem;" onclick="downloadCorrectionOrdersTemplate()">
+            <i class="fa-solid fa-file-arrow-down"></i> 업로드 양식
+          </button>
+          <button class="btn btn-secondary" style="padding:0.45rem 0.8rem; font-size:0.82rem;" onclick="exportCorrectionOrdersExcel()">
             <i class="fa-solid fa-file-excel"></i> 엑셀 다운로드
           </button>
-          <button class="btn btn-secondary" onclick="printCorrectionOrders()">
+          <button class="btn btn-secondary" style="padding:0.45rem 0.8rem; font-size:0.82rem;" onclick="printCorrectionOrders()">
             <i class="fa-solid fa-print"></i> 인쇄
           </button>
         </div>
@@ -978,9 +985,12 @@
       <div class="modal-body" style="padding:1.2rem;">
         <form id="form-correction-order" onsubmit="event.preventDefault(); saveCorrectionOrder();" style="display:flex; flex-direction:column; gap:1rem;">
           <input type="hidden" id="corr-edit-id">
-          <input type="hidden" id="corr-edit-batch">
 
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.8rem;">
+          <div style="display:grid; grid-template-columns: 1.2fr 1fr 0.8fr; gap:0.8rem;">
+            <div class="form-group">
+              <label class="form-label">차수 구분 (Batch) *</label>
+              <input type="text" id="corr-edit-batch" class="input-box" required placeholder="예: 2026-06-30 또는 2026-09-15">
+            </div>
             <div class="form-group">
               <label class="form-label">시정명령일자 *</label>
               <input type="text" id="corr-edit-date" class="input-box" required placeholder="예: 2026.8.19.">
@@ -1055,6 +1065,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260901_03"></script>
+  <script src="app.js?v=20260901_04"></script>
 </body>
 </html>
