@@ -197,7 +197,7 @@ async function loadData() {
   }
 
   // 2. Fetch fresh data
-  await Promise.all([fetchFacilities(), fetchDispositions()]);
+  await Promise.all([fetchFacilities(), fetchDispositions(), fetchCorrectionOrders()]);
   if (currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN")) {
     await fetchUsers();
   }
@@ -2590,15 +2590,48 @@ let currentCorrectionBatch = '2026-06-30';
 
 async function fetchCorrectionOrders() {
   try {
+    // 1. API fetch 시도
     const res = await fetch(`${API_BASE_URL}/correction_orders`);
     if (res.ok) {
       const data = await res.json();
+      if (data && data.orders && data.orders.length > 0) {
+        allCorrectionOrders = data.orders || [];
+        correctionMeta = data.meta || {};
+        try { localStorage.setItem("cached_correction_orders", JSON.stringify(data)); } catch(e) {}
+        renderCorrectionBatch(currentCorrectionBatch);
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn("Backend API fetch failed, trying local fallback:", err);
+  }
+
+  // 2. 정적 JSON fallback 시도 (GitHub Pages / Render 정적 호스팅 대응)
+  try {
+    const resLocal = await fetch("correction_orders_cache.json");
+    if (resLocal.ok) {
+      const data = await resLocal.json();
+      if (data && data.orders && data.orders.length > 0) {
+        allCorrectionOrders = data.orders || [];
+        correctionMeta = data.meta || {};
+        try { localStorage.setItem("cached_correction_orders", JSON.stringify(data)); } catch(e) {}
+        renderCorrectionBatch(currentCorrectionBatch);
+        return;
+      }
+    }
+  } catch (e) {
+    console.warn("Local cache fetch failed:", e);
+  }
+
+  // 3. localStorage 캐시 fallback
+  const cached = localStorage.getItem("cached_correction_orders");
+  if (cached) {
+    try {
+      const data = JSON.parse(cached);
       allCorrectionOrders = data.orders || [];
       correctionMeta = data.meta || {};
       renderCorrectionBatch(currentCorrectionBatch);
-    }
-  } catch (err) {
-    console.error("Error fetching correction orders:", err);
+    } catch(e) {}
   }
 }
 
