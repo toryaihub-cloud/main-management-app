@@ -560,7 +560,7 @@ def get_cached_facilities():
     if SUPABASE_URL and SECRET_KEY:
         try:
             req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
-            res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=5)
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=10)
             if res.status_code == 200:
                 data = res.json()
                 if data and len(data) > 0:
@@ -594,7 +594,7 @@ def get_cached_dispositions():
     if SUPABASE_URL and SECRET_KEY:
         try:
             req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
-            res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=5)
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=10)
             if res.status_code == 200:
                 data = res.json()
                 if data and len(data) > 0:
@@ -1099,6 +1099,23 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 db_payload["approval_date"] = req_json["building_approval_dates"]
             if req_json.get("building_new_old_type"):
                 db_payload["is_new_building"] = req_json["building_new_old_type"]
+
+            # Reverse-calculate uninstalled_cnt based on user-provided installed_cnt
+            if "parking_installed_cnt" in req_json and "parking_required_cnt" in db_payload:
+                try:
+                    req_p = int(db_payload["parking_required_cnt"])
+                    inst_p = int(req_json["parking_installed_cnt"])
+                    db_payload["parking_uninstalled_cnt"] = max(0, req_p - inst_p)
+                except (ValueError, TypeError):
+                    pass
+
+            if "charger_installed_cnt" in req_json and "charger_required_cnt" in db_payload:
+                try:
+                    req_c = int(db_payload["charger_required_cnt"])
+                    inst_c = int(req_json["charger_installed_cnt"])
+                    db_payload["charger_uninstalled_cnt"] = max(0, req_c - inst_c)
+                except (ValueError, TypeError):
+                    pass
 
             # _decrypted 필드를 _encrypted로 변환하여 DB에 저장
             if req_json.get("manager_name_decrypted"):

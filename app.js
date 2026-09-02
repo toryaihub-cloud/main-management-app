@@ -318,14 +318,30 @@ function normalizeDateStr(val) {
   return val.length >= 10 ? val.substring(0, 10) : null;
 }
 
+async function fetchWithRetry(url, options = {}, retries = 3, delayMs = 3000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok) return res;
+      if (res.status >= 500) throw new Error(`Server Error ${res.status}`);
+      return res;
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      console.warn(`[Cold Start Wait] ${url} fetch failed, retrying in ${delayMs}ms... (Attempt ${i+1}/${retries})`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+}
+
 async function fetchFacilities() {
   try {
-    const res = await fetch(`${API_BASE_URL}/facilities`);
+    const res = await fetchWithRetry(`${API_BASE_URL}/facilities`);
     let list = [];
     if (res.ok) {
       const raw = await res.json();
       list = Array.isArray(raw) ? raw : (raw.data || []);
     }
+    // Only fallback if API actually returns 0 (which means DB is empty) OR fetch failed completely
     if (list.length === 0) {
       const resStatic = await fetch("facilities_cache.json?v=" + Date.now());
       if (resStatic.ok) {
@@ -334,7 +350,6 @@ async function fetchFacilities() {
       }
     }
     if (list.length > 0) {
-      // Smart Merge: Local modifications priority guard (Field-Level)
       const cached = localStorage.getItem("cached_facilities");
       if (cached) {
         try {
@@ -350,7 +365,7 @@ async function fetchFacilities() {
       try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
     }
   } catch (err) {
-    console.warn("API facilities load failed, fallback to local json:", err);
+    console.warn("API facilities load failed after retries, fallback to local json:", err);
     try {
       const res = await fetch("facilities_cache.json?v=" + Date.now());
       if (res.ok) {
@@ -376,7 +391,7 @@ async function fetchFacilities() {
 
 async function fetchDispositions() {
   try {
-    const res = await fetch(`${API_BASE_URL}/dispositions`);
+    const res = await fetchWithRetry(`${API_BASE_URL}/dispositions`);
     let list = [];
     if (res.ok) {
       const raw = await res.json();
@@ -400,7 +415,6 @@ async function fetchDispositions() {
             const cItem = cachedMap.get(String(item.id));
             return cItem ? smartMergeObjects(item, cItem) : item;
           });
-          // Also include newly added sub-owners from local cache
           cachedList.forEach(cItem => {
             if (!list.some(l => String(l.id) === String(cItem.id))) {
               list.push(cItem);
@@ -421,7 +435,7 @@ async function fetchDispositions() {
       try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
     }
   } catch (err) {
-    console.warn("API dispositions load failed, fallback to local json:", err);
+    console.warn("API dispositions load failed after retries, fallback to local json:", err);
     try {
       const res = await fetch("dispositions_cache.json?v=" + Date.now());
       if (res.ok) {
