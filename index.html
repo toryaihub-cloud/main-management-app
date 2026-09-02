@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260902_18">
+  <link rel="stylesheet" href="styles.css?v=20260902_19">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- SheetJS (xlsx) CDN for Excel Upload/Parse -->
@@ -291,7 +291,10 @@
       <div class="card" style="margin-bottom:1rem; padding:0.8rem 1rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:0.8rem; flex-wrap:wrap;">
           <div style="display:flex; gap:0.5rem; align-items:center; flex:1; min-width:260px;">
-            <input type="text" id="corr-search-input" class="input-box" placeholder="시설명, 수신인, 주소, 대상 검색..." oninput="filterCorrectionOrders()">
+            <div class="search-box-wrapper" style="position:relative; display:flex; align-items:center; flex:1;">
+              <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:0.8rem; color:var(--text-muted); font-size:0.9rem;"></i>
+              <input type="text" id="corr-search-input" class="input-box" placeholder="검색..." oninput="filterCorrectionOrders()" style="padding-left:2.3rem; width:100%;">
+            </div>
             <select id="corr-filter-method" class="input-box" style="width:140px;" onchange="filterCorrectionOrders()">
               <option value="">통지방법 전체</option>
               <option value="등기">등기 발송</option>
@@ -1069,6 +1072,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260902_18"></script>
+  <script src="app.js?v=20260902_19"></script>
 </body>
 </html>
