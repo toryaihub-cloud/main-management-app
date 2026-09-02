@@ -293,7 +293,10 @@ async function fetchFacilities() {
     if (res.ok) {
       const raw = await res.json();
       const list = Array.isArray(raw) ? raw : (raw.data || []);
-      if (list.length > 0) facilitiesData = list;
+      if (list.length > 0) {
+        facilitiesData = list;
+        try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
+      }
     } else {
       throw new Error("API status " + res.status);
     }
@@ -304,6 +307,7 @@ async function fetchFacilities() {
       if (res.ok) {
         const raw = await res.json();
         facilitiesData = Array.isArray(raw) ? raw : (raw.data || []);
+        try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
       }
     } catch (e) {}
   }
@@ -337,6 +341,7 @@ async function fetchDispositions() {
         reg_num_decrypted: (d.reg_num_decrypted && !d.reg_num_decrypted.startsWith("gAAAAA")) ? d.reg_num_decrypted : (d.reg_num || ""),
         contact_decrypted: (d.contact_decrypted && !d.contact_decrypted.startsWith("gAAAAA")) ? d.contact_decrypted : (d.contact || "")
       }));
+      try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
     }
   } catch (err) {
     console.warn("API dispositions load failed, fallback to local json:", err);
@@ -353,6 +358,7 @@ async function fetchDispositions() {
           reg_num_decrypted: (d.reg_num_decrypted && !d.reg_num_decrypted.startsWith("gAAAAA")) ? d.reg_num_decrypted : (d.reg_num || ""),
           contact_decrypted: (d.contact_decrypted && !d.contact_decrypted.startsWith("gAAAAA")) ? d.contact_decrypted : (d.contact || "")
         }));
+        try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
       }
     } catch (e) {}
   }
