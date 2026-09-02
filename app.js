@@ -2794,50 +2794,63 @@ let correctionMeta = {};
 let currentCorrectionBatch = '2026-06-30';
 
 async function fetchCorrectionOrders() {
+  let fetchedData = null;
+
   try {
-    // 1. API fetch 시도
     const res = await fetch(`${API_BASE_URL}/correction_orders`);
     if (res.ok) {
       const data = await res.json();
       if (data && data.orders && data.orders.length > 0) {
-        allCorrectionOrders = data.orders || [];
-        correctionMeta = data.meta || {};
-        try { localStorage.setItem("cached_correction_orders", JSON.stringify(data)); } catch(e) {}
-        renderCorrectionBatch(currentCorrectionBatch);
-        return;
+        fetchedData = data;
       }
     }
   } catch (err) {
-    console.warn("Backend API fetch failed, trying local fallback:", err);
+    console.warn("Backend API fetch correction orders failed:", err);
   }
 
-  // 2. 정적 JSON fallback 시도 (GitHub Pages / Render 정적 호스팅 대응)
-  try {
-    const resLocal = await fetch("correction_orders_cache.json");
-    if (resLocal.ok) {
-      const data = await resLocal.json();
-      if (data && data.orders && data.orders.length > 0) {
-        allCorrectionOrders = data.orders || [];
-        correctionMeta = data.meta || {};
-        try { localStorage.setItem("cached_correction_orders", JSON.stringify(data)); } catch(e) {}
-        renderCorrectionBatch(currentCorrectionBatch);
-        return;
+  if (!fetchedData) {
+    try {
+      const resLocal = await fetch("correction_orders_cache.json?v=" + Date.now());
+      if (resLocal.ok) {
+        const data = await resLocal.json();
+        if (data && data.orders && data.orders.length > 0) {
+          fetchedData = data;
+        }
       }
+    } catch (e) {
+      console.warn("Local cache fetch failed:", e);
     }
-  } catch (e) {
-    console.warn("Local cache fetch failed:", e);
   }
 
-  // 3. localStorage 캐시 fallback
+  // Smart Merge with localStorage edits
   const cached = localStorage.getItem("cached_correction_orders");
+  let orders = fetchedData ? (fetchedData.orders || []) : [];
+  let meta = fetchedData ? (fetchedData.meta || {}) : {};
+
   if (cached) {
     try {
-      const data = JSON.parse(cached);
-      allCorrectionOrders = data.orders || [];
-      correctionMeta = data.meta || {};
-      renderCorrectionBatch(currentCorrectionBatch);
+      const cData = JSON.parse(cached);
+      const cOrders = cData.orders || [];
+      if (cOrders.length > 0) {
+        const cMap = new Map(cOrders.map(o => [String(o.id), o]));
+        orders = orders.map(o => {
+          const cItem = cMap.get(String(o.id));
+          return cItem ? { ...o, ...cItem } : o;
+        });
+        cOrders.forEach(cItem => {
+          if (!orders.some(o => String(o.id) === String(cItem.id))) {
+            orders.push(cItem);
+          }
+        });
+        if (cData.meta) meta = { ...meta, ...cData.meta };
+      }
     } catch(e) {}
   }
+
+  allCorrectionOrders = orders;
+  correctionMeta = meta;
+  try { localStorage.setItem("cached_correction_orders", JSON.stringify({ meta: correctionMeta, orders: allCorrectionOrders })); } catch(e) {}
+  renderCorrectionBatch(currentCorrectionBatch);
 }
 
 function renderCorrectionBatchTabs() {
