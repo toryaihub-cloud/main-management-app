@@ -3491,8 +3491,8 @@
     "updated_at": "2026-08-04T07:33:16.135871+00:00",
     "manager_name_decrypted": "이대영",
     "manager_contact_decrypted": "010-2258-7155",
-    "parking_installed_cnt": 3,
-    "charger_installed_cnt": 3,
+    "parking_installed_cnt": 4,
+    "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
     "charger_slow_cnt": 1
