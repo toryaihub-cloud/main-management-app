@@ -1839,7 +1839,7 @@ function openDispositionDetailModal(key) {
           <div class="disp-sub-card" style="margin-bottom:1.25rem;">
             <div class="disp-sub-title" style="display:flex; justify-content:space-between; align-items:center;">
               <div>${targetTagHtml}</div>
-              <button class="btn btn-secondary" style="padding:0.25rem 0.65rem; font-size:0.75rem;" onclick="editDisposition(${d.id})">
+              <button class="btn btn-secondary" style="padding:0.25rem 0.65rem; font-size:0.75rem;" onclick="editDisposition('${d.id}')">
                 <i class="fa-solid fa-pen-to-square"></i> 레코드 수정
               </button>
             </div>
@@ -2279,12 +2279,19 @@ function openDispositionModal(id = null) {
 
   if (id) {
     if (delBtn) delBtn.style.display = isAdmin ? "inline-flex" : "none";
-    const item = dispositionsData.find(d => d.id === id);
+    const item = dispositionsData.find(d => String(d.id) === String(id));
     if (item) {
       const fac = facilitiesData.find(f => f.facility_key === item.facility_key) || {};
       const facName = fac.facility_name || item.facility_key || `수정 (#${id})`;
       const targetType = item.target_type || '소유자';
-      const targetName = item.target_name_decrypted || item.target_name_encrypted || '';
+
+      const getCleanVal = (decVal, encVal) => {
+        if (decVal && typeof decVal === 'string' && !decVal.startsWith('gAAAAA')) return decVal;
+        if (encVal && typeof encVal === 'string' && !encVal.startsWith('gAAAAA')) return encVal;
+        return (decVal && !decVal.startsWith('gAAAAA')) ? decVal : "";
+      };
+
+      const targetName = getCleanVal(item.target_name_decrypted, item.target_name_encrypted);
 
       let subInfoStr = targetType;
       if (targetName && targetName !== facName) {
@@ -2296,20 +2303,20 @@ function openDispositionModal(id = null) {
       
       // 1. 기본 관리 정보
       document.getElementById("disp-facility-key").value = item.facility_key || "";
-      document.getElementById("disp-target-type").value = item.target_type || "시설";
+      document.getElementById("disp-target-type").value = item.target_type || "소유자";
       document.getElementById("disp-status").value = item.current_status || "";
-      document.getElementById("disp-target-name").value = item.target_name_decrypted || item.target_name_encrypted || "";
+      document.getElementById("disp-target-name").value = targetName;
       document.getElementById("disp-notice-target").value = item.advance_notice_target || "";
 
       // 2. 사전통지 & 초본주소 정보
       document.getElementById("disp-notice-method").value = item.advance_notice_method || "";
-      document.getElementById("disp-mail-address").value = item.mail_address_decrypted || item.mail_address_encrypted || "";
+      document.getElementById("disp-mail-address").value = getCleanVal(item.mail_address_decrypted, item.mail_address_encrypted);
       document.getElementById("disp-zip-code").value = item.zip_code || "";
-      document.getElementById("disp-recipient-name").value = item.recipient_name_decrypted || item.recipient_name_encrypted || "";
+      document.getElementById("disp-recipient-name").value = getCleanVal(item.recipient_name_decrypted, item.recipient_name_encrypted);
       document.getElementById("disp-notice-send-date").value = item.advance_notice_send_date || "";
       document.getElementById("disp-notice-return-status").value = item.advance_notice_return_status || "";
       document.getElementById("disp-abstract-send-date").value = item.abstract_send_date || "";
-      document.getElementById("disp-abstract-address").value = item.abstract_address_decrypted || item.abstract_address_encrypted || "";
+      document.getElementById("disp-abstract-address").value = getCleanVal(item.abstract_address_decrypted, item.abstract_address_encrypted);
       document.getElementById("disp-abstract-return-status").value = item.abstract_return_status || "";
       document.getElementById("disp-notice-public").value = item.notice_public || "";
       document.getElementById("disp-notice-public-period").value = item.notice_public_period || "";
@@ -2327,8 +2334,8 @@ function openDispositionModal(id = null) {
       document.getElementById("disp-correction-public").value = item.correction_public || "";
 
       // 4. 개인정보 & 비고
-      document.getElementById("disp-reg-num").value = item.reg_num_decrypted || item.reg_num_encrypted || "";
-      document.getElementById("disp-contact").value = item.contact_decrypted || item.contact_encrypted || "";
+      document.getElementById("disp-reg-num").value = getCleanVal(item.reg_num_decrypted, item.reg_num_encrypted);
+      document.getElementById("disp-contact").value = getCleanVal(item.contact_decrypted, item.contact_encrypted);
       document.getElementById("disp-note").value = item.note || "";
     }
   } else {
