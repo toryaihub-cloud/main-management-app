@@ -1795,13 +1795,19 @@ function openDispositionDetailModal(key) {
       modalBody.insertAdjacentHTML('beforeend', `<div style="text-align:center; color:var(--text-muted); padding:2rem;">등록된 상세 행정처분 이력이 없습니다.</div>`);
     } else {
       dispItems.forEach((d) => {
-        // Clean string without Lock emojis
-        const targetNameStr = d.target_name_decrypted || d.target_name_encrypted || '-';
-        const recipientStr = d.recipient_name_decrypted || d.recipient_name_encrypted || '-';
-        const regNumStr = d.reg_num_decrypted || d.reg_num_encrypted || '-';
-        const contactStr = d.contact_decrypted || d.contact_encrypted || '-';
-        const mailAddrStr = d.mail_address_decrypted || d.mail_address_encrypted || '-';
-        const abstractAddrStr = d.abstract_address_decrypted || d.abstract_address_encrypted || '-';
+        const cleanDecStr = (val) => {
+          if (!val || val === '-' || val === 'None') return '-';
+          const s = String(val).trim();
+          if (s.startsWith('gAAAAA')) return '-';
+          return s;
+        };
+
+        const targetNameStr = cleanDecStr(d.target_name_decrypted);
+        const recipientStr = cleanDecStr(d.recipient_name_decrypted);
+        const regNumStr = cleanDecStr(d.reg_num_decrypted);
+        const contactStr = cleanDecStr(d.contact_decrypted);
+        const mailAddrStr = cleanDecStr(d.mail_address_decrypted);
+        const abstractAddrStr = cleanDecStr(d.abstract_address_decrypted);
 
         // Return Status Badge (🟢 도달 / 🔴 반송)
         let returnBadgeStr = '-';
