@@ -1162,6 +1162,17 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 else:
                     res = requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[db_payload], timeout=5)
                     print(f"Supabase dispositions POST status={res.status_code}")
+                    if res.status_code in [200, 201]:
+                        saved_rows = res.json()
+                        if saved_rows and len(saved_rows) > 0:
+                            created_id = saved_rows[0].get("id")
+                            if created_id:
+                                req_json["id"] = created_id
+                                # 로컬 캐시 ID도 실제 DB ID로 동기화
+                                update_local_disposition_cache(req_json)
+                
+                # 다음 조회 시 Supabase DB에서 최신 데이터로 로드되도록 캐시 초기화
+                DISPOSITIONS_CACHE["data"] = None
             except Exception as e:
                 print("Supabase dispositions save error:", e)
 

@@ -1750,13 +1750,6 @@ function openDispositionDetailModal(key) {
       modalBody.insertAdjacentHTML('beforeend', `<div style="text-align:center; color:var(--text-muted); padding:2rem;">등록된 상세 행정처분 이력이 없습니다.</div>`);
     } else {
       dispItems.forEach((d) => {
-        // Skip ghost empty disposition records without name and content
-        const hasName = !!(d.target_name_decrypted || d.target_name_encrypted);
-        const hasContent = !!(d.advance_notice_method || d.opinion_content || d.correction_order_date || d.mail_address_decrypted || d.recipient_name_decrypted || d.advance_notice_date);
-        if (d.target_type !== '시설' && !hasName && !hasContent) {
-          return;
-        }
-
         // Clean string without Lock emojis
         const targetNameStr = d.target_name_decrypted || d.target_name_encrypted || '-';
         const recipientStr = d.recipient_name_decrypted || d.recipient_name_encrypted || '-';
@@ -2394,7 +2387,7 @@ async function saveDisposition() {
 
       const subPayload = {
         facility_key: facilityKey,
-        target_type: subTargetType,
+        target_type: subTargetType || '소유자',
         current_status: subStatus || payload.current_status,
         advance_notice_target: subNoticeTarget,
 
@@ -2426,11 +2419,14 @@ async function saveDisposition() {
         contact_decrypted: subCon
       };
 
-      await fetch(`${API_BASE_URL}/dispositions/save`, {
+      const subRes = await fetch(`${API_BASE_URL}/dispositions/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(subPayload)
       });
+      if (!subRes.ok) {
+        console.warn("Sub-owner save response not OK:", subRes.status);
+      }
     }
 
     alert("성공적으로 저장되었습니다.");
