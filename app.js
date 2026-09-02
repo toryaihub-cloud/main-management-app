@@ -2351,7 +2351,7 @@ function addDispositionSubForm() {
         </div>
         <div class="form-group">
           <label class="form-label">시정기간</label>
-          <input type="text" class="input-box sub-correction-period">
+          <input type="text" class="input-box sub-correction-period" placeholder="예: 2026.08.31 ~ 2027.08.30">
         </div>
         <div class="form-group">
           <label class="form-label">시정 통지방법</label>
