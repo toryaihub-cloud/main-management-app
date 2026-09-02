@@ -2401,40 +2401,53 @@ async function saveDisposition() {
       return;
     }
 
-    // Save Sub-owner Forms (All 30 fields parsed)
+    // 1. Update Main Disposition in In-Memory Array
+    let mainIdx = dispositionsData.findIndex(d => String(d.id) === String(id));
+    if (mainIdx >= 0) {
+      dispositionsData[mainIdx] = { ...dispositionsData[mainIdx], ...payload };
+    } else {
+      dispositionsData.push(payload);
+    }
+
+    // 2. Save Sub-owner Forms (All 30 fields parsed)
     const subCards = document.querySelectorAll("#disp-sub-owners-container .sub-owner-card");
     for (const card of subCards) {
-      const subTargetType = card.querySelector(".sub-target-type").value;
-      const subTargetName = card.querySelector(".sub-target-name").value.trim();
-      const subStatus = card.querySelector(".sub-status").value.trim();
-      const subNoticeTarget = card.querySelector(".sub-notice-target").value.trim();
+      const subTargetType = card.querySelector(".sub-target-type")?.value || "소유자";
+      const subTargetName = card.querySelector(".sub-target-name")?.value.trim() || "";
+      const subStatus = card.querySelector(".sub-status")?.value.trim() || "";
+      const subNoticeTarget = card.querySelector(".sub-notice-target")?.value.trim() || "";
 
-      const subNoticeMethod = card.querySelector(".sub-notice-method").value.trim();
-      const subMailAddr = card.querySelector(".sub-mail-address").value.trim();
-      const subZipCode = card.querySelector(".sub-zip-code").value.trim();
-      const subRecipient = card.querySelector(".sub-recipient-name").value.trim();
-      const subNoticeSendDate = card.querySelector(".sub-notice-send-date").value || null;
-      const subNoticeReturnStatus = card.querySelector(".sub-notice-return-status").value.trim();
-      const subAbstractSendDate = card.querySelector(".sub-abstract-send-date").value || null;
-      const subAbstractAddr = card.querySelector(".sub-abstract-address").value.trim();
-      const subAbstractReturnStatus = card.querySelector(".sub-abstract-return-status").value.trim();
-      const subNoticePublic = card.querySelector(".sub-notice-public").value.trim();
-      const subNoticePublicPeriod = card.querySelector(".sub-notice-public-period").value.trim();
+      const subNoticeMethod = card.querySelector(".sub-notice-method")?.value.trim() || "";
+      const subMailAddr = card.querySelector(".sub-mail-address")?.value.trim() || "";
+      const subZipCode = card.querySelector(".sub-zip-code")?.value.trim() || "";
+      const subRecipient = card.querySelector(".sub-recipient-name")?.value.trim() || "";
+      const subNoticeSendDate = card.querySelector(".sub-notice-send-date")?.value || null;
+      const subNoticeReturnStatus = card.querySelector(".sub-notice-return-status")?.value.trim() || "";
+      const subAbstractSendDate = card.querySelector(".sub-abstract-send-date")?.value || null;
+      const subAbstractAddr = card.querySelector(".sub-abstract-address")?.value.trim() || "";
+      const subAbstractReturnStatus = card.querySelector(".sub-abstract-return-status")?.value.trim() || "";
+      const subNoticePublic = card.querySelector(".sub-notice-public")?.value.trim() || "";
+      const subNoticePublicPeriod = card.querySelector(".sub-notice-public-period")?.value.trim() || "";
 
-      const subOpinionSubmitted = card.querySelector(".sub-opinion-submitted").value;
-      const subOpinionSubmitDate = card.querySelector(".sub-opinion-submit-date").value || null;
-      const subOpinionContent = card.querySelector(".sub-opinion-content").value.trim();
-      const subCorrectionOrder = card.querySelector(".sub-correction-order").value.trim();
-      const subCorrectionDate = card.querySelector(".sub-correction-date").value || null;
-      const subCorrectionReason = card.querySelector(".sub-correction-reason").value.trim();
-      const subCorrectionPeriod = card.querySelector(".sub-correction-period").value.trim();
-      const subCorrectionNoticeMethod = card.querySelector(".sub-correction-notice-method").value.trim();
-      const subCorrectionReturnDetails = card.querySelector(".sub-correction-return-details").value.trim();
-      const subCorrectionPublic = card.querySelector(".sub-correction-public").value.trim();
+      const subOpinionSubmitted = card.querySelector(".sub-opinion-submitted")?.value || "X";
+      const subOpinionSubmitDate = card.querySelector(".sub-opinion-submit-date")?.value || null;
+      const subOpinionContent = card.querySelector(".sub-opinion-content")?.value.trim() || "";
+      const subCorrectionOrder = card.querySelector(".sub-correction-order")?.value.trim() || "";
+      const subCorrectionDate = card.querySelector(".sub-correction-date")?.value || null;
+      const subCorrectionReason = card.querySelector(".sub-correction-reason")?.value.trim() || "";
+      const subCorrectionPeriod = card.querySelector(".sub-correction-period")?.value.trim() || "";
+      const subCorrectionNoticeMethod = card.querySelector(".sub-correction-notice-method")?.value.trim() || "";
+      const subCorrectionReturnDetails = card.querySelector(".sub-correction-return-details")?.value.trim() || "";
+      const subCorrectionPublic = card.querySelector(".sub-correction-public")?.value.trim() || "";
 
-      const subReg = card.querySelector(".sub-reg-num").value.trim();
-      const subCon = card.querySelector(".sub-contact").value.trim();
-      const subNote = card.querySelector(".sub-note").value.trim();
+      const subReg = card.querySelector(".sub-reg-num")?.value.trim() || "";
+      const subCon = card.querySelector(".sub-contact")?.value.trim() || "";
+      const subNote = card.querySelector(".sub-note")?.value.trim() || "";
+
+      // Skip completely empty cards
+      if (!subTargetName && !subMailAddr && !subRecipient && !subNoticeMethod && !subCorrectionOrder && !subNote) {
+        continue;
+      }
 
       const subPayload = {
         facility_key: facilityKey,
@@ -2470,25 +2483,42 @@ async function saveDisposition() {
         contact_decrypted: subCon
       };
 
-      const subRes = await fetch(`${API_BASE_URL}/dispositions/save`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(subPayload)
-      });
-      if (!subRes.ok) {
-        console.warn("Sub-owner save response not OK:", subRes.status);
+      try {
+        const subRes = await fetch(`${API_BASE_URL}/dispositions/save`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(subPayload)
+        });
+        if (subRes.ok) {
+          const subJson = await subRes.json();
+          const savedData = (subJson && subJson.data) ? subJson.data : subPayload;
+          dispositionsData.push({ ...subPayload, ...savedData, id: savedData.id || Date.now() });
+        } else {
+          dispositionsData.push({ ...subPayload, id: Date.now() });
+        }
+      } catch (errSub) {
+        dispositionsData.push({ ...subPayload, id: Date.now() });
       }
     }
 
+    try {
+      localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
+    } catch(e) {}
+
     alert("성공적으로 저장되었습니다.");
     closeModal('modal-disposition');
-    await loadData();
 
-    // 상세 팝업이 활성화 상태라면 최신 데이터로 새로고침
+    // 상세 팝업이 활성화 상태라면 즉시 최신 데이터로 새로고침
     const detailModal = document.getElementById("modal-disposition-detail");
     if (detailModal && detailModal.classList.contains("active")) {
       openDispositionDetailModal(facilityKey);
     }
+
+    // 메인 카드 그리드 및 테이블도 즉시 갱신
+    filterDispositions();
+
+    // 백그라운드로 서버와 최종 동기화
+    loadData();
   } catch (err) {
     console.error("Error saving disposition:", err);
     alert("저장 중 오류가 발생했습니다.");
