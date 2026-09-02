@@ -290,15 +290,21 @@ function setFacilityViewMode(mode) {
 async function fetchFacilities() {
   try {
     const res = await fetch(`${API_BASE_URL}/facilities`);
+    let list = [];
     if (res.ok) {
       const raw = await res.json();
-      const list = Array.isArray(raw) ? raw : (raw.data || []);
-      if (list.length > 0) {
-        facilitiesData = list;
-        try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
+      list = Array.isArray(raw) ? raw : (raw.data || []);
+    }
+    if (list.length === 0) {
+      const resStatic = await fetch("facilities_cache.json?v=" + Date.now());
+      if (resStatic.ok) {
+        const raw = await resStatic.json();
+        list = Array.isArray(raw) ? raw : (raw.data || []);
       }
-    } else {
-      throw new Error("API status " + res.status);
+    }
+    if (list.length > 0) {
+      facilitiesData = list;
+      try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
     }
   } catch (err) {
     console.warn("API facilities load failed, fallback to local json:", err);

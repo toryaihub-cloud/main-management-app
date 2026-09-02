@@ -552,21 +552,26 @@ def get_cached_facilities():
             res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=5)
             if res.status_code == 200:
                 data = res.json()
-                processed = [process_facility_item(item) for item in data]
-                processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
-                FACILITIES_CACHE["data"] = processed
-                try:
-                    with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
-                        json.dump(processed, f, ensure_ascii=False, indent=2)
-                except Exception: pass
-                return processed, 200
+                if data and len(data) > 0:
+                    processed = [process_facility_item(item) for item in data]
+                    processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
+                    FACILITIES_CACHE["data"] = processed
+                    try:
+                        with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
+                            json.dump(processed, f, ensure_ascii=False, indent=2)
+                    except Exception: pass
+                    return processed, 200
         except Exception as e:
             print("Facilities fetch exception:", e)
 
-    # 2. 로컬 캐시 Fallback
-    if FACILITIES_CACHE["data"]:
-        filtered = [f for f in FACILITIES_CACHE["data"] if f.get("facility_key") not in DELETED_FACILITY_KEYS]
-        return filtered, 200
+    # 2. 로컬 파일 및 메모리 캐시 Fallback
+    if not FACILITIES_CACHE["data"]:
+        if os.path.exists(LOCAL_FACILITIES_FILE):
+            try:
+                with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as f:
+                    raw_data = json.load(f)
+                    FACILITIES_CACHE["data"] = [process_facility_item(item) for item in raw_data]
+            except Exception: pass
 
     filtered = [f for f in (FACILITIES_CACHE["data"] or []) if f.get("facility_key") not in DELETED_FACILITY_KEYS]
     return filtered, 200
@@ -581,21 +586,26 @@ def get_cached_dispositions():
             res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=5)
             if res.status_code == 200:
                 data = res.json()
-                processed = [process_disposition_item(item) for item in data]
-                processed = [d for d in processed if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
-                DISPOSITIONS_CACHE["data"] = processed
-                try:
-                    with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
-                        json.dump(processed, f, ensure_ascii=False, indent=2)
-                except Exception: pass
-                return processed, 200
+                if data and len(data) > 0:
+                    processed = [process_disposition_item(item) for item in data]
+                    processed = [d for d in processed if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
+                    DISPOSITIONS_CACHE["data"] = processed
+                    try:
+                        with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
+                            json.dump(processed, f, ensure_ascii=False, indent=2)
+                    except Exception: pass
+                    return processed, 200
         except Exception as e:
             print("Dispositions fetch exception:", e)
 
-    # 2. 로컬 캐시 Fallback
-    if DISPOSITIONS_CACHE["data"]:
-        filtered = [d for d in DISPOSITIONS_CACHE["data"] if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
-        return filtered, 200
+    # 2. 로컬 파일 및 메모리 캐시 Fallback
+    if not DISPOSITIONS_CACHE["data"]:
+        if os.path.exists(LOCAL_DISPOSITIONS_FILE):
+            try:
+                with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as f:
+                    raw_disps = json.load(f)
+                    DISPOSITIONS_CACHE["data"] = [process_disposition_item(item) for item in raw_disps]
+            except Exception: pass
 
     filtered = [d for d in (DISPOSITIONS_CACHE["data"] or []) if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
     return filtered, 200
