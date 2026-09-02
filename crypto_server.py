@@ -338,6 +338,17 @@ def process_facility_item(item):
         mgr_con = smart_dec(mgr_con)
     item["manager_contact_decrypted"] = mgr_con or smart_dec(item.get("manager_contact_encrypted")) or item.get("manager_contact") or ""
 
+    # Derive parking and charger installed counts from DB columns if not explicitly present
+    req_p = int(item.get("parking_required_cnt") or 0)
+    un_p = int(item.get("parking_uninstalled_cnt") or 0)
+    if "parking_installed_cnt" not in item or item["parking_installed_cnt"] is None:
+        item["parking_installed_cnt"] = max(0, req_p - un_p)
+
+    req_c = int(item.get("charger_required_cnt") or 0)
+    un_c = int(item.get("charger_uninstalled_cnt") or 0)
+    if "charger_installed_cnt" not in item or item["charger_installed_cnt"] is None:
+        item["charger_installed_cnt"] = max(0, req_c - un_c)
+
     return item
 
 def process_disposition_item(item):
