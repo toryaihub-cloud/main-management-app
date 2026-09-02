@@ -2040,33 +2040,42 @@ async function saveFacility() {
     manager_contact_decrypted: mgrContact
   };
 
-  // Instant In-Memory Cache Update for 0.001s response
-  let idx = facilitiesData.findIndex(f => f.facility_key === key);
-  if (idx >= 0) {
-    facilitiesData[idx] = { ...facilitiesData[idx], ...payload };
-  } else {
-    facilitiesData.unshift(payload);
-  }
-
   try {
-    localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
-  } catch(e) {}
-
-  alert("성공적으로 저장되었습니다.");
-  closeModal('modal-facility');
-  
-  // Async Background DB Sync with await
-  try {
-    await fetch(`${API_BASE_URL}/facilities/save`, {
+    const res = await fetch(`${API_BASE_URL}/facilities/save`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-  } catch (err) { console.error(err); }
 
-  filterFacilities();
-  updateDashboardStats();
-  openFacilityDetailModal(key);
+    if (!res.ok) {
+      alert("시설 정보 저장 중 오류가 발생했습니다. (서버 응답 오류)");
+      return;
+    }
+
+    // Instant In-Memory Cache Update for 0.001s response
+    let idx = facilitiesData.findIndex(f => f.facility_key === key);
+    if (idx >= 0) {
+      facilitiesData[idx] = { ...facilitiesData[idx], ...payload };
+    } else {
+      facilitiesData.unshift(payload);
+    }
+
+    try {
+      localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
+    } catch(e) {}
+
+    alert("시설 정보가 성공적으로 저장되었습니다.");
+    closeModal('modal-facility');
+
+    filterFacilities();
+    updateDashboardStats();
+    renderCategoryChart();
+    renderStatusChart();
+    openFacilityDetailModal(key);
+  } catch (err) {
+    console.error("Error saving facility:", err);
+    alert("시설 정보 저장 중 네트워크 오류가 발생했습니다.");
+  }
 }
 
 async function deleteFacility(key) {

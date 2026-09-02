@@ -1058,22 +1058,27 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             fac_key = req_json.get("facility_key")
             update_local_facility_cache(req_json)
 
-            # Supabase DB에 저장할 때 DB에 존재하는 컬럼만 필터링
+            # Supabase DB에 저장할 때 DB에 실제로 존재하는 컬럼만 엄격하게 필터링
             FACILITIES_DB_COLS = {
                 "facility_key", "facility_name", "facility_category", "compliance_status",
                 "facility_ownership_type", "address_doro", "address_jibun", "dong_name",
-                "building_approval_dates", "building_new_old_type", "building_register_num",
-                "parking_required_cnt", "parking_installed_cnt", "parking_uninstalled_cnt",
-                "parking_status", "charger_required_cnt", "charger_installed_cnt",
-                "charger_uninstalled_cnt", "charger_status", "charger_fast_req_cnt",
-                "charger_fast_cnt", "investigation_status", "is_new_building",
-                "permission_date", "approval_date", "management_body",
+                "building_register_num", "permission_date", "approval_date", "is_new_building",
+                "parking_required_cnt", "parking_uninstalled_cnt", "parking_status",
+                "charger_required_cnt", "charger_uninstalled_cnt", "charger_status",
+                "investigation_status", "management_body",
                 "manager_name_encrypted", "manager_contact_encrypted"
             }
             db_payload = {}
             for k, v in req_json.items():
                 if k in FACILITIES_DB_COLS:
                     db_payload[k] = v
+            
+            # Form aliases to actual DB columns
+            if req_json.get("building_approval_dates"):
+                db_payload["approval_date"] = req_json["building_approval_dates"]
+            if req_json.get("building_new_old_type"):
+                db_payload["is_new_building"] = req_json["building_new_old_type"]
+
             # _decrypted 필드를 _encrypted로 변환하여 DB에 저장
             if req_json.get("manager_name_decrypted"):
                 enc = encrypt_data(req_json["manager_name_decrypted"])
@@ -1089,6 +1094,9 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 if res.status_code not in [200, 201, 204] or (res.content and len(json.loads(res.content.decode('utf-8'))) == 0):
                     res2 = requests.post(f"{SUPABASE_URL}/rest/v1/facilities", headers=prefer_headers, json=[db_payload], timeout=5)
                     print(f"Supabase facilities POST status={res2.status_code} key={fac_key}")
+                
+                # 다음 조회 시 Supabase DB에서 최신 데이터가 로드되도록 캐시 초기화
+                FACILITIES_CACHE["data"] = None
             except Exception as e:
                 print("Supabase facilities save error:", e)
 
