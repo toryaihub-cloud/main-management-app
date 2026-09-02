@@ -433,13 +433,13 @@ def update_local_disposition_cache(payload):
         if idx >= 0:
             DISPOSITIONS_CACHE["data"][idx] = {**DISPOSITIONS_CACHE["data"][idx], **processed_item}
         else:
-            DISPOSITIONS_CACHE["data"].insert(0, processed_item)
+            DISPOSITIONS_CACHE["data"].append(processed_item)
     else:
         import time
         new_id = int(time.time() * 1000)
         processed_item["id"] = new_id
         payload["id"] = new_id
-        DISPOSITIONS_CACHE["data"].insert(0, processed_item)
+        DISPOSITIONS_CACHE["data"].append(processed_item)
 
     try:
         with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:

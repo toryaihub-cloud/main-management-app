@@ -1582,6 +1582,13 @@ function openDispositionDetailModal(key) {
     const fac = facilitiesData.find(f => f.facility_key === key) || {};
     const dispItems = dispositionsData.filter(d => d.facility_key === key);
 
+    // 정렬: 메인 '시설' 레코드가 최상단에 오고, 하위 소유자/대상자들은 등록 순서(id 오름차순)대로 기존 소유자 아래(가장 하단)로 배치
+    dispItems.sort((a, b) => {
+      if (a.target_type === '시설' && b.target_type !== '시설') return -1;
+      if (a.target_type !== '시설' && b.target_type === '시설') return 1;
+      return (parseInt(a.id) || 0) - (parseInt(b.id) || 0);
+    });
+
     const facName = fac.facility_name || (dispItems[0] && dispItems[0].target_name_decrypted) || key;
     
     // Find representative '시설' item or fallback to first
