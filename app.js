@@ -3147,34 +3147,34 @@ function filterCorrectionOrders() {
   tbody.innerHTML = filtered.map((item, idx) => {
     const isOfficial = item.notice_method === '공문';
     const methodBadge = isOfficial 
-      ? `<span class="badge badge-amber" style="font-size:0.75rem;"><i class="fa-solid fa-envelope-open-text"></i> 공문</span>`
-      : `<span class="badge badge-blue" style="font-size:0.75rem;"><i class="fa-solid fa-paper-plane"></i> 등기</span>`;
+      ? `<span class="badge badge-amber" style="font-size:0.75rem; padding:0.2rem 0.5rem;"><i class="fa-solid fa-envelope-open-text"></i> 공문</span>`
+      : `<span class="badge badge-blue" style="font-size:0.75rem; padding:0.2rem 0.5rem;"><i class="fa-solid fa-paper-plane"></i> 등기</span>`;
 
-    let deliveryBadge = `<span style="color:var(--text-muted);">-</span>`;
+    let deliveryBadge = `<span style="color:#94A3B8; font-size:0.8rem;">-</span>`;
     if (item.delivery_status === '도달') {
-      deliveryBadge = `<span class="badge badge-emerald" style="font-size:0.75rem;"><i class="fa-solid fa-check"></i> 도달</span>`;
+      deliveryBadge = `<span class="badge badge-emerald" style="font-size:0.75rem; padding:0.2rem 0.5rem; font-weight:700;"><i class="fa-solid fa-check"></i> 도달</span>`;
     } else if (item.delivery_status) {
-      deliveryBadge = `<span class="badge badge-rose" style="font-size:0.75rem;">${item.delivery_status}</span>`;
+      deliveryBadge = `<span class="badge badge-rose" style="font-size:0.75rem; padding:0.2rem 0.5rem; font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> ${item.delivery_status}</span>`;
     }
 
-    const noteTag = item.note ? `<span style="font-size:0.8rem; background:#F1F5F9; padding:0.2rem 0.4rem; border-radius:4px; border:1px solid #E2E8F0; color:#334155;">${item.note}</span>` : '-';
+    const noteTag = item.note ? `<span style="font-size:0.8rem; background:#F8FAFC; padding:0.2rem 0.45rem; border-radius:4px; border:1px solid #CBD5E1; color:#334155; font-weight:500;">${item.note}</span>` : `<span style="color:#94A3B8;">-</span>`;
 
     return `
-      <tr style="transition: background 0.15s ease;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
-        <td style="text-align:center; font-weight:600; color:var(--text-muted); font-size:0.8rem;">${idx + 1}</td>
-        <td style="font-size:0.82rem; color:#334155;">${item.order_date || '-'}</td>
-        <td style="font-size:0.88rem;">
+      <tr>
+        <td style="text-align:center;"><span class="table-no-badge">${idx + 1}</span></td>
+        <td style="text-align:center; font-size:0.83rem; color:#334155; font-weight:600;">${item.order_date || '-'}</td>
+        <td>
           <span class="clickable-fac-name" onclick="openCorrectionOrderModal(${item.id})" title="클릭하여 내용 수정">
-            <i class="fa-regular fa-pen-to-square" style="font-size:0.75rem; margin-right:0.2rem;"></i>${item.facility_name || '-'}
+            <i class="fa-regular fa-pen-to-square" style="font-size:0.75rem;"></i>${item.facility_name || '-'}
           </span>
         </td>
-        <td style="font-size:0.82rem; color:#475569; max-width:320px; word-break:break-all;">${item.send_address || '-'}</td>
-        <td style="text-align:center; font-size:0.8rem; color:#64748B;">${item.zip_code || '-'}</td>
-        <td style="font-size:0.82rem; color:#1E293B;">${item.target_name || '-'}</td>
+        <td style="font-size:0.83rem; color:#334155; line-height:1.45; word-break:keep-all;">${item.send_address || '-'}</td>
+        <td style="text-align:center; font-size:0.8rem; color:#64748B; font-family:monospace; font-weight:600;">${item.zip_code || '-'}</td>
+        <td style="font-size:0.83rem; color:#1E293B;">${item.target_name || '-'}</td>
         <td style="text-align:center;">${methodBadge}</td>
-        <td style="font-size:0.82rem; font-weight:600; color:#0F172A;">${item.recipient_name || '-'}</td>
+        <td style="font-size:0.83rem; font-weight:700; color:#0F172A;">${item.recipient_name || '-'}</td>
         <td style="text-align:center;">${deliveryBadge}</td>
-        <td>${noteTag}</td>
+        <td style="text-align:center;">${noteTag}</td>
       </tr>
     `;
   }).join('');
