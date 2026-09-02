@@ -7,6 +7,7 @@ import time
 import os
 import glob
 import re
+import threading
 from urllib.parse import parse_qs, urlparse, unquote
 from crypto_utils import encrypt_data, decrypt_data
 
@@ -1445,9 +1446,43 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
     daemon_threads = True
 
+def supabase_keepalive_worker():
+    """
+    Supabase DB 자동 일시 정지(Pause) 방지용 백그라운드 킵얼라이브 워커.
+    6시간(21,600초)마다 Supabase DB에 유효한 SQL/REST 쿼리를 실행하여
+    프로젝트가 Paused 상태로 전환되지 않고 365일 활성 상태를 유지하도록 보장합니다.
+    """
+    print("Starting Supabase Keep-Alive Background Worker (6-hour interval)...")
+    while True:
+        if SUPABASE_URL and SECRET_KEY:
+            try:
+                # 1. system_settings 테이블 조회 (Activity 갱신)
+                res = requests.get(
+                    f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.general&select=*",
+                    headers=HEADERS,
+                    timeout=10
+                )
+                now_str = time.strftime("%Y-%m-%d %H:%M:%S")
+                if res.status_code == 200:
+                    print(f"[{now_str}] [Keep-Alive] Supabase ping successful (status={res.status_code})")
+                else:
+                    print(f"[{now_str}] [Keep-Alive] Supabase ping note: status={res.status_code}")
+            except Exception as e:
+                now_str = time.strftime("%Y-%m-%d %H:%M:%S")
+                print(f"[{now_str}] [Keep-Alive] Supabase ping error: {e}")
+        
+        # 6시간 대기 (21,600초)
+        time.sleep(21600)
+
 if __name__ == "__main__":
     load_users()
     load_settings()
+    load_correction_orders()
+
+    # Supabase Keep-Alive 백그라운드 스레드 자동 가동
+    keepalive_thread = threading.Thread(target=supabase_keepalive_worker, daemon=True)
+    keepalive_thread.start()
+
     with ThreadedTCPServer(("", PORT), CryptoAPIHandler) as httpd:
         print(f"Serving Threaded Multi-Async HTTP, Auth, Photos & Settings API at port {PORT}...")
         httpd.serve_forever()
