@@ -287,6 +287,37 @@ function setFacilityViewMode(mode) {
 }
 
 // 4. Fetch Data Functions
+// Field-Level Smart Merge Helper (DB values prioritized, non-empty local edits merged)
+function smartMergeObjects(baseObj, overlayObj) {
+  if (!baseObj) return overlayObj;
+  if (!overlayObj) return baseObj;
+  const result = { ...baseObj };
+  for (const [k, v] of Object.entries(overlayObj)) {
+    if (v !== undefined && v !== null && v !== "" && v !== "None" && v !== "-") {
+      result[k] = v;
+    }
+  }
+  return result;
+}
+
+function normalizeDateStr(val) {
+  if (!val) return null;
+  val = String(val).trim();
+  if (!val || val === '-' || val === 'None' || val === 'null') return null;
+  const m1 = val.match(/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
+  if (m1) {
+    const y = m1[1];
+    const m = m1[2].padStart(2, '0');
+    const d = m1[3].padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+  const m2 = val.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if (m2) {
+    return `${m2[1]}-${m2[2]}-${m2[3]}`;
+  }
+  return val.length >= 10 ? val.substring(0, 10) : null;
+}
+
 async function fetchFacilities() {
   try {
     const res = await fetch(`${API_BASE_URL}/facilities`);
@@ -303,7 +334,7 @@ async function fetchFacilities() {
       }
     }
     if (list.length > 0) {
-      // Smart Merge: Local modifications priority guard
+      // Smart Merge: Local modifications priority guard (Field-Level)
       const cached = localStorage.getItem("cached_facilities");
       if (cached) {
         try {
@@ -311,7 +342,7 @@ async function fetchFacilities() {
           const cachedMap = new Map(cachedList.map(item => [item.facility_key, item]));
           list = list.map(item => {
             const cItem = cachedMap.get(item.facility_key);
-            return cItem ? { ...item, ...cItem } : item;
+            return cItem ? smartMergeObjects(item, cItem) : item;
           });
         } catch(e) {}
       }
@@ -332,7 +363,7 @@ async function fetchFacilities() {
             const cachedMap = new Map(cachedList.map(item => [item.facility_key, item]));
             list = list.map(item => {
               const cItem = cachedMap.get(item.facility_key);
-              return cItem ? { ...item, ...cItem } : item;
+              return cItem ? smartMergeObjects(item, cItem) : item;
             });
           } catch(e) {}
         }
@@ -367,7 +398,7 @@ async function fetchDispositions() {
           const cachedMap = new Map(cachedList.map(item => [String(item.id), item]));
           list = list.map(item => {
             const cItem = cachedMap.get(String(item.id));
-            return cItem ? { ...item, ...cItem } : item;
+            return cItem ? smartMergeObjects(item, cItem) : item;
           });
           // Also include newly added sub-owners from local cache
           cachedList.forEach(cItem => {
@@ -402,7 +433,7 @@ async function fetchDispositions() {
             const cachedMap = new Map(cachedList.map(item => [String(item.id), item]));
             list = list.map(item => {
               const cItem = cachedMap.get(String(item.id));
-              return cItem ? { ...item, ...cItem } : item;
+              return cItem ? smartMergeObjects(item, cItem) : item;
             });
             cachedList.forEach(cItem => {
               if (!list.some(l => String(l.id) === String(cItem.id))) {
@@ -2477,12 +2508,9 @@ async function saveDisposition() {
   const regNum = document.getElementById("disp-reg-num").value.trim();
   const contact = document.getElementById("disp-contact").value.trim();
 
-  const parseDateSafe = (elemId) => {
+  const getDateVal = (elemId) => {
     const el = document.getElementById(elemId);
-    if (!el || !el.value) return null;
-    const val = el.value.trim();
-    if (val.length >= 10 && !val.includes('None')) return val.substring(0, 10);
-    return null;
+    return el ? normalizeDateStr(el.value) : null;
   };
 
   const payload = {
@@ -2493,18 +2521,18 @@ async function saveDisposition() {
 
     advance_notice_method: document.getElementById("disp-notice-method").value.trim(),
     zip_code: document.getElementById("disp-zip-code").value.trim(),
-    advance_notice_send_date: parseDateSafe("disp-notice-send-date"),
+    advance_notice_send_date: getDateVal("disp-notice-send-date"),
     advance_notice_return_status: document.getElementById("disp-notice-return-status").value.trim(),
-    abstract_send_date: parseDateSafe("disp-abstract-send-date"),
+    abstract_send_date: getDateVal("disp-abstract-send-date"),
     abstract_return_status: document.getElementById("disp-abstract-return-status").value.trim(),
     notice_public: document.getElementById("disp-notice-public").value.trim(),
     notice_public_period: document.getElementById("disp-notice-public-period").value.trim(),
 
     opinion_submitted: document.getElementById("disp-opinion-submitted").value,
-    opinion_submit_date: parseDateSafe("disp-opinion-submit-date"),
+    opinion_submit_date: getDateVal("disp-opinion-submit-date"),
     opinion_content: document.getElementById("disp-opinion-content").value.trim(),
     correction_order: document.getElementById("disp-correction-order").value.trim(),
-    correction_order_date: parseDateSafe("disp-correction-date"),
+    correction_order_date: getDateVal("disp-correction-date"),
     correction_reason: document.getElementById("disp-correction-reason").value.trim(),
     correction_period: document.getElementById("disp-correction-period").value.trim(),
     correction_notice_method: document.getElementById("disp-correction-notice-method").value.trim(),
@@ -2557,19 +2585,19 @@ async function saveDisposition() {
       const subMailAddr = card.querySelector(".sub-mail-address")?.value.trim() || "";
       const subZipCode = card.querySelector(".sub-zip-code")?.value.trim() || "";
       const subRecipient = card.querySelector(".sub-recipient-name")?.value.trim() || "";
-      const subNoticeSendDate = card.querySelector(".sub-notice-send-date")?.value || null;
+      const subNoticeSendDate = normalizeDateStr(card.querySelector(".sub-notice-send-date")?.value);
       const subNoticeReturnStatus = card.querySelector(".sub-notice-return-status")?.value.trim() || "";
-      const subAbstractSendDate = card.querySelector(".sub-abstract-send-date")?.value || null;
+      const subAbstractSendDate = normalizeDateStr(card.querySelector(".sub-abstract-send-date")?.value);
       const subAbstractAddr = card.querySelector(".sub-abstract-address")?.value.trim() || "";
       const subAbstractReturnStatus = card.querySelector(".sub-abstract-return-status")?.value.trim() || "";
       const subNoticePublic = card.querySelector(".sub-notice-public")?.value.trim() || "";
       const subNoticePublicPeriod = card.querySelector(".sub-notice-public-period")?.value.trim() || "";
 
       const subOpinionSubmitted = card.querySelector(".sub-opinion-submitted")?.value || "X";
-      const subOpinionSubmitDate = card.querySelector(".sub-opinion-submit-date")?.value || null;
+      const subOpinionSubmitDate = normalizeDateStr(card.querySelector(".sub-opinion-submit-date")?.value);
       const subOpinionContent = card.querySelector(".sub-opinion-content")?.value.trim() || "";
       const subCorrectionOrder = card.querySelector(".sub-correction-order")?.value.trim() || "";
-      const subCorrectionDate = card.querySelector(".sub-correction-date")?.value || null;
+      const subCorrectionDate = normalizeDateStr(card.querySelector(".sub-correction-date")?.value);
       const subCorrectionReason = card.querySelector(".sub-correction-reason")?.value.trim() || "";
       const subCorrectionPeriod = card.querySelector(".sub-correction-period")?.value.trim() || "";
       const subCorrectionNoticeMethod = card.querySelector(".sub-correction-notice-method")?.value.trim() || "";
