@@ -2267,83 +2267,106 @@ function addDispositionSubForm() {
 }
 
 function openDispositionModal(id = null) {
-  const form = document.getElementById("form-disposition");
-  if (form) form.reset();
+  try {
+    const form = document.getElementById("form-disposition");
+    if (form) form.reset();
 
-  subOwnerCounter = 0;
-  const container = document.getElementById("disp-sub-owners-container");
-  if (container) container.innerHTML = "";
+    subOwnerCounter = 0;
+    const container = document.getElementById("disp-sub-owners-container");
+    if (container) container.innerHTML = "";
 
-  const delBtn = document.getElementById("btn-delete-disp-form");
-  const isAdmin = currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN");
+    const delBtn = document.getElementById("btn-delete-disp-form");
+    const isAdmin = currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN");
 
-  if (id) {
-    if (delBtn) delBtn.style.display = isAdmin ? "inline-flex" : "none";
-    const item = dispositionsData.find(d => String(d.id) === String(id));
-    if (item) {
-      const fac = facilitiesData.find(f => f.facility_key === item.facility_key) || {};
-      const facName = fac.facility_name || item.facility_key || `수정 (#${id})`;
-      const targetType = item.target_type || '소유자';
+    const setVal = (elemId, val) => {
+      const el = document.getElementById(elemId);
+      if (el) el.value = (val === null || val === undefined || val === 'None') ? '' : String(val);
+    };
 
-      const getCleanVal = (decVal, encVal) => {
-        if (decVal && typeof decVal === 'string' && !decVal.startsWith('gAAAAA')) return decVal;
-        if (encVal && typeof encVal === 'string' && !encVal.startsWith('gAAAAA')) return encVal;
-        return (decVal && !decVal.startsWith('gAAAAA')) ? decVal : "";
-      };
-
-      const targetName = getCleanVal(item.target_name_decrypted, item.target_name_encrypted);
-
-      let subInfoStr = targetType;
-      if (targetName && targetName !== facName) {
-        subInfoStr = `${targetType}: ${targetName}`;
+    const setDateVal = (elemId, val) => {
+      const el = document.getElementById(elemId);
+      if (el) {
+        if (val && typeof val === 'string' && val.length >= 10 && !val.includes('None')) {
+          el.value = val.substring(0, 10);
+        } else {
+          el.value = '';
+        }
       }
-      
-      document.getElementById("modal-disposition-title").innerText = `${facName} (${subInfoStr}) 수정`;
-      document.getElementById("disp-id").value = item.id;
-      
-      // 1. 기본 관리 정보
-      document.getElementById("disp-facility-key").value = item.facility_key || "";
-      document.getElementById("disp-target-type").value = item.target_type || "소유자";
-      document.getElementById("disp-status").value = item.current_status || "";
-      document.getElementById("disp-target-name").value = targetName;
-      document.getElementById("disp-notice-target").value = item.advance_notice_target || "";
+    };
 
-      // 2. 사전통지 & 초본주소 정보
-      document.getElementById("disp-notice-method").value = item.advance_notice_method || "";
-      document.getElementById("disp-mail-address").value = getCleanVal(item.mail_address_decrypted, item.mail_address_encrypted);
-      document.getElementById("disp-zip-code").value = item.zip_code || "";
-      document.getElementById("disp-recipient-name").value = getCleanVal(item.recipient_name_decrypted, item.recipient_name_encrypted);
-      document.getElementById("disp-notice-send-date").value = item.advance_notice_send_date || "";
-      document.getElementById("disp-notice-return-status").value = item.advance_notice_return_status || "";
-      document.getElementById("disp-abstract-send-date").value = item.abstract_send_date || "";
-      document.getElementById("disp-abstract-address").value = getCleanVal(item.abstract_address_decrypted, item.abstract_address_encrypted);
-      document.getElementById("disp-abstract-return-status").value = item.abstract_return_status || "";
-      document.getElementById("disp-notice-public").value = item.notice_public || "";
-      document.getElementById("disp-notice-public-period").value = item.notice_public_period || "";
+    const getCleanVal = (decVal, encVal) => {
+      if (decVal && typeof decVal === 'string' && !decVal.startsWith('gAAAAA')) return decVal;
+      if (encVal && typeof encVal === 'string' && !encVal.startsWith('gAAAAA')) return encVal;
+      return (decVal && !decVal.startsWith('gAAAAA')) ? decVal : "";
+    };
 
-      // 3. 의견제출 & 시정명령 정보
-      document.getElementById("disp-opinion-submitted").value = item.opinion_submitted || "X";
-      document.getElementById("disp-opinion-submit-date").value = item.opinion_submit_date || "";
-      document.getElementById("disp-opinion-content").value = item.opinion_content || "";
-      document.getElementById("disp-correction-order").value = item.correction_order || "";
-      document.getElementById("disp-correction-date").value = item.correction_order_date || "";
-      document.getElementById("disp-correction-reason").value = item.correction_reason || "";
-      document.getElementById("disp-correction-period").value = item.correction_period || "";
-      document.getElementById("disp-correction-notice-method").value = item.correction_notice_method || "";
-      document.getElementById("disp-correction-return-details").value = item.correction_return_details || "";
-      document.getElementById("disp-correction-public").value = item.correction_public || "";
+    if (id) {
+      if (delBtn) delBtn.style.display = isAdmin ? "inline-flex" : "none";
+      const item = dispositionsData.find(d => String(d.id) === String(id));
+      if (item) {
+        const fac = facilitiesData.find(f => f.facility_key === item.facility_key) || {};
+        const facName = fac.facility_name || item.facility_key || `수정 (#${id})`;
+        const targetType = item.target_type || '소유자';
+        const targetName = getCleanVal(item.target_name_decrypted, item.target_name_encrypted);
 
-      // 4. 개인정보 & 비고
-      document.getElementById("disp-reg-num").value = getCleanVal(item.reg_num_decrypted, item.reg_num_encrypted);
-      document.getElementById("disp-contact").value = getCleanVal(item.contact_decrypted, item.contact_encrypted);
-      document.getElementById("disp-note").value = item.note || "";
+        let subInfoStr = targetType;
+        if (targetName && targetName !== facName) {
+          subInfoStr = `${targetType}: ${targetName}`;
+        }
+        
+        const titleEl = document.getElementById("modal-disposition-title");
+        if (titleEl) titleEl.innerText = `${facName} (${subInfoStr}) 수정`;
+        
+        setVal("disp-id", item.id);
+        
+        // 1. 기본 관리 정보
+        setVal("disp-facility-key", item.facility_key);
+        setVal("disp-target-type", item.target_type || "소유자");
+        setVal("disp-status", item.current_status);
+        setVal("disp-target-name", targetName);
+        setVal("disp-notice-target", item.advance_notice_target);
+
+        // 2. 사전통지 & 초본주소 정보
+        setVal("disp-notice-method", item.advance_notice_method);
+        setVal("disp-mail-address", getCleanVal(item.mail_address_decrypted, item.mail_address_encrypted));
+        setVal("disp-zip-code", item.zip_code);
+        setVal("disp-recipient-name", getCleanVal(item.recipient_name_decrypted, item.recipient_name_encrypted));
+        setDateVal("disp-notice-send-date", item.advance_notice_send_date);
+        setVal("disp-notice-return-status", item.advance_notice_return_status);
+        setDateVal("disp-abstract-send-date", item.abstract_send_date);
+        setVal("disp-abstract-address", getCleanVal(item.abstract_address_decrypted, item.abstract_address_encrypted));
+        setVal("disp-abstract-return-status", item.abstract_return_status);
+        setVal("disp-notice-public", item.notice_public);
+        setVal("disp-notice-public-period", item.notice_public_period);
+
+        // 3. 의견제출 & 시정명령 정보
+        setVal("disp-opinion-submitted", item.opinion_submitted || "X");
+        setDateVal("disp-opinion-submit-date", item.opinion_submit_date);
+        setVal("disp-opinion-content", item.opinion_content);
+        setVal("disp-correction-order", item.correction_order);
+        setDateVal("disp-correction-date", item.correction_order_date);
+        setVal("disp-correction-reason", item.correction_reason);
+        setVal("disp-correction-period", item.correction_period);
+        setVal("disp-correction-notice-method", item.correction_notice_method);
+        setVal("disp-correction-return-details", item.correction_return_details);
+        setVal("disp-correction-public", item.correction_public);
+
+        // 4. 개인정보 & 비고
+        setVal("disp-reg-num", getCleanVal(item.reg_num_decrypted, item.reg_num_encrypted));
+        setVal("disp-contact", getCleanVal(item.contact_decrypted, item.contact_encrypted));
+        setVal("disp-note", item.note);
+      }
+    } else {
+      if (delBtn) delBtn.style.display = "none";
+      const titleEl = document.getElementById("modal-disposition-title");
+      if (titleEl) titleEl.innerText = "신규등록";
+      setVal("disp-id", "");
     }
-  } else {
-    if (delBtn) delBtn.style.display = "none";
-    document.getElementById("modal-disposition-title").innerText = "신규등록";
-    document.getElementById("disp-id").value = "";
+    const modalEl = document.getElementById("modal-disposition");
+    if (modalEl) modalEl.classList.add("active");
+  } catch (errModal) {
+    console.error("Error opening disposition modal:", errModal);
   }
-  document.getElementById("modal-disposition").classList.add("active");
 }
 
 function editDisposition(id) { openDispositionModal(id); }
