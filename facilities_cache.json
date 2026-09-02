@@ -30,7 +30,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0002",
@@ -63,7 +65,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0003",
@@ -96,7 +100,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0004",
@@ -129,7 +135,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0005",
@@ -162,7 +170,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 1
   },
   {
     "facility_key": "K0006",
@@ -195,7 +205,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0007",
@@ -228,7 +240,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0008",
@@ -261,7 +275,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 5,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0009",
@@ -294,7 +310,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 4,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 19,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0010",
@@ -327,7 +345,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0011",
@@ -360,7 +380,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0012",
@@ -393,7 +415,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 3,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0013",
@@ -426,7 +450,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0014",
@@ -459,7 +485,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 3,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0015",
@@ -492,7 +520,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 3,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0016",
@@ -525,7 +555,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0017",
@@ -558,7 +590,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0018",
@@ -591,7 +625,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0019",
@@ -624,7 +660,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0020",
@@ -657,7 +695,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0021",
@@ -690,7 +730,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0022",
@@ -723,7 +765,9 @@
     "charger_installed_cnt": 32,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 6,
-    "charger_slow_cnt": 26
+    "charger_slow_cnt": 26,
+    "parking_ground_cnt": 79,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0023",
@@ -756,7 +800,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0024",
@@ -789,7 +835,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0025",
@@ -822,7 +870,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0026",
@@ -855,7 +905,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0027",
@@ -888,7 +940,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0028",
@@ -921,7 +975,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 8,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0029",
@@ -954,7 +1010,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0030",
@@ -987,7 +1045,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 3,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0031",
@@ -1020,7 +1080,9 @@
     "charger_installed_cnt": 20,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 19
+    "charger_slow_cnt": 19,
+    "parking_ground_cnt": 20,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0032",
@@ -1053,7 +1115,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0033",
@@ -1086,7 +1150,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0034",
@@ -1119,7 +1185,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0035",
@@ -1152,7 +1220,9 @@
     "charger_installed_cnt": 19,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 17
+    "charger_slow_cnt": 17,
+    "parking_ground_cnt": 19,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0036",
@@ -1185,7 +1255,9 @@
     "charger_installed_cnt": 31,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 30
+    "charger_slow_cnt": 30,
+    "parking_ground_cnt": 31,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0037",
@@ -1218,7 +1290,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0038",
@@ -1251,7 +1325,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0039",
@@ -1284,7 +1360,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0040",
@@ -1317,7 +1395,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0041",
@@ -1350,7 +1430,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0042",
@@ -1383,7 +1465,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0043",
@@ -1416,7 +1500,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0044",
@@ -1449,7 +1535,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0045",
@@ -1482,7 +1570,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0047",
@@ -1515,7 +1605,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0048",
@@ -1548,7 +1640,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0049",
@@ -1581,7 +1675,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0050",
@@ -1614,7 +1710,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0051",
@@ -1647,7 +1745,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0052",
@@ -1680,7 +1780,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0053",
@@ -1713,7 +1815,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0054",
@@ -1746,7 +1850,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 9
   },
   {
     "facility_key": "K0055",
@@ -1779,7 +1885,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0056",
@@ -1812,7 +1920,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0057",
@@ -1845,7 +1955,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0058",
@@ -1878,7 +1990,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0059",
@@ -1911,7 +2025,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0060",
@@ -1944,7 +2060,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0061",
@@ -1977,7 +2095,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0062",
@@ -2010,7 +2130,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0063",
@@ -2043,7 +2165,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0064",
@@ -2076,7 +2200,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0065",
@@ -2109,7 +2235,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0066",
@@ -2142,7 +2270,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0067",
@@ -2175,7 +2305,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0068",
@@ -2208,7 +2340,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0069",
@@ -2241,7 +2375,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0070",
@@ -2274,7 +2410,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0071",
@@ -2307,7 +2445,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0072",
@@ -2340,7 +2480,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0073",
@@ -2373,7 +2515,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0074",
@@ -2406,7 +2550,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0075",
@@ -2439,7 +2585,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0076",
@@ -2472,7 +2620,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 21
   },
   {
     "facility_key": "K0077",
@@ -2505,7 +2655,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0078",
@@ -2538,7 +2690,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0079",
@@ -2571,7 +2725,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0080",
@@ -2604,7 +2760,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0081",
@@ -2637,7 +2795,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0082",
@@ -2670,7 +2830,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0083",
@@ -2703,7 +2865,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0084",
@@ -2736,7 +2900,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0085",
@@ -2769,7 +2935,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0086",
@@ -2802,7 +2970,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0087",
@@ -2835,7 +3005,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0088",
@@ -2868,7 +3040,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0089",
@@ -2901,7 +3075,9 @@
     "charger_installed_cnt": 13,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 5,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0090",
@@ -2934,7 +3110,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 7,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 16,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0091",
@@ -2967,7 +3145,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 4,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0092",
@@ -3000,7 +3180,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0093",
@@ -3033,7 +3215,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0094",
@@ -3066,7 +3250,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0095",
@@ -3099,7 +3285,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0096",
@@ -3132,7 +3320,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0097",
@@ -3165,7 +3355,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0098",
@@ -3198,7 +3390,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0099",
@@ -3231,7 +3425,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0100",
@@ -3264,7 +3460,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0101",
@@ -3297,7 +3495,9 @@
     "charger_installed_cnt": 18,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 16
+    "charger_slow_cnt": 16,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0102",
@@ -3330,7 +3530,9 @@
     "charger_installed_cnt": 19,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 17
+    "charger_slow_cnt": 17,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 7
   },
   {
     "facility_key": "K0103",
@@ -3363,7 +3565,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0104",
@@ -3396,7 +3600,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0105",
@@ -3429,7 +3635,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0106",
@@ -3462,7 +3670,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0107",
@@ -3495,7 +3705,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0108",
@@ -3528,7 +3740,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0109",
@@ -3561,7 +3775,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0110",
@@ -3594,7 +3810,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0111",
@@ -3627,7 +3845,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0112",
@@ -3660,7 +3880,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0113",
@@ -3693,7 +3915,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0114",
@@ -3726,7 +3950,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0115",
@@ -3759,7 +3985,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0116",
@@ -3792,7 +4020,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0117",
@@ -3825,7 +4055,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0118",
@@ -3858,7 +4090,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0119",
@@ -3891,7 +4125,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0120",
@@ -3924,7 +4160,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0121",
@@ -3957,7 +4195,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0122",
@@ -3990,7 +4230,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0123",
@@ -4023,7 +4265,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0124",
@@ -4056,7 +4300,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0125",
@@ -4089,7 +4335,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0126",
@@ -4122,7 +4370,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0127",
@@ -4155,7 +4405,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0128",
@@ -4188,7 +4440,9 @@
     "charger_installed_cnt": 18,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 16
+    "charger_slow_cnt": 16,
+    "parking_ground_cnt": 44,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0130",
@@ -4221,7 +4475,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0131",
@@ -4254,7 +4510,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0132",
@@ -4287,7 +4545,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0133",
@@ -4320,7 +4580,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0134",
@@ -4353,7 +4615,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0135",
@@ -4386,7 +4650,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 1
   },
   {
     "facility_key": "K0136",
@@ -4419,7 +4685,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0137",
@@ -4452,7 +4720,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0138",
@@ -4485,7 +4755,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0139",
@@ -4518,7 +4790,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0140",
@@ -4551,7 +4825,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0141",
@@ -4584,7 +4860,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0142",
@@ -4617,7 +4895,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0143",
@@ -4650,7 +4930,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0144",
@@ -4683,7 +4965,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0145",
@@ -4716,7 +5000,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0146",
@@ -4749,7 +5035,9 @@
     "charger_installed_cnt": 16,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 16,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0147",
@@ -4782,7 +5070,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0148",
@@ -4815,7 +5105,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0149",
@@ -4848,7 +5140,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0150",
@@ -4881,7 +5175,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0151",
@@ -4914,7 +5210,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0152",
@@ -4947,7 +5245,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0153",
@@ -4980,7 +5280,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0154",
@@ -5013,7 +5315,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0155",
@@ -5046,7 +5350,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0156",
@@ -5079,7 +5385,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0157",
@@ -5112,7 +5420,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0158",
@@ -5145,7 +5455,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0159",
@@ -5178,7 +5490,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0160",
@@ -5211,7 +5525,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0161",
@@ -5244,7 +5560,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0162",
@@ -5277,7 +5595,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0163",
@@ -5310,7 +5630,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0164",
@@ -5343,7 +5665,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0165",
@@ -5376,7 +5700,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0166",
@@ -5409,7 +5735,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0167",
@@ -5442,7 +5770,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0168",
@@ -5475,7 +5805,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0169",
@@ -5508,7 +5840,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0170",
@@ -5541,7 +5875,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0171",
@@ -5574,7 +5910,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0172",
@@ -5607,7 +5945,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0173",
@@ -5640,7 +5980,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 1,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0174",
@@ -5673,7 +6015,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0175",
@@ -5706,7 +6050,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0176",
@@ -5739,7 +6085,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0177",
@@ -5772,7 +6120,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0178",
@@ -5805,7 +6155,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 10,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0179",
@@ -5838,7 +6190,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 19,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0180",
@@ -5871,7 +6225,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0181",
@@ -5904,7 +6260,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 25,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0182",
@@ -5937,7 +6295,9 @@
     "charger_installed_cnt": 13,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 13
+    "charger_slow_cnt": 13,
+    "parking_ground_cnt": 13,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0183",
@@ -5970,7 +6330,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0184",
@@ -6003,7 +6365,9 @@
     "charger_installed_cnt": 33,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 33
+    "charger_slow_cnt": 33,
+    "parking_ground_cnt": 33,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0185",
@@ -6036,7 +6400,9 @@
     "charger_installed_cnt": 19,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 19
+    "charger_slow_cnt": 19,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 30
   },
   {
     "facility_key": "K0186",
@@ -6069,7 +6435,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 15
   },
   {
     "facility_key": "K0187",
@@ -6102,7 +6470,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0188",
@@ -6135,7 +6505,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0189",
@@ -6168,7 +6540,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0190",
@@ -6201,7 +6575,9 @@
     "charger_installed_cnt": 74,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 74
+    "charger_slow_cnt": 74,
+    "parking_ground_cnt": 74,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0191",
@@ -6234,7 +6610,9 @@
     "charger_installed_cnt": 25,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 25
+    "charger_slow_cnt": 25,
+    "parking_ground_cnt": 13,
+    "parking_underground_cnt": 12
   },
   {
     "facility_key": "K0192",
@@ -6267,7 +6645,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0193",
@@ -6300,7 +6680,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0194",
@@ -6333,7 +6715,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0195",
@@ -6366,7 +6750,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0196",
@@ -6399,7 +6785,9 @@
     "charger_installed_cnt": 18,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 18
+    "charger_slow_cnt": 18,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0197",
@@ -6432,7 +6820,9 @@
     "charger_installed_cnt": 20,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 20
+    "charger_slow_cnt": 20,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 9
   },
   {
     "facility_key": "K0198",
@@ -6465,7 +6855,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0199",
@@ -6498,7 +6890,9 @@
     "charger_installed_cnt": 17,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 17
+    "charger_slow_cnt": 17,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0200",
@@ -6531,7 +6925,9 @@
     "charger_installed_cnt": 27,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 27
+    "charger_slow_cnt": 27,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 13
   },
   {
     "facility_key": "K0201",
@@ -6564,7 +6960,9 @@
     "charger_installed_cnt": 46,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 46
+    "charger_slow_cnt": 46,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 28
   },
   {
     "facility_key": "K0202",
@@ -6597,7 +6995,9 @@
     "charger_installed_cnt": 33,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 33
+    "charger_slow_cnt": 33,
+    "parking_ground_cnt": 33,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0203",
@@ -6630,7 +7030,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0204",
@@ -6663,7 +7065,9 @@
     "charger_installed_cnt": 37,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 37
+    "charger_slow_cnt": 37,
+    "parking_ground_cnt": 32,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0205",
@@ -6696,7 +7100,9 @@
     "charger_installed_cnt": 33,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 33
+    "charger_slow_cnt": 33,
+    "parking_ground_cnt": 27,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0206",
@@ -6729,7 +7135,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 15
   },
   {
     "facility_key": "K0207",
@@ -6762,7 +7170,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0208",
@@ -6795,7 +7205,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0209",
@@ -6828,7 +7240,9 @@
     "charger_installed_cnt": 22,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 22
+    "charger_slow_cnt": 22,
+    "parking_ground_cnt": 16,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0210",
@@ -6861,7 +7275,9 @@
     "charger_installed_cnt": 41,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 41
+    "charger_slow_cnt": 41,
+    "parking_ground_cnt": 41,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0211",
@@ -6894,7 +7310,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0212",
@@ -6927,7 +7345,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0213",
@@ -6960,7 +7380,9 @@
     "charger_installed_cnt": 18,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 18
+    "charger_slow_cnt": 18,
+    "parking_ground_cnt": 16,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0214",
@@ -6993,7 +7415,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0215",
@@ -7026,7 +7450,9 @@
     "charger_installed_cnt": 27,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 27
+    "charger_slow_cnt": 27,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 12
   },
   {
     "facility_key": "K0216",
@@ -7059,7 +7485,9 @@
     "charger_installed_cnt": 24,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 24
+    "charger_slow_cnt": 24,
+    "parking_ground_cnt": 24,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0217",
@@ -7092,7 +7520,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0218",
@@ -7125,7 +7555,9 @@
     "charger_installed_cnt": 42,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 42
+    "charger_slow_cnt": 42,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 28
   },
   {
     "facility_key": "K0219",
@@ -7158,7 +7590,9 @@
     "charger_installed_cnt": 26,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 26
+    "charger_slow_cnt": 26,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 26
   },
   {
     "facility_key": "K0220",
@@ -7191,7 +7625,9 @@
     "charger_installed_cnt": 28,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0221",
@@ -7224,7 +7660,9 @@
     "charger_installed_cnt": 60,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 60
+    "charger_slow_cnt": 60,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0222",
@@ -7257,7 +7695,9 @@
     "charger_installed_cnt": 38,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 38
+    "charger_slow_cnt": 38,
+    "parking_ground_cnt": 28,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0223",
@@ -7290,7 +7730,9 @@
     "charger_installed_cnt": 17,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 17
+    "charger_slow_cnt": 17,
+    "parking_ground_cnt": 17,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0224",
@@ -7323,7 +7765,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0225",
@@ -7356,7 +7800,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0226",
@@ -7389,7 +7835,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0227",
@@ -7422,7 +7870,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0228",
@@ -7455,7 +7905,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0229",
@@ -7488,7 +7940,9 @@
     "charger_installed_cnt": 26,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 26
+    "charger_slow_cnt": 26,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 20
   },
   {
     "facility_key": "K0230",
@@ -7521,7 +7975,9 @@
     "charger_installed_cnt": 27,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 27
+    "charger_slow_cnt": 27,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 27
   },
   {
     "facility_key": "K0231",
@@ -7554,7 +8010,9 @@
     "charger_installed_cnt": 27,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 27,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 27,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0232",
@@ -7587,7 +8045,9 @@
     "charger_installed_cnt": 25,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 25
+    "charger_slow_cnt": 25,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 25
   },
   {
     "facility_key": "K0233",
@@ -7620,7 +8080,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0234",
@@ -7653,7 +8115,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 13,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0235",
@@ -7686,7 +8150,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0236",
@@ -7719,7 +8185,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0237",
@@ -7752,7 +8220,9 @@
     "charger_installed_cnt": 33,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 33
+    "charger_slow_cnt": 33,
+    "parking_ground_cnt": 33,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0238",
@@ -7785,7 +8255,9 @@
     "charger_installed_cnt": 18,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 18
+    "charger_slow_cnt": 18,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 14
   },
   {
     "facility_key": "K0239",
@@ -7818,7 +8290,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0240",
@@ -7851,7 +8325,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0241",
@@ -7884,7 +8360,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0242",
@@ -7917,7 +8395,9 @@
     "charger_installed_cnt": 13,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 13
+    "charger_slow_cnt": 13,
+    "parking_ground_cnt": 13,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0243",
@@ -7950,7 +8430,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0244",
@@ -7983,7 +8465,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 13
+    "charger_slow_cnt": 13,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 11
   },
   {
     "facility_key": "K0245",
@@ -8016,7 +8500,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0246",
@@ -8049,7 +8535,9 @@
     "charger_installed_cnt": 16,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 16
+    "charger_slow_cnt": 16,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 8
   },
   {
     "facility_key": "K0247",
@@ -8082,7 +8570,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0248",
@@ -8115,7 +8605,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0249",
@@ -8148,7 +8640,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0250",
@@ -8181,7 +8675,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0251",
@@ -8214,7 +8710,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0252",
@@ -8247,7 +8745,9 @@
     "charger_installed_cnt": 20,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 20
+    "charger_slow_cnt": 20,
+    "parking_ground_cnt": 20,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0253",
@@ -8280,7 +8780,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0254",
@@ -8313,7 +8815,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0255",
@@ -8346,7 +8850,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0256",
@@ -8379,7 +8885,9 @@
     "charger_installed_cnt": 30,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 30
+    "charger_slow_cnt": 30,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 12
   },
   {
     "facility_key": "K0257",
@@ -8412,7 +8920,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0258",
@@ -8445,7 +8955,9 @@
     "charger_installed_cnt": 17,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 16
+    "charger_slow_cnt": 16,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 17
   },
   {
     "facility_key": "K0259",
@@ -8478,7 +8990,9 @@
     "charger_installed_cnt": 40,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 40
+    "charger_slow_cnt": 40,
+    "parking_ground_cnt": 25,
+    "parking_underground_cnt": 15
   },
   {
     "facility_key": "K0260",
@@ -8511,7 +9025,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 20
   },
   {
     "facility_key": "K0261",
@@ -8544,7 +9060,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0262",
@@ -8577,7 +9095,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0263",
@@ -8610,7 +9130,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0264",
@@ -8643,7 +9165,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0265",
@@ -8676,7 +9200,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0266",
@@ -8709,7 +9235,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0267",
@@ -8742,7 +9270,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0268",
@@ -8775,7 +9305,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 1
   },
   {
     "facility_key": "K0269",
@@ -8808,7 +9340,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 9
   },
   {
     "facility_key": "K0270",
@@ -8841,7 +9375,9 @@
     "charger_installed_cnt": 42,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 42
+    "charger_slow_cnt": 42,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 27
   },
   {
     "facility_key": "K0271",
@@ -8874,7 +9410,9 @@
     "charger_installed_cnt": 27,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 26
+    "charger_slow_cnt": 26,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 27
   },
   {
     "facility_key": "K0272",
@@ -8907,7 +9445,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 13
+    "charger_slow_cnt": 13,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 7
   },
   {
     "facility_key": "K0273",
@@ -8940,7 +9480,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0274",
@@ -8973,7 +9515,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0275",
@@ -9006,7 +9550,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0276",
@@ -9039,7 +9585,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0277",
@@ -9072,7 +9620,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 3,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0278",
@@ -9105,7 +9655,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0279",
@@ -9138,7 +9690,9 @@
     "charger_installed_cnt": 22,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 22
+    "charger_slow_cnt": 22,
+    "parking_ground_cnt": 22,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0280",
@@ -9171,7 +9725,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0281",
@@ -9204,7 +9760,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0282",
@@ -9237,7 +9795,9 @@
     "charger_installed_cnt": 19,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 19
+    "charger_slow_cnt": 19,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0283",
@@ -9270,7 +9830,9 @@
     "charger_installed_cnt": 13,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 13
+    "charger_slow_cnt": 13,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0284",
@@ -9303,7 +9865,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0285",
@@ -9336,7 +9900,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0286",
@@ -9369,7 +9935,9 @@
     "charger_installed_cnt": 16,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 16,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0287",
@@ -9402,7 +9970,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 31,
+    "parking_underground_cnt": 7
   },
   {
     "facility_key": "K0288",
@@ -9435,7 +10005,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0289",
@@ -9468,7 +10040,9 @@
     "charger_installed_cnt": 25,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0290",
@@ -9501,7 +10075,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0291",
@@ -9534,7 +10110,9 @@
     "charger_installed_cnt": 20,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 20
+    "charger_slow_cnt": 20,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 18
   },
   {
     "facility_key": "K0292",
@@ -9567,7 +10145,9 @@
     "charger_installed_cnt": 16,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 16
+    "charger_slow_cnt": 16,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0293",
@@ -9600,7 +10180,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0294",
@@ -9633,7 +10215,9 @@
     "charger_installed_cnt": 50,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 49
+    "charger_slow_cnt": 49,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 50
   },
   {
     "facility_key": "K0295",
@@ -9666,7 +10250,9 @@
     "charger_installed_cnt": 34,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 34
+    "charger_slow_cnt": 34,
+    "parking_ground_cnt": 24,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0296",
@@ -9699,7 +10285,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0297",
@@ -9732,7 +10320,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0298",
@@ -9765,7 +10355,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0299",
@@ -9798,7 +10390,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0300",
@@ -9831,7 +10425,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0301",
@@ -9864,7 +10460,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0302",
@@ -9897,7 +10495,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0303",
@@ -9930,7 +10530,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 21,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0304",
@@ -9963,7 +10565,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0305",
@@ -9996,7 +10600,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0306",
@@ -10029,7 +10635,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0307",
@@ -10062,7 +10670,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0308",
@@ -10095,7 +10705,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0309",
@@ -10128,7 +10740,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0310",
@@ -10161,7 +10775,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0311",
@@ -10194,7 +10810,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0312",
@@ -10227,7 +10845,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0313",
@@ -10260,7 +10880,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0314",
@@ -10293,7 +10915,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0315",
@@ -10326,7 +10950,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0316",
@@ -10359,7 +10985,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0317",
@@ -10392,7 +11020,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0318",
@@ -10425,7 +11055,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0319",
@@ -10458,7 +11090,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0320",
@@ -10491,7 +11125,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0321",
@@ -10524,7 +11160,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0322",
@@ -10557,7 +11195,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0323",
@@ -10590,7 +11230,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0324",
@@ -10623,7 +11265,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0325",
@@ -10656,7 +11300,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0326",
@@ -10689,7 +11335,9 @@
     "charger_installed_cnt": 25,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 25
+    "charger_slow_cnt": 25,
+    "parking_ground_cnt": 20,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0327",
@@ -10722,7 +11370,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0328",
@@ -10755,7 +11405,9 @@
     "charger_installed_cnt": 17,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 17
+    "charger_slow_cnt": 17,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0329",
@@ -10788,7 +11440,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0330",
@@ -10821,7 +11475,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 1
   },
   {
     "facility_key": "K0331",
@@ -10854,7 +11510,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0332",
@@ -10887,7 +11545,9 @@
     "charger_installed_cnt": 13,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 13
+    "charger_slow_cnt": 13,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 9
   },
   {
     "facility_key": "K0333",
@@ -10920,7 +11580,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0334",
@@ -10953,7 +11615,9 @@
     "charger_installed_cnt": 26,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 25
+    "charger_slow_cnt": 25,
+    "parking_ground_cnt": 16,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0335",
@@ -10986,7 +11650,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 14
   },
   {
     "facility_key": "K0336",
@@ -11019,7 +11685,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0337",
@@ -11052,7 +11720,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0338",
@@ -11085,7 +11755,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0339",
@@ -11118,7 +11790,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 21,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0340",
@@ -11151,7 +11825,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 13,
+    "parking_underground_cnt": 8
   },
   {
     "facility_key": "K0341",
@@ -11184,7 +11860,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 15
   },
   {
     "facility_key": "K0342",
@@ -11217,7 +11895,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 11
   },
   {
     "facility_key": "K0343",
@@ -11250,7 +11930,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0344",
@@ -11283,7 +11965,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 19,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0345",
@@ -11316,7 +12000,9 @@
     "charger_installed_cnt": 20,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 20
+    "charger_slow_cnt": 20,
+    "parking_ground_cnt": 46,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0346",
@@ -11349,7 +12035,9 @@
     "charger_installed_cnt": 22,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 12,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 45,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0347",
@@ -11382,7 +12070,9 @@
     "charger_installed_cnt": 27,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 26
+    "charger_slow_cnt": 26,
+    "parking_ground_cnt": 23,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0348",
@@ -11415,7 +12105,9 @@
     "charger_installed_cnt": 28,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 28
+    "charger_slow_cnt": 28,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0349",
@@ -11448,7 +12140,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0350",
@@ -11481,7 +12175,9 @@
     "charger_installed_cnt": 22,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 16,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0351",
@@ -11514,7 +12210,9 @@
     "charger_installed_cnt": 17,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 17
+    "charger_slow_cnt": 17,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0352",
@@ -11547,7 +12245,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0353",
@@ -11580,7 +12280,9 @@
     "charger_installed_cnt": 18,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 18
+    "charger_slow_cnt": 18,
+    "parking_ground_cnt": 36,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0354",
@@ -11613,7 +12315,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0355",
@@ -11646,7 +12350,9 @@
     "charger_installed_cnt": 18,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 18
+    "charger_slow_cnt": 18,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0356",
@@ -11679,7 +12385,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 14
   },
   {
     "facility_key": "K0357",
@@ -11712,7 +12420,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0358",
@@ -11745,7 +12455,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0359",
@@ -11778,7 +12490,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0360",
@@ -11811,7 +12525,9 @@
     "charger_installed_cnt": 33,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 33
+    "charger_slow_cnt": 33,
+    "parking_ground_cnt": 20,
+    "parking_underground_cnt": 13
   },
   {
     "facility_key": "K0361",
@@ -11844,7 +12560,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 20
+    "charger_slow_cnt": 20,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0362",
@@ -11877,7 +12595,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 8
   },
   {
     "facility_key": "K0363",
@@ -11910,7 +12630,9 @@
     "charger_installed_cnt": 20,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 20
+    "charger_slow_cnt": 20,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0364",
@@ -11943,7 +12665,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0365",
@@ -11976,7 +12700,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0366",
@@ -12009,7 +12735,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0367",
@@ -12042,7 +12770,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 1
   },
   {
     "facility_key": "K0368",
@@ -12075,7 +12805,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0369",
@@ -12108,7 +12840,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0370",
@@ -12141,7 +12875,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0371",
@@ -12174,7 +12910,9 @@
     "charger_installed_cnt": 24,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 24
+    "charger_slow_cnt": 24,
+    "parking_ground_cnt": 52,
+    "parking_underground_cnt": 9
   },
   {
     "facility_key": "K0372",
@@ -12207,7 +12945,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0373",
@@ -12240,7 +12980,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 13
+    "charger_slow_cnt": 13,
+    "parking_ground_cnt": 13,
+    "parking_underground_cnt": 1
   },
   {
     "facility_key": "K0374",
@@ -12273,7 +13015,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0375",
@@ -12306,7 +13050,9 @@
     "charger_installed_cnt": 22,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 22
+    "charger_slow_cnt": 22,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 22
   },
   {
     "facility_key": "K0376",
@@ -12339,7 +13085,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 16,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0377",
@@ -12372,7 +13120,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0378",
@@ -12405,7 +13155,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 8
   },
   {
     "facility_key": "K0379",
@@ -12438,7 +13190,9 @@
     "charger_installed_cnt": 29,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 29
+    "charger_slow_cnt": 29,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 29
   },
   {
     "facility_key": "K0380",
@@ -12471,7 +13225,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 3,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 7
   },
   {
     "facility_key": "K0381",
@@ -12504,7 +13260,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0382",
@@ -12537,7 +13295,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0383",
@@ -12570,7 +13330,9 @@
     "charger_installed_cnt": 21,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 21
+    "charger_slow_cnt": 21,
+    "parking_ground_cnt": 18,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0384",
@@ -12603,7 +13365,9 @@
     "charger_installed_cnt": 19,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 19
+    "charger_slow_cnt": 19,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 9
   },
   {
     "facility_key": "K0385",
@@ -12636,7 +13400,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 10
   },
   {
     "facility_key": "K0386",
@@ -12669,7 +13435,9 @@
     "charger_installed_cnt": 14,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 14
+    "charger_slow_cnt": 14,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0387",
@@ -12702,7 +13470,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0388",
@@ -12735,7 +13505,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0389",
@@ -12768,7 +13540,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 15,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0390",
@@ -12801,7 +13575,9 @@
     "charger_installed_cnt": 12,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 12,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0391",
@@ -12834,7 +13610,9 @@
     "charger_installed_cnt": 18,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 18
+    "charger_slow_cnt": 18,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 18
   },
   {
     "facility_key": "K0392",
@@ -12867,7 +13645,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0393",
@@ -12900,7 +13680,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0394",
@@ -12933,7 +13715,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0395",
@@ -12966,7 +13750,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0396",
@@ -12999,7 +13785,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0397",
@@ -13032,7 +13820,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0398",
@@ -13065,7 +13855,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0399",
@@ -13098,7 +13890,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0400",
@@ -13131,7 +13925,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0401",
@@ -13164,7 +13960,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0402",
@@ -13197,7 +13995,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0403",
@@ -13230,7 +14030,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0404",
@@ -13263,7 +14065,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0405",
@@ -13296,7 +14100,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0406",
@@ -13329,7 +14135,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 7
+    "charger_slow_cnt": 7,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0407",
@@ -13362,7 +14170,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0408",
@@ -13395,7 +14205,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0409",
@@ -13428,7 +14240,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0410",
@@ -13461,7 +14275,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0411",
@@ -13494,7 +14310,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0412",
@@ -13527,7 +14345,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0413",
@@ -13560,7 +14380,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0414",
@@ -13593,7 +14415,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0415",
@@ -13626,7 +14450,9 @@
     "charger_installed_cnt": 15,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 15
+    "charger_slow_cnt": 15,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0417",
@@ -13659,7 +14485,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0418",
@@ -13692,7 +14520,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0419",
@@ -13725,7 +14555,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0420",
@@ -13758,7 +14590,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0421",
@@ -13791,7 +14625,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0422",
@@ -13824,7 +14660,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0423",
@@ -13857,7 +14695,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0424",
@@ -13890,7 +14730,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0425",
@@ -13923,7 +14765,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0426",
@@ -13956,7 +14800,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0427",
@@ -13989,7 +14835,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0428",
@@ -14022,7 +14870,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 10
+    "charger_slow_cnt": 10,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 5
   },
   {
     "facility_key": "K0429",
@@ -14055,7 +14905,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0430",
@@ -14088,7 +14940,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0431",
@@ -14121,7 +14975,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0432",
@@ -14154,7 +15010,9 @@
     "charger_installed_cnt": 9,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 9
+    "charger_slow_cnt": 9,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0433",
@@ -14187,7 +15045,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 8
+    "charger_slow_cnt": 8,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0434",
@@ -14220,7 +15080,9 @@
     "charger_installed_cnt": 13,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 12
+    "charger_slow_cnt": 12,
+    "parking_ground_cnt": 13,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0435",
@@ -14253,7 +15115,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0436",
@@ -14286,7 +15150,9 @@
     "charger_installed_cnt": 5,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 11,
+    "parking_underground_cnt": 3
   },
   {
     "facility_key": "K0437",
@@ -14319,7 +15185,9 @@
     "charger_installed_cnt": 11,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 11
+    "charger_slow_cnt": 11,
+    "parking_ground_cnt": 9,
+    "parking_underground_cnt": 2
   },
   {
     "facility_key": "K0438",
@@ -14352,7 +15220,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0439",
@@ -14385,7 +15255,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0440",
@@ -14418,7 +15290,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0441",
@@ -14451,7 +15325,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 1
+    "charger_slow_cnt": 1,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0442",
@@ -14484,7 +15360,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 4,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0443",
@@ -14517,7 +15395,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0444",
@@ -14550,7 +15430,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0445",
@@ -14583,7 +15465,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 3,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0446",
@@ -14616,7 +15500,9 @@
     "charger_installed_cnt": 4,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 4,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0447",
@@ -14649,7 +15535,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0448",
@@ -14682,7 +15570,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0449",
@@ -14715,7 +15605,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 2,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0450",
@@ -14748,7 +15640,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0451",
@@ -14781,7 +15675,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0452",
@@ -14814,7 +15710,9 @@
     "charger_installed_cnt": 10,
     "charger_fast_req_cnt": 5,
     "charger_fast_cnt": 5,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 10,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0453",
@@ -14847,7 +15745,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 3,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0454",
@@ -14880,7 +15780,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0455",
@@ -14913,7 +15815,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0456",
@@ -14946,7 +15850,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0457",
@@ -14979,7 +15885,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0458",
@@ -15012,7 +15920,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0459",
@@ -15045,7 +15955,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0460",
@@ -15078,7 +15990,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 6,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 14,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0461",
@@ -15111,7 +16025,9 @@
     "charger_installed_cnt": 1,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 4
   },
   {
     "facility_key": "K0462",
@@ -15144,7 +16060,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 4,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0463",
@@ -15177,7 +16095,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 5,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0464",
@@ -15210,7 +16130,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0465",
@@ -15243,7 +16165,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0466",
@@ -15276,7 +16200,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 6
   },
   {
     "facility_key": "K0467",
@@ -15309,7 +16235,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0468",
@@ -15342,7 +16270,9 @@
     "charger_installed_cnt": 8,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 4,
-    "charger_slow_cnt": 4
+    "charger_slow_cnt": 4,
+    "parking_ground_cnt": 8,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0469",
@@ -15375,7 +16305,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0470",
@@ -15408,7 +16340,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0471",
@@ -15441,7 +16375,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 2,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0472",
@@ -15474,7 +16410,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 1,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0473",
@@ -15507,7 +16445,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0474",
@@ -15540,7 +16480,9 @@
     "charger_installed_cnt": 24,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 23
+    "charger_slow_cnt": 23,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 24
   },
   {
     "facility_key": "K0475",
@@ -15573,7 +16515,9 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0476",
@@ -15606,7 +16550,9 @@
     "charger_installed_cnt": 2,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 2
+    "charger_slow_cnt": 2,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0477",
@@ -15639,7 +16585,9 @@
     "charger_installed_cnt": 7,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 2,
-    "charger_slow_cnt": 5
+    "charger_slow_cnt": 5,
+    "parking_ground_cnt": 7,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0478",
@@ -15672,7 +16620,9 @@
     "charger_installed_cnt": 26,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 1,
-    "charger_slow_cnt": 25
+    "charger_slow_cnt": 25,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 26
   },
   {
     "facility_key": "K0479",
@@ -15705,7 +16655,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0480",
@@ -15738,7 +16690,9 @@
     "charger_installed_cnt": 3,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 3
+    "charger_slow_cnt": 3,
+    "parking_ground_cnt": 3,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0481",
@@ -15771,7 +16725,9 @@
     "charger_installed_cnt": 6,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 6
+    "charger_slow_cnt": 6,
+    "parking_ground_cnt": 6,
+    "parking_underground_cnt": 0
   },
   {
     "facility_key": "K0482",
@@ -15804,6 +16760,8 @@
     "charger_installed_cnt": 0,
     "charger_fast_req_cnt": 0,
     "charger_fast_cnt": 0,
-    "charger_slow_cnt": 0
+    "charger_slow_cnt": 0,
+    "parking_ground_cnt": 0,
+    "parking_underground_cnt": 0
   }
 ]
