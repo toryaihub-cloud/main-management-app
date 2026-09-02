@@ -2378,7 +2378,10 @@ function openDispositionModal(id = null) {
   }
 }
 
-function editDisposition(id) { openDispositionModal(id); }
+function editDisposition(id) {
+  closeModal('modal-disposition-detail');
+  openDispositionModal(id);
+}
 
 async function saveDisposition() {
   const id = document.getElementById("disp-id").value;
