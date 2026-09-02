@@ -303,6 +303,18 @@ async function fetchFacilities() {
       }
     }
     if (list.length > 0) {
+      // Smart Merge: Local modifications priority guard
+      const cached = localStorage.getItem("cached_facilities");
+      if (cached) {
+        try {
+          const cachedList = JSON.parse(cached);
+          const cachedMap = new Map(cachedList.map(item => [item.facility_key, item]));
+          list = list.map(item => {
+            const cItem = cachedMap.get(item.facility_key);
+            return cItem ? { ...item, ...cItem } : item;
+          });
+        } catch(e) {}
+      }
       facilitiesData = list;
       try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
     }
@@ -312,7 +324,19 @@ async function fetchFacilities() {
       const res = await fetch("facilities_cache.json?v=" + Date.now());
       if (res.ok) {
         const raw = await res.json();
-        facilitiesData = Array.isArray(raw) ? raw : (raw.data || []);
+        let list = Array.isArray(raw) ? raw : (raw.data || []);
+        const cached = localStorage.getItem("cached_facilities");
+        if (cached) {
+          try {
+            const cachedList = JSON.parse(cached);
+            const cachedMap = new Map(cachedList.map(item => [item.facility_key, item]));
+            list = list.map(item => {
+              const cItem = cachedMap.get(item.facility_key);
+              return cItem ? { ...item, ...cItem } : item;
+            });
+          } catch(e) {}
+        }
+        facilitiesData = list;
         try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
       }
     } catch (e) {}
@@ -326,8 +350,6 @@ async function fetchDispositions() {
     if (res.ok) {
       const raw = await res.json();
       list = Array.isArray(raw) ? raw : (raw.data || []);
-    } else {
-      throw new Error("API status " + res.status);
     }
 
     if (list.length === 0) {
@@ -338,6 +360,24 @@ async function fetchDispositions() {
     }
 
     if (list.length > 0) {
+      const cached = localStorage.getItem("cached_dispositions");
+      if (cached) {
+        try {
+          const cachedList = JSON.parse(cached);
+          const cachedMap = new Map(cachedList.map(item => [String(item.id), item]));
+          list = list.map(item => {
+            const cItem = cachedMap.get(String(item.id));
+            return cItem ? { ...item, ...cItem } : item;
+          });
+          // Also include newly added sub-owners from local cache
+          cachedList.forEach(cItem => {
+            if (!list.some(l => String(l.id) === String(cItem.id))) {
+              list.push(cItem);
+            }
+          });
+        } catch(e) {}
+      }
+
       dispositionsData = list.map(d => ({
         ...d,
         target_name_decrypted: (d.target_name_decrypted && !d.target_name_decrypted.startsWith("gAAAAA")) ? d.target_name_decrypted : (d.target_name || ""),
@@ -354,7 +394,23 @@ async function fetchDispositions() {
     try {
       const res = await fetch("dispositions_cache.json?v=" + Date.now());
       if (res.ok) {
-        const list = await res.json();
+        let list = await res.json();
+        const cached = localStorage.getItem("cached_dispositions");
+        if (cached) {
+          try {
+            const cachedList = JSON.parse(cached);
+            const cachedMap = new Map(cachedList.map(item => [String(item.id), item]));
+            list = list.map(item => {
+              const cItem = cachedMap.get(String(item.id));
+              return cItem ? { ...item, ...cItem } : item;
+            });
+            cachedList.forEach(cItem => {
+              if (!list.some(l => String(l.id) === String(cItem.id))) {
+                list.push(cItem);
+              }
+            });
+          } catch(e) {}
+        }
         dispositionsData = list.map(d => ({
           ...d,
           target_name_decrypted: (d.target_name_decrypted && !d.target_name_decrypted.startsWith("gAAAAA")) ? d.target_name_decrypted : (d.target_name || ""),
