@@ -766,14 +766,17 @@ function openFacilityDetailModal(key) {
   const chargerUnElem = document.getElementById("detail-charger-uninstalled");
   if (chargerUnElem) chargerUnElem.innerText = facility.charger_uninstalled_cnt || 0;
 
-  // Fast Charger Counts (Installed & Uninstalled)
+  // Fast & Slow Charger Counts (Installed & Uninstalled)
   const reqFast = parseInt(facility.charger_fast_req_cnt) || 0;
   const actFast = parseInt(facility.charger_fast_cnt) || 0;
+  const actSlow = facility.charger_slow_cnt !== undefined && facility.charger_slow_cnt !== null && facility.charger_slow_cnt !== '' 
+    ? parseInt(facility.charger_slow_cnt) 
+    : Math.max(0, actC - actFast);
   const uninstalledFast = Math.max(0, reqFast - actFast);
 
-  const fastInstElem = document.getElementById("detail-fast-installed");
-  if (fastInstElem) {
-    fastInstElem.innerText = `${actFast}`;
+  const slowFastInstElem = document.getElementById("detail-slow-fast-installed");
+  if (slowFastInstElem) {
+    slowFastInstElem.innerText = `${actSlow}기 / ${actFast}기`;
   }
 
   const fastUnElem = document.getElementById("detail-fast-uninstalled");
@@ -1937,6 +1940,7 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-charger-inst").value = item.charger_installed_cnt || 0;
       document.getElementById("fac-charger-uninstalled").value = item.charger_uninstalled_cnt || 0;
       document.getElementById("fac-fast-req").value = item.charger_fast_req_cnt || 0;
+      document.getElementById("fac-slow-cnt").value = item.charger_slow_cnt || 0;
       document.getElementById("fac-fast-cnt").value = item.charger_fast_cnt || 0;
       document.getElementById("fac-management-body").value = item.management_body || "";
       if (item.manager_name_decrypted) document.getElementById("fac-manager-name").value = item.manager_name_decrypted;
@@ -1978,6 +1982,7 @@ async function saveFacility() {
     charger_installed_cnt: parseInt(document.getElementById("fac-charger-inst").value) || 0,
     charger_uninstalled_cnt: parseInt(document.getElementById("fac-charger-uninstalled").value) || 0,
     charger_fast_req_cnt: parseInt(document.getElementById("fac-fast-req").value) || 0,
+    charger_slow_cnt: parseInt(document.getElementById("fac-slow-cnt").value) || 0,
     charger_fast_cnt: parseInt(document.getElementById("fac-fast-cnt").value) || 0,
     management_body: document.getElementById("fac-management-body").value.trim(),
     manager_name_decrypted: mgrName,

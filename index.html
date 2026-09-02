@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260902_01">
+  <link rel="stylesheet" href="styles.css?v=20260902_02">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- SheetJS (xlsx) CDN for Excel Upload/Parse -->
@@ -428,7 +428,7 @@
                   <div>
                     <p style="margin:0.15rem 0;"><strong>충전시설:</strong> <span id="detail-charger-slash-info">0기 / 0기</span></p>
                     <p style="margin:0.15rem 0;"><strong>미설치 충전:</strong> <span id="detail-charger-uninstalled" style="color:var(--danger); font-weight:bold;">0</span>기</p>
-                    <p style="margin:0.15rem 0;"><strong>설치 급속:</strong> <span id="detail-fast-installed" style="color:var(--primary); font-weight:bold;">0</span>기</p>
+                    <p style="margin:0.15rem 0;"><strong>설치 완속/급속:</strong> <span id="detail-slow-fast-installed" style="color:var(--primary); font-weight:bold;">0기 / 0기</span></p>
                     <p style="margin:0.15rem 0;"><strong>급속 미이행:</strong> <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:bold;">0기</span></p>
                   </div>
                 </div>
@@ -679,6 +679,10 @@
               <div class="form-group">
                 <label class="form-label">의무 급속 충전기수</label>
                 <input type="number" id="fac-fast-req" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">설치 완속 충전기수</label>
+                <input type="number" id="fac-slow-cnt" class="input-box" value="0">
               </div>
               <div class="form-group">
                 <label class="form-label">설치 급속 충전기수</label>
@@ -1065,6 +1069,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260902_01"></script>
+  <script src="app.js?v=20260902_02"></script>
 </body>
 </html>
