@@ -923,6 +923,13 @@ function openFacilityDetailModal(key) {
   const parkSlashElem = document.getElementById("detail-parking-slash-info");
   if (parkSlashElem) parkSlashElem.innerText = `${actP}면 / ${reqP}면 (설치/의무)`;
   
+  const parkGroundUnderElem = document.getElementById("detail-parking-ground-underground");
+  if (parkGroundUnderElem) {
+    const ground = facility.parking_ground_cnt !== undefined && facility.parking_ground_cnt !== null ? facility.parking_ground_cnt : 0;
+    const underground = facility.parking_underground_cnt !== undefined && facility.parking_underground_cnt !== null ? facility.parking_underground_cnt : 0;
+    parkGroundUnderElem.innerText = `${ground}면 / ${underground}면`;
+  }
+  
   const parkUnElem = document.getElementById("detail-parking-uninstalled");
   if (parkUnElem) parkUnElem.innerText = facility.parking_uninstalled_cnt || 0;
 
@@ -2113,6 +2120,8 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-register").value = item.building_register_num || 0;
       document.getElementById("fac-parking-req").value = item.parking_required_cnt || 0;
       document.getElementById("fac-parking-inst").value = item.parking_installed_cnt || 0;
+      document.getElementById("fac-parking-ground").value = item.parking_ground_cnt || 0;
+      document.getElementById("fac-parking-underground").value = item.parking_underground_cnt || 0;
       document.getElementById("fac-parking-uninstalled").value = item.parking_uninstalled_cnt || 0;
       document.getElementById("fac-charger-req").value = item.charger_required_cnt || 0;
       document.getElementById("fac-charger-inst").value = item.charger_installed_cnt || 0;
@@ -2155,6 +2164,8 @@ async function saveFacility() {
     building_register_num: parseInt(document.getElementById("fac-register").value) || 0,
     parking_required_cnt: parseInt(document.getElementById("fac-parking-req").value) || 0,
     parking_installed_cnt: parseInt(document.getElementById("fac-parking-inst").value) || 0,
+    parking_ground_cnt: parseInt(document.getElementById("fac-parking-ground").value) || 0,
+    parking_underground_cnt: parseInt(document.getElementById("fac-parking-underground").value) || 0,
     parking_uninstalled_cnt: parseInt(document.getElementById("fac-parking-uninstalled").value) || 0,
     charger_required_cnt: parseInt(document.getElementById("fac-charger-req").value) || 0,
     charger_installed_cnt: parseInt(document.getElementById("fac-charger-inst").value) || 0,

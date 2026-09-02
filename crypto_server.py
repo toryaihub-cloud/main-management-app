@@ -1087,7 +1087,8 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "parking_required_cnt", "parking_uninstalled_cnt", "parking_status",
                 "charger_required_cnt", "charger_uninstalled_cnt", "charger_status",
                 "investigation_status", "management_body",
-                "manager_name_encrypted", "manager_contact_encrypted"
+                "manager_name_encrypted", "manager_contact_encrypted",
+                "parking_ground_cnt", "parking_underground_cnt"
             }
             db_payload = {}
             for k, v in req_json.items():
