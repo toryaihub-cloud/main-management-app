@@ -1167,6 +1167,15 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 if disp_id:
                     res = requests.patch(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=prefer_headers, json=db_payload, timeout=5)
                     print(f"Supabase dispositions PATCH status={res.status_code} id={disp_id}")
+                    # 만약 DB에 해당 ID가 없어서 PATCH된 row가 0개인 경우 POST로 신규 생성
+                    if res.status_code in [200, 204] and (res.content and len(json.loads(res.content.decode('utf-8'))) == 0):
+                        res_post = requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[db_payload], timeout=5)
+                        print(f"Supabase dispositions POST fallback status={res_post.status_code}")
+                        if res_post.status_code in [200, 201]:
+                            saved_rows = res_post.json()
+                            if saved_rows and len(saved_rows) > 0:
+                                req_json["id"] = saved_rows[0].get("id")
+                                update_local_disposition_cache(req_json)
                 else:
                     res = requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[db_payload], timeout=5)
                     print(f"Supabase dispositions POST status={res.status_code}")

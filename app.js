@@ -2395,6 +2395,14 @@ async function saveDisposition() {
   const regNum = document.getElementById("disp-reg-num").value.trim();
   const contact = document.getElementById("disp-contact").value.trim();
 
+  const parseDateSafe = (elemId) => {
+    const el = document.getElementById(elemId);
+    if (!el || !el.value) return null;
+    const val = el.value.trim();
+    if (val.length >= 10 && !val.includes('None')) return val.substring(0, 10);
+    return null;
+  };
+
   const payload = {
     facility_key: facilityKey,
     target_type: document.getElementById("disp-target-type").value,
@@ -2403,18 +2411,18 @@ async function saveDisposition() {
 
     advance_notice_method: document.getElementById("disp-notice-method").value.trim(),
     zip_code: document.getElementById("disp-zip-code").value.trim(),
-    advance_notice_send_date: document.getElementById("disp-notice-send-date").value || null,
+    advance_notice_send_date: parseDateSafe("disp-notice-send-date"),
     advance_notice_return_status: document.getElementById("disp-notice-return-status").value.trim(),
-    abstract_send_date: document.getElementById("disp-abstract-send-date").value || null,
+    abstract_send_date: parseDateSafe("disp-abstract-send-date"),
     abstract_return_status: document.getElementById("disp-abstract-return-status").value.trim(),
     notice_public: document.getElementById("disp-notice-public").value.trim(),
     notice_public_period: document.getElementById("disp-notice-public-period").value.trim(),
 
     opinion_submitted: document.getElementById("disp-opinion-submitted").value,
-    opinion_submit_date: document.getElementById("disp-opinion-submit-date").value || null,
+    opinion_submit_date: parseDateSafe("disp-opinion-submit-date"),
     opinion_content: document.getElementById("disp-opinion-content").value.trim(),
     correction_order: document.getElementById("disp-correction-order").value.trim(),
-    correction_order_date: document.getElementById("disp-correction-date").value || null,
+    correction_order_date: parseDateSafe("disp-correction-date"),
     correction_reason: document.getElementById("disp-correction-reason").value.trim(),
     correction_period: document.getElementById("disp-correction-period").value.trim(),
     correction_notice_method: document.getElementById("disp-correction-notice-method").value.trim(),
@@ -2439,9 +2447,13 @@ async function saveDisposition() {
     });
 
     if (!res.ok) {
-      alert("주 메인 처분 저장 실패");
+      alert("행정처분 정보 저장 중 서버 오류가 발생했습니다.");
       return;
     }
+
+    const resJson = await res.json().catch(() => ({}));
+    const actualId = (resJson && resJson.data && resJson.data.id) ? resJson.data.id : (id ? parseInt(id) : Date.now());
+    payload.id = actualId;
 
     // 1. Update Main Disposition in In-Memory Array
     let mainIdx = dispositionsData.findIndex(d => String(d.id) === String(id));
@@ -2550,17 +2562,11 @@ async function saveDisposition() {
     alert("성공적으로 저장되었습니다.");
     closeModal('modal-disposition');
 
-    // 상세 팝업이 활성화 상태라면 즉시 최신 데이터로 새로고침
-    const detailModal = document.getElementById("modal-disposition-detail");
-    if (detailModal && detailModal.classList.contains("active")) {
-      openDispositionDetailModal(facilityKey);
-    }
+    // 상세 팝업을 즉시 최신 데이터로 다시 열기
+    openDispositionDetailModal(facilityKey);
 
     // 메인 카드 그리드 및 테이블도 즉시 갱신
     filterDispositions();
-
-    // 백그라운드로 서버와 최종 동기화
-    loadData();
   } catch (err) {
     console.error("Error saving disposition:", err);
     alert("저장 중 오류가 발생했습니다.");
@@ -3333,4 +3339,18 @@ function printCorrectionOrders() {
   `);
   printWindow.document.close();
 }
+
+// 날짜 입력 필드 4자리 연도 초과 방지 및 편의성 헬퍼
+document.addEventListener("DOMContentLoaded", () => {
+  const setupDateInputs = () => {
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+      if (!input.hasAttribute("max")) input.setAttribute("max", "2099-12-31");
+      if (!input.hasAttribute("min")) input.setAttribute("min", "1900-01-01");
+    });
+  };
+  setupDateInputs();
+  
+  const observer = new MutationObserver(setupDateInputs);
+  observer.observe(document.body, { childList: true, subtree: true });
+});
 
