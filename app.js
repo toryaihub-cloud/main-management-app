@@ -208,10 +208,14 @@ async function loadData() {
   filterFacilities();
   filterDispositions();
 
-  // Save fresh data to local cache
+  // Save fresh data to local cache (only if data is valid and non-empty)
   try {
-    localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
-    localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
+    if (facilitiesData && facilitiesData.length > 0) {
+      localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
+    }
+    if (dispositionsData && dispositionsData.length > 0) {
+      localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
+    }
   } catch(e) {}
 }
 
@@ -286,30 +290,71 @@ function setFacilityViewMode(mode) {
 async function fetchFacilities() {
   try {
     const res = await fetch(`${API_BASE_URL}/facilities`);
-    const raw = await res.json();
-    facilitiesData = Array.isArray(raw) ? raw : (raw.data || []);
+    if (res.ok) {
+      const raw = await res.json();
+      const list = Array.isArray(raw) ? raw : (raw.data || []);
+      if (list.length > 0) facilitiesData = list;
+    } else {
+      throw new Error("API status " + res.status);
+    }
   } catch (err) {
-    console.error("Error fetching facilities:", err);
+    console.warn("API facilities load failed, fallback to local json:", err);
+    try {
+      const res = await fetch("facilities_cache.json?v=" + Date.now());
+      if (res.ok) {
+        const raw = await res.json();
+        facilitiesData = Array.isArray(raw) ? raw : (raw.data || []);
+      }
+    } catch (e) {}
   }
 }
 
 async function fetchDispositions() {
   try {
     const res = await fetch(`${API_BASE_URL}/dispositions`);
-    const raw = await res.json();
-    const list = Array.isArray(raw) ? raw : (raw.data || []);
-    
-    dispositionsData = list.map(d => ({
-      ...d,
-      target_name_decrypted: (d.target_name_decrypted && !d.target_name_decrypted.startsWith("gAAAAA")) ? d.target_name_decrypted : (d.target_name || ""),
-      recipient_name_decrypted: (d.recipient_name_decrypted && !d.recipient_name_decrypted.startsWith("gAAAAA")) ? d.recipient_name_decrypted : (d.recipient_name || ""),
-      mail_address_decrypted: (d.mail_address_decrypted && !d.mail_address_decrypted.startsWith("gAAAAA")) ? d.mail_address_decrypted : (d.mail_address || ""),
-      abstract_address_decrypted: (d.abstract_address_decrypted && !d.abstract_address_decrypted.startsWith("gAAAAA")) ? d.abstract_address_decrypted : (d.abstract_address || ""),
-      reg_num_decrypted: (d.reg_num_decrypted && !d.reg_num_decrypted.startsWith("gAAAAA")) ? d.reg_num_decrypted : (d.reg_num || ""),
-      contact_decrypted: (d.contact_decrypted && !d.contact_decrypted.startsWith("gAAAAA")) ? d.contact_decrypted : (d.contact || "")
-    }));
+    let list = [];
+    if (res.ok) {
+      const raw = await res.json();
+      list = Array.isArray(raw) ? raw : (raw.data || []);
+    } else {
+      throw new Error("API status " + res.status);
+    }
+
+    if (list.length === 0) {
+      const resStatic = await fetch("dispositions_cache.json?v=" + Date.now());
+      if (resStatic.ok) {
+        list = await resStatic.json();
+      }
+    }
+
+    if (list.length > 0) {
+      dispositionsData = list.map(d => ({
+        ...d,
+        target_name_decrypted: (d.target_name_decrypted && !d.target_name_decrypted.startsWith("gAAAAA")) ? d.target_name_decrypted : (d.target_name || ""),
+        recipient_name_decrypted: (d.recipient_name_decrypted && !d.recipient_name_decrypted.startsWith("gAAAAA")) ? d.recipient_name_decrypted : (d.recipient_name || ""),
+        mail_address_decrypted: (d.mail_address_decrypted && !d.mail_address_decrypted.startsWith("gAAAAA")) ? d.mail_address_decrypted : (d.mail_address || ""),
+        abstract_address_decrypted: (d.abstract_address_decrypted && !d.abstract_address_decrypted.startsWith("gAAAAA")) ? d.abstract_address_decrypted : (d.abstract_address || ""),
+        reg_num_decrypted: (d.reg_num_decrypted && !d.reg_num_decrypted.startsWith("gAAAAA")) ? d.reg_num_decrypted : (d.reg_num || ""),
+        contact_decrypted: (d.contact_decrypted && !d.contact_decrypted.startsWith("gAAAAA")) ? d.contact_decrypted : (d.contact || "")
+      }));
+    }
   } catch (err) {
-    console.error("Error fetching dispositions:", err);
+    console.warn("API dispositions load failed, fallback to local json:", err);
+    try {
+      const res = await fetch("dispositions_cache.json?v=" + Date.now());
+      if (res.ok) {
+        const list = await res.json();
+        dispositionsData = list.map(d => ({
+          ...d,
+          target_name_decrypted: (d.target_name_decrypted && !d.target_name_decrypted.startsWith("gAAAAA")) ? d.target_name_decrypted : (d.target_name || ""),
+          recipient_name_decrypted: (d.recipient_name_decrypted && !d.recipient_name_decrypted.startsWith("gAAAAA")) ? d.recipient_name_decrypted : (d.recipient_name || ""),
+          mail_address_decrypted: (d.mail_address_decrypted && !d.mail_address_decrypted.startsWith("gAAAAA")) ? d.mail_address_decrypted : (d.mail_address || ""),
+          abstract_address_decrypted: (d.abstract_address_decrypted && !d.abstract_address_decrypted.startsWith("gAAAAA")) ? d.abstract_address_decrypted : (d.abstract_address || ""),
+          reg_num_decrypted: (d.reg_num_decrypted && !d.reg_num_decrypted.startsWith("gAAAAA")) ? d.reg_num_decrypted : (d.reg_num || ""),
+          contact_decrypted: (d.contact_decrypted && !d.contact_decrypted.startsWith("gAAAAA")) ? d.contact_decrypted : (d.contact || "")
+        }));
+      }
+    } catch (e) {}
   }
 }
 
