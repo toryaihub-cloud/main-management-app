@@ -29,42 +29,59 @@ CORRECTION_ORDERS_FILE = os.path.join(os.path.dirname(__file__), "correction_ord
 ECOCAR_HTML_PATH = r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\ECO-CAR.html"
 
 def load_correction_orders():
-    # 1. Supabase DB 조회 시도
+    # 1. Supabase DB 조회 시도 (1순위 SSOT)
     if SUPABASE_URL and SECRET_KEY:
         try:
-            res = requests.get(f"{SUPABASE_URL}/rest/v1/correction_orders?select=*&order=id.asc", headers=HEADERS, timeout=3)
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/correction_orders?select=*&order=id.asc", headers=HEADERS, timeout=8)
             if res.status_code == 200:
                 orders = res.json()
                 if orders and len(orders) > 0:
                     meta = {}
                     for o in orders:
                         br = o.get("batch_round")
+                        if not br: continue
                         if br not in meta:
                             meta[br] = {
                                 "batch_round": br,
                                 "batch_label": f"{br} 시정명령",
-                                "batch_title": o.get("batch_title", ""),
-                                "approval_date": o.get("approval_date", ""),
-                                "send_date": o.get("send_date", ""),
+                                "batch_title": o.get("batch_title", "") or f"{br} 시정명령",
+                                "approval_date": o.get("approval_date", "") or o.get("order_date", "") or "-",
+                                "send_date": o.get("send_date", "") or o.get("order_date", "") or "-",
                                 "summary_text": "",
                                 "total_facilities": 0,
                                 "official_count": 0,
                                 "mail_count": 0,
                                 "row_count": 0
                             }
-                        meta[br]["row_count"] += 1
-                        if o.get("notice_method") == "공문":
-                            meta[br]["official_count"] += 1
-                        else:
-                            meta[br]["mail_count"] += 1
+                    # 차수별 통계 집계
+                    for br in meta:
+                        b_orders = [o for o in orders if o.get("batch_round") == br]
+                        unique_facs = len(set(o.get("facility_name") for o in b_orders if o.get("facility_name")))
+                        off_cnt = len([o for o in b_orders if o.get("notice_method") == "공문"])
+                        mail_cnt = len(b_orders) - off_cnt
+                        meta[br]["total_facilities"] = unique_facs
+                        meta[br]["official_count"] = off_cnt
+                        meta[br]["mail_count"] = mail_cnt
+                        meta[br]["row_count"] = len(b_orders)
+                        meta[br]["summary_text"] = f"총 {unique_facs}개소 (공문 {off_cnt}개소, 우편 {mail_cnt}개소)"
+
+                    # 로컬 캐시 파일도 동기화 보존
+                    save_correction_orders_data({"meta": meta, "orders": orders})
                     return {"meta": meta, "orders": orders}
-        except Exception: pass
+        except Exception as e:
+            print("Supabase load_correction_orders error:", e)
 
     # 2. 로컬 캐시 Fallback
     if os.path.exists(CORRECTION_ORDERS_FILE):
         try:
             with open(CORRECTION_ORDERS_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
+                data = json.load(f)
+                # 만약 Supabase DB가 활성화되어 있고 로컬 데이터가 있으면, Supabase DB로 자동 시딩(Auto-seed) 시도
+                if SUPABASE_URL and SECRET_KEY and data.get("orders") and len(data["orders"]) > 0:
+                    try:
+                        requests.post(f"{SUPABASE_URL}/rest/v1/correction_orders", headers=HEADERS, json=data["orders"], timeout=5)
+                    except Exception: pass
+                return data
         except Exception: pass
     return {"meta": {}, "orders": []}
 

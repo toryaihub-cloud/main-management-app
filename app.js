@@ -3019,36 +3019,44 @@ async function saveCorrectionOrder() {
     note: note
   };
 
-  // 로컬 메모리 상태 즉시 갱신
-  const idx = allCorrectionOrders.findIndex(o => String(o.id) === String(id));
-  if (idx !== -1) {
-    allCorrectionOrders[idx] = { ...allCorrectionOrders[idx], ...payload };
-  } else {
-    allCorrectionOrders.push(payload);
-  }
-
-  try {
-    localStorage.setItem("cached_correction_orders", JSON.stringify({
-      meta: correctionMeta,
-      orders: allCorrectionOrders
-    }));
-  } catch(e) {}
-
-  closeModal("modal-correction-order");
-  renderCorrectionBatch(currentCorrectionBatch);
-
-  // 백엔드 API 호출
+  // 백엔드 API 저장 호출 (Supabase DB 및 서버 캐시 저장)
   try {
     const res = await fetch(`${API_BASE_URL}/correction_orders/save`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
+    
     if (res.ok) {
-      alert("시정명령 내용이 저장되었습니다.");
+      const resData = await res.json();
+      if (resData.data && resData.data.id) {
+        payload.id = resData.data.id;
+      }
+      
+      // 로컬 메모리 상태 갱신
+      const idx = allCorrectionOrders.findIndex(o => String(o.id) === String(payload.id) || (id && String(o.id) === String(id)));
+      if (idx !== -1) {
+        allCorrectionOrders[idx] = { ...allCorrectionOrders[idx], ...payload };
+      } else {
+        allCorrectionOrders.push(payload);
+      }
+
+      try {
+        localStorage.setItem("cached_correction_orders", JSON.stringify({
+          meta: correctionMeta,
+          orders: allCorrectionOrders
+        }));
+      } catch(e) {}
+
+      closeModal("modal-correction-order");
+      renderCorrectionBatch(currentCorrectionBatch);
+      alert("시정명령 내용이 데이터베이스에 안전하게 저장되었습니다.");
+    } else {
+      alert("저장 중 서버 오류가 발생했습니다. 다시 시도해주세요.");
     }
   } catch (err) {
-    console.warn("Backend save error:", err);
+    console.error("Backend save error:", err);
+    alert("서버 연결에 실패했습니다: " + err.message);
   }
 }
 
