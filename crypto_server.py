@@ -1321,19 +1321,9 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
         elif path == "/api/dispositions/save":
             disp_id = req_json.get("id")
             note_val = req_json.get("note", "")
+            is_new = not disp_id
 
-            # 1. Update Local Disposition Cache & Notes File
-            update_local_disposition_cache(req_json)
-
-            if disp_id and note_val is not None:
-                try:
-                    notes = load_notes()
-                    notes[str(disp_id)] = str(note_val)
-                    save_notes(notes)
-                except Exception as e:
-                    print("Local note save error:", e)
-
-            # 2. Supabase DB에 저장 - DB 컬럼만 필터링
+            # 1. Supabase DB에 저장 - DB 컬럼만 필터링
             DISPOSITIONS_DB_COLS = {
                 "id", "facility_key", "target_type", "current_status", "seq",
                 "advance_notice_date", "advance_notice_target", "advance_notice_method",
@@ -1375,20 +1365,14 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 if df in db_payload and (db_payload[df] == "" or db_payload[df] == "None"):
                     db_payload[df] = None
 
+            supabase_saved = False
             try:
                 prefer_headers = {**HEADERS, "Prefer": "return=representation"}
-                if disp_id:
+                if not is_new and disp_id:
                     res = requests.patch(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=prefer_headers, json=db_payload, timeout=5)
                     print(f"Supabase dispositions PATCH status={res.status_code} id={disp_id}")
-                    # 만약 DB에 해당 ID가 없어서 PATCH된 row가 0개인 경우 POST로 신규 생성
-                    if res.status_code in [200, 204] and (res.content and len(json.loads(res.content.decode('utf-8'))) == 0):
-                        res_post = requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[db_payload], timeout=5)
-                        print(f"Supabase dispositions POST fallback status={res_post.status_code}")
-                        if res_post.status_code in [200, 201]:
-                            saved_rows = res_post.json()
-                            if saved_rows and len(saved_rows) > 0:
-                                req_json["id"] = saved_rows[0].get("id")
-                                update_local_disposition_cache(req_json)
+                    if res.status_code in [200, 204]:
+                        supabase_saved = True
                 else:
                     res = requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[db_payload], timeout=5)
                     print(f"Supabase dispositions POST status={res.status_code}")
@@ -1398,18 +1382,29 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                             created_id = saved_rows[0].get("id")
                             if created_id:
                                 req_json["id"] = created_id
-                                # 로컬 캐시 ID도 실제 DB ID로 동기화
-                                update_local_disposition_cache(req_json)
+                                disp_id = created_id
+                                supabase_saved = True
                 
-                # 다음 조회 시 Supabase DB에서 최신 데이터로 로드되도록 캐시 초기화
+                # 다음 조회 시 Supabase DB에서 최신 데이터로 로드되도록 캐시 무효화
                 DISPOSITIONS_CACHE["data"] = None
             except Exception as e:
                 print("Supabase dispositions save error:", e)
 
+            # 2. Supabase DB에서 확정된 진짜 ID를 바탕으로 로컬 캐시 갱신
+            update_local_disposition_cache(req_json)
+
+            if disp_id and note_val is not None:
+                try:
+                    notes = load_notes()
+                    notes[str(disp_id)] = str(note_val)
+                    save_notes(notes)
+                except Exception as e:
+                    print("Local note save error:", e)
+
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
-            self.wfile.write(json.dumps({"success": True, "data": req_json}, ensure_ascii=False).encode('utf-8'))
+            self.wfile.write(json.dumps({"success": True, "data": req_json, "supabase_saved": supabase_saved}, ensure_ascii=False).encode('utf-8'))
 
         elif path == "/api/photos/upload":
             facility_key = req_json.get("facility_key", "").strip()

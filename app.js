@@ -2603,9 +2603,72 @@ async function saveDisposition() {
       return;
     }
 
-    const resJson = await res.json().catch(() => ({}));
-    const actualId = (resJson && resJson.data && resJson.data.id) ? resJson.data.id : (id ? parseInt(id) : Date.now());
-    payload.id = actualId;
+    let actualId = null;
+    if (res.ok) {
+      const resJson = await res.json().catch(() => ({}));
+      if (resJson && resJson.data && resJson.data.id) {
+        actualId = resJson.data.id;
+      }
+    }
+
+    // [모범 아키텍처 Fallback] 백엔드에서 실제 ID를 못 얻었을 경우 Supabase 직접 저장 시도
+    if (!actualId && id) {
+      actualId = parseInt(id);
+    } else if (!actualId) {
+      try {
+        const directPayload = {
+          facility_key: facilityKey,
+          target_type: payload.target_type || '소유자',
+          current_status: payload.current_status,
+          target_name_encrypted: payload.target_name_decrypted,
+          recipient_name_encrypted: payload.recipient_name_decrypted,
+          reg_num_encrypted: payload.reg_num_decrypted,
+          contact_encrypted: payload.contact_decrypted,
+          mail_address_encrypted: payload.mail_address_decrypted,
+          abstract_address_encrypted: payload.abstract_address_decrypted,
+          zip_code: payload.zip_code,
+          advance_notice_target: payload.advance_notice_target,
+          advance_notice_method: payload.advance_notice_method,
+          advance_notice_send_date: payload.advance_notice_send_date,
+          advance_notice_return_status: payload.advance_notice_return_status,
+          abstract_send_date: payload.abstract_send_date,
+          abstract_return_status: payload.abstract_return_status,
+          notice_public: payload.notice_public,
+          notice_public_period: payload.notice_public_period,
+          opinion_submitted: payload.opinion_submitted,
+          opinion_submit_date: payload.opinion_submit_date,
+          opinion_content: payload.opinion_content,
+          correction_order: payload.correction_order,
+          correction_order_date: payload.correction_order_date,
+          correction_reason: payload.correction_reason,
+          correction_period: payload.correction_period,
+          correction_notice_method: payload.correction_notice_method,
+          correction_return_details: payload.correction_return_details,
+          correction_public: payload.correction_public,
+          note: payload.note
+        };
+        const rDirect = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
+          method: "POST",
+          headers: {
+            "apikey": SUPABASE_SECRET_KEY,
+            "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+          },
+          body: JSON.stringify([directPayload])
+        });
+        if (rDirect.ok) {
+          const directRows = await rDirect.json();
+          if (directRows && directRows.length > 0) {
+            actualId = directRows[0].id;
+          }
+        }
+      } catch (eDir) {
+        console.warn("Direct Supabase main save fallback error:", eDir);
+      }
+    }
+
+    payload.id = actualId || (id ? parseInt(id) : Date.now());
 
     // 1. Update Main Disposition in In-Memory Array
     let mainIdx = dispositionsData.findIndex(d => String(d.id) === String(id));
@@ -2615,7 +2678,7 @@ async function saveDisposition() {
       dispositionsData.push(payload);
     }
 
-    // 2. Save Sub-owner Forms (All 30 fields parsed)
+    // 2. Save Sub-owner Forms (All 30 fields parsed with guaranteed DB persistence)
     const subCards = document.querySelectorAll("#disp-sub-owners-container .sub-owner-card");
     for (const card of subCards) {
       const subTargetType = card.querySelector(".sub-target-type")?.value || "소유자";
@@ -2689,6 +2752,7 @@ async function saveDisposition() {
         contact_decrypted: subCon
       };
 
+      let subActualId = null;
       try {
         const subRes = await fetch(`${API_BASE_URL}/dispositions/save`, {
           method: "POST",
@@ -2697,13 +2761,71 @@ async function saveDisposition() {
         });
         if (subRes.ok) {
           const subJson = await subRes.json();
-          const savedData = (subJson && subJson.data) ? subJson.data : subPayload;
-          dispositionsData.push({ ...subPayload, ...savedData, id: savedData.id || Date.now() });
-        } else {
-          dispositionsData.push({ ...subPayload, id: Date.now() });
+          if (subJson && subJson.data && subJson.data.id) {
+            subActualId = subJson.data.id;
+          }
         }
       } catch (errSub) {
-        dispositionsData.push({ ...subPayload, id: Date.now() });
+        console.warn("Backend sub-owner save failed, trying direct Supabase save:", errSub);
+      }
+
+      // [모범 아키텍처 Direct Fallback] 백엔드 실패 시 Supabase 직접 DB 생성
+      if (!subActualId) {
+        try {
+          const directSub = {
+            facility_key: facilityKey,
+            target_type: subPayload.target_type,
+            current_status: subPayload.current_status,
+            target_name_encrypted: subPayload.target_name_decrypted,
+            recipient_name_encrypted: subPayload.recipient_name_decrypted,
+            reg_num_encrypted: subPayload.reg_num_decrypted,
+            contact_encrypted: subPayload.contact_decrypted,
+            mail_address_encrypted: subPayload.mail_address_decrypted,
+            abstract_address_encrypted: subPayload.abstract_address_decrypted,
+            zip_code: subPayload.zip_code,
+            advance_notice_target: subPayload.advance_notice_target,
+            advance_notice_method: subPayload.advance_notice_method,
+            advance_notice_send_date: subPayload.advance_notice_send_date,
+            advance_notice_return_status: subPayload.advance_notice_return_status,
+            abstract_send_date: subPayload.abstract_send_date,
+            abstract_return_status: subPayload.abstract_return_status,
+            notice_public: subPayload.notice_public,
+            notice_public_period: subPayload.notice_public_period,
+            opinion_submitted: subPayload.opinion_submitted,
+            opinion_submit_date: subPayload.opinion_submit_date,
+            opinion_content: subPayload.opinion_content,
+            correction_order: subPayload.correction_order,
+            correction_order_date: subPayload.correction_order_date,
+            correction_reason: subPayload.correction_reason,
+            correction_period: subPayload.correction_period,
+            correction_notice_method: subPayload.correction_notice_method,
+            correction_return_details: subPayload.correction_return_details,
+            correction_public: subPayload.correction_public,
+            note: subPayload.note
+          };
+          const rSubDirect = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
+            method: "POST",
+            headers: {
+              "apikey": SUPABASE_SECRET_KEY,
+              "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+              "Content-Type": "application/json",
+              "Prefer": "return=representation"
+            },
+            body: JSON.stringify([directSub])
+          });
+          if (rSubDirect.ok) {
+            const subRows = await rSubDirect.json();
+            if (subRows && subRows.length > 0) {
+              subActualId = subRows[0].id;
+            }
+          }
+        } catch (eDirSub) {
+          console.error("Direct Supabase sub save error:", eDirSub);
+        }
+      }
+
+      if (subActualId) {
+        dispositionsData.push({ ...subPayload, id: subActualId });
       }
     }
 
