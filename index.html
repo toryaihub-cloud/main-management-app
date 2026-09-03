@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260903_height">
+  <link rel="stylesheet" href="styles.css?v=20260903_donutfix">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- SheetJS (xlsx) CDN for Excel Upload/Parse -->
@@ -468,21 +468,21 @@
             </div>
 
             <!-- Card 3: 의무설치 이행상태 및 현황 (표 형태) -->
-            <div class="detail-box" style="padding:0.75rem; display:flex; flex-direction:column; justify-content:space-between;">
+            <div class="detail-box" style="padding:0.45rem 0.65rem; display:flex; flex-direction:column; justify-content:flex-start; gap:0.35rem;">
               <div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem;">
-                  <h3 style="font-size:0.92rem; margin:0; display:flex; align-items:center; gap:0.4rem; color:#2563EB;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+                  <h3 style="font-size:0.88rem; margin:0; display:flex; align-items:center; gap:0.4rem; color:#2563EB;">
                     <i class="fa-solid fa-chart-pie"></i> 의무설치 이행상태
                   </h3>
                   <div style="display:flex; align-items:center; gap:0.35rem;">
-                    <span style="font-size:0.8rem; font-weight:600; color:#64748B;">상태:</span>
-                    <span id="detail-compliance" class="badge badge-emerald" style="font-size:0.8rem; padding:0.2rem 0.55rem;">-</span>
+                    <span style="font-size:0.78rem; font-weight:600; color:#64748B;">상태:</span>
+                    <span id="detail-compliance" class="badge badge-emerald" style="font-size:0.78rem; padding:0.15rem 0.5rem;">-</span>
                   </div>
                 </div>
 
-                <table class="detail-info-table" style="margin-bottom:0.5rem;">
+                <table class="detail-info-table" style="margin-bottom:0.35rem;">
                   <thead>
-                    <tr style="background:#F1F5F9; font-size:0.77rem;">
+                    <tr style="background:#F1F5F9; font-size:0.75rem;">
                       <th style="text-align:center; width:16%;">구분</th>
                       <th style="text-align:center; width:28%;">설치 / 의무</th>
                       <th style="text-align:center; width:38%;">세부 설치 내역</th>
@@ -493,13 +493,13 @@
                     <tr>
                       <th style="text-align:center; background:#F8FAFC;"><i class="fa-solid fa-square-parking" style="color:var(--primary);"></i> 주차</th>
                       <td style="text-align:center; font-weight:600;"><span id="detail-parking-slash-info">0면 / 0면</span></td>
-                      <td style="font-size:0.78rem; text-align:center;">지상/지하: <strong id="detail-parking-ground-underground">0면 / 0면</strong></td>
+                      <td style="font-size:0.76rem; text-align:center;">지상/지하: <strong id="detail-parking-ground-underground">0면 / 0면</strong></td>
                       <td style="text-align:center; color:var(--danger); font-weight:700;"><span id="detail-parking-uninstalled">0</span>면</td>
                     </tr>
                     <tr>
                       <th style="text-align:center; background:#F8FAFC;"><i class="fa-solid fa-bolt" style="color:#EAB308;"></i> 충전</th>
                       <td style="text-align:center; font-weight:600;"><span id="detail-charger-slash-info">0기 / 0기</span></td>
-                      <td style="font-size:0.77rem; text-align:center; line-height:1.35;">
+                      <td style="font-size:0.75rem; text-align:center; line-height:1.3;">
                         완속/급속: <strong id="detail-slow-fast-installed" style="color:var(--primary);">0기 / 0기</strong><br>
                         <span style="color:#64748B;">급속미이행: <strong id="detail-fast-uninstalled" style="color:var(--danger);">0기</strong></span>
                       </td>
@@ -509,26 +509,26 @@
                 </table>
               </div>
 
-              <!-- Integrated Dual Donut Chart -->
-              <div class="card-chart-wrapper-dual" style="padding:0.4rem; background:#F8FAFC; border-radius:8px; border:1px solid #E2E8F0;">
+              <!-- Integrated Dual Donut Chart (Compact & Fully Visible) -->
+              <div class="card-chart-wrapper-dual" style="padding:0.35rem 0.5rem; background:#F8FAFC; border-radius:8px; border:1px solid #E2E8F0; margin-bottom:0 !important;">
                 <!-- Parking Donut -->
                 <div class="donut-box-item">
-                  <div class="donut-title-label" style="font-size:0.75rem; font-weight:700;"><i class="fa-solid fa-square-parking"></i> 주차면수</div>
-                  <div class="donut-chart-relative" style="width:65px; height:65px;">
+                  <div class="donut-title-label" style="font-size:0.74rem; font-weight:700; margin-top:0;"><i class="fa-solid fa-square-parking"></i> 주차면수</div>
+                  <div class="donut-chart-relative" style="width:58px; height:58px; margin:0.15rem auto;">
                     <canvas id="modal-detail-donut-p"></canvas>
                     <div id="modal-detail-pct-p" class="donut-center-pct" style="font-size:0.75rem;">0%</div>
                   </div>
-                  <div id="modal-detail-slash-p" class="donut-ratio-slash" style="font-size:0.7rem; margin-top:0.2rem;">0면 / 0면</div>
+                  <div id="modal-detail-slash-p" class="donut-ratio-slash" style="font-size:0.72rem; font-weight:700; color:#1E293B; margin-top:0.1rem;">0면 / 0면</div>
                 </div>
 
                 <!-- Charger Donut -->
                 <div class="donut-box-item">
-                  <div class="donut-title-label" style="font-size:0.75rem; font-weight:700;"><i class="fa-solid fa-bolt"></i> 충전기수</div>
-                  <div class="donut-chart-relative" style="width:65px; height:65px;">
+                  <div class="donut-title-label" style="font-size:0.74rem; font-weight:700; margin-top:0;"><i class="fa-solid fa-bolt"></i> 충전기수</div>
+                  <div class="donut-chart-relative" style="width:58px; height:58px; margin:0.15rem auto;">
                     <canvas id="modal-detail-donut-c"></canvas>
                     <div id="modal-detail-pct-c" class="donut-center-pct" style="font-size:0.75rem;">0%</div>
                   </div>
-                  <div id="modal-detail-slash-c" class="donut-ratio-slash" style="font-size:0.7rem; margin-top:0.2rem;">0기 / 0기</div>
+                  <div id="modal-detail-slash-c" class="donut-ratio-slash" style="font-size:0.72rem; font-weight:700; color:#1E293B; margin-top:0.1rem;">0기 / 0기</div>
                 </div>
               </div>
 

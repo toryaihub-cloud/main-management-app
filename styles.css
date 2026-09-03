@@ -667,11 +667,11 @@ header {
   max-width: 1400px;
   width: 92vw;
   background: #FFFFFF;
-  max-height: 92vh !important;
-  height: 88vh;
+  max-height: 94vh !important;
+  height: 90vh;
   display: flex;
   flex-direction: column;
-  padding: 0.6rem 1rem !important;
+  padding: 0.5rem 0.8rem !important;
   overflow: hidden !important;
   border-radius: 12px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.3);
@@ -685,7 +685,7 @@ header {
 }
 
 .detail-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-main);
 }
@@ -693,36 +693,37 @@ header {
 .detail-split-body {
   display: grid;
   grid-template-columns: 1fr 1.08fr;
-  gap: 0.8rem;
+  gap: 0.7rem;
   align-items: stretch;
   overflow: hidden !important;
   height: 100% !important;
-  max-height: calc(88vh - 85px) !important;
+  max-height: calc(90vh - 80px) !important;
 }
 
 .detail-left-column {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  justify-content: space-between;
+  gap: 0.35rem;
+  justify-content: flex-start;
   height: 100% !important;
-  overflow: hidden !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
 .detail-left-column .detail-box {
-  padding: 0.5rem 0.75rem !important;
+  padding: 0.4rem 0.6rem !important;
   border-radius: 8px;
 }
 
 .detail-left-column .detail-box h3 {
-  font-size: 0.88rem !important;
-  margin-bottom: 0.35rem !important;
+  font-size: 0.85rem !important;
+  margin-bottom: 0.25rem !important;
 }
 
 .detail-left-column .detail-box p,
 .detail-left-column .detail-box div {
-  font-size: 0.8rem !important;
-  line-height: 1.35 !important;
+  font-size: 0.78rem !important;
+  line-height: 1.3 !important;
 }
 
 .detail-right-column {
@@ -1380,9 +1381,9 @@ tr:hover {
 .detail-info-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.81rem;
-  line-height: 1.4;
-  margin-bottom: 0.3rem;
+  font-size: 0.77rem;
+  line-height: 1.25;
+  margin-bottom: 0.25rem;
   background: #ffffff;
   border: 1px solid #E2E8F0;
   border-radius: 6px;
@@ -1391,7 +1392,7 @@ tr:hover {
 
 .detail-info-table th, .detail-info-table td {
   border: 1px solid #E2E8F0;
-  padding: 0.38rem 0.55rem;
+  padding: 0.22rem 0.45rem;
 }
 
 .detail-info-table th {
