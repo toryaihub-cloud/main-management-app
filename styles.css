@@ -664,14 +664,14 @@ header {
 }
 
 .detail-modal-content {
-  max-width: 1320px;
-  width: 88vw;
+  max-width: 1400px;
+  width: 92vw;
   background: #FFFFFF;
-  max-height: 70vh !important;
-  height: auto;
+  max-height: 92vh !important;
+  height: 88vh;
   display: flex;
   flex-direction: column;
-  padding: 0.4rem 0.8rem !important;
+  padding: 0.6rem 1rem !important;
   overflow: hidden !important;
   border-radius: 12px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.3);
@@ -685,42 +685,44 @@ header {
 }
 
 .detail-title {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-main);
 }
 
 .detail-split-body {
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 0.6rem;
+  grid-template-columns: 1fr 1.08fr;
+  gap: 0.8rem;
   align-items: stretch;
   overflow: hidden !important;
-  max-height: calc(70vh - 75px) !important;
+  height: 100% !important;
+  max-height: calc(88vh - 85px) !important;
 }
 
 .detail-left-column {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.45rem;
   justify-content: space-between;
+  height: 100% !important;
   overflow: hidden !important;
 }
 
 .detail-left-column .detail-box {
-  padding: 0.35rem 0.65rem !important;
+  padding: 0.5rem 0.75rem !important;
   border-radius: 8px;
 }
 
 .detail-left-column .detail-box h3 {
-  font-size: 0.82rem !important;
-  margin-bottom: 0.2rem !important;
+  font-size: 0.88rem !important;
+  margin-bottom: 0.35rem !important;
 }
 
 .detail-left-column .detail-box p,
 .detail-left-column .detail-box div {
-  font-size: 0.75rem !important;
-  line-height: 1.25 !important;
+  font-size: 0.8rem !important;
+  line-height: 1.35 !important;
 }
 
 .detail-right-column {
@@ -1124,7 +1126,8 @@ tr:hover {
 #modal-facility-detail .modal-content {
   max-width: 1440px !important;
   width: 95vw !important;
-  max-height: 92vh !important;
+  max-height: 94vh !important;
+  height: 90vh !important;
 }
 
 #modal-disposition-detail .modal-content {
