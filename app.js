@@ -963,8 +963,14 @@ function openFacilityDetailModal(key) {
 
   const totalHh = facility.total_households ? `${facility.total_households}세대` : '-';
   const evReg = facility.ev_registered_cnt ? `${facility.ev_registered_cnt}대` : '-';
-  const repIns = `${facility.charger_reported || '-'} / ${facility.insurance_enrolled || '-'}`;
-  const fireMan = facility.fire_manual_distributed || '-';
+
+  const repStr = facility.charger_reported ? (facility.charger_reported === '여' ? '신고' : (facility.charger_reported === '부' ? '미신고' : facility.charger_reported)) : '-';
+  const insStr = facility.insurance_enrolled ? (facility.insurance_enrolled === '여' ? '가입' : (facility.insurance_enrolled === '부' ? '미가입' : facility.insurance_enrolled)) : '-';
+  const repIns = (repStr !== '-' || insStr !== '-') ? `${repStr} / ${insStr}` : '-';
+
+  let fireMan = facility.fire_manual_distributed || '-';
+  if (fireMan === '여') fireMan = '배부';
+  else if (fireMan === '부') fireMan = '미배부';
 
   safeSetText("detail-total-households", totalHh);
   safeSetText("detail-ev-registered", evReg);
@@ -2167,9 +2173,16 @@ function openFacilityModal(key = null) {
       if (item.manager_contact_decrypted) document.getElementById("fac-manager-contact").value = item.manager_contact_decrypted;
       document.getElementById("fac-total-households").value = (item.total_households !== undefined && item.total_households !== null) ? item.total_households : "";
       document.getElementById("fac-ev-registered-cnt").value = (item.ev_registered_cnt !== undefined && item.ev_registered_cnt !== null) ? item.ev_registered_cnt : "";
-      document.getElementById("fac-charger-reported").value = item.charger_reported || "";
-      document.getElementById("fac-insurance-enrolled").value = item.insurance_enrolled || "";
-      document.getElementById("fac-fire-manual-distributed").value = item.fire_manual_distributed || "";
+      const mapYesNo = (val) => {
+        if (!val) return "";
+        val = String(val).trim();
+        if (val === "여" || val.includes("배부완료") || val.includes("가입") || val.includes("신고완료") || val === "O" || val === "o" || val === "배부" || val === "신고") return "여";
+        if (val === "부" || val.includes("미배부") || val.includes("미가입") || val.includes("미신고") || val === "X" || val === "x") return "부";
+        return "";
+      };
+      document.getElementById("fac-charger-reported").value = mapYesNo(item.charger_reported);
+      document.getElementById("fac-insurance-enrolled").value = mapYesNo(item.insurance_enrolled);
+      document.getElementById("fac-fire-manual-distributed").value = mapYesNo(item.fire_manual_distributed);
     }
   } else {
     document.getElementById("modal-facility-title").innerText = "신규 시설 등록";
