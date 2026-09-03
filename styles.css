@@ -1373,3 +1373,38 @@ tr:hover {
   font-size: 0.78rem;
 }
 
+/* Modal Detail Tables */
+.detail-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.81rem;
+  line-height: 1.4;
+  margin-bottom: 0.3rem;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.detail-info-table th, .detail-info-table td {
+  border: 1px solid #E2E8F0;
+  padding: 0.38rem 0.55rem;
+}
+
+.detail-info-table th {
+  background-color: #F8FAFC;
+  color: #475569;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.detail-info-table td {
+  background-color: #FFFFFF;
+  color: #1E293B;
+}
+
+.detail-info-table tr:hover td {
+  background-color: #F8FAFC;
+}
+
