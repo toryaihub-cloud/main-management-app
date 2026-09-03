@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260903_ssot_final">
+  <link rel="stylesheet" href="styles.css?v=20260903_table_style_unify">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- SheetJS (xlsx) CDN for Excel Upload/Parse -->
@@ -392,21 +392,22 @@
           <!-- LEFT COLUMN: 3 Info Cards -->
           <div class="detail-left-column">
             <!-- Card 1: 기본 시설 정보 (표 형태) -->
-            <div class="detail-box" style="padding:0.75rem;">
-              <h3 style="font-size:0.92rem; margin-bottom:0.45rem; display:flex; align-items:center; gap:0.4rem; color:var(--primary);">
+            <!-- Card 1: 기본 시설 정보 (표 형태) -->
+            <div class="detail-box" style="padding:0.65rem 0.75rem;">
+              <h3 style="font-size:0.9rem; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem; color:var(--primary);">
                 <i class="fa-solid fa-building"></i> 기본 시설 정보
               </h3>
               <table class="detail-info-table">
                 <colgroup>
-                  <col style="width: 24%;">
-                  <col style="width: 26%;">
-                  <col style="width: 24%;">
-                  <col style="width: 26%;">
+                  <col style="width: 22%;">
+                  <col style="width: 28%;">
+                  <col style="width: 22%;">
+                  <col style="width: 28%;">
                 </colgroup>
                 <tbody>
                   <tr>
                     <th>시설구분</th>
-                    <td><span id="detail-category" style="font-weight:600;">-</span></td>
+                    <td><span id="detail-category">-</span></td>
                     <th>신축/기축</th>
                     <td><span id="detail-new-old">-</span></td>
                   </tr>
@@ -429,21 +430,21 @@
             </div>
 
             <!-- Card 2: 관리 및 운영 정보 (표 형태) -->
-            <div class="detail-box" style="padding:0.75rem;">
-              <h3 style="font-size:0.92rem; margin-bottom:0.45rem; display:flex; align-items:center; gap:0.4rem; color:#059669;">
+            <div class="detail-box" style="padding:0.65rem 0.75rem;">
+              <h3 style="font-size:0.9rem; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem; color:#059669;">
                 <i class="fa-solid fa-user-shield"></i> 관리 및 운영 정보
               </h3>
               <table class="detail-info-table">
                 <colgroup>
-                  <col style="width: 24%;">
-                  <col style="width: 26%;">
-                  <col style="width: 24%;">
-                  <col style="width: 26%;">
+                  <col style="width: 22%;">
+                  <col style="width: 28%;">
+                  <col style="width: 22%;">
+                  <col style="width: 28%;">
                 </colgroup>
                 <tbody>
                   <tr>
                     <th>시설 관리자</th>
-                    <td><span id="detail-manager-name" style="font-weight:600;">-</span></td>
+                    <td><span id="detail-manager-name">-</span></td>
                     <th>관리자 연락처</th>
                     <td><span id="detail-manager-contact">-</span></td>
                   </tr>
@@ -451,24 +452,24 @@
                     <th>관리주체</th>
                     <td colspan="3"><span id="detail-management-body">-</span></td>
                   </tr>
-                  <tr style="background:#F8FAFC;">
-                    <th style="background:#F1F5F9; color:#334155;">총세대수</th>
-                    <td><span id="detail-total-households" style="font-weight:600;">-</span></td>
-                    <th style="background:#F1F5F9; color:#334155;">전기차등록</th>
-                    <td><span id="detail-ev-registered" style="font-weight:600;">-</span></td>
+                  <tr>
+                    <th>총세대수</th>
+                    <td><span id="detail-total-households">-</span></td>
+                    <th>전기차등록</th>
+                    <td><span id="detail-ev-registered">-</span></td>
                   </tr>
-                  <tr style="background:#F8FAFC;">
-                    <th style="background:#F1F5F9; color:#334155;">신고 / 보험</th>
-                    <td><span id="detail-reported-insurance" style="font-weight:600;">-</span></td>
-                    <th style="background:#F1F5F9; color:#334155;">화재책자배부</th>
-                    <td><span id="detail-fire-manual" style="font-weight:600;">-</span></td>
+                  <tr>
+                    <th>신고 / 보험</th>
+                    <td><span id="detail-reported-insurance">-</span></td>
+                    <th>화재책자배부</th>
+                    <td><span id="detail-fire-manual">-</span></td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <!-- Card 3: 의무설치 이행상태 및 현황 (표 형태) -->
-            <div class="detail-box" style="padding:0.45rem 0.65rem; display:flex; flex-direction:column; justify-content:flex-start; gap:0.35rem;">
+            <div class="detail-box" style="padding:0.5rem 0.65rem; display:flex; flex-direction:column; justify-content:flex-start; gap:0.35rem;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
                   <h3 style="font-size:0.88rem; margin:0; display:flex; align-items:center; gap:0.4rem; color:#2563EB;">
@@ -482,28 +483,28 @@
 
                 <table class="detail-info-table" style="margin-bottom:0.35rem;">
                   <thead>
-                    <tr style="background:#F1F5F9; font-size:0.75rem;">
-                      <th style="text-align:center; width:16%;">구분</th>
-                      <th style="text-align:center; width:28%;">설치 / 의무</th>
-                      <th style="text-align:center; width:38%;">세부 설치 내역</th>
-                      <th style="text-align:center; width:18%;">미설치</th>
+                    <tr>
+                      <th style="width:16%;">구분</th>
+                      <th style="width:28%;">설치 / 의무</th>
+                      <th style="width:38%;">세부 설치 내역</th>
+                      <th style="width:18%;">미설치</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <th style="text-align:center; background:#F8FAFC;"><i class="fa-solid fa-square-parking" style="color:var(--primary);"></i> 주차</th>
-                      <td style="text-align:center; font-weight:600;"><span id="detail-parking-slash-info">0면 / 0면</span></td>
-                      <td style="font-size:0.76rem; text-align:center;">지상/지하: <strong id="detail-parking-ground-underground">0면 / 0면</strong></td>
-                      <td style="text-align:center; color:var(--danger); font-weight:700;"><span id="detail-parking-uninstalled">0</span>면</td>
+                      <th><i class="fa-solid fa-square-parking" style="color:var(--primary);"></i> 주차</th>
+                      <td style="text-align:center;"><span id="detail-parking-slash-info">0면 / 0면</span></td>
+                      <td style="text-align:center;">지상/지하: <span id="detail-parking-ground-underground">0면 / 0면</span></td>
+                      <td style="text-align:center; color:var(--danger); font-weight:600;"><span id="detail-parking-uninstalled">0</span>면</td>
                     </tr>
                     <tr>
-                      <th style="text-align:center; background:#F8FAFC;"><i class="fa-solid fa-bolt" style="color:#EAB308;"></i> 충전</th>
-                      <td style="text-align:center; font-weight:600;"><span id="detail-charger-slash-info">0기 / 0기</span></td>
-                      <td style="font-size:0.75rem; text-align:center; line-height:1.3;">
-                        완속/급속: <strong id="detail-slow-fast-installed" style="color:var(--primary);">0기 / 0기</strong><br>
-                        <span style="color:#64748B;">급속미이행: <strong id="detail-fast-uninstalled" style="color:var(--danger);">0기</strong></span>
+                      <th><i class="fa-solid fa-bolt" style="color:#EAB308;"></i> 충전</th>
+                      <td style="text-align:center;"><span id="detail-charger-slash-info">0기 / 0기</span></td>
+                      <td style="text-align:center; line-height:1.35;">
+                        완속/급속: <span id="detail-slow-fast-installed" style="color:var(--primary); font-weight:600;">0기 / 0기</span><br>
+                        <span style="color:#64748B;">급속미이행: <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:600;">0기</span></span>
                       </td>
-                      <td style="text-align:center; color:var(--danger); font-weight:700;"><span id="detail-charger-uninstalled">0</span>기</td>
+                      <td style="text-align:center; color:var(--danger); font-weight:600;"><span id="detail-charger-uninstalled">0</span>기</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1190,6 +1191,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260903_firemanual_fix"></script>
+  <script src="app.js?v=20260903_table_style_unify"></script>
 </body>
 </html>

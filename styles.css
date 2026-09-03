@@ -1377,35 +1377,55 @@ tr:hover {
   font-size: 0.78rem;
 }
 
-/* Modal Detail Tables */
+/* Modal Detail Tables - Unified Borders, Typography & Spacing */
 .detail-info-table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.77rem;
-  line-height: 1.25;
-  margin-bottom: 0.25rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  margin-bottom: 0;
   background: #ffffff;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #CBD5E1;
   border-radius: 6px;
   overflow: hidden;
 }
 
-.detail-info-table th, .detail-info-table td {
-  border: 1px solid #E2E8F0;
-  padding: 0.22rem 0.45rem;
+.detail-info-table th, 
+.detail-info-table td {
+  border-right: 1px solid #E2E8F0;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 0.28rem 0.45rem;
+  font-size: 0.78rem;
+  vertical-align: middle;
 }
 
+/* Eliminate double right border on last column */
+.detail-info-table tr th:last-child,
+.detail-info-table tr td:last-child {
+  border-right: none;
+}
+
+/* Eliminate bottom border on last row of tbody */
+.detail-info-table tbody tr:last-child th,
+.detail-info-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Uniform Header Styling across Cards 1, 2, 3 */
 .detail-info-table th {
-  background-color: #F8FAFC;
-  color: #475569;
+  background-color: #F1F5F9;
+  color: #334155;
   font-weight: 600;
-  text-align: left;
+  text-align: center;
   white-space: nowrap;
 }
 
+/* Uniform Cell Styling across Cards 1, 2, 3 */
 .detail-info-table td {
   background-color: #FFFFFF;
   color: #1E293B;
+  font-weight: 500;
 }
 
 .detail-info-table tr:hover td {
