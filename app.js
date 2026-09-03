@@ -337,9 +337,11 @@ async function fetchFacilities() {
   try {
     const res = await fetchWithRetry(`${API_BASE_URL}/facilities`);
     let list = [];
+    let fromServer = false;
     if (res.ok) {
       const raw = await res.json();
       list = Array.isArray(raw) ? raw : (raw.data || []);
+      if (list.length > 0) fromServer = true;
     }
     // Only fallback if API actually returns 0 (which means DB is empty) OR fetch failed completely
     if (list.length === 0) {
@@ -350,16 +352,19 @@ async function fetchFacilities() {
       }
     }
     if (list.length > 0) {
-      const cached = localStorage.getItem("cached_facilities");
-      if (cached) {
-        try {
-          const cachedList = JSON.parse(cached);
-          const cachedMap = new Map(cachedList.map(item => [item.facility_key, item]));
-          list = list.map(item => {
-            const cItem = cachedMap.get(item.facility_key);
-            return cItem ? smartMergeObjects(item, cItem) : item;
-          });
-        } catch(e) {}
+      // 서버에서 온 데이터가 아닐 때(오프라인/정적폴백)에만 localStorage 스마트 머지 적용
+      if (!fromServer) {
+        const cached = localStorage.getItem("cached_facilities");
+        if (cached) {
+          try {
+            const cachedList = JSON.parse(cached);
+            const cachedMap = new Map(cachedList.map(item => [item.facility_key, item]));
+            list = list.map(item => {
+              const cItem = cachedMap.get(item.facility_key);
+              return cItem ? smartMergeObjects(item, cItem) : item;
+            });
+          } catch(e) {}
+        }
       }
       facilitiesData = list;
       try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
@@ -393,9 +398,11 @@ async function fetchDispositions() {
   try {
     const res = await fetchWithRetry(`${API_BASE_URL}/dispositions`);
     let list = [];
+    let fromServer = false;
     if (res.ok) {
       const raw = await res.json();
       list = Array.isArray(raw) ? raw : (raw.data || []);
+      if (list.length > 0) fromServer = true;
     }
 
     if (list.length === 0) {
@@ -406,21 +413,24 @@ async function fetchDispositions() {
     }
 
     if (list.length > 0) {
-      const cached = localStorage.getItem("cached_dispositions");
-      if (cached) {
-        try {
-          const cachedList = JSON.parse(cached);
-          const cachedMap = new Map(cachedList.map(item => [String(item.id), item]));
-          list = list.map(item => {
-            const cItem = cachedMap.get(String(item.id));
-            return cItem ? smartMergeObjects(item, cItem) : item;
-          });
-          cachedList.forEach(cItem => {
-            if (!list.some(l => String(l.id) === String(cItem.id))) {
-              list.push(cItem);
-            }
-          });
-        } catch(e) {}
+      // 서버에서 온 데이터가 아닐 때(오프라인/정적폴백)에만 localStorage 머지 적용
+      if (!fromServer) {
+        const cached = localStorage.getItem("cached_dispositions");
+        if (cached) {
+          try {
+            const cachedList = JSON.parse(cached);
+            const cachedMap = new Map(cachedList.map(item => [String(item.id), item]));
+            list = list.map(item => {
+              const cItem = cachedMap.get(String(item.id));
+              return cItem ? smartMergeObjects(item, cItem) : item;
+            });
+            cachedList.forEach(cItem => {
+              if (!list.some(l => String(l.id) === String(cItem.id))) {
+                list.push(cItem);
+              }
+            });
+          } catch(e) {}
+        }
       }
 
       dispositionsData = list.map(d => ({
@@ -964,6 +974,16 @@ function openFacilityDetailModal(key) {
   safeSetText("detail-manager-name", decName);
   safeSetText("detail-manager-contact", decContact);
   safeSetText("detail-management-body", facility.management_body);
+
+  const totalHh = facility.total_households ? `${facility.total_households}세대` : '-';
+  const evReg = facility.ev_registered_cnt ? `${facility.ev_registered_cnt}대` : '-';
+  const repIns = `${facility.charger_reported || '-'} / ${facility.insurance_enrolled || '-'}`;
+  const fireMan = facility.fire_manual_distributed || '-';
+
+  safeSetText("detail-total-households", totalHh);
+  safeSetText("detail-ev-registered", evReg);
+  safeSetText("detail-reported-insurance", repIns);
+  safeSetText("detail-fire-manual", fireMan);
   
   const invElem = document.getElementById("detail-investigation-status");
   if (invElem) invElem.innerText = facility.investigation_status || '-';
