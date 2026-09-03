@@ -773,17 +773,25 @@ function renderFacilitiesCards(data) {
 
     const reqP = parseInt(f.parking_required_cnt) || 0;
     const unP = parseInt(f.parking_uninstalled_cnt) || 0;
-    let actP = (f.parking_installed_cnt !== undefined && f.parking_installed_cnt !== null && f.parking_installed_cnt !== '') ? parseInt(f.parking_installed_cnt) : Math.max(0, reqP - unP);
-    if (f.compliance_status === '이행완료' || unP === 0) {
-      actP = Math.max(actP, reqP);
+    let actP = (f.parking_installed_cnt !== undefined && f.parking_installed_cnt !== null && f.parking_installed_cnt !== '') ? parseInt(f.parking_installed_cnt) : 0;
+    if (actP === 0) {
+      const sumP = (parseInt(f.parking_ground_cnt) || 0) + (parseInt(f.parking_underground_cnt) || 0);
+      actP = sumP > 0 ? sumP : Math.max(0, reqP - unP);
+    }
+    if ((f.compliance_status === '이행완료' || unP === 0) && actP < reqP) {
+      actP = reqP;
     }
     const pctP = reqP > 0 ? Math.min(100, Math.round((actP / reqP) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
 
     const reqC = parseInt(f.charger_required_cnt) || 0;
     const unC = parseInt(f.charger_uninstalled_cnt) || 0;
-    let actC = (f.charger_installed_cnt !== undefined && f.charger_installed_cnt !== null && f.charger_installed_cnt !== '') ? parseInt(f.charger_installed_cnt) : Math.max(0, reqC - unC);
-    if (f.compliance_status === '이행완료' || unC === 0) {
-      actC = Math.max(actC, reqC);
+    let actC = (f.charger_installed_cnt !== undefined && f.charger_installed_cnt !== null && f.charger_installed_cnt !== '') ? parseInt(f.charger_installed_cnt) : 0;
+    if (actC === 0) {
+      const sumC = (parseInt(f.charger_fast_cnt) || 0) + (parseInt(f.charger_slow_cnt) || 0);
+      actC = sumC > 0 ? sumC : Math.max(0, reqC - unC);
+    }
+    if ((f.compliance_status === '이행완료' || unC === 0) && actC < reqC) {
+      actC = reqC;
     }
     const pctC = reqC > 0 ? Math.min(100, Math.round((actC / reqC) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
 
@@ -886,17 +894,25 @@ function openFacilityDetailModal(key) {
   // Parking & Charger Slash Ratio Info
   const reqP = parseInt(facility.parking_required_cnt) || 0;
   const unP = parseInt(facility.parking_uninstalled_cnt) || 0;
-  let actP = (facility.parking_installed_cnt !== undefined && facility.parking_installed_cnt !== null && facility.parking_installed_cnt !== '') ? parseInt(facility.parking_installed_cnt) : Math.max(0, reqP - unP);
-  if (facility.compliance_status === '이행완료' || unP === 0) {
-    actP = Math.max(actP, reqP);
+  let actP = (facility.parking_installed_cnt !== undefined && facility.parking_installed_cnt !== null && facility.parking_installed_cnt !== '') ? parseInt(facility.parking_installed_cnt) : 0;
+  if (actP === 0) {
+    const sumP = (parseInt(facility.parking_ground_cnt) || 0) + (parseInt(facility.parking_underground_cnt) || 0);
+    actP = sumP > 0 ? sumP : Math.max(0, reqP - unP);
+  }
+  if ((facility.compliance_status === '이행완료' || unP === 0) && actP < reqP) {
+    actP = reqP;
   }
   const pctP = reqP > 0 ? Math.min(100, Math.round((actP / reqP) * 100)) : (facility.compliance_status === '이행완료' ? 100 : 0);
 
   const reqC = parseInt(facility.charger_required_cnt) || 0;
   const unC = parseInt(facility.charger_uninstalled_cnt) || 0;
-  let actC = (facility.charger_installed_cnt !== undefined && facility.charger_installed_cnt !== null && facility.charger_installed_cnt !== '') ? parseInt(facility.charger_installed_cnt) : Math.max(0, reqC - unC);
-  if (facility.compliance_status === '이행완료' || unC === 0) {
-    actC = Math.max(actC, reqC);
+  let actC = (facility.charger_installed_cnt !== undefined && facility.charger_installed_cnt !== null && facility.charger_installed_cnt !== '') ? parseInt(facility.charger_installed_cnt) : 0;
+  if (actC === 0) {
+    const sumC = (parseInt(facility.charger_fast_cnt) || 0) + (parseInt(facility.charger_slow_cnt) || 0);
+    actC = sumC > 0 ? sumC : Math.max(0, reqC - unC);
+  }
+  if ((facility.compliance_status === '이행완료' || unC === 0) && actC < reqC) {
+    actC = reqC;
   }
   const pctC = reqC > 0 ? Math.min(100, Math.round((actC / reqC) * 100)) : (facility.compliance_status === '이행완료' ? 100 : 0);
 
@@ -1007,17 +1023,25 @@ function renderModalDetailDonutChart(f) {
 
   const reqP = parseInt(f.parking_required_cnt) || 0;
   const unP = parseInt(f.parking_uninstalled_cnt) || 0;
-  let actP = (f.parking_installed_cnt !== undefined && f.parking_installed_cnt !== null && f.parking_installed_cnt !== '') ? parseInt(f.parking_installed_cnt) : Math.max(0, reqP - unP);
-  if (f.compliance_status === '이행완료' || unP === 0) {
-    actP = Math.max(actP, reqP);
+  let actP = (f.parking_installed_cnt !== undefined && f.parking_installed_cnt !== null && f.parking_installed_cnt !== '') ? parseInt(f.parking_installed_cnt) : 0;
+  if (actP === 0) {
+    const sumP = (parseInt(f.parking_ground_cnt) || 0) + (parseInt(f.parking_underground_cnt) || 0);
+    actP = sumP > 0 ? sumP : Math.max(0, reqP - unP);
+  }
+  if ((f.compliance_status === '이행완료' || unP === 0) && actP < reqP) {
+    actP = reqP;
   }
   const pctP = reqP > 0 ? Math.min(100, Math.round((actP / reqP) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
 
   const reqC = parseInt(f.charger_required_cnt) || 0;
   const unC = parseInt(f.charger_uninstalled_cnt) || 0;
-  let actC = (f.charger_installed_cnt !== undefined && f.charger_installed_cnt !== null && f.charger_installed_cnt !== '') ? parseInt(f.charger_installed_cnt) : Math.max(0, reqC - unC);
-  if (f.compliance_status === '이행완료' || unC === 0) {
-    actC = Math.max(actC, reqC);
+  let actC = (f.charger_installed_cnt !== undefined && f.charger_installed_cnt !== null && f.charger_installed_cnt !== '') ? parseInt(f.charger_installed_cnt) : 0;
+  if (actC === 0) {
+    const sumC = (parseInt(f.charger_fast_cnt) || 0) + (parseInt(f.charger_slow_cnt) || 0);
+    actC = sumC > 0 ? sumC : Math.max(0, reqC - unC);
+  }
+  if ((f.compliance_status === '이행완료' || unC === 0) && actC < reqC) {
+    actC = reqC;
   }
   const pctC = reqC > 0 ? Math.min(100, Math.round((actC / reqC) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
 
