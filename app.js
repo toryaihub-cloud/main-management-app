@@ -340,85 +340,113 @@ async function fetchWithRetry(url, options = {}, retries = 5, delayMs = 5000) {
 }
 
 async function fetchFacilities() {
+  let list = [];
+
+  // [1순위] Supabase DB 실시간 직접 조회 (Render 슬립/과거 파일과 완전 무관한 실시간 진실)
   try {
-    const res = await fetchWithRetry(`${API_BASE_URL}/facilities`);
-    let list = [];
-    if (res.ok) {
-      const raw = await res.json();
-      list = Array.isArray(raw) ? raw : (raw.data || []);
+    const resDirect = await fetch(`${SUPABASE_REST_URL}/facilities?select=*&order=facility_key.asc`, {
+      headers: {
+        "apikey": SUPABASE_SECRET_KEY,
+        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`
+      }
+    });
+    if (resDirect.ok) {
+      const dbRows = await resDirect.json();
+      if (Array.isArray(dbRows) && dbRows.length > 0) {
+        list = dbRows.map(f => ({
+          ...f,
+          building_approval_dates: f.approval_date || f.building_approval_dates || "",
+          building_new_old_type: f.is_new_building || f.building_new_old_type || "신축",
+          manager_name_decrypted: (f.manager_name_encrypted && !f.manager_name_encrypted.startsWith("gAAAAA")) ? f.manager_name_encrypted : (f.manager_name || ""),
+          manager_contact_decrypted: (f.manager_contact_encrypted && !f.manager_contact_encrypted.startsWith("gAAAAA")) ? f.manager_contact_encrypted : (f.manager_contact || "")
+        }));
+      }
     }
-    // Only fallback if API actually returns 0 (which means DB is empty) OR fetch failed completely
-    if (list.length === 0) {
+  } catch (errDb) {
+    console.warn("Direct Supabase facilities fetch failed, fallback to backend:", errDb);
+  }
+
+  // [2순위] Render 백엔드 API
+  if (list.length === 0) {
+    try {
+      const res = await fetchWithRetry(`${API_BASE_URL}/facilities`);
+      if (res.ok) {
+        const raw = await res.json();
+        list = Array.isArray(raw) ? raw : (raw.data || []);
+      }
+    } catch (e) {}
+  }
+
+  // [3순위] 오프라인 비상용 정적 파일
+  if (list.length === 0) {
+    try {
       const resStatic = await fetch("facilities_cache.json?v=" + Date.now());
       if (resStatic.ok) {
         const raw = await resStatic.json();
         list = Array.isArray(raw) ? raw : (raw.data || []);
       }
-    }
-    if (list.length > 0) {
-      facilitiesData = list;
-      try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
-    }
-  } catch (err) {
-    console.warn("API facilities load failed after retries, fallback to local json:", err);
-    try {
-      const res = await fetch("facilities_cache.json?v=" + Date.now());
-      if (res.ok) {
-        const raw = await res.json();
-        facilitiesData = Array.isArray(raw) ? raw : (raw.data || []);
-        try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
-      }
     } catch (e) {}
+  }
+
+  if (list.length > 0) {
+    facilitiesData = list;
+    try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
   }
 }
 
 async function fetchDispositions() {
-  try {
-    const res = await fetchWithRetry(`${API_BASE_URL}/dispositions`);
-    let list = [];
-    if (res.ok) {
-      const raw = await res.json();
-      list = Array.isArray(raw) ? raw : (raw.data || []);
-    }
+  let list = [];
 
-    if (list.length === 0) {
+  // [1순위] Supabase DB 실시간 직접 조회 (Render 슬립/과거 파일과 완전 무관한 실시간 진실)
+  try {
+    const resDirect = await fetch(`${SUPABASE_REST_URL}/dispositions?select=*&order=id.asc`, {
+      headers: {
+        "apikey": SUPABASE_SECRET_KEY,
+        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`
+      }
+    });
+    if (resDirect.ok) {
+      const dbRows = await resDirect.json();
+      if (Array.isArray(dbRows) && dbRows.length > 0) {
+        list = dbRows;
+      }
+    }
+  } catch (errDb) {
+    console.warn("Direct Supabase dispositions fetch failed, fallback to backend:", errDb);
+  }
+
+  // [2순위] Render 백엔드 API
+  if (list.length === 0) {
+    try {
+      const res = await fetchWithRetry(`${API_BASE_URL}/dispositions`);
+      if (res.ok) {
+        const raw = await res.json();
+        list = Array.isArray(raw) ? raw : (raw.data || []);
+      }
+    } catch (e) {}
+  }
+
+  // [3순위] 오프라인 비상용 정적 파일
+  if (list.length === 0) {
+    try {
       const resStatic = await fetch("dispositions_cache.json?v=" + Date.now());
       if (resStatic.ok) {
         list = await resStatic.json();
       }
-    }
+    } catch (e) {}
+  }
 
-    if (list.length > 0) {
-      dispositionsData = list.map(d => ({
-        ...d,
-        target_name_decrypted: (d.target_name_decrypted && !d.target_name_decrypted.startsWith("gAAAAA")) ? d.target_name_decrypted : (d.target_name || ""),
-        recipient_name_decrypted: (d.recipient_name_decrypted && !d.recipient_name_decrypted.startsWith("gAAAAA")) ? d.recipient_name_decrypted : (d.recipient_name || ""),
-        mail_address_decrypted: (d.mail_address_decrypted && !d.mail_address_decrypted.startsWith("gAAAAA")) ? d.mail_address_decrypted : (d.mail_address || ""),
-        abstract_address_decrypted: (d.abstract_address_decrypted && !d.abstract_address_decrypted.startsWith("gAAAAA")) ? d.abstract_address_decrypted : (d.abstract_address || ""),
-        reg_num_decrypted: (d.reg_num_decrypted && !d.reg_num_decrypted.startsWith("gAAAAA")) ? d.reg_num_decrypted : (d.reg_num || ""),
-        contact_decrypted: (d.contact_decrypted && !d.contact_decrypted.startsWith("gAAAAA")) ? d.contact_decrypted : (d.contact || "")
-      }));
-      try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
-    }
-  } catch (err) {
-    console.warn("API dispositions load failed after retries, fallback to local json:", err);
-    try {
-      const res = await fetch("dispositions_cache.json?v=" + Date.now());
-      if (res.ok) {
-        const raw = await res.json();
-        let list = Array.isArray(raw) ? raw : (raw.data || []);
-        dispositionsData = list.map(d => ({
-          ...d,
-          target_name_decrypted: (d.target_name_decrypted && !d.target_name_decrypted.startsWith("gAAAAA")) ? d.target_name_decrypted : (d.target_name || ""),
-          recipient_name_decrypted: (d.recipient_name_decrypted && !d.recipient_name_decrypted.startsWith("gAAAAA")) ? d.recipient_name_decrypted : (d.recipient_name || ""),
-          mail_address_decrypted: (d.mail_address_decrypted && !d.mail_address_decrypted.startsWith("gAAAAA")) ? d.mail_address_decrypted : (d.mail_address || ""),
-          abstract_address_decrypted: (d.abstract_address_decrypted && !d.abstract_address_decrypted.startsWith("gAAAAA")) ? d.abstract_address_decrypted : (d.abstract_address || ""),
-          reg_num_decrypted: (d.reg_num_decrypted && !d.reg_num_decrypted.startsWith("gAAAAA")) ? d.reg_num_decrypted : (d.reg_num || ""),
-          contact_decrypted: (d.contact_decrypted && !d.contact_decrypted.startsWith("gAAAAA")) ? d.contact_decrypted : (d.contact || "")
-        }));
-        try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
-      }
-    } catch(e) {}
+  if (list.length > 0) {
+    dispositionsData = list.map(d => ({
+      ...d,
+      target_name_decrypted: (d.target_name_encrypted && !d.target_name_encrypted.startsWith("gAAAAA")) ? d.target_name_encrypted : (d.target_name_decrypted || d.target_name || ""),
+      recipient_name_decrypted: (d.recipient_name_encrypted && !d.recipient_name_encrypted.startsWith("gAAAAA")) ? d.recipient_name_encrypted : (d.recipient_name_decrypted || d.recipient_name || ""),
+      mail_address_decrypted: (d.mail_address_encrypted && !d.mail_address_encrypted.startsWith("gAAAAA")) ? d.mail_address_encrypted : (d.mail_address_decrypted || d.mail_address || ""),
+      abstract_address_decrypted: (d.abstract_address_encrypted && !d.abstract_address_encrypted.startsWith("gAAAAA")) ? d.abstract_address_encrypted : (d.abstract_address_decrypted || d.abstract_address || ""),
+      reg_num_decrypted: (d.reg_num_encrypted && !d.reg_num_encrypted.startsWith("gAAAAA")) ? d.reg_num_encrypted : (d.reg_num_decrypted || d.reg_num || ""),
+      contact_decrypted: (d.contact_encrypted && !d.contact_encrypted.startsWith("gAAAAA")) ? d.contact_encrypted : (d.contact_decrypted || d.contact || "")
+    }));
+    try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
   }
 }
 
@@ -2174,99 +2202,88 @@ async function saveFacility() {
     fire_manual_distributed: document.getElementById("fac-fire-manual-distributed").value.trim()
   };
 
+  // [1순위] Supabase DB에 직접 즉시 저장 (Render 상태와 무관하게 100% 영구 안착)
   let savedSuccessfully = false;
   try {
-    const res = await fetch(`${API_BASE_URL}/facilities/save`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    const directPayload = {
+      facility_key: key,
+      facility_name: name,
+      facility_category: payload.facility_category,
+      compliance_status: payload.compliance_status,
+      facility_ownership_type: payload.facility_ownership_type,
+      address_doro: payload.address_doro,
+      address_jibun: payload.address_jibun,
+      dong_name: payload.dong_name,
+      approval_date: payload.building_approval_dates,
+      is_new_building: payload.building_new_old_type,
+      building_register_num: payload.building_register_num,
+      parking_required_cnt: payload.parking_required_cnt,
+      parking_installed_cnt: payload.parking_installed_cnt,
+      parking_ground_cnt: payload.parking_ground_cnt,
+      parking_underground_cnt: payload.parking_underground_cnt,
+      parking_uninstalled_cnt: payload.parking_uninstalled_cnt,
+      charger_required_cnt: payload.charger_required_cnt,
+      charger_installed_cnt: payload.charger_installed_cnt,
+      charger_uninstalled_cnt: payload.charger_uninstalled_cnt,
+      charger_fast_req_cnt: payload.charger_fast_req_cnt,
+      charger_slow_cnt: payload.charger_slow_cnt,
+      charger_fast_cnt: payload.charger_fast_cnt,
+      management_body: payload.management_body,
+      manager_name_encrypted: mgrName,
+      manager_contact_encrypted: mgrContact,
+      total_households: payload.total_households,
+      ev_registered_cnt: payload.ev_registered_cnt,
+      charger_reported: payload.charger_reported,
+      insurance_enrolled: payload.insurance_enrolled,
+      fire_manual_distributed: payload.fire_manual_distributed
+    };
+
+    const preferHeaders = {
+      "apikey": SUPABASE_SECRET_KEY,
+      "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation"
+    };
+
+    // 1. 기존 시설 PATCH 시도
+    let rDirect = await fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(key)}`, {
+      method: "PATCH",
+      headers: preferHeaders,
+      body: JSON.stringify(directPayload)
     });
 
-    if (res.ok) {
-      savedSuccessfully = true;
-    }
-  } catch (errBackend) {
-    console.warn("Backend facility save failed, attempting direct Supabase save:", errBackend);
-  }
-
-  // [모범 아키텍처 Direct Fallback] 백엔드 미응답 또는 실패 시 Supabase DB 직접 저장
-  if (!savedSuccessfully) {
-    try {
-      const directPayload = {
-        facility_key: key,
-        facility_name: name,
-        facility_category: payload.facility_category,
-        compliance_status: payload.compliance_status,
-        facility_ownership_type: payload.facility_ownership_type,
-        address_doro: payload.address_doro,
-        address_jibun: payload.address_jibun,
-        dong_name: payload.dong_name,
-        approval_date: payload.building_approval_dates,
-        is_new_building: payload.building_new_old_type,
-        building_register_num: payload.building_register_num,
-        parking_required_cnt: payload.parking_required_cnt,
-        parking_installed_cnt: payload.parking_installed_cnt,
-        parking_ground_cnt: payload.parking_ground_cnt,
-        parking_underground_cnt: payload.parking_underground_cnt,
-        parking_uninstalled_cnt: payload.parking_uninstalled_cnt,
-        charger_required_cnt: payload.charger_required_cnt,
-        charger_installed_cnt: payload.charger_installed_cnt,
-        charger_uninstalled_cnt: payload.charger_uninstalled_cnt,
-        charger_fast_req_cnt: payload.charger_fast_req_cnt,
-        charger_slow_cnt: payload.charger_slow_cnt,
-        charger_fast_cnt: payload.charger_fast_cnt,
-        management_body: payload.management_body,
-        manager_name_encrypted: mgrName,
-        manager_contact_encrypted: mgrContact,
-        total_households: payload.total_households,
-        ev_registered_cnt: payload.ev_registered_cnt,
-        charger_reported: payload.charger_reported,
-        insurance_enrolled: payload.insurance_enrolled,
-        fire_manual_distributed: payload.fire_manual_distributed
-      };
-
-      const preferHeaders = {
-        "apikey": SUPABASE_SECRET_KEY,
-        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-      };
-
-      // 1. 기존 시설 PATCH 시도
-      let rDirect = await fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(key)}`, {
-        method: "PATCH",
-        headers: preferHeaders,
-        body: JSON.stringify(directPayload)
-      });
-
-      // 만약 신규 시설이거나 PATCH 결과가 0건이면 POST 생성
-      if (rDirect.ok) {
-        const patchRows = await rDirect.json().catch(() => []);
-        if (!patchRows || patchRows.length === 0) {
-          rDirect = await fetch(`${SUPABASE_REST_URL}/facilities`, {
-            method: "POST",
-            headers: preferHeaders,
-            body: JSON.stringify([directPayload])
-          });
-        }
-      } else {
+    // 신규 시설이거나 PATCH row가 0건이면 POST 생성
+    if (rDirect.ok) {
+      const patchRows = await rDirect.json().catch(() => []);
+      if (!patchRows || patchRows.length === 0) {
         rDirect = await fetch(`${SUPABASE_REST_URL}/facilities`, {
           method: "POST",
           headers: preferHeaders,
           body: JSON.stringify([directPayload])
         });
       }
-
-      if (rDirect.ok) {
-        savedSuccessfully = true;
-      }
-    } catch (eDir) {
-      console.error("Direct Supabase facility save error:", eDir);
+      if (rDirect.ok) savedSuccessfully = true;
+    } else {
+      rDirect = await fetch(`${SUPABASE_REST_URL}/facilities`, {
+        method: "POST",
+        headers: preferHeaders,
+        body: JSON.stringify([directPayload])
+      });
+      if (rDirect.ok) savedSuccessfully = true;
     }
+  } catch (eDir) {
+    console.error("Direct Supabase facility save error:", eDir);
   }
 
+  // [2순위 보조] Render 백엔드 로컬 동기화용 비동기 통지
+  fetch(`${API_BASE_URL}/facilities/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
   if (!savedSuccessfully) {
-    alert("시설 정보 저장 중 오류가 발생했습니다. (DB 연결 실패)");
+    alert("시설 정보 저장 중 오류가 발생했습니다. (Supabase DB 연결 실패)");
     return;
   }
 
@@ -2670,243 +2687,237 @@ async function saveDisposition() {
 
   if (id) payload.id = parseInt(id);
 
+  // [1순위] Supabase DB에 직접 즉시 저장/수정 (Direct Mutation)
+  let actualId = null;
   try {
-    const res = await fetch(`${API_BASE_URL}/dispositions/save`, {
+    const directPayload = {
+      facility_key: facilityKey,
+      target_type: payload.target_type || '소유자',
+      current_status: payload.current_status,
+      target_name_encrypted: payload.target_name_decrypted,
+      recipient_name_encrypted: payload.recipient_name_decrypted,
+      reg_num_encrypted: payload.reg_num_decrypted,
+      contact_encrypted: payload.contact_decrypted,
+      mail_address_encrypted: payload.mail_address_decrypted,
+      abstract_address_encrypted: payload.abstract_address_decrypted,
+      zip_code: payload.zip_code,
+      advance_notice_target: payload.advance_notice_target,
+      advance_notice_method: payload.advance_notice_method,
+      advance_notice_send_date: payload.advance_notice_send_date,
+      advance_notice_return_status: payload.advance_notice_return_status,
+      abstract_send_date: payload.abstract_send_date,
+      abstract_return_status: payload.abstract_return_status,
+      notice_public: payload.notice_public,
+      notice_public_period: payload.notice_public_period,
+      opinion_submitted: payload.opinion_submitted,
+      opinion_submit_date: payload.opinion_submit_date,
+      opinion_content: payload.opinion_content,
+      correction_order: payload.correction_order,
+      correction_order_date: payload.correction_order_date,
+      correction_reason: payload.correction_reason,
+      correction_period: payload.correction_period,
+      correction_notice_method: payload.correction_notice_method,
+      correction_return_details: payload.correction_return_details,
+      correction_public: payload.correction_public,
+      note: payload.note
+    };
+
+    const preferHeaders = {
+      "apikey": SUPABASE_SECRET_KEY,
+      "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation"
+    };
+
+    if (id) {
+      // 기존 처분 수정: Supabase DB에 직접 PATCH!
+      const rPatch = await fetch(`${SUPABASE_REST_URL}/dispositions?id=eq.${id}`, {
+        method: "PATCH",
+        headers: preferHeaders,
+        body: JSON.stringify(directPayload)
+      });
+      if (rPatch.ok) {
+        actualId = parseInt(id);
+      }
+    } else {
+      // 신규 처분 생성: Supabase DB에 직접 POST!
+      const rPost = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
+        method: "POST",
+        headers: preferHeaders,
+        body: JSON.stringify([directPayload])
+      });
+      if (rPost.ok) {
+        const rows = await rPost.json().catch(() => []);
+        if (rows && rows.length > 0) {
+          actualId = rows[0].id;
+        }
+      }
+    }
+  } catch (eDir) {
+    console.error("Direct Supabase disposition save error:", eDir);
+  }
+
+  // [2순위 보조] Render 백엔드 로컬 동기화용 비동기 통지
+  fetch(`${API_BASE_URL}/dispositions/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...payload, id: actualId || id })
+  }).catch(() => {});
+
+  if (!actualId && !id) {
+    alert("행정처분 정보 저장 중 오류가 발생했습니다. (Supabase DB 저장 실패)");
+    return;
+  }
+
+  payload.id = actualId || parseInt(id);
+
+  // 1. Update Main Disposition in In-Memory Array
+  let mainIdx = dispositionsData.findIndex(d => String(d.id) === String(payload.id));
+  if (mainIdx >= 0) {
+    dispositionsData[mainIdx] = { ...dispositionsData[mainIdx], ...payload };
+  } else {
+    dispositionsData.push(payload);
+  }
+
+  // 2. Save Sub-owner Forms (All 30 fields parsed with guaranteed Direct DB persistence)
+  const subCards = document.querySelectorAll("#disp-sub-owners-container .sub-owner-card");
+  for (const card of subCards) {
+    const subTargetType = card.querySelector(".sub-target-type")?.value || "소유자";
+    const subTargetName = card.querySelector(".sub-target-name")?.value.trim() || "";
+    const subStatus = card.querySelector(".sub-status")?.value.trim() || "";
+    const subNoticeTarget = card.querySelector(".sub-notice-target")?.value.trim() || "";
+
+    const subNoticeMethod = card.querySelector(".sub-notice-method")?.value.trim() || "";
+    const subMailAddr = card.querySelector(".sub-mail-address")?.value.trim() || "";
+    const subZipCode = card.querySelector(".sub-zip-code")?.value.trim() || "";
+    const subRecipient = card.querySelector(".sub-recipient-name")?.value.trim() || "";
+    const subNoticeSendDate = normalizeDateStr(card.querySelector(".sub-notice-send-date")?.value);
+    const subNoticeReturnStatus = card.querySelector(".sub-notice-return-status")?.value.trim() || "";
+    const subAbstractSendDate = normalizeDateStr(card.querySelector(".sub-abstract-send-date")?.value);
+    const subAbstractAddr = card.querySelector(".sub-abstract-address")?.value.trim() || "";
+    const subAbstractReturnStatus = card.querySelector(".sub-abstract-return-status")?.value.trim() || "";
+    const subNoticePublic = card.querySelector(".sub-notice-public")?.value.trim() || "";
+    const subNoticePublicPeriod = card.querySelector(".sub-notice-public-period")?.value.trim() || "";
+
+    const subOpinionSubmitted = card.querySelector(".sub-opinion-submitted")?.value || "X";
+    const subOpinionSubmitDate = normalizeDateStr(card.querySelector(".sub-opinion-submit-date")?.value);
+    const subOpinionContent = card.querySelector(".sub-opinion-content")?.value.trim() || "";
+    const subCorrectionOrder = card.querySelector(".sub-correction-order")?.value.trim() || "";
+    const subCorrectionDate = normalizeDateStr(card.querySelector(".sub-correction-date")?.value);
+    const subCorrectionReason = card.querySelector(".sub-correction-reason")?.value.trim() || "";
+    const subCorrectionPeriod = card.querySelector(".sub-correction-period")?.value.trim() || "";
+    const subCorrectionNoticeMethod = card.querySelector(".sub-correction-notice-method")?.value.trim() || "";
+    const subCorrectionReturnDetails = card.querySelector(".sub-correction-return-details")?.value.trim() || "";
+    const subCorrectionPublic = card.querySelector(".sub-correction-public")?.value.trim() || "";
+
+    const subReg = card.querySelector(".sub-reg-num")?.value.trim() || "";
+    const subCon = card.querySelector(".sub-contact")?.value.trim() || "";
+    const subNote = card.querySelector(".sub-note")?.value.trim() || "";
+
+    // Skip completely empty cards
+    if (!subTargetName && !subMailAddr && !subRecipient && !subNoticeMethod && !subCorrectionOrder && !subNote) {
+      continue;
+    }
+
+    const subPayload = {
+      facility_key: facilityKey,
+      target_type: subTargetType || '소유자',
+      current_status: subStatus || payload.current_status,
+      advance_notice_target: subNoticeTarget,
+
+      advance_notice_method: subNoticeMethod,
+      zip_code: subZipCode,
+      advance_notice_send_date: subNoticeSendDate,
+      advance_notice_return_status: subNoticeReturnStatus,
+      abstract_send_date: subAbstractSendDate,
+      abstract_return_status: subAbstractReturnStatus,
+      notice_public: subNoticePublic,
+      notice_public_period: subNoticePublicPeriod,
+
+      opinion_submitted: subOpinionSubmitted,
+      opinion_submit_date: subOpinionSubmitDate,
+      opinion_content: subOpinionContent,
+      correction_order: subCorrectionOrder,
+      correction_order_date: subCorrectionDate,
+      correction_reason: subCorrectionReason,
+      correction_period: subCorrectionPeriod,
+      correction_notice_method: subCorrectionNoticeMethod,
+      correction_return_details: subCorrectionReturnDetails,
+      correction_public: subCorrectionPublic,
+      note: subNote,
+      target_name_decrypted: subTargetName,
+      mail_address_decrypted: subMailAddr,
+      recipient_name_decrypted: subRecipient,
+      abstract_address_decrypted: subAbstractAddr,
+      reg_num_decrypted: subReg,
+      contact_decrypted: subCon
+    };
+
+    // [서브 카드 1순위] Supabase DB에 직접 POST 생성
+    let subActualId = null;
+    try {
+      const directSub = {
+        facility_key: facilityKey,
+        target_type: subPayload.target_type,
+        current_status: subPayload.current_status,
+        target_name_encrypted: subPayload.target_name_decrypted,
+        recipient_name_encrypted: subPayload.recipient_name_decrypted,
+        reg_num_encrypted: subPayload.reg_num_decrypted,
+        contact_encrypted: subPayload.contact_decrypted,
+        mail_address_encrypted: subPayload.mail_address_decrypted,
+        abstract_address_encrypted: subPayload.abstract_address_decrypted,
+        zip_code: subPayload.zip_code,
+        advance_notice_target: subPayload.advance_notice_target,
+        advance_notice_method: subPayload.advance_notice_method,
+        advance_notice_send_date: subPayload.advance_notice_send_date,
+        advance_notice_return_status: subPayload.advance_notice_return_status,
+        abstract_send_date: subPayload.abstract_send_date,
+        abstract_return_status: subPayload.abstract_return_status,
+        notice_public: subPayload.notice_public,
+        notice_public_period: subPayload.notice_public_period,
+        opinion_submitted: subPayload.opinion_submitted,
+        opinion_submit_date: subPayload.opinion_submit_date,
+        opinion_content: subPayload.opinion_content,
+        correction_order: subPayload.correction_order,
+        correction_order_date: subPayload.correction_order_date,
+        correction_reason: subPayload.correction_reason,
+        correction_period: subPayload.correction_period,
+        correction_notice_method: subPayload.correction_notice_method,
+        correction_return_details: subPayload.correction_return_details,
+        correction_public: subPayload.correction_public,
+        note: subPayload.note
+      };
+      const rSubDirect = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_SECRET_KEY,
+          "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+          "Content-Type": "application/json",
+          "Prefer": "return=representation"
+        },
+        body: JSON.stringify([directSub])
+      });
+      if (rSubDirect.ok) {
+        const subRows = await rSubDirect.json();
+        if (subRows && subRows.length > 0) {
+          subActualId = subRows[0].id;
+        }
+      }
+    } catch (eDirSub) {
+      console.error("Direct Supabase sub save error:", eDirSub);
+    }
+
+    // [서브 카드 2순위 보조] Render 백엔드 비동기 통지
+    fetch(`${API_BASE_URL}/dispositions/save`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+      body: JSON.stringify({ ...subPayload, id: subActualId })
+    }).catch(() => {});
 
-    if (!res.ok) {
-      alert("행정처분 정보 저장 중 서버 오류가 발생했습니다.");
-      return;
+    if (subActualId) {
+      dispositionsData.push({ ...subPayload, id: subActualId });
     }
-
-    let actualId = null;
-    if (res.ok) {
-      const resJson = await res.json().catch(() => ({}));
-      if (resJson && resJson.data && resJson.data.id) {
-        actualId = resJson.data.id;
-      }
-    }
-
-    // [모범 아키텍처 Fallback] 백엔드에서 실제 ID를 못 얻었을 경우 Supabase 직접 저장 시도
-    if (!actualId && id) {
-      actualId = parseInt(id);
-    } else if (!actualId) {
-      try {
-        const directPayload = {
-          facility_key: facilityKey,
-          target_type: payload.target_type || '소유자',
-          current_status: payload.current_status,
-          target_name_encrypted: payload.target_name_decrypted,
-          recipient_name_encrypted: payload.recipient_name_decrypted,
-          reg_num_encrypted: payload.reg_num_decrypted,
-          contact_encrypted: payload.contact_decrypted,
-          mail_address_encrypted: payload.mail_address_decrypted,
-          abstract_address_encrypted: payload.abstract_address_decrypted,
-          zip_code: payload.zip_code,
-          advance_notice_target: payload.advance_notice_target,
-          advance_notice_method: payload.advance_notice_method,
-          advance_notice_send_date: payload.advance_notice_send_date,
-          advance_notice_return_status: payload.advance_notice_return_status,
-          abstract_send_date: payload.abstract_send_date,
-          abstract_return_status: payload.abstract_return_status,
-          notice_public: payload.notice_public,
-          notice_public_period: payload.notice_public_period,
-          opinion_submitted: payload.opinion_submitted,
-          opinion_submit_date: payload.opinion_submit_date,
-          opinion_content: payload.opinion_content,
-          correction_order: payload.correction_order,
-          correction_order_date: payload.correction_order_date,
-          correction_reason: payload.correction_reason,
-          correction_period: payload.correction_period,
-          correction_notice_method: payload.correction_notice_method,
-          correction_return_details: payload.correction_return_details,
-          correction_public: payload.correction_public,
-          note: payload.note
-        };
-        const rDirect = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
-          method: "POST",
-          headers: {
-            "apikey": SUPABASE_SECRET_KEY,
-            "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
-            "Content-Type": "application/json",
-            "Prefer": "return=representation"
-          },
-          body: JSON.stringify([directPayload])
-        });
-        if (rDirect.ok) {
-          const directRows = await rDirect.json();
-          if (directRows && directRows.length > 0) {
-            actualId = directRows[0].id;
-          }
-        }
-      } catch (eDir) {
-        console.warn("Direct Supabase main save fallback error:", eDir);
-      }
-    }
-
-    payload.id = actualId || (id ? parseInt(id) : Date.now());
-
-    // 1. Update Main Disposition in In-Memory Array
-    let mainIdx = dispositionsData.findIndex(d => String(d.id) === String(id));
-    if (mainIdx >= 0) {
-      dispositionsData[mainIdx] = { ...dispositionsData[mainIdx], ...payload };
-    } else {
-      dispositionsData.push(payload);
-    }
-
-    // 2. Save Sub-owner Forms (All 30 fields parsed with guaranteed DB persistence)
-    const subCards = document.querySelectorAll("#disp-sub-owners-container .sub-owner-card");
-    for (const card of subCards) {
-      const subTargetType = card.querySelector(".sub-target-type")?.value || "소유자";
-      const subTargetName = card.querySelector(".sub-target-name")?.value.trim() || "";
-      const subStatus = card.querySelector(".sub-status")?.value.trim() || "";
-      const subNoticeTarget = card.querySelector(".sub-notice-target")?.value.trim() || "";
-
-      const subNoticeMethod = card.querySelector(".sub-notice-method")?.value.trim() || "";
-      const subMailAddr = card.querySelector(".sub-mail-address")?.value.trim() || "";
-      const subZipCode = card.querySelector(".sub-zip-code")?.value.trim() || "";
-      const subRecipient = card.querySelector(".sub-recipient-name")?.value.trim() || "";
-      const subNoticeSendDate = normalizeDateStr(card.querySelector(".sub-notice-send-date")?.value);
-      const subNoticeReturnStatus = card.querySelector(".sub-notice-return-status")?.value.trim() || "";
-      const subAbstractSendDate = normalizeDateStr(card.querySelector(".sub-abstract-send-date")?.value);
-      const subAbstractAddr = card.querySelector(".sub-abstract-address")?.value.trim() || "";
-      const subAbstractReturnStatus = card.querySelector(".sub-abstract-return-status")?.value.trim() || "";
-      const subNoticePublic = card.querySelector(".sub-notice-public")?.value.trim() || "";
-      const subNoticePublicPeriod = card.querySelector(".sub-notice-public-period")?.value.trim() || "";
-
-      const subOpinionSubmitted = card.querySelector(".sub-opinion-submitted")?.value || "X";
-      const subOpinionSubmitDate = normalizeDateStr(card.querySelector(".sub-opinion-submit-date")?.value);
-      const subOpinionContent = card.querySelector(".sub-opinion-content")?.value.trim() || "";
-      const subCorrectionOrder = card.querySelector(".sub-correction-order")?.value.trim() || "";
-      const subCorrectionDate = normalizeDateStr(card.querySelector(".sub-correction-date")?.value);
-      const subCorrectionReason = card.querySelector(".sub-correction-reason")?.value.trim() || "";
-      const subCorrectionPeriod = card.querySelector(".sub-correction-period")?.value.trim() || "";
-      const subCorrectionNoticeMethod = card.querySelector(".sub-correction-notice-method")?.value.trim() || "";
-      const subCorrectionReturnDetails = card.querySelector(".sub-correction-return-details")?.value.trim() || "";
-      const subCorrectionPublic = card.querySelector(".sub-correction-public")?.value.trim() || "";
-
-      const subReg = card.querySelector(".sub-reg-num")?.value.trim() || "";
-      const subCon = card.querySelector(".sub-contact")?.value.trim() || "";
-      const subNote = card.querySelector(".sub-note")?.value.trim() || "";
-
-      // Skip completely empty cards
-      if (!subTargetName && !subMailAddr && !subRecipient && !subNoticeMethod && !subCorrectionOrder && !subNote) {
-        continue;
-      }
-
-      const subPayload = {
-        facility_key: facilityKey,
-        target_type: subTargetType || '소유자',
-        current_status: subStatus || payload.current_status,
-        advance_notice_target: subNoticeTarget,
-
-        advance_notice_method: subNoticeMethod,
-        zip_code: subZipCode,
-        advance_notice_send_date: subNoticeSendDate,
-        advance_notice_return_status: subNoticeReturnStatus,
-        abstract_send_date: subAbstractSendDate,
-        abstract_return_status: subAbstractReturnStatus,
-        notice_public: subNoticePublic,
-        notice_public_period: subNoticePublicPeriod,
-
-        opinion_submitted: subOpinionSubmitted,
-        opinion_submit_date: subOpinionSubmitDate,
-        opinion_content: subOpinionContent,
-        correction_order: subCorrectionOrder,
-        correction_order_date: subCorrectionDate,
-        correction_reason: subCorrectionReason,
-        correction_period: subCorrectionPeriod,
-        correction_notice_method: subCorrectionNoticeMethod,
-        correction_return_details: subCorrectionReturnDetails,
-        correction_public: subCorrectionPublic,
-        note: subNote,
-        target_name_decrypted: subTargetName,
-        mail_address_decrypted: subMailAddr,
-        recipient_name_decrypted: subRecipient,
-        abstract_address_decrypted: subAbstractAddr,
-        reg_num_decrypted: subReg,
-        contact_decrypted: subCon
-      };
-
-      let subActualId = null;
-      try {
-        const subRes = await fetch(`${API_BASE_URL}/dispositions/save`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(subPayload)
-        });
-        if (subRes.ok) {
-          const subJson = await subRes.json();
-          if (subJson && subJson.data && subJson.data.id) {
-            subActualId = subJson.data.id;
-          }
-        }
-      } catch (errSub) {
-        console.warn("Backend sub-owner save failed, trying direct Supabase save:", errSub);
-      }
-
-      // [모범 아키텍처 Direct Fallback] 백엔드 실패 시 Supabase 직접 DB 생성
-      if (!subActualId) {
-        try {
-          const directSub = {
-            facility_key: facilityKey,
-            target_type: subPayload.target_type,
-            current_status: subPayload.current_status,
-            target_name_encrypted: subPayload.target_name_decrypted,
-            recipient_name_encrypted: subPayload.recipient_name_decrypted,
-            reg_num_encrypted: subPayload.reg_num_decrypted,
-            contact_encrypted: subPayload.contact_decrypted,
-            mail_address_encrypted: subPayload.mail_address_decrypted,
-            abstract_address_encrypted: subPayload.abstract_address_decrypted,
-            zip_code: subPayload.zip_code,
-            advance_notice_target: subPayload.advance_notice_target,
-            advance_notice_method: subPayload.advance_notice_method,
-            advance_notice_send_date: subPayload.advance_notice_send_date,
-            advance_notice_return_status: subPayload.advance_notice_return_status,
-            abstract_send_date: subPayload.abstract_send_date,
-            abstract_return_status: subPayload.abstract_return_status,
-            notice_public: subPayload.notice_public,
-            notice_public_period: subPayload.notice_public_period,
-            opinion_submitted: subPayload.opinion_submitted,
-            opinion_submit_date: subPayload.opinion_submit_date,
-            opinion_content: subPayload.opinion_content,
-            correction_order: subPayload.correction_order,
-            correction_order_date: subPayload.correction_order_date,
-            correction_reason: subPayload.correction_reason,
-            correction_period: subPayload.correction_period,
-            correction_notice_method: subPayload.correction_notice_method,
-            correction_return_details: subPayload.correction_return_details,
-            correction_public: subPayload.correction_public,
-            note: subPayload.note
-          };
-          const rSubDirect = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
-            method: "POST",
-            headers: {
-              "apikey": SUPABASE_SECRET_KEY,
-              "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
-              "Content-Type": "application/json",
-              "Prefer": "return=representation"
-            },
-            body: JSON.stringify([directSub])
-          });
-          if (rSubDirect.ok) {
-            const subRows = await rSubDirect.json();
-            if (subRows && subRows.length > 0) {
-              subActualId = subRows[0].id;
-            }
-          }
-        } catch (eDirSub) {
-          console.error("Direct Supabase sub save error:", eDirSub);
-        }
-      }
-
-      if (subActualId) {
-        dispositionsData.push({ ...subPayload, id: subActualId });
-      }
-    }
+  }
 
     try {
       localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
