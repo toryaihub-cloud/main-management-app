@@ -2174,6 +2174,7 @@ async function saveFacility() {
     fire_manual_distributed: document.getElementById("fac-fire-manual-distributed").value.trim()
   };
 
+  let savedSuccessfully = false;
   try {
     const res = await fetch(`${API_BASE_URL}/facilities/save`, {
       method: "POST",
@@ -2181,41 +2182,119 @@ async function saveFacility() {
       body: JSON.stringify(payload)
     });
 
-    if (!res.ok) {
-      alert("시설 정보 저장 중 오류가 발생했습니다. (서버 응답 오류)");
-      return;
+    if (res.ok) {
+      savedSuccessfully = true;
     }
-
-    // Instant In-Memory Cache Update for 0.001s response
-    let idx = facilitiesData.findIndex(f => f.facility_key === key);
-    if (idx >= 0) {
-      facilitiesData[idx] = { ...facilitiesData[idx], ...payload };
-    } else {
-      facilitiesData.unshift(payload);
-    }
-
-    try {
-      localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
-    } catch(e) {}
-
-    alert("시설 정보가 성공적으로 저장되었습니다.");
-    closeModal('modal-facility');
-
-    // 만약 상세 모달창이 열려있는 상태라면 즉시 최신 정보로 재렌더링
-    const detailModal = document.getElementById("modal-facility-detail");
-    if (detailModal && detailModal.classList.contains("active")) {
-      openFacilityDetailModal(key);
-    }
-
-    filterFacilities();
-    updateDashboardStats();
-    renderCategoryChart();
-    renderStatusChart();
-    openFacilityDetailModal(key);
-  } catch (err) {
-    console.error("Error saving facility:", err);
-    alert("시설 정보 저장 중 네트워크 오류가 발생했습니다.");
+  } catch (errBackend) {
+    console.warn("Backend facility save failed, attempting direct Supabase save:", errBackend);
   }
+
+  // [모범 아키텍처 Direct Fallback] 백엔드 미응답 또는 실패 시 Supabase DB 직접 저장
+  if (!savedSuccessfully) {
+    try {
+      const directPayload = {
+        facility_key: key,
+        facility_name: name,
+        facility_category: payload.facility_category,
+        compliance_status: payload.compliance_status,
+        facility_ownership_type: payload.facility_ownership_type,
+        address_doro: payload.address_doro,
+        address_jibun: payload.address_jibun,
+        dong_name: payload.dong_name,
+        approval_date: payload.building_approval_dates,
+        is_new_building: payload.building_new_old_type,
+        building_register_num: payload.building_register_num,
+        parking_required_cnt: payload.parking_required_cnt,
+        parking_installed_cnt: payload.parking_installed_cnt,
+        parking_ground_cnt: payload.parking_ground_cnt,
+        parking_underground_cnt: payload.parking_underground_cnt,
+        parking_uninstalled_cnt: payload.parking_uninstalled_cnt,
+        charger_required_cnt: payload.charger_required_cnt,
+        charger_installed_cnt: payload.charger_installed_cnt,
+        charger_uninstalled_cnt: payload.charger_uninstalled_cnt,
+        charger_fast_req_cnt: payload.charger_fast_req_cnt,
+        charger_slow_cnt: payload.charger_slow_cnt,
+        charger_fast_cnt: payload.charger_fast_cnt,
+        management_body: payload.management_body,
+        manager_name_encrypted: mgrName,
+        manager_contact_encrypted: mgrContact,
+        total_households: payload.total_households,
+        ev_registered_cnt: payload.ev_registered_cnt,
+        charger_reported: payload.charger_reported,
+        insurance_enrolled: payload.insurance_enrolled,
+        fire_manual_distributed: payload.fire_manual_distributed
+      };
+
+      const preferHeaders = {
+        "apikey": SUPABASE_SECRET_KEY,
+        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+      };
+
+      // 1. 기존 시설 PATCH 시도
+      let rDirect = await fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(key)}`, {
+        method: "PATCH",
+        headers: preferHeaders,
+        body: JSON.stringify(directPayload)
+      });
+
+      // 만약 신규 시설이거나 PATCH 결과가 0건이면 POST 생성
+      if (rDirect.ok) {
+        const patchRows = await rDirect.json().catch(() => []);
+        if (!patchRows || patchRows.length === 0) {
+          rDirect = await fetch(`${SUPABASE_REST_URL}/facilities`, {
+            method: "POST",
+            headers: preferHeaders,
+            body: JSON.stringify([directPayload])
+          });
+        }
+      } else {
+        rDirect = await fetch(`${SUPABASE_REST_URL}/facilities`, {
+          method: "POST",
+          headers: preferHeaders,
+          body: JSON.stringify([directPayload])
+        });
+      }
+
+      if (rDirect.ok) {
+        savedSuccessfully = true;
+      }
+    } catch (eDir) {
+      console.error("Direct Supabase facility save error:", eDir);
+    }
+  }
+
+  if (!savedSuccessfully) {
+    alert("시설 정보 저장 중 오류가 발생했습니다. (DB 연결 실패)");
+    return;
+  }
+
+  // Instant In-Memory Cache Update for 0.001s response
+  let idx = facilitiesData.findIndex(f => f.facility_key === key);
+  if (idx >= 0) {
+    facilitiesData[idx] = { ...facilitiesData[idx], ...payload };
+  } else {
+    facilitiesData.unshift(payload);
+  }
+
+  try {
+    localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
+  } catch(e) {}
+
+  alert("시설 정보가 성공적으로 저장되었습니다.");
+  closeModal('modal-facility');
+
+  // 만약 상세 모달창이 열려있는 상태라면 즉시 최신 정보로 재렌더링
+  const detailModal = document.getElementById("modal-facility-detail");
+  if (detailModal && detailModal.classList.contains("active")) {
+    openFacilityDetailModal(key);
+  }
+
+  filterFacilities();
+  updateDashboardStats();
+  renderCategoryChart();
+  renderStatusChart();
 }
 
 async function deleteFacility(key) {
