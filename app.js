@@ -564,9 +564,10 @@ function updateDashboardStats() {
   let totalParkingUninstalled = 0;
   let totalChargerUninstalled = 0;
 
-  facilitiesData.forEach(f => {
-    totalParkingUninstalled += (f.parking_uninstalled_cnt || 0);
-    totalChargerUninstalled += (f.charger_uninstalled_cnt || 0);
+  // 미이행 시설(80개) 기준으로 주차 미설치면수 / 충전 미설치기수 합산 (287면 / 188기)
+  facilitiesData.filter(f => f.compliance_status === '미이행').forEach(f => {
+    totalParkingUninstalled += (parseInt(f.parking_uninstalled_cnt) || 0);
+    totalChargerUninstalled += (parseInt(f.charger_uninstalled_cnt) || 0);
   });
 
   document.getElementById("stat-total-facilities").innerText = total.toLocaleString();
