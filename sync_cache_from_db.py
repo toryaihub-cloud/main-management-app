@@ -18,7 +18,7 @@ if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
 from crypto_utils import decrypt_data
-from crypto_server import process_facility_item, process_disposition_item
+from crypto_server import process_facility_item, process_disposition_item, merge_facility_extra_fields
 
 SUPABASE_URL = 'https://vijiacxcmtfekbmegjlf.supabase.co'
 SECRET_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpamlhY3hjbXRmZWtibWVnamxmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTgyMzgyNiwiZXhwIjoyMTAxMzk5ODI2fQ.Noa3eCRZLGLp67fRYu4ZlsFC4_d2X1C7KxQ_g2_zP00'
@@ -61,12 +61,8 @@ def sync():
                 k = raw_item.get('facility_key')
                 old_item = old_fac_map.get(k, {})
                 
-                # 기존 캐시에 저장되어 있던 완속/급속 수치 보존
-                for field in ['charger_fast_req_cnt', 'charger_fast_cnt', 'charger_slow_cnt']:
-                    if field not in raw_item or raw_item[field] is None:
-                        if field in old_item and old_item[field] is not None:
-                            raw_item[field] = old_item[field]
-
+                # 기존 캐시에 저장되어 있던 완속/급속 및 부가 운영 필드 보존
+                raw_item = merge_facility_extra_fields(raw_item, old_item)
                 item = process_facility_item(raw_item)
                 
                 # K0107 농협은행 광주영업본부 특별 보정 (사용자 요청: 완속 2기 / 급속 2기)

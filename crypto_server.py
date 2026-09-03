@@ -362,6 +362,24 @@ def process_facility_item(item):
 
     return item
 
+FACILITY_EXTRA_FIELDS = [
+    "parking_installed_cnt", "charger_installed_cnt",
+    "charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt",
+    "total_households", "ev_registered_cnt", "charger_reported",
+    "insurance_enrolled", "parallel_parking_status", "parallel_parking_cnt",
+    "fire_manual_distributed", "covenant", "general_mixed",
+    "final_conclusion", "job_parking_cnt", "order_addr", "surveys"
+]
+
+def merge_facility_extra_fields(db_item, cached_item):
+    if not cached_item:
+        return db_item
+    for field in FACILITY_EXTRA_FIELDS:
+        if field not in db_item or db_item[field] is None:
+            if field in cached_item and cached_item[field] is not None:
+                db_item[field] = cached_item[field]
+    return db_item
+
 def process_disposition_item(item):
     if not item: return item
     notes = load_notes()
@@ -560,7 +578,20 @@ def init_server_cache():
             if res.status_code == 200:
                 data = res.json()
                 if data and len(data) > 0:
-                    processed = [process_facility_item(item) for item in data]
+                    existing_map = {}
+                    if os.path.exists(LOCAL_FACILITIES_FILE):
+                        try:
+                            with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as lf:
+                                existing_map = {f.get("facility_key"): f for f in json.load(lf)}
+                        except Exception: pass
+
+                    processed = []
+                    for item in data:
+                        k = item.get("facility_key")
+                        old = existing_map.get(k, {})
+                        item = merge_facility_extra_fields(item, old)
+                        processed.append(process_facility_item(item))
+
                     FACILITIES_CACHE["data"] = processed
                     try:
                         with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
@@ -640,13 +671,8 @@ def get_cached_facilities():
                     for item in data:
                         k = item.get("facility_key")
                         old = existing_map.get(k, {})
-                        # DB에 없는 완속/급속 수치 보존
-                        for col in ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt"]:
-                            if col not in item or item[col] is None:
-                                if col in old and old[col] is not None:
-                                    item[col] = old[col]
-                        p_item = process_facility_item(item)
-                        processed.append(p_item)
+                        item = merge_facility_extra_fields(item, old)
+                        processed.append(process_facility_item(item))
 
                     processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
                     FACILITIES_CACHE["data"] = processed
