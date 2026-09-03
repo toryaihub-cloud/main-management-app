@@ -533,23 +533,74 @@ def init_photo_cache():
 def init_server_cache():
     global FACILITIES_CACHE, DISPOSITIONS_CACHE
     init_photo_cache()
-    if os.path.exists(LOCAL_FACILITIES_FILE):
-        try:
-            with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as f:
-                raw_data = json.load(f)
-                processed = [process_facility_item(item) for item in raw_data]
-                FACILITIES_CACHE["data"] = processed
-                print(f"Preloaded facilities cache ({len(processed)} records)")
-        except Exception as e: print("Preload facilities error:", e)
 
-    if os.path.exists(LOCAL_DISPOSITIONS_FILE):
+    # ★ 핵심 수정: 서버 시작 시 Supabase DB에서 최신 데이터를 가져와 캐시 초기화
+    # Git에 커밋된 정적 JSON 파일은 배포 시점의 과거 데이터이므로,
+    # DB를 우선 조회하여 배포 직후에도 항상 최신 데이터를 제공하도록 합니다.
+    db_facilities_loaded = False
+    db_dispositions_loaded = False
+
+    if SUPABASE_URL and SECRET_KEY:
+        req_headers = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
+
+        # Facilities DB 조회
         try:
-            with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as f:
-                raw_disps = json.load(f)
-                processed_disps = [process_disposition_item(item) for item in raw_disps]
-                DISPOSITIONS_CACHE["data"] = processed_disps
-                print(f"Preloaded dispositions cache ({len(processed_disps)} records)")
-        except Exception as e: print("Preload dispositions error:", e)
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?select=*&order=facility_key.asc", headers=req_headers, timeout=15)
+            if res.status_code == 200:
+                data = res.json()
+                if data and len(data) > 0:
+                    processed = [process_facility_item(item) for item in data]
+                    FACILITIES_CACHE["data"] = processed
+                    try:
+                        with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
+                            json.dump(processed, f, ensure_ascii=False, indent=2)
+                    except Exception:
+                        pass
+                    db_facilities_loaded = True
+                    print(f"[STARTUP] Loaded facilities from Supabase DB ({len(processed)} records)")
+        except Exception as e:
+            print(f"[STARTUP] Supabase facilities fetch failed: {e}")
+
+        # Dispositions DB 조회
+        try:
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/dispositions?select=*&order=id.asc", headers=req_headers, timeout=15)
+            if res.status_code == 200:
+                data = res.json()
+                if data and len(data) > 0:
+                    processed_disps = [process_disposition_item(item) for item in data]
+                    DISPOSITIONS_CACHE["data"] = processed_disps
+                    try:
+                        with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:
+                            json.dump(processed_disps, f, ensure_ascii=False, indent=2)
+                    except Exception:
+                        pass
+                    db_dispositions_loaded = True
+                    print(f"[STARTUP] Loaded dispositions from Supabase DB ({len(processed_disps)} records)")
+        except Exception as e:
+            print(f"[STARTUP] Supabase dispositions fetch failed: {e}")
+
+    # DB 조회 실패 시에만 로컬 파일 Fallback (Git 커밋된 정적 파일)
+    if not db_facilities_loaded:
+        if os.path.exists(LOCAL_FACILITIES_FILE):
+            try:
+                with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as f:
+                    raw_data = json.load(f)
+                    processed = [process_facility_item(item) for item in raw_data]
+                    FACILITIES_CACHE["data"] = processed
+                    print(f"[STARTUP FALLBACK] Loaded facilities from local file ({len(processed)} records)")
+            except Exception as e:
+                print("Preload facilities error:", e)
+
+    if not db_dispositions_loaded:
+        if os.path.exists(LOCAL_DISPOSITIONS_FILE):
+            try:
+                with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as f:
+                    raw_disps = json.load(f)
+                    processed_disps = [process_disposition_item(item) for item in raw_disps]
+                    DISPOSITIONS_CACHE["data"] = processed_disps
+                    print(f"[STARTUP FALLBACK] Loaded dispositions from local file ({len(processed_disps)} records)")
+            except Exception as e:
+                print("Preload dispositions error:", e)
 
 init_server_cache()
 

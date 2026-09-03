@@ -318,7 +318,7 @@ function normalizeDateStr(val) {
   return val.length >= 10 ? val.substring(0, 10) : null;
 }
 
-async function fetchWithRetry(url, options = {}, retries = 3, delayMs = 3000) {
+async function fetchWithRetry(url, options = {}, retries = 5, delayMs = 5000) {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await fetch(url, options);
@@ -327,7 +327,7 @@ async function fetchWithRetry(url, options = {}, retries = 3, delayMs = 3000) {
       return res;
     } catch (err) {
       if (i === retries - 1) throw err;
-      console.warn(`[Cold Start Wait] ${url} fetch failed, retrying in ${delayMs}ms... (Attempt ${i+1}/${retries})`);
+      console.warn(`[Cold Start Wait] ${url} retry ${i+1}/${retries}, waiting ${delayMs}ms...`);
       await new Promise(resolve => setTimeout(resolve, delayMs));
     }
   }
