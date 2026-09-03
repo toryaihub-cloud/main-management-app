@@ -349,6 +349,17 @@ def process_facility_item(item):
     if "charger_installed_cnt" not in item or item["charger_installed_cnt"] is None:
         item["charger_installed_cnt"] = max(0, req_c - un_c)
 
+    # Ensure charger fast/slow counts are numeric or default to 0
+    if "charger_fast_req_cnt" in item and item["charger_fast_req_cnt"] is not None:
+        try: item["charger_fast_req_cnt"] = int(item["charger_fast_req_cnt"])
+        except (ValueError, TypeError): item["charger_fast_req_cnt"] = 0
+    if "charger_fast_cnt" in item and item["charger_fast_cnt"] is not None:
+        try: item["charger_fast_cnt"] = int(item["charger_fast_cnt"])
+        except (ValueError, TypeError): item["charger_fast_cnt"] = 0
+    if "charger_slow_cnt" in item and item["charger_slow_cnt"] is not None:
+        try: item["charger_slow_cnt"] = int(item["charger_slow_cnt"])
+        except (ValueError, TypeError): item["charger_slow_cnt"] = 0
+
     return item
 
 def process_disposition_item(item):
@@ -615,7 +626,28 @@ def get_cached_facilities():
             if res.status_code == 200:
                 data = res.json()
                 if data and len(data) > 0:
-                    processed = [process_facility_item(item) for item in data]
+                    # 기존 캐시에 있는 상세 필드 매핑 생성
+                    existing_map = {}
+                    if FACILITIES_CACHE.get("data"):
+                        existing_map = {f.get("facility_key"): f for f in FACILITIES_CACHE["data"]}
+                    elif os.path.exists(LOCAL_FACILITIES_FILE):
+                        try:
+                            with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as lf:
+                                existing_map = {f.get("facility_key"): f for f in json.load(lf)}
+                        except Exception: pass
+
+                    processed = []
+                    for item in data:
+                        k = item.get("facility_key")
+                        old = existing_map.get(k, {})
+                        # DB에 없는 완속/급속 수치 보존
+                        for col in ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt"]:
+                            if col not in item or item[col] is None:
+                                if col in old and old[col] is not None:
+                                    item[col] = old[col]
+                        p_item = process_facility_item(item)
+                        processed.append(p_item)
+
                     processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
                     FACILITIES_CACHE["data"] = processed
                     try:
@@ -649,7 +681,26 @@ def get_cached_dispositions():
             if res.status_code == 200:
                 data = res.json()
                 if data and len(data) > 0:
-                    processed = [process_disposition_item(item) for item in data]
+                    existing_disp_map = {}
+                    if DISPOSITIONS_CACHE.get("data"):
+                        existing_disp_map = {str(d.get("id")): d for d in DISPOSITIONS_CACHE["data"]}
+                    elif os.path.exists(LOCAL_DISPOSITIONS_FILE):
+                        try:
+                            with open(LOCAL_DISPOSITIONS_FILE, "r", encoding="utf-8") as ld:
+                                existing_disp_map = {str(d.get("id")): d for d in json.load(ld)}
+                        except Exception: pass
+
+                    processed = []
+                    for item in data:
+                        did = str(item.get("id"))
+                        old = existing_disp_map.get(did, {})
+                        p_item = process_disposition_item(item)
+                        # 복호화 필드가 비어있을 경우 기존 캐시 값 보존
+                        for dec_col in ["target_name_decrypted", "recipient_name_decrypted", "mail_address_decrypted", "abstract_address_decrypted", "reg_num_decrypted", "contact_decrypted"]:
+                            if not p_item.get(dec_col) and old.get(dec_col):
+                                p_item[dec_col] = old[dec_col]
+                        processed.append(p_item)
+
                     processed = [d for d in processed if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
                     DISPOSITIONS_CACHE["data"] = processed
                     try:
@@ -1139,7 +1190,8 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "charger_required_cnt", "charger_uninstalled_cnt", "charger_status",
                 "investigation_status", "management_body",
                 "manager_name_encrypted", "manager_contact_encrypted",
-                "parking_ground_cnt", "parking_underground_cnt"
+                "parking_ground_cnt", "parking_underground_cnt",
+                "charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt"
             }
             db_payload = {}
             for k, v in req_json.items():
@@ -1181,6 +1233,11 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 prefer_headers = {**HEADERS, "Prefer": "return=representation"}
                 res = requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{fac_key}", headers=prefer_headers, json=db_payload, timeout=5)
                 print(f"Supabase facilities PATCH status={res.status_code} key={fac_key}")
+                # 만약 새 컬럼 때문에 400 에러가 난다면, 새 컬럼을 제외하고 재시도
+                if res.status_code == 400 and any(k in db_payload for k in ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt"]):
+                    safe_payload = {k: v for k, v in db_payload.items() if k not in ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt"]}
+                    res = requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{fac_key}", headers=prefer_headers, json=safe_payload, timeout=5)
+                    print(f"Supabase facilities PATCH fallback status={res.status_code} key={fac_key}")
                 if res.status_code not in [200, 201, 204] or (res.content and len(json.loads(res.content.decode('utf-8'))) == 0):
                     res2 = requests.post(f"{SUPABASE_URL}/rest/v1/facilities", headers=prefer_headers, json=[db_payload], timeout=5)
                     print(f"Supabase facilities POST status={res2.status_code} key={fac_key}")
