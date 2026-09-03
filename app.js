@@ -2635,8 +2635,9 @@ function editDisposition(id) {
 }
 
 async function saveDisposition() {
-  const id = document.getElementById("disp-id").value;
-  const facilityKey = document.getElementById("disp-facility-key").value.trim();
+  try {
+    const id = document.getElementById("disp-id").value;
+    const facilityKey = document.getElementById("disp-facility-key").value.trim();
   if (!facilityKey) { alert("시설 KEY는 필수입니다."); return; }
 
   const targetName = document.getElementById("disp-target-name").value.trim();

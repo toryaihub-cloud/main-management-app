@@ -37,9 +37,24 @@ def run_tests():
     all_passed = True
 
     # -------------------------------------------------------------
+    # TEST 0: 프론트엔드 JavaScript (app.js) 문법 구문 검사
+    # -------------------------------------------------------------
+    log("TEST 0: 프론트엔드 app.js 자바스크립트 문법(Syntax) 검증 중...")
+    try:
+        import subprocess
+        res_node = subprocess.run(["node", "-c", "app.js"], capture_output=True, text=True)
+        if res_node.returncode == 0:
+            log("app.js 자바스크립트 구문 문법 검사 통과 (오류 없음)", True)
+        else:
+            log(f"app.js 자바스크립트 SyntaxError 감지: {res_node.stderr.strip()}", False)
+            all_passed = False
+    except Exception as e:
+        log(f"Node.js 구문 검사 실행 중 예외 (Node 미설치 등): {e}", True)
+
+    # -------------------------------------------------------------
     # TEST 1: Supabase DB 연결 및 RLS 통신 테스트
     # -------------------------------------------------------------
-    log("TEST 1: Supabase DB 연결 및 엔드포인트 응답 검증 중...")
+    log("\nTEST 1: Supabase DB 연결 및 엔드포인트 응답 검증 중...")
     try:
         t0 = time.time()
         r = requests.get(f"{SUPABASE_URL}/rest/v1/facilities?limit=1", headers=HEADERS, timeout=5)
