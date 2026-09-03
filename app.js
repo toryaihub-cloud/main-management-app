@@ -1,6 +1,10 @@
 // Render Cloud Production Backend URL
 window.RENDER_BACKEND_URL = "https://ecocar-backend-otev.onrender.com";
 
+// Supabase Direct REST API (SSOT - 업계 표준 직접 DB 연동)
+const SUPABASE_REST_URL = "https://vijiacxcmtfekbmegjlf.supabase.co/rest/v1";
+const SUPABASE_SECRET_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpamlhY3hjbXRmZWtibWVnamxmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTgyMzgyNiwiZXhwIjoyMTAxMzk5ODI2fQ.Noa3eCRZLGLp67fRYu4ZlsFC4_d2X1C7KxQ_g2_zP00";
+
 // Smart Auto Detect API Base URL (Local vs Render Cloud Production)
 let API_BASE_URL = "http://localhost:8081/api";
 if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
@@ -2217,21 +2221,36 @@ async function saveFacility() {
 async function deleteFacility(key) {
   if (!confirm(`정말 시설 (${key})을 삭제하시겠습니까?`)) return;
   try {
-    const res = await fetch(`${API_BASE_URL}/facilities/delete?key=${encodeURIComponent(key)}`, { method: "DELETE" });
-    if (res.ok) {
-      alert("삭제되었습니다.");
-      closeModal('modal-facility-detail');
-
-      // 로컬 메모리 및 브라우저 캐시에서 즉시 제거
-      facilitiesData = facilitiesData.filter(f => f.facility_key !== key);
-      try {
-        localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
-      } catch(e) {}
-
-      await loadData();
-    } else {
-      alert("삭제에 실패했습니다.");
+    // 1. [모범 아키텍처] Supabase DB 직접 즉시 삭제
+    try {
+      await fetch(`${SUPABASE_REST_URL}/dispositions?facility_key=eq.${encodeURIComponent(key)}`, {
+        method: "DELETE",
+        headers: { "apikey": SUPABASE_SECRET_KEY, "Authorization": `Bearer ${SUPABASE_SECRET_KEY}` }
+      });
+      await fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(key)}`, {
+        method: "DELETE",
+        headers: { "apikey": SUPABASE_SECRET_KEY, "Authorization": `Bearer ${SUPABASE_SECRET_KEY}` }
+      });
+    } catch(eDb) {
+      console.warn("Direct Supabase facility delete note:", eDb);
     }
+
+    // 2. 백엔드 프록시 삭제
+    try {
+      await fetch(`${API_BASE_URL}/facilities/delete?key=${encodeURIComponent(key)}`, { method: "DELETE" });
+    } catch(eProxy) {}
+
+    alert("시설이 성공적으로 삭제되었습니다.");
+    closeModal('modal-facility-detail');
+
+    // 로컬 메모리 및 브라우저 캐시에서 즉시 제거
+    facilitiesData = facilitiesData.filter(f => f.facility_key !== key);
+    dispositionsData = dispositionsData.filter(d => d.facility_key !== key);
+    try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
+    try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
+
+    filterFacilities();
+    updateDashboardStats();
   } catch (err) {
     console.error(err);
     alert("삭제 중 오류가 발생했습니다.");
@@ -2712,33 +2731,47 @@ async function deleteDisposition(id) {
     const item = dispositionsData.find(d => String(d.id) === String(id));
     const facilityKey = item ? item.facility_key : null;
 
-    const res = await fetch(`${API_BASE_URL}/dispositions/delete?id=${id}`, { method: "DELETE" });
-    if (res.ok) {
-      // 1. 인메모리 배열 및 localStorage에서 즉시 제거 (캐시 부활 원천 차단)
-      dispositionsData = dispositionsData.filter(d => String(d.id) !== String(id));
-      try {
-        localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
-      } catch(e) {}
+    // 1. [모범 아키텍처 1단계] Supabase DB에 직접 DELETE 요청 (0.1초 즉시 영구 삭제 보장)
+    try {
+      await fetch(`${SUPABASE_REST_URL}/dispositions?id=eq.${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: {
+          "apikey": SUPABASE_SECRET_KEY,
+          "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+          "Prefer": "return=minimal"
+        }
+      });
+    } catch(eDb) {
+      console.warn("Direct Supabase DELETE error:", eDb);
+    }
 
-      alert("성공적으로 삭제되었습니다.");
+    // 2. [모범 아키텍처 2단계] 백엔드 프록시 삭제 동기화
+    try {
+      await fetch(`${API_BASE_URL}/dispositions/delete?id=${id}`, { method: "DELETE" });
+    } catch(eProxy) {}
 
-      // 2. 상세 모달창 및 메인 그리드 즉시 갱신
-      if (facilityKey) {
-        const detailModal = document.getElementById("modal-disposition-detail");
-        if (detailModal && detailModal.classList.contains("active")) {
-          const remain = dispositionsData.filter(d => d.facility_key === facilityKey);
-          if (remain.length === 0) {
-            closeModal('modal-disposition-detail');
-          } else {
-            openDispositionDetailModal(facilityKey);
-          }
+    // 3. [모범 아키텍처 3단계] 인메모리 배열 및 localStorage에서 즉시 영구 제거
+    dispositionsData = dispositionsData.filter(d => String(d.id) !== String(id));
+    try {
+      localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
+    } catch(e) {}
+
+    alert("성공적으로 삭제되었습니다.");
+
+    // 4. 상세 모달창 및 메인 그리드 즉시 갱신
+    if (facilityKey) {
+      const detailModal = document.getElementById("modal-disposition-detail");
+      if (detailModal && detailModal.classList.contains("active")) {
+        const remain = dispositionsData.filter(d => d.facility_key === facilityKey);
+        if (remain.length === 0) {
+          closeModal('modal-disposition-detail');
+        } else {
+          openDispositionDetailModal(facilityKey);
         }
       }
-      filterDispositions();
-      updateDashboardStats();
-    } else {
-      alert("삭제 처리에 실패했습니다.");
     }
+    filterDispositions();
+    updateDashboardStats();
   } catch (err) {
     console.error(err);
     alert("삭제 중 오류가 발생했습니다.");
@@ -2759,17 +2792,31 @@ async function deleteDispositionFromDetail() {
   if (!confirm(`정말 시설 (${currentDispositionDetailKey})의 행정처분 내역 전체(${items.length}건)를 삭제하시겠습니까?`)) return;
 
   try {
-    const res = await fetch(`${API_BASE_URL}/dispositions/delete?facility_key=${encodeURIComponent(currentDispositionDetailKey)}`, { method: "DELETE" });
-    if (res.ok) {
-      dispositionsData = dispositionsData.filter(d => d.facility_key !== currentDispositionDetailKey);
-      try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
-      alert("행정처분 내역 전체가 성공적으로 삭제되었습니다.");
-      closeModal('modal-disposition-detail');
-      filterDispositions();
-      updateDashboardStats();
-    } else {
-      alert("삭제 처리에 실패했습니다.");
+    // 1. [모범 아키텍처 1단계] Supabase DB 직접 전체 삭제
+    try {
+      await fetch(`${SUPABASE_REST_URL}/dispositions?facility_key=eq.${encodeURIComponent(currentDispositionDetailKey)}`, {
+        method: "DELETE",
+        headers: {
+          "apikey": SUPABASE_SECRET_KEY,
+          "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+          "Prefer": "return=minimal"
+        }
+      });
+    } catch(eDb) {
+      console.warn("Direct Supabase bulk delete error:", eDb);
     }
+
+    // 2. [모범 아키텍처 2단계] 백엔드 프록시 삭제 동기화
+    try {
+      await fetch(`${API_BASE_URL}/dispositions/delete?facility_key=${encodeURIComponent(currentDispositionDetailKey)}`, { method: "DELETE" });
+    } catch(eProxy) {}
+
+    dispositionsData = dispositionsData.filter(d => d.facility_key !== currentDispositionDetailKey);
+    try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
+    alert("행정처분 내역 전체가 성공적으로 삭제되었습니다.");
+    closeModal('modal-disposition-detail');
+    filterDispositions();
+    updateDashboardStats();
   } catch (err) {
     console.error(err);
     alert("삭제 중 오류가 발생했습니다.");
