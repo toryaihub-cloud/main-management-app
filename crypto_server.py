@@ -296,6 +296,26 @@ DELETED_DISPOSITION_IDS = set()
 
 def load_deleted_keys():
     global DELETED_FACILITY_KEYS, DELETED_DISPOSITION_IDS
+    # 1. Supabase DB에서 영구 삭제 목록 먼저 조회
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.deleted_keys", headers=HEADERS, timeout=3)
+            if res.status_code == 200:
+                data = res.json()
+                if data and len(data) > 0:
+                    val = data[0].get("value", {})
+                    if val:
+                        DELETED_FACILITY_KEYS = set(val.get("facilities", []))
+                        DELETED_DISPOSITION_IDS = set(str(x) for x in val.get("dispositions", []))
+                        try:
+                            with open(DELETED_KEYS_FILE, "w", encoding="utf-8") as f:
+                                json.dump({"facilities": list(DELETED_FACILITY_KEYS), "dispositions": list(DELETED_DISPOSITION_IDS)}, f, ensure_ascii=False, indent=2)
+                        except Exception: pass
+                        return
+        except Exception as e:
+            print("Supabase load deleted keys note:", e)
+
+    # 2. 로컬 파일 Fallback
     if os.path.exists(DELETED_KEYS_FILE):
         try:
             with open(DELETED_KEYS_FILE, "r", encoding="utf-8") as f:
@@ -305,14 +325,29 @@ def load_deleted_keys():
         except Exception: pass
 
 def save_deleted_keys():
+    payload = {
+        "facilities": list(DELETED_FACILITY_KEYS),
+        "dispositions": list(DELETED_DISPOSITION_IDS)
+    }
+    # 1. 로컬 파일 저장
     try:
         with open(DELETED_KEYS_FILE, "w", encoding="utf-8") as f:
-            json.dump({
-                "facilities": list(DELETED_FACILITY_KEYS),
-                "dispositions": list(DELETED_DISPOSITION_IDS)
-            }, f, ensure_ascii=False, indent=2)
+            json.dump(payload, f, ensure_ascii=False, indent=2)
     except Exception as e:
         print("Error saving deleted keys file:", e)
+
+    # 2. Supabase DB 영구 저장 (클라우드 재배포 시에도 영구 보존)
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            db_payload = {"key": "deleted_keys", "value": payload}
+            prefer_headers = {**HEADERS, "Prefer": "resolution=merge-duplicates"}
+            check_res = requests.get(f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.deleted_keys", headers=HEADERS, timeout=3)
+            if check_res.status_code == 200 and len(check_res.json()) > 0:
+                requests.patch(f"{SUPABASE_URL}/rest/v1/system_settings?key=eq.deleted_keys", headers=prefer_headers, json=db_payload, timeout=3)
+            else:
+                requests.post(f"{SUPABASE_URL}/rest/v1/system_settings", headers=prefer_headers, json=[db_payload], timeout=3)
+        except Exception as e:
+            print("Supabase save deleted keys error:", e)
 
 load_deleted_keys()
 
@@ -592,6 +627,7 @@ def init_server_cache():
                         item = merge_facility_extra_fields(item, old)
                         processed.append(process_facility_item(item))
 
+                    processed = [f for f in processed if f.get("facility_key") not in DELETED_FACILITY_KEYS]
                     FACILITIES_CACHE["data"] = processed
                     try:
                         with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as f:
@@ -610,6 +646,7 @@ def init_server_cache():
                 data = res.json()
                 if data and len(data) > 0:
                     processed_disps = [process_disposition_item(item) for item in data]
+                    processed_disps = [d for d in processed_disps if str(d.get("id")) not in DELETED_DISPOSITION_IDS and d.get("facility_key") not in DELETED_FACILITY_KEYS]
                     DISPOSITIONS_CACHE["data"] = processed_disps
                     try:
                         with open(LOCAL_DISPOSITIONS_FILE, "w", encoding="utf-8") as f:

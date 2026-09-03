@@ -1994,9 +1994,14 @@ function openDispositionDetailModal(key) {
           <div class="disp-sub-card" style="margin-bottom:1.25rem;">
             <div class="disp-sub-title" style="display:flex; justify-content:space-between; align-items:center;">
               <div>${targetTagHtml}</div>
-              <button class="btn btn-secondary" style="padding:0.25rem 0.65rem; font-size:0.75rem;" onclick="editDisposition('${d.id}')">
-                <i class="fa-solid fa-pen-to-square"></i> 레코드 수정
-              </button>
+              <div style="display:flex; gap:0.4rem; align-items:center;">
+                <button class="btn btn-secondary" style="padding:0.25rem 0.65rem; font-size:0.75rem;" onclick="editDisposition('${d.id}')">
+                  <i class="fa-solid fa-pen-to-square"></i> 레코드 수정
+                </button>
+                <button class="btn btn-danger" style="padding:0.25rem 0.65rem; font-size:0.75rem;" onclick="deleteDisposition('${d.id}')">
+                  <i class="fa-solid fa-trash"></i> 삭제
+                </button>
+              </div>
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; font-size: 0.85rem;">
@@ -2737,9 +2742,15 @@ async function deleteDisposition(id) {
 
     const res = await fetch(`${API_BASE_URL}/dispositions/delete?id=${id}`, { method: "DELETE" });
     if (res.ok) {
-      alert("삭제되었습니다.");
-      await loadData();
+      // 1. 인메모리 배열 및 localStorage에서 즉시 제거 (캐시 부활 원천 차단)
+      dispositionsData = dispositionsData.filter(d => String(d.id) !== String(id));
+      try {
+        localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
+      } catch(e) {}
 
+      alert("성공적으로 삭제되었습니다.");
+
+      // 2. 상세 모달창 및 메인 그리드 즉시 갱신
       if (facilityKey) {
         const detailModal = document.getElementById("modal-disposition-detail");
         if (detailModal && detailModal.classList.contains("active")) {
@@ -2751,6 +2762,8 @@ async function deleteDisposition(id) {
           }
         }
       }
+      filterDispositions();
+      updateDashboardStats();
     } else {
       alert("삭제 처리에 실패했습니다.");
     }
@@ -2776,9 +2789,12 @@ async function deleteDispositionFromDetail() {
   try {
     const res = await fetch(`${API_BASE_URL}/dispositions/delete?facility_key=${encodeURIComponent(currentDispositionDetailKey)}`, { method: "DELETE" });
     if (res.ok) {
+      dispositionsData = dispositionsData.filter(d => d.facility_key !== currentDispositionDetailKey);
+      try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
       alert("행정처분 내역 전체가 성공적으로 삭제되었습니다.");
       closeModal('modal-disposition-detail');
-      await loadData();
+      filterDispositions();
+      updateDashboardStats();
     } else {
       alert("삭제 처리에 실패했습니다.");
     }

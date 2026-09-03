@@ -18,7 +18,10 @@ if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
 from crypto_utils import decrypt_data
-from crypto_server import process_facility_item, process_disposition_item, merge_facility_extra_fields
+from crypto_server import (
+    process_facility_item, process_disposition_item, merge_facility_extra_fields,
+    load_deleted_keys, DELETED_FACILITY_KEYS, DELETED_DISPOSITION_IDS
+)
 
 SUPABASE_URL = 'https://vijiacxcmtfekbmegjlf.supabase.co'
 SECRET_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpamlhY3hjbXRmZWtibWVnamxmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTgyMzgyNiwiZXhwIjoyMTAxMzk5ODI2fQ.Noa3eCRZLGLp67fRYu4ZlsFC4_d2X1C7KxQ_g2_zP00'
@@ -29,6 +32,7 @@ HEADERS = {
 
 def sync():
     print("[sync] Supabase DB에서 최신 데이터를 가져와 캐시 파일을 동기화합니다...")
+    load_deleted_keys()
 
     # 기존 캐시 파일 로드 (DB에 없는 특수 필드 보존용)
     old_fac_map = {}
@@ -75,6 +79,7 @@ def sync():
 
                 processed_facilities.append(item)
 
+            processed_facilities = [f for f in processed_facilities if f.get('facility_key') not in DELETED_FACILITY_KEYS]
             with open('facilities_cache.json', 'w', encoding='utf-8') as f:
                 json.dump(processed_facilities, f, ensure_ascii=False, indent=2)
             print(f"[sync] facilities_cache.json 업데이트 완료 ({len(processed_facilities)}건 - 복호화 및 파생필드 완벽 반영)")
@@ -105,6 +110,7 @@ def sync():
 
                 processed_dispositions.append(item)
 
+            processed_dispositions = [d for d in processed_dispositions if str(d.get('id')) not in DELETED_DISPOSITION_IDS and d.get('facility_key') not in DELETED_FACILITY_KEYS]
             with open('dispositions_cache.json', 'w', encoding='utf-8') as f:
                 json.dump(processed_dispositions, f, ensure_ascii=False, indent=2)
             print(f"[sync] dispositions_cache.json 업데이트 완료 ({len(processed_dispositions)}건 - 복호화 필드 완벽 반영)")
