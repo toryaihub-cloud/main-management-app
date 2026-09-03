@@ -2158,10 +2158,20 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-management-body").value = item.management_body || "";
       if (item.manager_name_decrypted) document.getElementById("fac-manager-name").value = item.manager_name_decrypted;
       if (item.manager_contact_decrypted) document.getElementById("fac-manager-contact").value = item.manager_contact_decrypted;
+      document.getElementById("fac-total-households").value = (item.total_households !== undefined && item.total_households !== null) ? item.total_households : "";
+      document.getElementById("fac-ev-registered-cnt").value = (item.ev_registered_cnt !== undefined && item.ev_registered_cnt !== null) ? item.ev_registered_cnt : "";
+      document.getElementById("fac-charger-reported").value = item.charger_reported || "";
+      document.getElementById("fac-insurance-enrolled").value = item.insurance_enrolled || "";
+      document.getElementById("fac-fire-manual-distributed").value = item.fire_manual_distributed || "";
     }
   } else {
     document.getElementById("modal-facility-title").innerText = "신규 시설 등록";
     document.getElementById("fac-key").readOnly = false;
+    document.getElementById("fac-total-households").value = "";
+    document.getElementById("fac-ev-registered-cnt").value = "";
+    document.getElementById("fac-charger-reported").value = "";
+    document.getElementById("fac-insurance-enrolled").value = "";
+    document.getElementById("fac-fire-manual-distributed").value = "";
   }
   document.getElementById("modal-facility").classList.add("active");
 }
@@ -2171,7 +2181,7 @@ function editFacility(key) { openFacilityModal(key); }
 async function saveFacility() {
   const key = document.getElementById("fac-key").value.trim();
   const name = document.getElementById("fac-name").value.trim();
-  if (!key || !name) { alert("BU KEY와 시설명은 필수입니다."); return; }
+  if (!key || !name) { alert("KEY와 시설명은 필수입니다."); return; }
 
   const mgrName = document.getElementById("fac-manager-name").value.trim();
   const mgrContact = document.getElementById("fac-manager-contact").value.trim();
@@ -2201,7 +2211,12 @@ async function saveFacility() {
     charger_fast_cnt: parseInt(document.getElementById("fac-fast-cnt").value) || 0,
     management_body: document.getElementById("fac-management-body").value.trim(),
     manager_name_decrypted: mgrName,
-    manager_contact_decrypted: mgrContact
+    manager_contact_decrypted: mgrContact,
+    total_households: document.getElementById("fac-total-households").value ? parseInt(document.getElementById("fac-total-households").value) : null,
+    ev_registered_cnt: document.getElementById("fac-ev-registered-cnt").value ? parseInt(document.getElementById("fac-ev-registered-cnt").value) : null,
+    charger_reported: document.getElementById("fac-charger-reported").value.trim(),
+    insurance_enrolled: document.getElementById("fac-insurance-enrolled").value.trim(),
+    fire_manual_distributed: document.getElementById("fac-fire-manual-distributed").value.trim()
   };
 
   try {
@@ -2230,6 +2245,12 @@ async function saveFacility() {
 
     alert("시설 정보가 성공적으로 저장되었습니다.");
     closeModal('modal-facility');
+
+    // 만약 상세 모달창이 열려있는 상태라면 즉시 최신 정보로 재렌더링
+    const detailModal = document.getElementById("modal-facility-detail");
+    if (detailModal && detailModal.classList.contains("active")) {
+      openFacilityDetailModal(key);
+    }
 
     filterFacilities();
     updateDashboardStats();

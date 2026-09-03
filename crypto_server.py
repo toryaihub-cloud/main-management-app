@@ -1254,7 +1254,9 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "investigation_status", "management_body",
                 "manager_name_encrypted", "manager_contact_encrypted",
                 "parking_ground_cnt", "parking_underground_cnt",
-                "charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt"
+                "charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt",
+                "total_households", "ev_registered_cnt", "charger_reported",
+                "insurance_enrolled", "fire_manual_distributed"
             }
             db_payload = {}
             for k, v in req_json.items():
@@ -1297,8 +1299,9 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 res = requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{fac_key}", headers=prefer_headers, json=db_payload, timeout=5)
                 print(f"Supabase facilities PATCH status={res.status_code} key={fac_key}")
                 # 만약 새 컬럼 때문에 400 에러가 난다면, 새 컬럼을 제외하고 재시도
-                if res.status_code == 400 and any(k in db_payload for k in ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt"]):
-                    safe_payload = {k: v for k, v in db_payload.items() if k not in ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt"]}
+                OPTIONAL_COLS = ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt", "total_households", "ev_registered_cnt", "charger_reported", "insurance_enrolled", "fire_manual_distributed"]
+                if res.status_code == 400 and any(k in db_payload for k in OPTIONAL_COLS):
+                    safe_payload = {k: v for k, v in db_payload.items() if k not in OPTIONAL_COLS}
                     res = requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{fac_key}", headers=prefer_headers, json=safe_payload, timeout=5)
                     print(f"Supabase facilities PATCH fallback status={res.status_code} key={fac_key}")
                 if res.status_code not in [200, 201, 204] or (res.content and len(json.loads(res.content.decode('utf-8'))) == 0):
