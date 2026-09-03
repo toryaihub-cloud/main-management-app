@@ -1445,15 +1445,29 @@ function renderPrintOnly(payload) {
       <table class="print-table">
         <colgroup><col style="width: 20%;"><col style="width: 80%;"></colgroup>
         <tr><th>이행여부 상태</th><td><strong style="color:${f.compliance_status === '이행완료' ? '#059669' : '#dc2626'};">${f.compliance_status || '-'}</strong></td></tr>
-        <tr><th>주차구역 현황</th><td>의무 설치: ${reqPark}면 | 현재 설치: ${actPark}면 | <strong>미설치: ${unPark}면</strong></td></tr>
-        <tr><th>충전시설 현황</th><td>의무 설치: ${reqCharge}기 | 현재 설치: ${actCharge}기 | <strong>미설치: ${unCharge}기</strong></td></tr>
+        <tr><th>주차구역 현황</th><td>의무: ${reqPark}면 | 설치: ${actPark}면 (지상: ${f.parking_ground_cnt || 0}면 / 지하: ${f.parking_underground_cnt || 0}면) | <strong>미설치: ${unPark}면</strong></td></tr>
+        <tr><th>충전시설 현황</th><td>의무: ${reqCharge}기 (의무급속: ${f.charger_fast_req_cnt || 0}기) | 설치: ${actCharge}기 (완속: ${f.charger_slow_cnt || 0}기 / 급속: ${f.charger_fast_cnt || 0}기) | <strong>미설치: ${unCharge}기</strong></td></tr>
       </table>
 
-      <div class="print-section-title">3. 관리 및 담당자 정보</div>
+      <div class="print-section-title">3. 관리 및 운영·안전 정보</div>
       <table class="print-table">
-        <colgroup><col style="width: 20%;"><col style="width: 30%;"><col style="width: 20%;"><col style="width: 30%;"></colgroup>
-        <tr><th>관리주체</th><td>${f.management_body || '-'}</td><th>시설 관리자</th><td>${f.manager_name_decrypted || '보안'}</td></tr>
-        <tr><th>관리자 연락처</th><td>${f.manager_contact_decrypted || '보안'}</td><th>실태조사 상태</th><td>${f.investigation_status || '-'}</td></tr>
+        <colgroup><col style="width: 18%;"><col style="width: 32%;"><col style="width: 18%;"><col style="width: 32%;"></colgroup>
+        <tr>
+          <th>관리주체</th><td>${f.management_body || '-'}</td>
+          <th>시설 관리자</th><td>${f.manager_name_decrypted || '보안'}</td>
+        </tr>
+        <tr>
+          <th>관리자 연락처</th><td>${f.manager_contact_decrypted || '보안'}</td>
+          <th>실태조사 상태</th><td>${f.investigation_status || '-'}</td>
+        </tr>
+        <tr>
+          <th>총세대수</th><td>${(f.total_households !== undefined && f.total_households !== null && f.total_households !== '') ? `${f.total_households}세대` : '-'}</td>
+          <th>전기차등록대수</th><td>${(f.ev_registered_cnt !== undefined && f.ev_registered_cnt !== null && f.ev_registered_cnt !== '') ? `${f.ev_registered_cnt}대` : '-'}</td>
+        </tr>
+        <tr>
+          <th>신고 / 보험</th><td>${f.charger_reported || '-'} / ${f.insurance_enrolled || '-'}</td>
+          <th>화재대응책자 배부</th><td>${f.fire_manual_distributed || '-'}</td>
+        </tr>
       </table>
 
       <div class="print-section-title">4. 행정처분 및 시정명령 이력</div>
