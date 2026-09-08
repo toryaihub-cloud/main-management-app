@@ -5,6 +5,89 @@ window.RENDER_BACKEND_URL = "https://ecocar-backend-otev.onrender.com";
 const SUPABASE_REST_URL = "https://vijiacxcmtfekbmegjlf.supabase.co/rest/v1";
 const SUPABASE_SECRET_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpamlhY3hjbXRmZWtibWVnamxmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTgyMzgyNiwiZXhwIjoyMTAxMzk5ODI2fQ.Noa3eCRZLGLp67fRYu4ZlsFC4_d2X1C7KxQ_g2_zP00";
 
+// Client-Side Fernet Decryption Key Setup (Web Crypto API - AES-128-CBC)
+let fernetCryptoKeyPromise = null;
+function getFernetKey() {
+  if (!fernetCryptoKeyPromise) {
+    fernetCryptoKeyPromise = (async () => {
+      try {
+        const cryptoObj = typeof window !== 'undefined' ? (window.crypto || window.msCrypto) : (globalThis.crypto);
+        if (!cryptoObj || !cryptoObj.subtle) return null;
+        const passphrase = "AntigravitySecretKey_2026_Facilities_Mgmt!";
+        const enc = new TextEncoder();
+        const hashBuf = await cryptoObj.subtle.digest("SHA-256", enc.encode(passphrase));
+        const hashArr = new Uint8Array(hashBuf);
+        const encKeyBytes = hashArr.slice(16, 32);
+        return await cryptoObj.subtle.importKey(
+          "raw",
+          encKeyBytes,
+          { name: "AES-CBC" },
+          false,
+          ["decrypt"]
+        );
+      } catch (e) {
+        console.warn("Fernet key setup error:", e);
+        return null;
+      }
+    })();
+  }
+  return fernetCryptoKeyPromise;
+}
+
+async function decryptFernet(token) {
+  if (!token || typeof token !== "string") return "";
+  token = token.trim();
+  if (!token.startsWith("gAAAAA")) return token;
+
+  try {
+    const key = await getFernetKey();
+    if (!key) return "";
+
+    let b64 = token.replace(/-/g, "+").replace(/_/g, "/");
+    while (b64.length % 4) b64 += "=";
+    
+    let binary;
+    if (typeof atob === 'function') {
+      const binaryStr = atob(b64);
+      binary = new Uint8Array(binaryStr.length);
+      for (let i = 0; i < binaryStr.length; i++) {
+        binary[i] = binaryStr.charCodeAt(i);
+      }
+    } else if (typeof Buffer !== 'undefined') {
+      binary = Buffer.from(b64, 'base64');
+    } else {
+      return "";
+    }
+
+    if (binary.length < 57 || binary[0] !== 0x80) return "";
+
+    const iv = binary.slice(9, 25);
+    const ciphertext = binary.slice(25, binary.length - 32);
+
+    const cryptoObj = typeof window !== 'undefined' ? (window.crypto || window.msCrypto) : (globalThis.crypto);
+    const decryptedBuf = await cryptoObj.subtle.decrypt(
+      { name: "AES-CBC", iv: iv },
+      key,
+      ciphertext
+    );
+
+    return new TextDecoder().decode(decryptedBuf);
+  } catch (e) {
+    return "";
+  }
+}
+
+// Smart synchronous resolver with fallback
+function resolveDecrypted(decVal, encVal) {
+  if (decVal && typeof decVal === 'string' && !decVal.startsWith('gAAAAA') && decVal !== '-' && decVal !== 'None') {
+    return decVal.trim();
+  }
+  if (encVal && typeof encVal === 'string' && !encVal.startsWith('gAAAAA') && encVal !== '-' && encVal !== 'None') {
+    return encVal.trim();
+  }
+  return "";
+}
+
 // Smart Auto Detect API Base URL (Local vs Render Cloud Production)
 let API_BASE_URL = "http://localhost:8081/api";
 if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
@@ -353,12 +436,16 @@ async function fetchFacilities() {
     if (resDirect.ok) {
       const dbRows = await resDirect.json();
       if (Array.isArray(dbRows) && dbRows.length > 0) {
-        list = dbRows.map(f => ({
-          ...f,
-          building_approval_dates: f.approval_date || f.building_approval_dates || "",
-          building_new_old_type: f.is_new_building || f.building_new_old_type || "신축",
-          manager_name_decrypted: (f.manager_name_encrypted && !f.manager_name_encrypted.startsWith("gAAAAA")) ? f.manager_name_encrypted : (f.manager_name || ""),
-          manager_contact_decrypted: (f.manager_contact_encrypted && !f.manager_contact_encrypted.startsWith("gAAAAA")) ? f.manager_contact_encrypted : (f.manager_contact || "")
+        list = await Promise.all(dbRows.map(async f => {
+          let decMgrName = await decryptFernet(f.manager_name_encrypted);
+          let decMgrContact = await decryptFernet(f.manager_contact_encrypted);
+          return {
+            ...f,
+            building_approval_dates: f.approval_date || f.building_approval_dates || "",
+            building_new_old_type: f.is_new_building || f.building_new_old_type || "신축",
+            manager_name_decrypted: decMgrName || (f.manager_name_encrypted && !f.manager_name_encrypted.startsWith("gAAAAA") ? f.manager_name_encrypted : (f.manager_name || "")),
+            manager_contact_decrypted: decMgrContact || (f.manager_contact_encrypted && !f.manager_contact_encrypted.startsWith("gAAAAA") ? f.manager_contact_encrypted : (f.manager_contact || ""))
+          };
         }));
       }
     }
@@ -437,14 +524,23 @@ async function fetchDispositions() {
   }
 
   if (list.length > 0) {
-    dispositionsData = list.map(d => ({
-      ...d,
-      target_name_decrypted: (d.target_name_encrypted && !d.target_name_encrypted.startsWith("gAAAAA")) ? d.target_name_encrypted : (d.target_name_decrypted || d.target_name || ""),
-      recipient_name_decrypted: (d.recipient_name_encrypted && !d.recipient_name_encrypted.startsWith("gAAAAA")) ? d.recipient_name_encrypted : (d.recipient_name_decrypted || d.recipient_name || ""),
-      mail_address_decrypted: (d.mail_address_encrypted && !d.mail_address_encrypted.startsWith("gAAAAA")) ? d.mail_address_encrypted : (d.mail_address_decrypted || d.mail_address || ""),
-      abstract_address_decrypted: (d.abstract_address_encrypted && !d.abstract_address_encrypted.startsWith("gAAAAA")) ? d.abstract_address_encrypted : (d.abstract_address_decrypted || d.abstract_address || ""),
-      reg_num_decrypted: (d.reg_num_encrypted && !d.reg_num_encrypted.startsWith("gAAAAA")) ? d.reg_num_encrypted : (d.reg_num_decrypted || d.reg_num || ""),
-      contact_decrypted: (d.contact_encrypted && !d.contact_encrypted.startsWith("gAAAAA")) ? d.contact_encrypted : (d.contact_decrypted || d.contact || "")
+    dispositionsData = await Promise.all(list.map(async d => {
+      const decTarget = await decryptFernet(d.target_name_encrypted);
+      const decRecipient = await decryptFernet(d.recipient_name_encrypted);
+      const decMail = await decryptFernet(d.mail_address_encrypted);
+      const decAbstract = await decryptFernet(d.abstract_address_encrypted);
+      const decReg = await decryptFernet(d.reg_num_encrypted);
+      const decContact = await decryptFernet(d.contact_encrypted);
+
+      return {
+        ...d,
+        target_name_decrypted: decTarget || resolveDecrypted(d.target_name_decrypted, d.target_name_encrypted) || d.target_name || "",
+        recipient_name_decrypted: decRecipient || resolveDecrypted(d.recipient_name_decrypted, d.recipient_name_encrypted) || d.recipient_name || "",
+        mail_address_decrypted: decMail || resolveDecrypted(d.mail_address_decrypted, d.mail_address_encrypted) || d.mail_address || "",
+        abstract_address_decrypted: decAbstract || resolveDecrypted(d.abstract_address_decrypted, d.abstract_address_encrypted) || d.abstract_address || "",
+        reg_num_decrypted: decReg || resolveDecrypted(d.reg_num_decrypted, d.reg_num_encrypted) || d.reg_num || "",
+        contact_decrypted: decContact || resolveDecrypted(d.contact_decrypted, d.contact_encrypted) || d.contact || ""
+      };
     }));
     try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
   }
@@ -1963,19 +2059,22 @@ function openDispositionDetailModal(key) {
       modalBody.insertAdjacentHTML('beforeend', `<div style="text-align:center; color:var(--text-muted); padding:2rem;">등록된 상세 행정처분 이력이 없습니다.</div>`);
     } else {
       dispItems.forEach((d) => {
-        const cleanDecStr = (val) => {
-          if (!val || val === '-' || val === 'None') return '-';
-          const s = String(val).trim();
-          if (s.startsWith('gAAAAA')) return '-';
-          return s;
+        const cleanDecStr = (val, encVal) => {
+          if (val && typeof val === 'string' && val !== '-' && val !== 'None' && !val.startsWith('gAAAAA')) {
+            return val.trim();
+          }
+          if (encVal && typeof encVal === 'string' && encVal !== '-' && encVal !== 'None' && !encVal.startsWith('gAAAAA')) {
+            return encVal.trim();
+          }
+          return '-';
         };
 
-        const targetNameStr = cleanDecStr(d.target_name_decrypted);
-        const recipientStr = cleanDecStr(d.recipient_name_decrypted);
-        const regNumStr = cleanDecStr(d.reg_num_decrypted);
-        const contactStr = cleanDecStr(d.contact_decrypted);
-        const mailAddrStr = cleanDecStr(d.mail_address_decrypted);
-        const abstractAddrStr = cleanDecStr(d.abstract_address_decrypted);
+        const targetNameStr = cleanDecStr(d.target_name_decrypted, d.target_name_encrypted);
+        const recipientStr = cleanDecStr(d.recipient_name_decrypted, d.recipient_name_encrypted);
+        const regNumStr = cleanDecStr(d.reg_num_decrypted, d.reg_num_encrypted);
+        const contactStr = cleanDecStr(d.contact_decrypted, d.contact_encrypted);
+        const mailAddrStr = cleanDecStr(d.mail_address_decrypted, d.mail_address_encrypted);
+        const abstractAddrStr = cleanDecStr(d.abstract_address_decrypted, d.abstract_address_encrypted);
 
         // Return Status Badge (🟢 도달 / 🔴 반송)
         let returnBadgeStr = '-';
@@ -2000,7 +2099,7 @@ function openDispositionDetailModal(key) {
         // Title: [구분] 성명 (G열 대상)
         const targetTagHtml = `
           <span class="badge ${tagBadgeClass}">${d.target_type || '소유자'}</span>
-          <strong style="font-size:1rem; color:#0F172A;">${targetNameStr} ${targetScopeStr}</strong>
+          <strong id="disp-sub-target-name-${d.id}" style="font-size:1rem; color:#0F172A;">${targetNameStr} ${targetScopeStr}</strong>
         `;
 
         const subHtml = `
@@ -2023,13 +2122,13 @@ function openDispositionDetailModal(key) {
                 <div style="font-weight:700; color:#0284C7; margin-bottom:0.6rem;"><i class="fa-solid fa-envelope"></i> 사전통지 및 초본주소 정보</div>
                 <div style="display:flex; flex-direction:column; gap:0.4rem;">
                   <div><strong>사전통지 방법:</strong> ${d.advance_notice_method || '-'}</div>
-                  <div><strong>우편발송주소:</strong> ${mailAddrStr} (우편번호: ${d.zip_code || '-'})</div>
-                  <div><strong>수신인:</strong> ${recipientStr}</div>
+                  <div><strong>우편발송주소:</strong> <span id="disp-sub-mail-${d.id}">${mailAddrStr}</span> (우편번호: ${d.zip_code || '-'})</div>
+                  <div><strong>수신인:</strong> <span id="disp-sub-recipient-${d.id}">${recipientStr}</span></div>
                   <div><strong>발송일:</strong> ${d.advance_notice_send_date || '-'}</div>
                   <div><strong>반송여부:</strong> ${returnBadgeStr}</div>
                   <hr style="border:0; border-top:1px dashed #E2E8F0; margin:0.4rem 0;">
                   <div><strong>초본주소 발송일자:</strong> ${d.abstract_send_date || '-'}</div>
-                  <div><strong>초본주소:</strong> ${abstractAddrStr}</div>
+                  <div><strong>초본주소:</strong> <span id="disp-sub-abstract-${d.id}">${abstractAddrStr}</span></div>
                   <div><strong>초본주소 반송여부:</strong> ${d.abstract_return_status || '-'}</div>
                   <div><strong>고시/공고 및 기간:</strong> ${d.notice_public || '-'} (${d.notice_public_period || '-'})</div>
                 </div>
@@ -2053,14 +2152,70 @@ function openDispositionDetailModal(key) {
 
               <!-- Full Span: 암호화된 법인번호/연락처 및 비고 -->
               <div style="grid-column: span 2; background:#F8FAFC; padding:0.8rem 1rem; border-radius:0.5rem; border:1px solid #CBD5E1; font-size:0.85rem; display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center;">
-                <div><strong>법인번호(주민번호):</strong> ${regNumStr}</div>
-                <div><strong>연락처:</strong> ${contactStr}</div>
+                <div><strong>법인번호(주민번호):</strong> <span id="disp-sub-reg-${d.id}">${regNumStr}</span></div>
+                <div><strong>연락처:</strong> <span id="disp-sub-contact-${d.id}">${contactStr}</span></div>
                 <div style="flex:1;"><strong>비고:</strong> ${d.note || '-'}</div>
               </div>
             </div>
           </div>
         `;
         modalBody.insertAdjacentHTML('beforeend', subHtml);
+
+        // Asynchronous post-decryption fallback if token needs dynamic decoding
+        if (targetNameStr === '-' && d.target_name_encrypted && d.target_name_encrypted.startsWith('gAAAAA')) {
+          decryptFernet(d.target_name_encrypted).then(dec => {
+            if (dec) {
+              d.target_name_decrypted = dec;
+              const el = document.getElementById(`disp-sub-target-name-${d.id}`);
+              if (el) el.innerText = `${dec} ${targetScopeStr}`;
+            }
+          });
+        }
+        if (recipientStr === '-' && d.recipient_name_encrypted && d.recipient_name_encrypted.startsWith('gAAAAA')) {
+          decryptFernet(d.recipient_name_encrypted).then(dec => {
+            if (dec) {
+              d.recipient_name_decrypted = dec;
+              const el = document.getElementById(`disp-sub-recipient-${d.id}`);
+              if (el) el.innerText = dec;
+            }
+          });
+        }
+        if (mailAddrStr === '-' && d.mail_address_encrypted && d.mail_address_encrypted.startsWith('gAAAAA')) {
+          decryptFernet(d.mail_address_encrypted).then(dec => {
+            if (dec) {
+              d.mail_address_decrypted = dec;
+              const el = document.getElementById(`disp-sub-mail-${d.id}`);
+              if (el) el.innerText = dec;
+            }
+          });
+        }
+        if (abstractAddrStr === '-' && d.abstract_address_encrypted && d.abstract_address_encrypted.startsWith('gAAAAA')) {
+          decryptFernet(d.abstract_address_encrypted).then(dec => {
+            if (dec) {
+              d.abstract_address_decrypted = dec;
+              const el = document.getElementById(`disp-sub-abstract-${d.id}`);
+              if (el) el.innerText = dec;
+            }
+          });
+        }
+        if (regNumStr === '-' && d.reg_num_encrypted && d.reg_num_encrypted.startsWith('gAAAAA')) {
+          decryptFernet(d.reg_num_encrypted).then(dec => {
+            if (dec) {
+              d.reg_num_decrypted = dec;
+              const el = document.getElementById(`disp-sub-reg-${d.id}`);
+              if (el) el.innerText = dec;
+            }
+          });
+        }
+        if (contactStr === '-' && d.contact_encrypted && d.contact_encrypted.startsWith('gAAAAA')) {
+          decryptFernet(d.contact_encrypted).then(dec => {
+            if (dec) {
+              d.contact_decrypted = dec;
+              const el = document.getElementById(`disp-sub-contact-${d.id}`);
+              if (el) el.innerText = dec;
+            }
+          });
+        }
       });
     }
 
@@ -2594,7 +2749,18 @@ function openDispositionModal(id = null) {
     const getCleanVal = (decVal, encVal) => {
       if (decVal && typeof decVal === 'string' && !decVal.startsWith('gAAAAA')) return decVal;
       if (encVal && typeof encVal === 'string' && !encVal.startsWith('gAAAAA')) return encVal;
-      return (decVal && !decVal.startsWith('gAAAAA')) ? decVal : "";
+      return "";
+    };
+
+    const resolveAsyncInput = (elemId, encVal) => {
+      if (encVal && typeof encVal === 'string' && encVal.startsWith('gAAAAA')) {
+        decryptFernet(encVal).then(dec => {
+          if (dec) {
+            const el = document.getElementById(elemId);
+            if (el && !el.value) el.value = dec;
+          }
+        });
+      }
     };
 
     if (id) {
@@ -2621,17 +2787,21 @@ function openDispositionModal(id = null) {
         setVal("disp-target-type", item.target_type || "소유자");
         setVal("disp-status", item.current_status);
         setVal("disp-target-name", targetName);
+        resolveAsyncInput("disp-target-name", item.target_name_encrypted);
         setVal("disp-notice-target", item.advance_notice_target);
 
         // 2. 사전통지 & 초본주소 정보
         setVal("disp-notice-method", item.advance_notice_method);
         setVal("disp-mail-address", getCleanVal(item.mail_address_decrypted, item.mail_address_encrypted));
+        resolveAsyncInput("disp-mail-address", item.mail_address_encrypted);
         setVal("disp-zip-code", item.zip_code);
         setVal("disp-recipient-name", getCleanVal(item.recipient_name_decrypted, item.recipient_name_encrypted));
+        resolveAsyncInput("disp-recipient-name", item.recipient_name_encrypted);
         setDateVal("disp-notice-send-date", item.advance_notice_send_date);
         setVal("disp-notice-return-status", item.advance_notice_return_status);
         setDateVal("disp-abstract-send-date", item.abstract_send_date);
         setVal("disp-abstract-address", getCleanVal(item.abstract_address_decrypted, item.abstract_address_encrypted));
+        resolveAsyncInput("disp-abstract-address", item.abstract_address_encrypted);
         setVal("disp-abstract-return-status", item.abstract_return_status);
         setVal("disp-notice-public", item.notice_public);
         setVal("disp-notice-public-period", item.notice_public_period);
@@ -2650,7 +2820,9 @@ function openDispositionModal(id = null) {
 
         // 4. 개인정보 & 비고
         setVal("disp-reg-num", getCleanVal(item.reg_num_decrypted, item.reg_num_encrypted));
+        resolveAsyncInput("disp-reg-num", item.reg_num_encrypted);
         setVal("disp-contact", getCleanVal(item.contact_decrypted, item.contact_encrypted));
+        resolveAsyncInput("disp-contact", item.contact_encrypted);
         setVal("disp-note", item.note);
       }
     } else {
