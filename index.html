@@ -875,8 +875,9 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">현상태</label>
+                <label class="form-label">현상태 <span style="font-size:0.75rem; color:#0284C7; font-weight:normal;">(시설에서 일괄 관리)</span></label>
                 <input type="text" id="disp-status" class="input-box" placeholder="예: 7.27.시정명령, 사전통지">
+                <div id="disp-status-hint" style="font-size:0.72rem; color:#64748B; margin-top:0.25rem; line-height:1.2;"></div>
               </div>
               <div class="form-group">
                 <label class="form-label">대상자/소유자명 (DB 암호화)</label>
@@ -1191,6 +1192,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260908_decrypt_fix"></script>
+  <script src="app.js?v=20260908_status_cascade"></script>
 </body>
 </html>

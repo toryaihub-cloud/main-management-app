@@ -2592,7 +2592,7 @@ function addDispositionSubForm() {
         </div>
         <div class="form-group">
           <label class="form-label">현상태</label>
-          <input type="text" class="input-box sub-status" placeholder="예: 7.27.시정명령">
+          <input type="text" class="input-box sub-status" disabled readonly style="background:#F1F5F9; color:#64748B; cursor:not-allowed;" value="${(document.getElementById('disp-status')?.value || '').trim()}" placeholder="시설 현상태와 자동 연동">
         </div>
         <div class="form-group">
           <label class="form-label">G열 대상 범위</label>
@@ -2831,6 +2831,49 @@ function openDispositionModal(id = null) {
       if (titleEl) titleEl.innerText = "신규등록";
       setVal("disp-id", "");
     }
+
+    // 현상태 제어: '시설'인 경우에만 편집 허용, '소유자/관리자' 등 하위 정보는 자동 연동 및 비활성화
+    const statusInput = document.getElementById("disp-status");
+    const targetTypeSelect = document.getElementById("disp-target-type");
+    const statusHint = document.getElementById("disp-status-hint");
+
+    const updateDispStatusState = () => {
+      const isFacility = targetTypeSelect && targetTypeSelect.value === '시설';
+      if (statusInput) {
+        if (isFacility) {
+          statusInput.disabled = false;
+          statusInput.readOnly = false;
+          statusInput.style.background = "#FFFFFF";
+          statusInput.style.color = "#1E293B";
+          statusInput.style.cursor = "text";
+          statusInput.placeholder = "예: 7.27.시정명령 (시설 변경 시 모든 하위 소유자에 일괄 적용)";
+          if (statusHint) statusHint.innerText = "* '시설'의 현상태 변경 시 해당 시설의 모든 하위 소유자/관리자에게 일괄 적용됩니다.";
+        } else {
+          statusInput.disabled = true;
+          statusInput.readOnly = true;
+          statusInput.style.background = "#F1F5F9";
+          statusInput.style.color = "#64748B";
+          statusInput.style.cursor = "not-allowed";
+          statusInput.placeholder = "시설 레코드에서 관리됩니다 (자동 연동)";
+          if (statusHint) statusHint.innerText = "* 현상태는 '시설' 레코드에서만 수정할 수 있으며 모든 하위 정보에 자동 연동됩니다.";
+          
+          // 해당 시설의 '시설' 레코드에서 현상태 가져와 표시
+          const currentFacKey = document.getElementById("disp-facility-key")?.value.trim();
+          if (currentFacKey) {
+            const mainFacDisp = dispositionsData.find(d => d.facility_key === currentFacKey && d.target_type === '시설');
+            if (mainFacDisp && mainFacDisp.current_status) {
+              statusInput.value = mainFacDisp.current_status;
+            }
+          }
+        }
+      }
+    };
+
+    if (targetTypeSelect) {
+      targetTypeSelect.onchange = updateDispStatusState;
+    }
+    updateDispStatusState();
+
     const modalEl = document.getElementById("modal-disposition");
     if (modalEl) modalEl.classList.add("active");
   } catch (errModal) {
@@ -2963,6 +3006,19 @@ async function saveDisposition() {
         }
       }
     }
+
+    // [현상태 일괄 연동] '시설'의 현상태가 변경된 경우, 동일 시설의 모든 하위 처분 레코드(소유자, 관리자 등)의 현상태도 Supabase DB에 일괄 동기화!
+    if (payload.target_type === '시설' && payload.current_status) {
+      try {
+        await fetch(`${SUPABASE_REST_URL}/dispositions?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+          method: "PATCH",
+          headers: preferHeaders,
+          body: JSON.stringify({ current_status: payload.current_status })
+        });
+      } catch (errSync) {
+        console.warn("Cascade status update to sub-dispositions failed:", errSync);
+      }
+    }
   } catch (eDir) {
     console.error("Direct Supabase disposition save error:", eDir);
   }
@@ -2981,7 +3037,7 @@ async function saveDisposition() {
 
   payload.id = actualId || parseInt(id);
 
-  // 1. Update Main Disposition in In-Memory Array
+  // 1. Update Main Disposition in In-Memory Array & Cascade if Facility
   let mainIdx = dispositionsData.findIndex(d => String(d.id) === String(payload.id));
   if (mainIdx >= 0) {
     dispositionsData[mainIdx] = { ...dispositionsData[mainIdx], ...payload };
@@ -2989,12 +3045,21 @@ async function saveDisposition() {
     dispositionsData.push(payload);
   }
 
+  // 시설 상태 변경 시 인메모리의 동일 시설 모든 하위 레코드도 일괄 갱신
+  if (payload.target_type === '시설' && payload.current_status) {
+    dispositionsData.forEach(d => {
+      if (d.facility_key === facilityKey) {
+        d.current_status = payload.current_status;
+      }
+    });
+  }
+
   // 2. Save Sub-owner Forms (All 30 fields parsed with guaranteed Direct DB persistence)
   const subCards = document.querySelectorAll("#disp-sub-owners-container .sub-owner-card");
   for (const card of subCards) {
     const subTargetType = card.querySelector(".sub-target-type")?.value || "소유자";
     const subTargetName = card.querySelector(".sub-target-name")?.value.trim() || "";
-    const subStatus = card.querySelector(".sub-status")?.value.trim() || "";
+    const subStatus = (payload.target_type === '시설' ? payload.current_status : (payload.current_status || "")) || card.querySelector(".sub-status")?.value.trim() || "";
     const subNoticeTarget = card.querySelector(".sub-notice-target")?.value.trim() || "";
 
     const subNoticeMethod = card.querySelector(".sub-notice-method")?.value.trim() || "";
@@ -3133,7 +3198,7 @@ async function saveDisposition() {
       localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
     } catch(e) {}
 
-    alert("성공적으로 저장되었습니다.");
+    alert("행정처분 정보가 성공적으로 저장되었습니다." + (payload.target_type === '시설' ? "\n(해당 시설의 모든 하위 소유자/관리자의 현상태도 함께 일괄 동기화되었습니다)" : ""));
     closeModal('modal-disposition');
 
     // 상세 팝업을 즉시 최신 데이터로 다시 열기
