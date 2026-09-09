@@ -663,10 +663,32 @@ function updateDashboardStats() {
     totalChargerUninstalled += (parseInt(f.charger_uninstalled_cnt) || 0);
   });
 
-  document.getElementById("stat-total-facilities").innerText = total.toLocaleString();
-  document.getElementById("stat-completed-facilities").innerText = completed.toLocaleString();
-  document.getElementById("stat-uninstalled-facilities").innerText = uninstalled.toLocaleString();
-  document.getElementById("stat-uninstalled-counts").innerText = `${totalParkingUninstalled}면 / ${totalChargerUninstalled}기`;
+  const strTotal = total.toLocaleString();
+  const strCompleted = completed.toLocaleString();
+  const strUninstalled = uninstalled.toLocaleString();
+  const strCounts = `${totalParkingUninstalled}면 / ${totalChargerUninstalled}기`;
+
+  // 대시보드 통계 카드
+  const elDashTotal = document.getElementById("stat-total-facilities");
+  const elDashCompleted = document.getElementById("stat-completed-facilities");
+  const elDashUninstalled = document.getElementById("stat-uninstalled-facilities");
+  const elDashCounts = document.getElementById("stat-uninstalled-counts");
+
+  if (elDashTotal) elDashTotal.innerText = strTotal;
+  if (elDashCompleted) elDashCompleted.innerText = strCompleted;
+  if (elDashUninstalled) elDashUninstalled.innerText = strUninstalled;
+  if (elDashCounts) elDashCounts.innerText = strCounts;
+
+  // 통합시설관리 상단 통계 카드 (실시간 동기화)
+  const elFacTotal = document.getElementById("fac-stat-total-facilities");
+  const elFacCompleted = document.getElementById("fac-stat-completed-facilities");
+  const elFacUninstalled = document.getElementById("fac-stat-uninstalled-facilities");
+  const elFacCounts = document.getElementById("fac-stat-uninstalled-counts");
+
+  if (elFacTotal) elFacTotal.innerText = strTotal;
+  if (elFacCompleted) elFacCompleted.innerText = strCompleted;
+  if (elFacUninstalled) elFacUninstalled.innerText = strUninstalled;
+  if (elFacCounts) elFacCounts.innerText = strCounts;
 }
 
 // Custom inline plugin for displaying values permanently on Bar Chart
