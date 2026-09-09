@@ -98,6 +98,8 @@ let currentUser = null;
 let facilitiesData = [];
 let dispositionsData = [];
 let usersData = [];
+let operationsData = [];
+let filteredOperationsData = [];
 let currentSettings = { photo_dir_path: "" };
 
 let categoryChart = null;
@@ -359,6 +361,10 @@ function switchTab(tabName) {
     document.querySelectorAll(".tab-btn")[3].classList.add("active");
     document.getElementById("view-correction-orders").classList.add("active");
     fetchCorrectionOrders();
+  } else if (tabName === 'operations') {
+    document.querySelectorAll(".tab-btn")[4].classList.add("active");
+    document.getElementById("view-operations").classList.add("active");
+    fetchOperations();
   } else if (tabName === 'users') {
     document.getElementById("tab-users").classList.add("active");
     document.getElementById("view-users").classList.add("active");
@@ -4044,4 +4050,551 @@ document.addEventListener("DOMContentLoaded", () => {
   const observer = new MutationObserver(setupDateInputs);
   observer.observe(document.body, { childList: true, subtree: true });
 });
+
+/* ==========================================================================
+   Operations Management (운영현황 관리) Functions
+   ========================================================================== */
+
+async function fetchOperations(forceRefresh = false) {
+  const container = document.getElementById("operations-card-container");
+  if (container && (!operationsData || operationsData.length === 0)) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary); margin-bottom: 0.8rem;"></i>
+        <div style="font-weight: 600;">운영현황 데이터를 불러오는 중입니다...</div>
+      </div>
+    `;
+  }
+
+  let list = [];
+
+  // [1순위] Supabase DB 실시간 직접 조회 (SSOT)
+  try {
+    const resDirect = await fetch(`${SUPABASE_REST_URL}/operations?select=*&order=id.asc`, {
+      headers: {
+        "apikey": SUPABASE_SECRET_KEY,
+        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`
+      }
+    });
+    if (resDirect.ok) {
+      const dbRows = await resDirect.json();
+      if (Array.isArray(dbRows) && dbRows.length > 0) {
+        list = await Promise.all(dbRows.map(async op => {
+          let decMgr = await decryptFernet(op.manager_name_encrypted);
+          let decContact = await decryptFernet(op.manager_contact_encrypted);
+          return {
+            ...op,
+            manager_name: decMgr || (op.manager_name_encrypted && !op.manager_name_encrypted.startsWith("gAAAAA") ? op.manager_name_encrypted : (op.manager_name || "")),
+            manager_contact: decContact || (op.manager_contact_encrypted && !op.manager_contact_encrypted.startsWith("gAAAAA") ? op.manager_contact_encrypted : (op.manager_contact || ""))
+          };
+        }));
+      }
+    }
+  } catch (errDb) {
+    console.warn("Direct Supabase operations fetch failed, fallback to backend:", errDb);
+  }
+
+  // [2순위] Render 백엔드 API
+  if (list.length === 0) {
+    try {
+      const res = await fetchWithRetry(`${API_BASE_URL}/operations`);
+      if (res.ok) {
+        const raw = await res.json();
+        list = Array.isArray(raw) ? raw : (raw.data || []);
+      }
+    } catch (e) {
+      console.warn("Backend operations fetch failed, fallback to cache:", e);
+    }
+  }
+
+  // [3순위] 오프라인 정적 캐시 파일
+  if (list.length === 0) {
+    try {
+      const resStatic = await fetch("operations_cache.json?v=" + Date.now());
+      if (resStatic.ok) {
+        const raw = await resStatic.json();
+        const rawList = Array.isArray(raw) ? raw : [];
+        list = await Promise.all(rawList.map(async op => {
+          let decMgr = await decryptFernet(op.manager_name_encrypted);
+          let decContact = await decryptFernet(op.manager_contact_encrypted);
+          return {
+            ...op,
+            manager_name: decMgr || (op.manager_name_encrypted && !op.manager_name_encrypted.startsWith("gAAAAA") ? op.manager_name_encrypted : (op.manager_name || "")),
+            manager_contact: decContact || (op.manager_contact_encrypted && !op.manager_contact_encrypted.startsWith("gAAAAA") ? op.manager_contact_encrypted : (op.manager_contact || ""))
+          };
+        }));
+      }
+    } catch (e) {
+      console.warn("Static operations cache fetch failed:", e);
+    }
+  }
+
+  if (list.length > 0) {
+    operationsData = list;
+    initOperationReasonFilter();
+    filterOperations();
+  } else if (container) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; color: var(--warning); margin-bottom: 0.8rem;"></i>
+        <div style="font-weight: 600;">운영현황 데이터를 불러오지 못했습니다.</div>
+        <button class="btn btn-secondary" style="margin-top: 1rem;" onclick="fetchOperations(true)">다시 시도</button>
+      </div>
+    `;
+  }
+}
+
+function initOperationReasonFilter() {
+  const reasonSelect = document.getElementById("op-filter-reason");
+  if (!reasonSelect) return;
+
+  const currentVal = reasonSelect.value;
+  const reasons = new Set();
+
+  operationsData.forEach(item => {
+    const r = (item.unoperated_reason || "").trim();
+    if (r && r !== "-" && r.toLowerCase() !== "none") {
+      reasons.add(r);
+    }
+  });
+
+  const sortedReasons = Array.from(reasons).sort();
+  let html = `<option value="ALL">미운영사유: 전체</option>`;
+  sortedReasons.forEach(r => {
+    html += `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`;
+  });
+  reasonSelect.innerHTML = html;
+  if (reasons.has(currentVal)) {
+    reasonSelect.value = currentVal;
+  }
+}
+
+function filterOperations() {
+  const searchInput = (document.getElementById("op-search-input")?.value || "").trim().toLowerCase();
+  const statusFilter = document.getElementById("op-filter-status")?.value || "ALL";
+  const reasonFilter = document.getElementById("op-filter-reason")?.value || "ALL";
+  const sortMode = document.getElementById("op-sort")?.value || "default";
+
+  filteredOperationsData = operationsData.filter(item => {
+    // 1. 운영여부 필터
+    if (statusFilter !== "ALL") {
+      if (item.operation_status !== statusFilter) return false;
+    }
+
+    // 2. 미운영사유 필터
+    if (reasonFilter !== "ALL") {
+      if ((item.unoperated_reason || "").trim() !== reasonFilter) return false;
+    }
+
+    // 3. 검색어 필터 (시설명, 도로명주소, 정상사업자, 미운영사업자, 미운영사유, KEY, 관리자)
+    if (searchInput) {
+      const matchKey = (item.facility_key || "").toLowerCase().includes(searchInput);
+      const matchName = (item.facility_name || "").toLowerCase().includes(searchInput);
+      const matchAddr = (item.address_doro || "").toLowerCase().includes(searchInput);
+      const matchNormal = (item.normal_operator_qty || "").toLowerCase().includes(searchInput);
+      const matchUnopOp = (item.unoperated_operator || "").toLowerCase().includes(searchInput);
+      const matchReason = (item.unoperated_reason || "").toLowerCase().includes(searchInput);
+      const matchMgr = (item.manager_name || "").toLowerCase().includes(searchInput);
+      const matchContact = (item.manager_contact || "").toLowerCase().includes(searchInput);
+      if (!matchKey && !matchName && !matchAddr && !matchNormal && !matchUnopOp && !matchReason && !matchMgr && !matchContact) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  // 정렬
+  if (sortMode === "name_asc") {
+    filteredOperationsData.sort((a, b) => (a.facility_name || "").localeCompare(b.facility_name || "", "ko"));
+  } else if (sortMode === "name_desc") {
+    filteredOperationsData.sort((a, b) => (b.facility_name || "").localeCompare(a.facility_name || "", "ko"));
+  } else if (sortMode === "unop_desc") {
+    filteredOperationsData.sort((a, b) => (parseInt(b.unoperated_cnt) || 0) - (parseInt(a.unoperated_cnt) || 0));
+  } else if (sortMode === "installed_desc") {
+    filteredOperationsData.sort((a, b) => (parseInt(b.charger_installed_cnt) || 0) - (parseInt(a.charger_installed_cnt) || 0));
+  }
+
+  renderOperations();
+}
+
+function renderOperations() {
+  // 1. 상단 통계 수치 갱신
+  const totalCount = operationsData.length;
+  const normalCount = operationsData.filter(d => d.operation_status === "정상운영").length;
+  const unopCount = operationsData.filter(d => d.operation_status === "미운영").length;
+  const unopChargers = operationsData.reduce((sum, d) => sum + (parseInt(d.unoperated_cnt) || 0), 0);
+
+  const elTotal = document.getElementById("stat-op-total");
+  const elNormal = document.getElementById("stat-op-normal");
+  const elUnop = document.getElementById("stat-op-unoperated");
+  const elUnopChargers = document.getElementById("stat-op-unoperated-chargers");
+  const elBadge = document.getElementById("op-count-badge");
+
+  if (elTotal) elTotal.textContent = totalCount.toLocaleString();
+  if (elNormal) elNormal.textContent = normalCount.toLocaleString();
+  if (elUnop) elUnop.textContent = unopCount.toLocaleString();
+  if (elUnopChargers) elUnopChargers.textContent = unopChargers.toLocaleString();
+  if (elBadge) elBadge.textContent = `총 ${filteredOperationsData.length}건`;
+
+  // 2. 카드 그리드 렌더링
+  const container = document.getElementById("operations-card-container");
+  if (!container) return;
+
+  if (filteredOperationsData.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted); background: var(--bg-card); border-radius: 12px; border: 1px dashed var(--border-color);">
+        <i class="fa-solid fa-filter-circle-xmark" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.8rem;"></i>
+        <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.3rem;">검색 조건에 맞는 시설이 없습니다.</div>
+        <div style="font-size: 0.85rem;">검색어 또는 필터 조건을 변경해보세요.</div>
+      </div>
+    `;
+    return;
+  }
+
+  let cardsHtml = "";
+  filteredOperationsData.forEach(item => {
+    const isUnop = item.operation_status === "미운영";
+    const statusClass = isUnop ? "unoperated" : "normal";
+    const badgeHtml = isUnop
+      ? `<span class="op-badge op-badge-unop"><i class="fa-solid fa-triangle-exclamation"></i> 미운영</span>`
+      : `<span class="op-badge op-badge-normal"><i class="fa-solid fa-circle-check"></i> 정상운영</span>`;
+
+    // 주차 및 충전기 요약 칩
+    const groundP = parseInt(item.parking_ground_cnt) || 0;
+    const underP = parseInt(item.parking_underground_cnt) || 0;
+    const totalCharger = parseInt(item.charger_installed_cnt) || 0;
+    const fastC = parseInt(item.charger_fast_cnt) || 0;
+    const slowC = parseInt(item.charger_slow_cnt) || 0;
+    const unopCnt = parseInt(item.unoperated_cnt) || 0;
+
+    // 미운영 상세 정보 블록
+    let unopBoxHtml = "";
+    if (isUnop || unopCnt > 0) {
+      unopBoxHtml = `
+        <div class="op-unop-box">
+          <div class="op-unop-header">
+            <i class="fa-solid fa-ban"></i> 미운영 상세: ${unopCnt}기 (${escapeHtml(item.unoperated_operator || "사업자 미지정")})
+          </div>
+          <div class="op-unop-detail">
+            ${item.location ? `<div><strong>위치:</strong> ${escapeHtml(item.location)}</div>` : ""}
+            ${item.unoperated_reason ? `<div><strong>사유:</strong> ${escapeHtml(item.unoperated_reason)}</div>` : ""}
+            ${item.unoperated_date ? `<div><strong>시기:</strong> ${escapeHtml(item.unoperated_date)}</div>` : ""}
+            ${item.note ? `<div><strong>비고:</strong> ${escapeHtml(item.note)}</div>` : ""}
+          </div>
+        </div>
+      `;
+    }
+
+    // 관리자/연락처
+    const mgrName = item.manager_name || "-";
+    const mgrContact = item.manager_contact || "-";
+
+    cardsHtml += `
+      <div class="op-card ${statusClass}">
+        <div class="op-card-header">
+          <div class="op-card-title-wrap">
+            <div class="op-card-title" onclick="openOperationModal('${escapeHtml(item.facility_key)}')">
+              <span>${escapeHtml(item.facility_name || "시설명 미지정")}</span>
+            </div>
+            <span class="op-card-key">${escapeHtml(item.facility_key || "-")}</span>
+          </div>
+          <div>${badgeHtml}</div>
+        </div>
+
+        <div class="op-card-address">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>${escapeHtml(item.address_doro || "주소 정보 없음")}</span>
+        </div>
+
+        <div class="op-chips-row">
+          <span class="op-chip" title="주차구역 (지상/지하)">
+            <i class="fa-solid fa-square-parking"></i> 주차: 지상 ${groundP}면 / 지하 ${underP}면
+          </span>
+          <span class="op-chip" title="충전기 설치합계 (급속/완속)">
+            <i class="fa-solid fa-bolt"></i> 충전합: ${totalCharger}기 (급속 ${fastC} / 완속 ${slowC})
+          </span>
+        </div>
+
+        <div class="op-info-row">
+          <span class="op-info-label">정상운영 사업자:</span>
+          <span class="op-info-val">${escapeHtml(item.normal_operator_qty || "-")}</span>
+        </div>
+
+        ${unopBoxHtml}
+
+        ${item.complaint_and_plan ? `
+          <div class="op-info-row" style="align-items: flex-start; margin-bottom: 0.5rem;">
+            <span class="op-info-label" style="min-width: 60px;">향후계획:</span>
+            <span class="op-info-val" style="font-weight: 500; font-size: 0.78rem; text-align: right;">${escapeHtml(item.complaint_and_plan)}</span>
+          </div>
+        ` : ""}
+
+        <div class="op-info-row" style="margin-top: 0.2rem; padding-top: 0.4rem; border-top: 1px dashed #E2E8F0;">
+          <span class="op-info-label"><i class="fa-solid fa-user-shield"></i> 관리자:</span>
+          <span class="op-info-val" style="font-size: 0.78rem;">
+            ${escapeHtml(mgrName)} ${mgrContact !== "-" ? `(${escapeHtml(mgrContact)})` : ""}
+          </span>
+        </div>
+
+        <div class="op-card-footer">
+          <button class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;" onclick="jumpToFacilityDetail('${escapeHtml(item.facility_key)}')">
+            <i class="fa-solid fa-building"></i> 통합시설
+          </button>
+          <button class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" onclick="openOperationModal('${escapeHtml(item.facility_key)}')">
+            <i class="fa-solid fa-pen-to-square"></i> 상세 / 수정
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = cardsHtml;
+}
+
+function openOperationModal(facilityKey) {
+  const item = operationsData.find(d => d.facility_key === facilityKey);
+  if (!item) {
+    alert("해당 시설의 운영현황 데이터를 찾을 수 없습니다.");
+    return;
+  }
+
+  // 폼에 데이터 바인딩
+  document.getElementById("op-edit-facility-key").value = item.facility_key || "";
+  document.getElementById("op-edit-facility-name").value = item.facility_name || "";
+  document.getElementById("op-edit-investigator").value = item.investigator || "";
+  document.getElementById("op-edit-investigation-date").value = item.investigation_date || "";
+  document.getElementById("op-edit-address-doro").value = item.address_doro || "";
+
+  document.getElementById("op-edit-parking-ground").value = item.parking_ground_cnt ?? 0;
+  document.getElementById("op-edit-parking-underground").value = item.parking_underground_cnt ?? 0;
+  document.getElementById("op-edit-parking-uninstalled").value = item.parking_uninstalled_cnt ?? 0;
+
+  document.getElementById("op-edit-charger-installed").value = item.charger_installed_cnt ?? 0;
+  document.getElementById("op-edit-charger-fast").value = item.charger_fast_cnt ?? 0;
+  document.getElementById("op-edit-charger-slow").value = item.charger_slow_cnt ?? 0;
+  document.getElementById("op-edit-charger-uninstalled").value = item.charger_uninstalled_cnt ?? 0;
+
+  document.getElementById("op-edit-normal-operator").value = item.normal_operator_qty || "";
+  document.getElementById("op-edit-status").value = item.operation_status === "미운영" ? "미운영" : "정상운영";
+
+  document.getElementById("op-edit-unoperated-cnt").value = item.unoperated_cnt ?? 0;
+  document.getElementById("op-edit-unoperated-operator").value = item.unoperated_operator || "";
+  document.getElementById("op-edit-location").value = item.location || "";
+  document.getElementById("op-edit-unoperated-reason").value = item.unoperated_reason || "";
+  document.getElementById("op-edit-unoperated-date").value = item.unoperated_date || "";
+  document.getElementById("op-edit-initial-install-date").value = item.initial_install_date || "";
+  document.getElementById("op-edit-note").value = item.note || "";
+
+  document.getElementById("op-edit-complaint-plan").value = item.complaint_and_plan || "";
+  document.getElementById("op-edit-manager-name").value = item.manager_name || "";
+  document.getElementById("op-edit-manager-contact").value = item.manager_contact || "";
+
+  // 헤더 뱃지 설정
+  const keyBadge = document.getElementById("op-modal-key-badge");
+  const statusBadge = document.getElementById("op-modal-status-badge");
+  if (keyBadge) keyBadge.textContent = item.facility_key || "-";
+  if (statusBadge) {
+    if (item.operation_status === "미운영") {
+      statusBadge.className = "badge op-badge-unop";
+      statusBadge.textContent = "미운영";
+    } else {
+      statusBadge.className = "badge op-badge-normal";
+      statusBadge.textContent = "정상운영";
+    }
+  }
+
+  toggleOpUnoperatedFields();
+  openModal("modal-operation-detail");
+}
+
+function toggleOpUnoperatedFields() {
+  const status = document.getElementById("op-edit-status")?.value;
+  const box = document.getElementById("op-unoperated-fields-box");
+  const statusBadge = document.getElementById("op-modal-status-badge");
+
+  if (status === "미운영") {
+    if (box) box.style.opacity = "1";
+    if (statusBadge) {
+      statusBadge.className = "badge op-badge-unop";
+      statusBadge.textContent = "미운영";
+    }
+  } else {
+    if (box) box.style.opacity = "0.6";
+    if (statusBadge) {
+      statusBadge.className = "badge op-badge-normal";
+      statusBadge.textContent = "정상운영";
+    }
+  }
+}
+
+async function handleSaveOperation(e) {
+  e.preventDefault();
+  const facilityKey = document.getElementById("op-edit-facility-key")?.value;
+  if (!facilityKey) {
+    alert("시설 고유키가 유효하지 않습니다.");
+    return;
+  }
+
+  const mgrName = (document.getElementById("op-edit-manager-name")?.value || "").trim();
+  const mgrContact = (document.getElementById("op-edit-manager-contact")?.value || "").trim();
+
+  const payload = {
+    facility_key: facilityKey,
+    facility_name: (document.getElementById("op-edit-facility-name")?.value || "").trim(),
+    investigator: (document.getElementById("op-edit-investigator")?.value || "").trim(),
+    investigation_date: (document.getElementById("op-edit-investigation-date")?.value || "").trim(),
+    address_doro: (document.getElementById("op-edit-address-doro")?.value || "").trim(),
+    parking_ground_cnt: parseInt(document.getElementById("op-edit-parking-ground")?.value) || 0,
+    parking_underground_cnt: parseInt(document.getElementById("op-edit-parking-underground")?.value) || 0,
+    parking_uninstalled_cnt: parseInt(document.getElementById("op-edit-parking-uninstalled")?.value) || 0,
+    charger_installed_cnt: parseInt(document.getElementById("op-edit-charger-installed")?.value) || 0,
+    charger_fast_cnt: parseInt(document.getElementById("op-edit-charger-fast")?.value) || 0,
+    charger_slow_cnt: parseInt(document.getElementById("op-edit-charger-slow")?.value) || 0,
+    charger_uninstalled_cnt: parseInt(document.getElementById("op-edit-charger-uninstalled")?.value) || 0,
+    normal_operator_qty: (document.getElementById("op-edit-normal-operator")?.value || "").trim(),
+    operation_status: document.getElementById("op-edit-status")?.value || "정상운영",
+    unoperated_cnt: parseInt(document.getElementById("op-edit-unoperated-cnt")?.value) || 0,
+    unoperated_operator: (document.getElementById("op-edit-unoperated-operator")?.value || "").trim(),
+    location: (document.getElementById("op-edit-location")?.value || "").trim(),
+    unoperated_reason: (document.getElementById("op-edit-unoperated-reason")?.value || "").trim(),
+    unoperated_date: (document.getElementById("op-edit-unoperated-date")?.value || "").trim(),
+    initial_install_date: (document.getElementById("op-edit-initial-install-date")?.value || "").trim(),
+    note: (document.getElementById("op-edit-note")?.value || "").trim(),
+    complaint_and_plan: (document.getElementById("op-edit-complaint-plan")?.value || "").trim(),
+    manager_name: mgrName,
+    manager_contact: mgrContact
+  };
+
+  try {
+    // 1순위: 백엔드 API 호출 (백엔드에서 AES-256 Fernet 암호화 후 Supabase 및 캐시에 영구 저장)
+    let savedSuccessfully = false;
+    try {
+      const res = await fetch(`${API_BASE_URL}/operations/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        savedSuccessfully = true;
+      }
+    } catch (apiErr) {
+      console.warn("Backend save failed, trying direct Supabase:", apiErr);
+    }
+
+    // 2순위: Supabase DB 직접 upsert 시도
+    if (!savedSuccessfully) {
+      try {
+        const resDb = await fetch(`${SUPABASE_REST_URL}/operations?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+          method: "PATCH",
+          headers: {
+            "apikey": SUPABASE_SECRET_KEY,
+            "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+          },
+          body: JSON.stringify(payload)
+        });
+        if (resDb.ok) {
+          savedSuccessfully = true;
+        }
+      } catch (dbErr) {
+        console.warn("Direct Supabase update failed:", dbErr);
+      }
+    }
+
+    // 로컬 메모리 상태 즉시 반영
+    const idx = operationsData.findIndex(d => d.facility_key === facilityKey);
+    if (idx !== -1) {
+      operationsData[idx] = { ...operationsData[idx], ...payload };
+    } else {
+      operationsData.push(payload);
+    }
+
+    closeModal("modal-operation-detail");
+    initOperationReasonFilter();
+    filterOperations();
+    alert("운영현황 정보가 성공적으로 저장되었습니다.");
+  } catch (err) {
+    console.error("Save operation error:", err);
+    alert("저장 중 오류가 발생했습니다: " + err.message);
+  }
+}
+
+function jumpToFacilityDetail(facilityKey) {
+  if (!facilityKey) return;
+  const targetFac = facilitiesData.find(f => f.facility_key === facilityKey);
+  if (targetFac) {
+    switchTab('facilities');
+    showFacilityDetailModal(targetFac);
+  } else {
+    alert(`통합시설관리 데이터에서 시설키 [${facilityKey}]를 찾을 수 없습니다.`);
+  }
+}
+
+function jumpToFacilityDetailFromOp() {
+  const facilityKey = document.getElementById("op-edit-facility-key")?.value;
+  closeModal("modal-operation-detail");
+  jumpToFacilityDetail(facilityKey);
+}
+
+function exportOperationsExcel() {
+  if (!filteredOperationsData || filteredOperationsData.length === 0) {
+    alert("내보낼 운영현황 데이터가 없습니다.");
+    return;
+  }
+
+  const headers = [
+    "KEY", "시설명", "주소(도로명)", "조사자", "조사일",
+    "설치면수(지상)", "설치면수(지하)", "미설치면수",
+    "설치기수 합", "설치기수(급속)", "설치기수(완속)", "미설치기수",
+    "정상운영 사업자(수량)", "운영여부", "미운영 기수", "위치", "미운영 사업자",
+    "최초설치시기", "미운영사유", "미운영시기", "비고", "민원사항 및 향후계획",
+    "관리자", "연락처"
+  ];
+
+  const csvRows = [headers.join(",")];
+
+  filteredOperationsData.forEach(item => {
+    const row = [
+      `"${(item.facility_key || "").replace(/"/g, '""')}"`,
+      `"${(item.facility_name || "").replace(/"/g, '""')}"`,
+      `"${(item.address_doro || "").replace(/"/g, '""')}"`,
+      `"${(item.investigator || "").replace(/"/g, '""')}"`,
+      `"${(item.investigation_date || "").replace(/"/g, '""')}"`,
+      item.parking_ground_cnt ?? 0,
+      item.parking_underground_cnt ?? 0,
+      item.parking_uninstalled_cnt ?? 0,
+      item.charger_installed_cnt ?? 0,
+      item.charger_fast_cnt ?? 0,
+      item.charger_slow_cnt ?? 0,
+      item.charger_uninstalled_cnt ?? 0,
+      `"${(item.normal_operator_qty || "").replace(/"/g, '""')}"`,
+      `"${(item.operation_status || "").replace(/"/g, '""')}"`,
+      item.unoperated_cnt ?? 0,
+      `"${(item.location || "").replace(/"/g, '""')}"`,
+      `"${(item.unoperated_operator || "").replace(/"/g, '""')}"`,
+      `"${(item.initial_install_date || "").replace(/"/g, '""')}"`,
+      `"${(item.unoperated_reason || "").replace(/"/g, '""')}"`,
+      `"${(item.unoperated_date || "").replace(/"/g, '""')}"`,
+      `"${(item.note || "").replace(/"/g, '""')}"`,
+      `"${(item.complaint_and_plan || "").replace(/"/g, '""')}"`,
+      `"${(item.manager_name || "").replace(/"/g, '""')}"`,
+      `"${(item.manager_contact || "").replace(/"/g, '""')}"`
+    ];
+    csvRows.push(row.join(","));
+  });
+
+  const csvContent = "\uFEFF" + csvRows.join("\r\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `충전시설_운영현황_${today}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 

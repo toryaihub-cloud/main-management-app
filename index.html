@@ -65,6 +65,9 @@
       <button class="tab-btn" onclick="switchTab('correction-orders')">
         <i class="fa-solid fa-file-signature"></i> 시정명령
       </button>
+      <button class="tab-btn" onclick="switchTab('operations')">
+        <i class="fa-solid fa-charging-station"></i> 운영현황 관리
+      </button>
       <button id="tab-users" class="tab-btn admin-only" onclick="switchTab('users')" style="display: none;">
         <i class="fa-solid fa-users-gear"></i> 계정 관리 (ADMIN)
       </button>
@@ -335,6 +338,91 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </section>
+
+    <!-- 4-2. Operations Management View (운영현황 관리) -->
+    <section id="view-operations" class="view-section">
+      <!-- Summary Statistics Bar -->
+      <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 1.25rem;">
+        <div class="stat-card purple" style="padding: 1rem 1.25rem;">
+          <div class="stat-header">
+            <span class="stat-title">전체 조사 시설</span>
+            <div class="stat-icon"><i class="fa-solid fa-charging-station" style="color: var(--purple);"></i></div>
+          </div>
+          <div class="stat-value" id="stat-op-total">0</div>
+          <div class="stat-desc">운영현황 조사 대상 시설</div>
+        </div>
+
+        <div class="stat-card emerald" style="padding: 1rem 1.25rem;">
+          <div class="stat-header">
+            <span class="stat-title">정상운영 시설</span>
+            <div class="stat-icon"><i class="fa-solid fa-circle-check" style="color: var(--success);"></i></div>
+          </div>
+          <div class="stat-value" id="stat-op-normal">0</div>
+          <div class="stat-desc">충전기 정상 가동 시설</div>
+        </div>
+
+        <div class="stat-card rose" style="padding: 1rem 1.25rem;">
+          <div class="stat-header">
+            <span class="stat-title">미운영 시설</span>
+            <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i></div>
+          </div>
+          <div class="stat-value" id="stat-op-unoperated">0</div>
+          <div class="stat-desc">일부/전체 미운영 시설</div>
+        </div>
+
+        <div class="stat-card blue" style="padding: 1rem 1.25rem;">
+          <div class="stat-header">
+            <span class="stat-title">총 미운영 충전기</span>
+            <div class="stat-icon"><i class="fa-solid fa-plug-circle-xmark" style="color: #3b82f6;"></i></div>
+          </div>
+          <div class="stat-value" id="stat-op-unoperated-chargers">0</div>
+          <div class="stat-desc">가동 중단 충전기 합계</div>
+        </div>
+      </div>
+
+      <!-- Search & Filter Toolbar -->
+      <div class="toolbar" style="margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div class="search-filter-group" style="flex: 1; min-width: 300px; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+          <div class="search-box" style="flex: 1; min-width: 200px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="op-search-input" placeholder="시설명, 주소, 사업자, 사유, KEY 검색..." oninput="filterOperations()">
+          </div>
+          
+          <select id="op-filter-status" class="filter-select" onchange="filterOperations()" style="padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.85rem;">
+            <option value="ALL">운영여부: 전체</option>
+            <option value="정상운영">정상운영</option>
+            <option value="미운영">미운영</option>
+          </select>
+
+          <select id="op-filter-reason" class="filter-select" onchange="filterOperations()" style="padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.85rem;">
+            <option value="ALL">미운영사유: 전체</option>
+          </select>
+
+          <select id="op-sort" class="filter-select" onchange="filterOperations()" style="padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.85rem;">
+            <option value="default">정렬: 기본순</option>
+            <option value="name_asc">시설명 오름차순</option>
+            <option value="name_desc">시설명 내림차순</option>
+            <option value="unop_desc">미운영기수 많은순</option>
+            <option value="installed_desc">설치기수 많은순</option>
+          </select>
+        </div>
+
+        <div class="action-btn-group" style="display: flex; gap: 0.5rem; align-items: center;">
+          <span id="op-count-badge" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); background: var(--bg-hover); padding: 0.4rem 0.75rem; border-radius: 6px;">총 0건</span>
+          <button class="btn btn-secondary" style="padding: 0.45rem 0.8rem; font-size: 0.82rem;" onclick="fetchOperations(true)">
+            <i class="fa-solid fa-arrows-rotate"></i> 새로고침
+          </button>
+          <button class="btn btn-primary" style="padding: 0.45rem 0.8rem; font-size: 0.82rem;" onclick="exportOperationsExcel()">
+            <i class="fa-solid fa-file-excel"></i> 엑셀 저장
+          </button>
+        </div>
+      </div>
+
+      <!-- Operations Cards Grid Container -->
+      <div id="operations-card-container" class="op-cards-grid">
+        <!-- Dynamically rendered operation cards -->
       </div>
     </section>
 
@@ -1189,9 +1277,182 @@
     </div>
   </div>
 
+  <!-- Operations Management Detail & Edit Modal -->
+  <div id="modal-operation-detail" class="modal-backdrop" style="display:none; align-items:center; justify-content:center;">
+    <div class="modal-content" style="max-width: 860px; width:95%; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header" style="flex-shrink: 0;">
+        <div class="modal-title" style="font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:0.5rem;">
+          <i class="fa-solid fa-charging-station" style="color: var(--primary);"></i>
+          <span id="op-modal-facility-title">충전시설 운영현황 상세 / 수정</span>
+          <span id="op-modal-key-badge" class="badge" style="font-size:0.75rem; background:#f1f5f9; color:#475569; padding:0.2rem 0.6rem; border-radius:4px;">-</span>
+          <span id="op-modal-status-badge" class="badge" style="font-size:0.75rem;">-</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-operation-detail')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding:1.25rem; overflow-y: auto; flex: 1;">
+        <form id="op-modal-form" onsubmit="handleSaveOperation(event)">
+          <input type="hidden" id="op-edit-facility-key">
+
+          <!-- Section 1: 기본 시설 정보 -->
+          <div style="font-weight:700; font-size:0.95rem; margin-bottom:0.6rem; color:var(--text-main); display:flex; align-items:center; gap:0.4rem; border-bottom:1px solid var(--border-color); padding-bottom:0.4rem;">
+            <i class="fa-solid fa-building" style="color:var(--primary); font-size:0.9rem;"></i> 기본 시설 정보 (통합시설 공유)
+          </div>
+          <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr; gap:0.6rem; margin-bottom:1rem;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">시설명</label>
+              <input type="text" id="op-edit-facility-name" class="input-box" required>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">조사자</label>
+              <input type="text" id="op-edit-investigator" class="input-box">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">조사일</label>
+              <input type="text" id="op-edit-investigation-date" class="input-box" placeholder="YYYY.MM.DD">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label class="form-label" style="font-size:0.8rem;">주소 (도로명)</label>
+            <input type="text" id="op-edit-address-doro" class="input-box">
+          </div>
+
+          <!-- Section 2: 주차면수 및 충전기 설치현황 -->
+          <div style="font-weight:700; font-size:0.95rem; margin-bottom:0.6rem; color:var(--text-main); display:flex; align-items:center; gap:0.4rem; border-bottom:1px solid var(--border-color); padding-bottom:0.4rem;">
+            <i class="fa-solid fa-square-parking" style="color:var(--purple); font-size:0.9rem;"></i> 주차구역 및 충전시설 설치현황
+          </div>
+          <div class="form-grid" style="grid-template-columns: repeat(3, 1fr); gap:0.6rem; margin-bottom:0.6rem;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">주차 지상 (면)</label>
+              <input type="number" id="op-edit-parking-ground" class="input-box" min="0">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">주차 지하 (면)</label>
+              <input type="number" id="op-edit-parking-underground" class="input-box" min="0">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">주차 미설치 (면)</label>
+              <input type="number" id="op-edit-parking-uninstalled" class="input-box" min="0">
+            </div>
+          </div>
+          <div class="form-grid" style="grid-template-columns: repeat(4, 1fr); gap:0.6rem; margin-bottom:1rem;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">충전기 합계 (기)</label>
+              <input type="number" id="op-edit-charger-installed" class="input-box" min="0">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">급속 충전기 (기)</label>
+              <input type="number" id="op-edit-charger-fast" class="input-box" min="0">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">완속 충전기 (기)</label>
+              <input type="number" id="op-edit-charger-slow" class="input-box" min="0">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">충전 미설치 (기)</label>
+              <input type="number" id="op-edit-charger-uninstalled" class="input-box" min="0">
+            </div>
+          </div>
+
+          <!-- Section 3: 충전기 운영 및 미운영 상세 -->
+          <div style="font-weight:700; font-size:0.95rem; margin-bottom:0.6rem; color:var(--text-main); display:flex; align-items:center; gap:0.4rem; border-bottom:1px solid var(--border-color); padding-bottom:0.4rem;">
+            <i class="fa-solid fa-triangle-exclamation" style="color:var(--danger); font-size:0.9rem;"></i> 가동 상태 및 미운영 상세정보
+          </div>
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap:0.6rem; margin-bottom:0.6rem;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">정상운영 사업자(수량)</label>
+              <input type="text" id="op-edit-normal-operator" class="input-box" placeholder="예: 한국전력 2기">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem;">운영여부 상태</label>
+              <select id="op-edit-status" class="input-box" onchange="toggleOpUnoperatedFields()">
+                <option value="정상운영">정상운영</option>
+                <option value="미운영">미운영</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 미운영 상세 블록 -->
+          <div id="op-unoperated-fields-box" style="background:#fff1f2; border:1px solid #fecdd3; border-radius:8px; padding:0.8rem; margin-bottom:1rem;">
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr; gap:0.6rem; margin-bottom:0.6rem;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:0.8rem; color:#9f1239;">미운영 기수</label>
+                <input type="number" id="op-edit-unoperated-cnt" class="input-box" min="0">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:0.8rem; color:#9f1239;">미운영 사업자</label>
+                <input type="text" id="op-edit-unoperated-operator" class="input-box" placeholder="사업자명">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:0.8rem; color:#9f1239;">설치 위치</label>
+                <input type="text" id="op-edit-location" class="input-box" placeholder="예: 지상, 지하1층">
+              </div>
+            </div>
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap:0.6rem; margin-bottom:0.6rem;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:0.8rem; color:#9f1239;">미운영 사유</label>
+                <input type="text" id="op-edit-unoperated-reason" class="input-box" placeholder="사유 입력">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:0.8rem; color:#9f1239;">미운영 시기</label>
+                <input type="text" id="op-edit-unoperated-date" class="input-box" placeholder="시기 입력">
+              </div>
+            </div>
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap:0.6rem;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:0.8rem; color:#9f1239;">최초설치시기</label>
+                <input type="text" id="op-edit-initial-install-date" class="input-box" placeholder="설치시기">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:0.8rem; color:#9f1239;">비고</label>
+                <input type="text" id="op-edit-note" class="input-box" placeholder="비고 입력">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: 향후계획 및 관리자 (개인정보 암호화 보관) -->
+          <div style="font-weight:700; font-size:0.95rem; margin-bottom:0.6rem; color:var(--text-main); display:flex; align-items:center; gap:0.4rem; border-bottom:1px solid var(--border-color); padding-bottom:0.4rem;">
+            <i class="fa-solid fa-user-shield" style="color:var(--success); font-size:0.9rem;"></i> 향후계획 및 관리자 (AES-256 보안 암호화 보관)
+          </div>
+          <div class="form-group" style="margin-bottom:0.6rem;">
+            <label class="form-label" style="font-size:0.8rem;">민원사항 및 향후계획</label>
+            <textarea id="op-edit-complaint-plan" class="input-box" rows="2" placeholder="민원사항 및 향후계획 입력" style="resize:vertical;"></textarea>
+          </div>
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap:0.6rem; margin-bottom:1rem;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem; display:flex; align-items:center; gap:0.3rem;">
+                <i class="fa-solid fa-lock" style="color:var(--purple); font-size:0.75rem;"></i> 관리자명 <span style="font-size:0.72rem; color:var(--text-muted);">(암호화 저장)</span>
+              </label>
+              <input type="text" id="op-edit-manager-name" class="input-box" placeholder="관리자 성명">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.8rem; display:flex; align-items:center; gap:0.3rem;">
+                <i class="fa-solid fa-lock" style="color:var(--purple); font-size:0.75rem;"></i> 연락처 <span style="font-size:0.72rem; color:var(--text-muted);">(암호화 저장)</span>
+              </label>
+              <input type="text" id="op-edit-manager-contact" class="input-box" placeholder="전화번호 / 핸드폰">
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; padding-top:0.8rem; border-top:1px solid var(--border-color);">
+            <button type="button" class="btn btn-secondary" style="font-size:0.82rem;" onclick="jumpToFacilityDetailFromOp()">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> 통합시설관리 상세 열기
+            </button>
+            <div style="display:flex; gap:0.5rem;">
+              <button type="button" class="btn btn-secondary" onclick="closeModal('modal-operation-detail')">닫기</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> 저장하기
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260908_status_cascade"></script>
+  <script src="app.js?v=20260909_operations_management"></script>
 </body>
 </html>

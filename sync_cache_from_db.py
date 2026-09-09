@@ -121,8 +121,26 @@ def sync():
         print(f"[sync] ERROR: dispositions fetch failed: {e}")
         return False
 
+    # 3. Operations 동기화 (충전시설 운영현황)
+    try:
+        res = requests.get(f"{SUPABASE_URL}/rest/v1/operations?select=*&order=id.asc", headers=HEADERS, timeout=15)
+        if res.status_code == 200:
+            raw_ops = res.json()
+            if raw_ops and len(raw_ops) > 0:
+                for item in raw_ops:
+                    item["manager_name"] = decrypt_data(item.get("manager_name_encrypted")) if item.get("manager_name_encrypted") else ""
+                    item["manager_contact"] = decrypt_data(item.get("manager_contact_encrypted")) if item.get("manager_contact_encrypted") else ""
+                with open('operations_cache.json', 'w', encoding='utf-8') as f:
+                    json.dump(raw_ops, f, ensure_ascii=False, indent=2)
+                print(f"[sync] operations_cache.json 업데이트 완료 ({len(raw_ops)}건)")
+        else:
+            print(f"[sync] Operations note: status={res.status_code} (로컬 캐시 보존)")
+    except Exception as e:
+        print(f"[sync] Operations sync note: {e} (로컬 캐시 보존)")
+
     print("[sync] 캐시 동기화 완료! 이제 git add/commit/push 해도 안전합니다.")
     return True
+
 
 if __name__ == '__main__':
     success = sync()

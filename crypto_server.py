@@ -27,7 +27,116 @@ USERS_FILE = os.path.join(os.path.dirname(__file__), "users_db.json")
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "settings.json")
 NOTES_FILE = os.path.join(os.path.dirname(__file__), "dispositions_notes.json")
 CORRECTION_ORDERS_FILE = os.path.join(os.path.dirname(__file__), "correction_orders_cache.json")
+OPERATIONS_FILE = os.path.join(os.path.dirname(__file__), "operations_cache.json")
 ECOCAR_HTML_PATH = r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\ECO-CAR.html"
+
+def load_operations():
+    # 1. Supabase DB 조회 시도 (1순위 SSOT)
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/operations?select=*&order=id.asc", headers=HEADERS, timeout=8)
+            if res.status_code == 200:
+                ops = res.json()
+                if ops and len(ops) > 0:
+                    for item in ops:
+                        item["manager_name"] = decrypt_data(item.get("manager_name_encrypted")) if item.get("manager_name_encrypted") else ""
+                        item["manager_contact"] = decrypt_data(item.get("manager_contact_encrypted")) if item.get("manager_contact_encrypted") else ""
+                    try:
+                        with open(OPERATIONS_FILE, "w", encoding="utf-8") as f:
+                            json.dump(ops, f, ensure_ascii=False, indent=2)
+                    except Exception:
+                        pass
+                    return ops
+        except Exception as e:
+            print(f"Supabase load_operations error: {e}")
+
+    # 2. 로컬 캐시 fallback
+    if os.path.exists(OPERATIONS_FILE):
+        try:
+            with open(OPERATIONS_FILE, "r", encoding="utf-8") as f:
+                ops = json.load(f)
+            for item in ops:
+                if "manager_name" not in item:
+                    item["manager_name"] = decrypt_data(item.get("manager_name_encrypted")) if item.get("manager_name_encrypted") else ""
+                if "manager_contact" not in item:
+                    item["manager_contact"] = decrypt_data(item.get("manager_contact_encrypted")) if item.get("manager_contact_encrypted") else ""
+            return ops
+        except Exception as e:
+            print(f"Local load_operations error: {e}")
+    return []
+
+def save_operation(req_data):
+    facility_key = str(req_data.get("facility_key", "")).strip()
+    if not facility_key:
+        return False, "시설 고유키(facility_key)는 필수입니다."
+
+    raw_mgr = req_data.get("manager_name")
+    raw_contact = req_data.get("manager_contact")
+    enc_mgr = encrypt_data(raw_mgr) if raw_mgr else req_data.get("manager_name_encrypted")
+    enc_contact = encrypt_data(raw_contact) if raw_contact else req_data.get("manager_contact_encrypted")
+
+    record = {
+        "facility_key": facility_key,
+        "facility_name": req_data.get("facility_name", ""),
+        "address_doro": req_data.get("address_doro", ""),
+        "investigator": req_data.get("investigator", ""),
+        "investigation_date": req_data.get("investigation_date", ""),
+        "parking_ground_cnt": int(req_data.get("parking_ground_cnt", 0) or 0),
+        "parking_underground_cnt": int(req_data.get("parking_underground_cnt", 0) or 0),
+        "parking_uninstalled_cnt": int(req_data.get("parking_uninstalled_cnt", 0) or 0),
+        "charger_installed_cnt": int(req_data.get("charger_installed_cnt", 0) or 0),
+        "charger_fast_cnt": int(req_data.get("charger_fast_cnt", 0) or 0),
+        "charger_slow_cnt": int(req_data.get("charger_slow_cnt", 0) or 0),
+        "charger_uninstalled_cnt": int(req_data.get("charger_uninstalled_cnt", 0) or 0),
+        "normal_operator_qty": req_data.get("normal_operator_qty", ""),
+        "unoperated_cnt": int(req_data.get("unoperated_cnt", 0) or 0),
+        "location": req_data.get("location", ""),
+        "unoperated_operator": req_data.get("unoperated_operator", ""),
+        "initial_install_date": req_data.get("initial_install_date", ""),
+        "operation_status": req_data.get("operation_status", "정상운영"),
+        "unoperated_reason": req_data.get("unoperated_reason", ""),
+        "unoperated_date": req_data.get("unoperated_date", ""),
+        "note": req_data.get("note", ""),
+        "complaint_and_plan": req_data.get("complaint_and_plan", ""),
+        "manager_name_encrypted": enc_mgr,
+        "manager_contact_encrypted": enc_contact,
+        "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            url = f"{SUPABASE_URL}/rest/v1/operations"
+            upsert_headers = dict(HEADERS)
+            upsert_headers["Prefer"] = "resolution=merge-duplicates"
+            requests.post(url, headers=upsert_headers, json=[record], timeout=8)
+        except Exception as e:
+            print("Supabase operation save error:", e)
+
+    try:
+        cached = []
+        if os.path.exists(OPERATIONS_FILE):
+            with open(OPERATIONS_FILE, "r", encoding="utf-8") as f:
+                cached = json.load(f)
+        found = False
+        for idx, item in enumerate(cached):
+            if item.get("facility_key") == facility_key:
+                cached[idx] = {**item, **record}
+                cached[idx]["manager_name"] = raw_mgr if raw_mgr is not None else decrypt_data(enc_mgr)
+                cached[idx]["manager_contact"] = raw_contact if raw_contact is not None else decrypt_data(enc_contact)
+                found = True
+                break
+        if not found:
+            new_item = dict(record)
+            new_item["manager_name"] = raw_mgr or ""
+            new_item["manager_contact"] = raw_contact or ""
+            cached.append(new_item)
+        with open(OPERATIONS_FILE, "w", encoding="utf-8") as f:
+            json.dump(cached, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Local cache operation save error:", e)
+
+    return True, "정상적으로 저장되었습니다."
+
 
 def load_correction_orders():
     # 1. Supabase DB 조회 시도 (1순위 SSOT)
@@ -850,6 +959,14 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
 
+        elif path == "/api/operations":
+            data = load_operations()
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
+
+
         elif path == "/api/photos":
             key = params.get("key", [None])[0]
             name = params.get("name", [None])[0]
@@ -1160,6 +1277,15 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "total_count": len(orders),
                 "meta": meta
             }, ensure_ascii=False).encode('utf-8'))
+
+        elif path == "/api/operations/save":
+            success, msg = save_operation(req_json)
+            status_code = 200 if success else 400
+            self.send_response(status_code)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": success, "message": msg}, ensure_ascii=False).encode('utf-8'))
+            return
 
         elif path == "/api/users/save":
             username = req_json.get("username", "").strip()
