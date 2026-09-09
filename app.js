@@ -3386,6 +3386,8 @@ function openModal(modalId) {
   }
 }
 
+let returnTabAfterFacilityDetail = null;
+
 function closeModal(modalId) {
   const elem = document.getElementById(modalId);
   if (elem) {
@@ -3396,6 +3398,19 @@ function closeModal(modalId) {
     if (body) body.scrollTop = 0;
     const content = elem.querySelector(".modal-content");
     if (content) content.scrollTop = 0;
+  }
+
+  // 통합시설 상세보기 또는 시설수정 모달을 닫을 때, 운영현황(또는 이전 탭)에서 호출된 경우 해당 탭으로 복귀
+  if (modalId === "modal-facility-detail" || modalId === "modal-facility") {
+    if (returnTabAfterFacilityDetail) {
+      const isFacilityModalActive = document.getElementById("modal-facility")?.classList.contains("active");
+      const isDetailModalActive = document.getElementById("modal-facility-detail")?.classList.contains("active");
+      if (!isFacilityModalActive && !isDetailModalActive) {
+        const targetTab = returnTabAfterFacilityDetail;
+        returnTabAfterFacilityDetail = null;
+        switchTab(targetTab);
+      }
+    }
   }
 }
 
@@ -4638,12 +4653,10 @@ async function handleSaveOperation(e) {
 function jumpToFacilityDetail(facilityKey) {
   if (!facilityKey) return;
   const targetKey = String(facilityKey).trim();
+  returnTabAfterFacilityDetail = 'operations';
   
   const doOpen = () => {
-    switchTab('facilities');
-    setTimeout(() => {
-      openFacilityDetailModal(targetKey);
-    }, 60);
+    openFacilityDetailModal(targetKey);
   };
 
   if (!facilitiesData || facilitiesData.length === 0) {
