@@ -288,7 +288,7 @@ async function loadData() {
   }
 
   // 2. Fetch fresh data
-  await Promise.all([fetchFacilities(), fetchDispositions(), fetchCorrectionOrders()]);
+  await Promise.all([fetchFacilities(), fetchDispositions(), fetchCorrectionOrders(), fetchOperations()]);
   if (currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN")) {
     await fetchUsers();
   }
@@ -4055,8 +4055,39 @@ document.addEventListener("DOMContentLoaded", () => {
    Operations Management (운영현황 관리) Functions
    ========================================================================== */
 
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 async function fetchOperations(forceRefresh = false) {
   const container = document.getElementById("operations-card-container");
+  
+  // 이미 메모리에 데이터가 있다면 먼저 렌더링하여 지연 방지
+  if (operationsData && operationsData.length > 0 && !forceRefresh) {
+    initOperationReasonFilter();
+    filterOperations();
+    return;
+  }
+
+  // 로컬 캐시(localStorage)에 저장된 데이터가 있으면 0.001초 만에 즉시 표시
+  try {
+    const localCached = localStorage.getItem("cached_operations");
+    if (localCached) {
+      const parsed = JSON.parse(localCached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        operationsData = parsed;
+        initOperationReasonFilter();
+        filterOperations();
+      }
+    }
+  } catch (e) {}
+
   if (container && (!operationsData || operationsData.length === 0)) {
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
@@ -4068,7 +4099,35 @@ async function fetchOperations(forceRefresh = false) {
 
   let list = [];
 
-  // [1순위] Supabase DB 실시간 직접 조회 (SSOT)
+  // [1순위] 초고속 로컬 정적 캐시 파일 (즉시 로드되어 0.1초 렌더링 보장)
+  try {
+    const resStatic = await fetch("operations_cache.json?v=" + Date.now());
+    if (resStatic.ok) {
+      const raw = await resStatic.json();
+      const rawList = Array.isArray(raw) ? raw : [];
+      list = await Promise.all(rawList.map(async op => {
+        let decMgr = await decryptFernet(op.manager_name_encrypted);
+        let decContact = await decryptFernet(op.manager_contact_encrypted);
+        return {
+          ...op,
+          manager_name: decMgr || (op.manager_name_encrypted && !op.manager_name_encrypted.startsWith("gAAAAA") ? op.manager_name_encrypted : (op.manager_name || "")),
+          manager_contact: decContact || (op.manager_contact_encrypted && !op.manager_contact_encrypted.startsWith("gAAAAA") ? op.manager_contact_encrypted : (op.manager_contact || ""))
+        };
+      }));
+    }
+  } catch (e) {
+    console.warn("Static operations cache fetch note:", e);
+  }
+
+  // 1순위 데이터가 있으면 즉시 화면 렌더링 (체감 대기시간 0초)
+  if (list.length > 0) {
+    operationsData = list;
+    try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch (e) {}
+    initOperationReasonFilter();
+    filterOperations();
+  }
+
+  // [2순위 & 백그라운드 동기화] Supabase DB 실시간 직접 조회 (SSOT)
   try {
     const resDirect = await fetch(`${SUPABASE_REST_URL}/operations?select=*&order=id.asc`, {
       headers: {
@@ -4079,7 +4138,7 @@ async function fetchOperations(forceRefresh = false) {
     if (resDirect.ok) {
       const dbRows = await resDirect.json();
       if (Array.isArray(dbRows) && dbRows.length > 0) {
-        list = await Promise.all(dbRows.map(async op => {
+        const freshList = await Promise.all(dbRows.map(async op => {
           let decMgr = await decryptFernet(op.manager_name_encrypted);
           let decContact = await decryptFernet(op.manager_contact_encrypted);
           return {
@@ -4088,52 +4147,39 @@ async function fetchOperations(forceRefresh = false) {
             manager_contact: decContact || (op.manager_contact_encrypted && !op.manager_contact_encrypted.startsWith("gAAAAA") ? op.manager_contact_encrypted : (op.manager_contact || ""))
           };
         }));
+        operationsData = freshList;
+        try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch (e) {}
+        initOperationReasonFilter();
+        filterOperations();
+        return;
       }
     }
   } catch (errDb) {
-    console.warn("Direct Supabase operations fetch failed, fallback to backend:", errDb);
+    console.warn("Direct Supabase operations fetch note:", errDb);
   }
 
-  // [2순위] Render 백엔드 API
-  if (list.length === 0) {
+  // [3순위] Render 백엔드 API (Supabase 테이블이 없을 때 백엔드 캐시 활용)
+  if (operationsData.length === 0) {
     try {
       const res = await fetchWithRetry(`${API_BASE_URL}/operations`);
-      if (res.ok) {
+      if (res && res.ok) {
         const raw = await res.json();
-        list = Array.isArray(raw) ? raw : (raw.data || []);
+        const rawList = Array.isArray(raw) ? raw : (raw.data || []);
+        if (rawList.length > 0) {
+          operationsData = rawList;
+          try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch (e) {}
+          initOperationReasonFilter();
+          filterOperations();
+          return;
+        }
       }
     } catch (e) {
-      console.warn("Backend operations fetch failed, fallback to cache:", e);
+      console.warn("Backend operations fetch note:", e);
     }
   }
 
-  // [3순위] 오프라인 정적 캐시 파일
-  if (list.length === 0) {
-    try {
-      const resStatic = await fetch("operations_cache.json?v=" + Date.now());
-      if (resStatic.ok) {
-        const raw = await resStatic.json();
-        const rawList = Array.isArray(raw) ? raw : [];
-        list = await Promise.all(rawList.map(async op => {
-          let decMgr = await decryptFernet(op.manager_name_encrypted);
-          let decContact = await decryptFernet(op.manager_contact_encrypted);
-          return {
-            ...op,
-            manager_name: decMgr || (op.manager_name_encrypted && !op.manager_name_encrypted.startsWith("gAAAAA") ? op.manager_name_encrypted : (op.manager_name || "")),
-            manager_contact: decContact || (op.manager_contact_encrypted && !op.manager_contact_encrypted.startsWith("gAAAAA") ? op.manager_contact_encrypted : (op.manager_contact || ""))
-          };
-        }));
-      }
-    } catch (e) {
-      console.warn("Static operations cache fetch failed:", e);
-    }
-  }
-
-  if (list.length > 0) {
-    operationsData = list;
-    initOperationReasonFilter();
-    filterOperations();
-  } else if (container) {
+  // 최종 실패 시 처리
+  if ((!operationsData || operationsData.length === 0) && container) {
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
         <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; color: var(--warning); margin-bottom: 0.8rem;"></i>
