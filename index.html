@@ -382,35 +382,44 @@
         </div>
       </div>
 
-      <!-- Search & Filter Toolbar -->
-      <div class="toolbar" style="margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
-        <div class="search-filter-group" style="flex: 1; min-width: 300px; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-          <div class="search-box" style="flex: 1; min-width: 200px;">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="op-search-input" placeholder="시설명, 주소, 사업자, 사유, KEY 검색..." oninput="filterOperations()">
+      <!-- Search & Filter Toolbar (통합시설관리와 100% 통일성 유지) -->
+      <div class="toolbar">
+        <div class="search-filter-group">
+          <!-- Search Input with Magnifying Glass Icon -->
+          <div class="search-box-wrapper" style="position:relative; display:flex; align-items:center;">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:0.8rem; color:var(--text-muted); font-size:0.9rem;"></i>
+            <input type="text" id="op-search-input" class="input-box" placeholder="검색..." oninput="filterOperations()" style="padding-left:2.3rem;">
           </div>
           
-          <select id="op-filter-status" class="filter-select" onchange="filterOperations()" style="padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.85rem;">
-            <option value="ALL">운영여부: 전체</option>
+          <select id="op-filter-status" class="select-box" onchange="filterOperations()">
+            <option value="ALL">운영여부 전체</option>
             <option value="정상운영">정상운영</option>
             <option value="미운영">미운영</option>
           </select>
 
-          <select id="op-filter-reason" class="filter-select" onchange="filterOperations()" style="padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.85rem;">
-            <option value="ALL">미운영사유: 전체</option>
+          <!-- 운영사업자 필터 신설 -->
+          <select id="op-filter-operator" class="select-box" onchange="filterOperations()">
+            <option value="ALL">운영사업자 전체</option>
           </select>
 
-          <select id="op-sort" class="filter-select" onchange="filterOperations()" style="padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.85rem;">
+          <!-- 미운영사유 필터 -->
+          <select id="op-filter-reason" class="select-box" onchange="filterOperations()">
+            <option value="ALL">미운영사유 전체</option>
+          </select>
+
+          <!-- 정렬 -->
+          <select id="op-sort" class="select-box" onchange="filterOperations()">
             <option value="default">정렬: 기본순</option>
             <option value="name_asc">시설명 오름차순</option>
             <option value="name_desc">시설명 내림차순</option>
             <option value="unop_desc">미운영기수 많은순</option>
             <option value="installed_desc">설치기수 많은순</option>
           </select>
+
+          <span id="op-count-badge" class="result-badge">총 0건 검색</span>
         </div>
 
-        <div class="action-btn-group" style="display: flex; gap: 0.5rem; align-items: center;">
-          <span id="op-count-badge" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); background: var(--bg-hover); padding: 0.4rem 0.75rem; border-radius: 6px;">총 0건</span>
+        <div class="action-btn-group" style="display:flex; gap:0.5rem; align-items:center;">
           <button class="btn btn-secondary" style="padding: 0.45rem 0.8rem; font-size: 0.82rem;" onclick="fetchOperations(true)">
             <i class="fa-solid fa-arrows-rotate"></i> 새로고침
           </button>
@@ -1453,6 +1462,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260909_simplified_card_detail"></script>
+  <script src="app.js?v=20260909_op_filter_operator"></script>
 </body>
 </html>

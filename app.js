@@ -4131,7 +4131,7 @@ async function fetchOperations(forceRefresh = false) {
   if (list.length > 0) {
     operationsData = list;
     try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch (e) {}
-    initOperationReasonFilter();
+    initOperationFilters();
     filterOperations();
   }
 
@@ -4157,7 +4157,7 @@ async function fetchOperations(forceRefresh = false) {
         }));
         operationsData = freshList;
         try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch (e) {}
-        initOperationReasonFilter();
+        initOperationFilters();
         filterOperations();
         return;
       }
@@ -4176,7 +4176,7 @@ async function fetchOperations(forceRefresh = false) {
         if (rawList.length > 0) {
           operationsData = rawList;
           try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch (e) {}
-          initOperationReasonFilter();
+          initOperationFilters();
           filterOperations();
           return;
         }
@@ -4198,6 +4198,70 @@ async function fetchOperations(forceRefresh = false) {
   }
 }
 
+// 조사일자 시간 제거 헬퍼 함수 ('2026-06-30 00:00:00' -> '2026-06-30')
+function formatInvestigationDate(dateStr) {
+  if (!dateStr) return "-";
+  const s = String(dateStr).trim();
+  const m = s.match(/^(\d{4}[-./]\d{1,2}[-./]\d{1,2})/);
+  if (m) return m[1];
+  return s.split(" ")[0] || s;
+}
+
+function initOperationFilters() {
+  initOperationOperatorFilter();
+  initOperationReasonFilter();
+}
+
+function initOperationOperatorFilter() {
+  const opSelect = document.getElementById("op-filter-operator");
+  if (!opSelect) return;
+
+  const currentVal = opSelect.value;
+  const operators = new Set();
+
+  operationsData.forEach(d => {
+    // 1. normal_operator_qty에서 사업자명 추출
+    const norm = d.normal_operator_qty || "";
+    if (norm) {
+      const parts = norm.split(/[,/&]/);
+      parts.forEach(p => {
+        const m = p.trim().match(/^([^(（0-9]+)/);
+        if (m) {
+          const name = m[1].trim();
+          if (name && name.length >= 2 && name !== "None" && name !== "기타") {
+            operators.add(name);
+          }
+        }
+      });
+    }
+
+    // 2. unoperated_operator에서 사업자명 추출
+    const unop = d.unoperated_operator || "";
+    if (unop) {
+      const parts = unop.split(/[,/&]/);
+      parts.forEach(p => {
+        const m = p.trim().match(/^([^(（0-9]+)/);
+        if (m) {
+          const name = m[1].trim();
+          if (name && name.length >= 2 && name !== "None" && name !== "기타") {
+            operators.add(name);
+          }
+        }
+      });
+    }
+  });
+
+  const sortedOps = Array.from(operators).sort((a, b) => a.localeCompare(b, "ko"));
+  let html = `<option value="ALL">운영사업자 전체</option>`;
+  sortedOps.forEach(op => {
+    html += `<option value="${escapeHtml(op)}">${escapeHtml(op)}</option>`;
+  });
+  opSelect.innerHTML = html;
+  if (operators.has(currentVal)) {
+    opSelect.value = currentVal;
+  }
+}
+
 function initOperationReasonFilter() {
   const reasonSelect = document.getElementById("op-filter-reason");
   if (!reasonSelect) return;
@@ -4213,7 +4277,7 @@ function initOperationReasonFilter() {
   });
 
   const sortedReasons = Array.from(reasons).sort();
-  let html = `<option value="ALL">미운영사유: 전체</option>`;
+  let html = `<option value="ALL">미운영사유 전체</option>`;
   sortedReasons.forEach(r => {
     html += `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`;
   });
@@ -4226,6 +4290,7 @@ function initOperationReasonFilter() {
 function filterOperations() {
   const searchInput = (document.getElementById("op-search-input")?.value || "").trim().toLowerCase();
   const statusFilter = document.getElementById("op-filter-status")?.value || "ALL";
+  const operatorFilter = document.getElementById("op-filter-operator")?.value || "ALL";
   const reasonFilter = document.getElementById("op-filter-reason")?.value || "ALL";
   const sortMode = document.getElementById("op-sort")?.value || "default";
 
@@ -4235,12 +4300,21 @@ function filterOperations() {
       if (item.operation_status !== statusFilter) return false;
     }
 
-    // 2. 미운영사유 필터
+    // 2. 운영사업자 필터
+    if (operatorFilter !== "ALL") {
+      const normStr = item.normal_operator_qty || "";
+      const unopStr = item.unoperated_operator || "";
+      if (!normStr.includes(operatorFilter) && !unopStr.includes(operatorFilter)) {
+        return false;
+      }
+    }
+
+    // 3. 미운영사유 필터
     if (reasonFilter !== "ALL") {
       if ((item.unoperated_reason || "").trim() !== reasonFilter) return false;
     }
 
-    // 3. 검색어 필터 (시설명, 도로명주소, 정상사업자, 미운영사업자, 미운영사유, KEY, 관리자)
+    // 4. 검색어 필터 (시설명, 도로명주소, 정상사업자, 미운영사업자, 미운영사유, KEY, 관리자)
     if (searchInput) {
       const matchKey = (item.facility_key || "").toLowerCase().includes(searchInput);
       const matchName = (item.facility_name || "").toLowerCase().includes(searchInput);
@@ -4289,7 +4363,7 @@ function renderOperations() {
   if (elNormal) elNormal.textContent = normalCount.toLocaleString();
   if (elUnop) elUnop.textContent = unopCount.toLocaleString();
   if (elUnopChargers) elUnopChargers.textContent = unopChargers.toLocaleString();
-  if (elBadge) elBadge.textContent = `총 ${filteredOperationsData.length}건`;
+  if (elBadge) elBadge.textContent = `총 ${filteredOperationsData.length}건 검색`;
 
   // 2. 카드 그리드 렌더링
   const container = document.getElementById("operations-card-container");
@@ -4315,6 +4389,37 @@ function renderOperations() {
       : `<span class="op-badge op-badge-normal"><i class="fa-solid fa-circle-check"></i> 정상운영</span>`;
 
     const unopCnt = parseInt(item.unoperated_cnt) || 0;
+    const hasNormal = Boolean(item.normal_operator_qty && item.normal_operator_qty.trim() && item.normal_operator_qty.trim() !== "-");
+    const hasUnop = Boolean(isUnop || unopCnt > 0 || (item.unoperated_operator && item.unoperated_operator.trim() && item.unoperated_operator.trim() !== "-") || (item.unoperated_reason && item.unoperated_reason.trim() && item.unoperated_reason.trim() !== "-"));
+
+    let summaryBoxesHtml = "";
+    if (hasNormal || (!hasUnop && item.operation_status === "정상운영")) {
+      summaryBoxesHtml += `
+        <div class="op-summary-normal">
+          <div class="op-summary-normal-title">
+            <i class="fa-solid fa-circle-check"></i> 정상운영
+          </div>
+          <div class="op-summary-operator">
+            ${escapeHtml(item.normal_operator_qty || "충전시설 정상 가동 중")}
+          </div>
+        </div>
+      `;
+    }
+    if (hasUnop) {
+      summaryBoxesHtml += `
+        <div class="op-summary-unop">
+          <div class="op-summary-unop-title">
+            <i class="fa-solid fa-triangle-exclamation"></i> 미운영 ${unopCnt > 0 ? `${unopCnt}기` : ''}
+            ${item.unoperated_operator ? `<span class="op-sub-text">(${escapeHtml(item.unoperated_operator)})</span>` : ''}
+          </div>
+          ${item.unoperated_reason ? `
+            <div class="op-summary-reason-badge">
+              <i class="fa-solid fa-wrench"></i> 사유: ${escapeHtml(item.unoperated_reason)}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
 
     cardsHtml += `
       <div class="op-card ${statusClass}">
@@ -4331,32 +4436,11 @@ function renderOperations() {
 
         <!-- 2. 카드 본문: 핵심 운영/미운영 현황 요약 (단순화 및 직관성 극대화) -->
         <div class="op-card-summary">
-          ${isUnop || unopCnt > 0 ? `
-            <div class="op-summary-unop">
-              <div class="op-summary-unop-title">
-                <i class="fa-solid fa-triangle-exclamation"></i> 미운영 ${unopCnt > 0 ? `${unopCnt}기` : ''}
-                ${item.unoperated_operator ? `<span class="op-sub-text">(${escapeHtml(item.unoperated_operator)})</span>` : ''}
-              </div>
-              ${item.unoperated_reason ? `
-                <div class="op-summary-reason-badge">
-                  <i class="fa-solid fa-wrench"></i> 사유: ${escapeHtml(item.unoperated_reason)}
-                </div>
-              ` : ''}
-            </div>
-          ` : `
-            <div class="op-summary-normal">
-              <div class="op-summary-normal-title">
-                <i class="fa-solid fa-circle-check"></i> 정상운영
-              </div>
-              <div class="op-summary-operator">
-                ${escapeHtml(item.normal_operator_qty || "충전시설 정상 가동 중")}
-              </div>
-            </div>
-          `}
+          ${summaryBoxesHtml}
 
           <!-- 조사 정보 (조사일 / 조사자) -->
           <div class="op-meta-row">
-            <span><i class="fa-regular fa-calendar-check"></i> 조사일: ${escapeHtml(item.investigation_date || "-")}</span>
+            <span><i class="fa-regular fa-calendar-check"></i> 조사일: ${escapeHtml(formatInvestigationDate(item.investigation_date))}</span>
             <span><i class="fa-regular fa-user"></i> 조사자: ${escapeHtml(item.investigator || "-")}</span>
           </div>
         </div>
@@ -4393,7 +4477,7 @@ function openOperationModal(facilityKey) {
   setVal("op-edit-facility-key", item.facility_key);
   setVal("op-edit-facility-name", item.facility_name);
   setVal("op-edit-investigator", item.investigator);
-  setVal("op-edit-investigation-date", item.investigation_date);
+  setVal("op-edit-investigation-date", formatInvestigationDate(item.investigation_date));
   setVal("op-edit-address-doro", item.address_doro);
 
   setVal("op-edit-parking-ground", item.parking_ground_cnt ?? 0);
