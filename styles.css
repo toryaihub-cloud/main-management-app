@@ -1563,46 +1563,82 @@ tr:hover {
   color: #64748B;
 }
 
-.op-unop-box {
-  background: #FFF1F2;
-  border: 1px solid #FECDD3;
-  border-radius: 8px;
-  padding: 0.65rem 0.8rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.8rem;
+/* Simplified Card Body Styles */
+.op-card-summary {
+  margin-bottom: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
 }
 
-.op-unop-header {
+.op-summary-unop {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+}
+
+.op-summary-unop-title {
+  font-size: 0.88rem;
   font-weight: 700;
-  color: #9F1239;
+  color: #DC2626;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.op-summary-unop-title .op-sub-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #991B1B;
+}
+
+.op-summary-reason-badge {
+  font-size: 0.76rem;
+  color: #B91C1C;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.op-summary-normal {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+}
+
+.op-summary-normal-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #16A34A;
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.2rem;
 }
 
-.op-unop-detail {
-  color: #881337;
-  line-height: 1.4;
-}
-
-.op-info-row {
-  font-size: 0.8rem;
-  color: #334155;
-  margin-bottom: 0.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.op-info-label {
-  color: #64748B;
-  font-size: 0.75rem;
-}
-
-.op-info-val {
+.op-summary-operator {
+  font-size: 0.82rem;
+  color: #15803D;
   font-weight: 600;
-  color: #1E293B;
+}
+
+.op-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.76rem;
+  color: var(--text-muted, #64748B);
+  padding: 0.1rem 0.2rem;
+}
+
+.op-meta-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .op-card-footer {
@@ -1610,9 +1646,30 @@ tr:hover {
   padding-top: 0.75rem;
   border-top: 1px solid var(--border-color, #F1F5F9);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: 0.5rem;
 }
+
+.op-btn-facility {
+  flex: 1.1;
+  padding: 0.42rem 0.5rem !important;
+  font-size: 0.78rem !important;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.op-btn-edit {
+  flex: 1;
+  padding: 0.42rem 0.5rem !important;
+  font-size: 0.78rem !important;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
 
 

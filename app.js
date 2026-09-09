@@ -3378,6 +3378,14 @@ async function deleteUser(username) {
   } catch (err) { console.error(err); }
 }
 
+function openModal(modalId) {
+  const elem = document.getElementById(modalId);
+  if (elem) {
+    elem.classList.add("active");
+    elem.style.display = "flex";
+  }
+}
+
 function closeModal(modalId) {
   const elem = document.getElementById(modalId);
   if (elem) {
@@ -4306,38 +4314,11 @@ function renderOperations() {
       ? `<span class="op-badge op-badge-unop"><i class="fa-solid fa-triangle-exclamation"></i> 미운영</span>`
       : `<span class="op-badge op-badge-normal"><i class="fa-solid fa-circle-check"></i> 정상운영</span>`;
 
-    // 주차 및 충전기 요약 칩
-    const groundP = parseInt(item.parking_ground_cnt) || 0;
-    const underP = parseInt(item.parking_underground_cnt) || 0;
-    const totalCharger = parseInt(item.charger_installed_cnt) || 0;
-    const fastC = parseInt(item.charger_fast_cnt) || 0;
-    const slowC = parseInt(item.charger_slow_cnt) || 0;
     const unopCnt = parseInt(item.unoperated_cnt) || 0;
-
-    // 미운영 상세 정보 블록
-    let unopBoxHtml = "";
-    if (isUnop || unopCnt > 0) {
-      unopBoxHtml = `
-        <div class="op-unop-box">
-          <div class="op-unop-header">
-            <i class="fa-solid fa-ban"></i> 미운영 상세: ${unopCnt}기 (${escapeHtml(item.unoperated_operator || "사업자 미지정")})
-          </div>
-          <div class="op-unop-detail">
-            ${item.location ? `<div><strong>위치:</strong> ${escapeHtml(item.location)}</div>` : ""}
-            ${item.unoperated_reason ? `<div><strong>사유:</strong> ${escapeHtml(item.unoperated_reason)}</div>` : ""}
-            ${item.unoperated_date ? `<div><strong>시기:</strong> ${escapeHtml(item.unoperated_date)}</div>` : ""}
-            ${item.note ? `<div><strong>비고:</strong> ${escapeHtml(item.note)}</div>` : ""}
-          </div>
-        </div>
-      `;
-    }
-
-    // 관리자/연락처
-    const mgrName = item.manager_name || "-";
-    const mgrContact = item.manager_contact || "-";
 
     cardsHtml += `
       <div class="op-card ${statusClass}">
+        <!-- 1. 카드 헤더: 시설명, KEY, 운영여부 뱃지 -->
         <div class="op-card-header">
           <div class="op-card-title-wrap">
             <div class="op-card-title" onclick="openOperationModal('${escapeHtml(item.facility_key)}')">
@@ -4348,46 +4329,44 @@ function renderOperations() {
           <div>${badgeHtml}</div>
         </div>
 
-        <div class="op-card-address">
-          <i class="fa-solid fa-location-dot"></i>
-          <span>${escapeHtml(item.address_doro || "주소 정보 없음")}</span>
-        </div>
+        <!-- 2. 카드 본문: 핵심 운영/미운영 현황 요약 (단순화 및 직관성 극대화) -->
+        <div class="op-card-summary">
+          ${isUnop || unopCnt > 0 ? `
+            <div class="op-summary-unop">
+              <div class="op-summary-unop-title">
+                <i class="fa-solid fa-triangle-exclamation"></i> 미운영 ${unopCnt > 0 ? `${unopCnt}기` : ''}
+                ${item.unoperated_operator ? `<span class="op-sub-text">(${escapeHtml(item.unoperated_operator)})</span>` : ''}
+              </div>
+              ${item.unoperated_reason ? `
+                <div class="op-summary-reason-badge">
+                  <i class="fa-solid fa-wrench"></i> 사유: ${escapeHtml(item.unoperated_reason)}
+                </div>
+              ` : ''}
+            </div>
+          ` : `
+            <div class="op-summary-normal">
+              <div class="op-summary-normal-title">
+                <i class="fa-solid fa-circle-check"></i> 정상운영
+              </div>
+              <div class="op-summary-operator">
+                ${escapeHtml(item.normal_operator_qty || "충전시설 정상 가동 중")}
+              </div>
+            </div>
+          `}
 
-        <div class="op-chips-row">
-          <span class="op-chip" title="주차구역 (지상/지하)">
-            <i class="fa-solid fa-square-parking"></i> 주차: 지상 ${groundP}면 / 지하 ${underP}면
-          </span>
-          <span class="op-chip" title="충전기 설치합계 (급속/완속)">
-            <i class="fa-solid fa-bolt"></i> 충전합: ${totalCharger}기 (급속 ${fastC} / 완속 ${slowC})
-          </span>
-        </div>
-
-        <div class="op-info-row">
-          <span class="op-info-label">정상운영 사업자:</span>
-          <span class="op-info-val">${escapeHtml(item.normal_operator_qty || "-")}</span>
-        </div>
-
-        ${unopBoxHtml}
-
-        ${item.complaint_and_plan ? `
-          <div class="op-info-row" style="align-items: flex-start; margin-bottom: 0.5rem;">
-            <span class="op-info-label" style="min-width: 60px;">향후계획:</span>
-            <span class="op-info-val" style="font-weight: 500; font-size: 0.78rem; text-align: right;">${escapeHtml(item.complaint_and_plan)}</span>
+          <!-- 조사 정보 (조사일 / 조사자) -->
+          <div class="op-meta-row">
+            <span><i class="fa-regular fa-calendar-check"></i> 조사일: ${escapeHtml(item.investigation_date || "-")}</span>
+            <span><i class="fa-regular fa-user"></i> 조사자: ${escapeHtml(item.investigator || "-")}</span>
           </div>
-        ` : ""}
-
-        <div class="op-info-row" style="margin-top: 0.2rem; padding-top: 0.4rem; border-top: 1px dashed #E2E8F0;">
-          <span class="op-info-label"><i class="fa-solid fa-user-shield"></i> 관리자:</span>
-          <span class="op-info-val" style="font-size: 0.78rem;">
-            ${escapeHtml(mgrName)} ${mgrContact !== "-" ? `(${escapeHtml(mgrContact)})` : ""}
-          </span>
         </div>
 
+        <!-- 3. 카드 액션 버튼 (통합시설 상세보기 & 운영현황 상세/수정) -->
         <div class="op-card-footer">
-          <button class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;" onclick="jumpToFacilityDetail('${escapeHtml(item.facility_key)}')">
-            <i class="fa-solid fa-building"></i> 통합시설
+          <button type="button" class="btn btn-secondary op-btn-facility" onclick="jumpToFacilityDetail('${escapeHtml(item.facility_key)}')">
+            <i class="fa-solid fa-building"></i> 통합시설 상세보기
           </button>
-          <button class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" onclick="openOperationModal('${escapeHtml(item.facility_key)}')">
+          <button type="button" class="btn btn-primary op-btn-edit" onclick="openOperationModal('${escapeHtml(item.facility_key)}')">
             <i class="fa-solid fa-pen-to-square"></i> 상세 / 수정
           </button>
         </div>
@@ -4405,36 +4384,41 @@ function openOperationModal(facilityKey) {
     return;
   }
 
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = (val !== null && val !== undefined) ? val : "";
+  };
+
   // 폼에 데이터 바인딩
-  document.getElementById("op-edit-facility-key").value = item.facility_key || "";
-  document.getElementById("op-edit-facility-name").value = item.facility_name || "";
-  document.getElementById("op-edit-investigator").value = item.investigator || "";
-  document.getElementById("op-edit-investigation-date").value = item.investigation_date || "";
-  document.getElementById("op-edit-address-doro").value = item.address_doro || "";
+  setVal("op-edit-facility-key", item.facility_key);
+  setVal("op-edit-facility-name", item.facility_name);
+  setVal("op-edit-investigator", item.investigator);
+  setVal("op-edit-investigation-date", item.investigation_date);
+  setVal("op-edit-address-doro", item.address_doro);
 
-  document.getElementById("op-edit-parking-ground").value = item.parking_ground_cnt ?? 0;
-  document.getElementById("op-edit-parking-underground").value = item.parking_underground_cnt ?? 0;
-  document.getElementById("op-edit-parking-uninstalled").value = item.parking_uninstalled_cnt ?? 0;
+  setVal("op-edit-parking-ground", item.parking_ground_cnt ?? 0);
+  setVal("op-edit-parking-underground", item.parking_underground_cnt ?? 0);
+  setVal("op-edit-parking-uninstalled", item.parking_uninstalled_cnt ?? 0);
 
-  document.getElementById("op-edit-charger-installed").value = item.charger_installed_cnt ?? 0;
-  document.getElementById("op-edit-charger-fast").value = item.charger_fast_cnt ?? 0;
-  document.getElementById("op-edit-charger-slow").value = item.charger_slow_cnt ?? 0;
-  document.getElementById("op-edit-charger-uninstalled").value = item.charger_uninstalled_cnt ?? 0;
+  setVal("op-edit-charger-installed", item.charger_installed_cnt ?? 0);
+  setVal("op-edit-charger-fast", item.charger_fast_cnt ?? 0);
+  setVal("op-edit-charger-slow", item.charger_slow_cnt ?? 0);
+  setVal("op-edit-charger-uninstalled", item.charger_uninstalled_cnt ?? 0);
 
-  document.getElementById("op-edit-normal-operator").value = item.normal_operator_qty || "";
-  document.getElementById("op-edit-status").value = item.operation_status === "미운영" ? "미운영" : "정상운영";
+  setVal("op-edit-normal-operator", item.normal_operator_qty || "");
+  setVal("op-edit-status", item.operation_status === "미운영" ? "미운영" : "정상운영");
 
-  document.getElementById("op-edit-unoperated-cnt").value = item.unoperated_cnt ?? 0;
-  document.getElementById("op-edit-unoperated-operator").value = item.unoperated_operator || "";
-  document.getElementById("op-edit-location").value = item.location || "";
-  document.getElementById("op-edit-unoperated-reason").value = item.unoperated_reason || "";
-  document.getElementById("op-edit-unoperated-date").value = item.unoperated_date || "";
-  document.getElementById("op-edit-initial-install-date").value = item.initial_install_date || "";
-  document.getElementById("op-edit-note").value = item.note || "";
+  setVal("op-edit-unoperated-cnt", item.unoperated_cnt ?? 0);
+  setVal("op-edit-unoperated-operator", item.unoperated_operator || "");
+  setVal("op-edit-location", item.location || "");
+  setVal("op-edit-unoperated-reason", item.unoperated_reason || "");
+  setVal("op-edit-unoperated-date", item.unoperated_date || "");
+  setVal("op-edit-initial-install-date", item.initial_install_date || "");
+  setVal("op-edit-note", item.note || "");
 
-  document.getElementById("op-edit-complaint-plan").value = item.complaint_and_plan || "";
-  document.getElementById("op-edit-manager-name").value = item.manager_name || "";
-  document.getElementById("op-edit-manager-contact").value = item.manager_contact || "";
+  setVal("op-edit-complaint-plan", item.complaint_and_plan || "");
+  setVal("op-edit-manager-name", item.manager_name || "");
+  setVal("op-edit-manager-contact", item.manager_contact || "");
 
   // 헤더 뱃지 설정
   const keyBadge = document.getElementById("op-modal-key-badge");
@@ -4569,12 +4553,19 @@ async function handleSaveOperation(e) {
 
 function jumpToFacilityDetail(facilityKey) {
   if (!facilityKey) return;
-  const targetFac = facilitiesData.find(f => f.facility_key === facilityKey);
-  if (targetFac) {
+  const targetKey = String(facilityKey).trim();
+  
+  const doOpen = () => {
     switchTab('facilities');
-    showFacilityDetailModal(targetFac);
+    setTimeout(() => {
+      openFacilityDetailModal(targetKey);
+    }, 60);
+  };
+
+  if (!facilitiesData || facilitiesData.length === 0) {
+    fetchFacilities().then(doOpen).catch(doOpen);
   } else {
-    alert(`통합시설관리 데이터에서 시설키 [${facilityKey}]를 찾을 수 없습니다.`);
+    doOpen();
   }
 }
 
