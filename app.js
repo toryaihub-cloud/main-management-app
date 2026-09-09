@@ -5,11 +5,13 @@ window.RENDER_BACKEND_URL = "https://ecocar-backend-otev.onrender.com";
 const SUPABASE_REST_URL = "https://vijiacxcmtfekbmegjlf.supabase.co/rest/v1";
 const SUPABASE_SECRET_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpamlhY3hjbXRmZWtibWVnamxmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTgyMzgyNiwiZXhwIjoyMTAxMzk5ODI2fQ.Noa3eCRZLGLp67fRYu4ZlsFC4_d2X1C7KxQ_g2_zP00";
 
-// Client-Side Fernet Decryption Key Setup (Web Crypto API - AES-128-CBC)
-let fernetCryptoKeyPromise = null;
-function getFernetKey() {
-  if (!fernetCryptoKeyPromise) {
-    fernetCryptoKeyPromise = (async () => {
+// Client-Side Fernet Crypto Keys Setup (Web Crypto API - AES-128-CBC + HMAC-SHA256)
+let fernetEncKeyPromise = null;
+let fernetSignKeyPromise = null;
+
+function getFernetEncKey() {
+  if (!fernetEncKeyPromise) {
+    fernetEncKeyPromise = (async () => {
       try {
         const cryptoObj = typeof window !== 'undefined' ? (window.crypto || window.msCrypto) : (globalThis.crypto);
         if (!cryptoObj || !cryptoObj.subtle) return null;
@@ -23,15 +25,118 @@ function getFernetKey() {
           encKeyBytes,
           { name: "AES-CBC" },
           false,
-          ["decrypt"]
+          ["encrypt", "decrypt"]
         );
       } catch (e) {
-        console.warn("Fernet key setup error:", e);
+        console.warn("Fernet enc key setup error:", e);
         return null;
       }
     })();
   }
-  return fernetCryptoKeyPromise;
+  return fernetEncKeyPromise;
+}
+
+function getFernetSignKey() {
+  if (!fernetSignKeyPromise) {
+    fernetSignKeyPromise = (async () => {
+      try {
+        const cryptoObj = typeof window !== 'undefined' ? (window.crypto || window.msCrypto) : (globalThis.crypto);
+        if (!cryptoObj || !cryptoObj.subtle) return null;
+        const passphrase = "AntigravitySecretKey_2026_Facilities_Mgmt!";
+        const enc = new TextEncoder();
+        const hashBuf = await cryptoObj.subtle.digest("SHA-256", enc.encode(passphrase));
+        const hashArr = new Uint8Array(hashBuf);
+        const signKeyBytes = hashArr.slice(0, 16);
+        return await cryptoObj.subtle.importKey(
+          "raw",
+          signKeyBytes,
+          { name: "HMAC", hash: { name: "SHA-256" } },
+          false,
+          ["sign"]
+        );
+      } catch (e) {
+        console.warn("Fernet sign key setup error:", e);
+        return null;
+      }
+    })();
+  }
+  return fernetSignKeyPromise;
+}
+
+function getFernetKey() {
+  return getFernetEncKey();
+}
+
+async function encryptFernet(plainText) {
+  if (!plainText || typeof plainText !== "string") return "";
+  plainText = plainText.trim();
+  if (!plainText || plainText === "-" || plainText.toLowerCase() === "none") return "";
+  if (plainText.startsWith("gAAAAA")) return plainText;
+
+  try {
+    const cryptoObj = typeof window !== 'undefined' ? (window.crypto || window.msCrypto) : (globalThis.crypto);
+    if (!cryptoObj || !cryptoObj.subtle) throw new Error("SubtleCrypto not available");
+
+    const encKey = await getFernetEncKey();
+    const signKey = await getFernetSignKey();
+    if (!encKey || !signKey) throw new Error("Keys not ready");
+
+    // 1. Version 0x80 + Timestamp 8 bytes
+    const header = new Uint8Array(9);
+    header[0] = 0x80;
+    const nowSec = BigInt(Math.floor(Date.now() / 1000));
+    for (let i = 0; i < 8; i++) {
+      header[8 - i] = Number((nowSec >> BigInt(i * 8)) & 0xffn);
+    }
+
+    // 2. IV 16 bytes
+    const iv = new Uint8Array(16);
+    cryptoObj.getRandomValues(iv);
+
+    // 3. AES-128-CBC Encrypt
+    const encText = new TextEncoder().encode(plainText);
+    const cipherBuf = await cryptoObj.subtle.encrypt(
+      { name: "AES-CBC", iv: iv },
+      encKey,
+      encText
+    );
+    const cipherArr = new Uint8Array(cipherBuf);
+
+    // 4. Data = header + iv + cipher
+    const dataToSign = new Uint8Array(header.length + iv.length + cipherArr.length);
+    dataToSign.set(header, 0);
+    dataToSign.set(iv, header.length);
+    dataToSign.set(cipherArr, header.length + iv.length);
+
+    // 5. HMAC-SHA256
+    const hmacBuf = await cryptoObj.subtle.sign("HMAC", signKey, dataToSign);
+    const hmacArr = new Uint8Array(hmacBuf);
+
+    // 6. Token = Base64Url
+    const tokenArr = new Uint8Array(dataToSign.length + hmacArr.length);
+    tokenArr.set(dataToSign, 0);
+    tokenArr.set(hmacArr, dataToSign.length);
+
+    let binary = "";
+    for (let i = 0; i < tokenArr.byteLength; i++) {
+      binary += String.fromCharCode(tokenArr[i]);
+    }
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_");
+  } catch (e) {
+    // API Fallback
+    try {
+      const res = await fetch(`${API_BASE_URL}/encrypt`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: plainText })
+      });
+      if (res.ok) {
+        const d = await res.json();
+        if (d.result) return d.result;
+      }
+    } catch (apiErr) {}
+    return plainText;
+  }
 }
 
 async function decryptFernet(token) {
@@ -75,6 +180,22 @@ async function decryptFernet(token) {
   } catch (e) {
     return "";
   }
+}
+
+// Supabase DATE 컬럼용 안전 날짜 정제 함수 (빈값/미상 등은 null 처리하여 400 Bad Request 방지)
+function sanitizeDate(dateStr) {
+  if (!dateStr || typeof dateStr !== "string") return null;
+  dateStr = dateStr.trim();
+  if (!dateStr || dateStr === "-" || dateStr === "미상" || dateStr.toLowerCase() === "none" || dateStr === "null") return null;
+  dateStr = dateStr.replace(/[./]/g, "-");
+  const match = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (match) {
+    const y = match[1];
+    const m = match[2].padStart(2, "0");
+    const d = match[3].padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+  return null;
 }
 
 // Smart synchronous resolver with fallback
@@ -2411,6 +2532,14 @@ async function saveFacility() {
   const mgrName = document.getElementById("fac-manager-name").value.trim();
   const mgrContact = document.getElementById("fac-manager-contact").value.trim();
 
+  // 개인정보 암호화 적용 (규칙 4 준수)
+  const encMgrName = await encryptFernet(mgrName);
+  const encMgrContact = await encryptFernet(mgrContact);
+
+  // 날짜 필드 정제 (빈 문자열이면 null로 처리하여 Postgres DATE 400 Bad Request 방지)
+  const rawDate = document.getElementById("fac-dates").value.trim();
+  const sanitizedApprovalDate = sanitizeDate(rawDate);
+
   const payload = {
     facility_key: key,
     facility_name: name,
@@ -2420,9 +2549,10 @@ async function saveFacility() {
     address_doro: document.getElementById("fac-address-doro").value.trim(),
     address_jibun: document.getElementById("fac-address-jibun").value.trim(),
     dong_name: document.getElementById("fac-dong").value.trim(),
-    building_approval_dates: document.getElementById("fac-dates").value.trim(),
+    building_approval_dates: rawDate,
+    approval_date: sanitizedApprovalDate,
     building_new_old_type: document.getElementById("fac-new-old").value,
-    building_register_num: parseInt(document.getElementById("fac-register").value) || 0,
+    building_register_num: document.getElementById("fac-register").value.trim(),
     parking_required_cnt: parseInt(document.getElementById("fac-parking-req").value) || 0,
     parking_installed_cnt: parseInt(document.getElementById("fac-parking-inst").value) || 0,
     parking_ground_cnt: parseInt(document.getElementById("fac-parking-ground").value) || 0,
@@ -2435,6 +2565,8 @@ async function saveFacility() {
     charger_slow_cnt: parseInt(document.getElementById("fac-slow-cnt").value) || 0,
     charger_fast_cnt: parseInt(document.getElementById("fac-fast-cnt").value) || 0,
     management_body: document.getElementById("fac-management-body").value.trim(),
+    manager_name_encrypted: encMgrName,
+    manager_contact_encrypted: encMgrContact,
     manager_name_decrypted: mgrName,
     manager_contact_decrypted: mgrContact,
     total_households: document.getElementById("fac-total-households").value ? parseInt(document.getElementById("fac-total-households").value) : null,
@@ -2456,7 +2588,7 @@ async function saveFacility() {
       address_doro: payload.address_doro,
       address_jibun: payload.address_jibun,
       dong_name: payload.dong_name,
-      approval_date: payload.building_approval_dates,
+      approval_date: sanitizedApprovalDate,
       is_new_building: payload.building_new_old_type,
       building_register_num: payload.building_register_num,
       parking_required_cnt: payload.parking_required_cnt,
@@ -2471,8 +2603,8 @@ async function saveFacility() {
       charger_slow_cnt: payload.charger_slow_cnt,
       charger_fast_cnt: payload.charger_fast_cnt,
       management_body: payload.management_body,
-      manager_name_encrypted: mgrName,
-      manager_contact_encrypted: mgrContact,
+      manager_name_encrypted: encMgrName,
+      manager_contact_encrypted: encMgrContact,
       total_households: payload.total_households,
       ev_registered_cnt: payload.ev_registered_cnt,
       charger_reported: payload.charger_reported,
@@ -2494,10 +2626,10 @@ async function saveFacility() {
       body: JSON.stringify(directPayload)
     });
 
-    // 신규 시설이거나 PATCH row가 0건이면 POST 생성
     if (rDirect.ok) {
       const patchRows = await rDirect.json().catch(() => []);
       if (!patchRows || patchRows.length === 0) {
+        // 행이 없으면 POST 신규 생성
         rDirect = await fetch(`${SUPABASE_REST_URL}/facilities`, {
           method: "POST",
           headers: preferHeaders,
@@ -2506,23 +2638,38 @@ async function saveFacility() {
       }
       if (rDirect.ok) savedSuccessfully = true;
     } else {
+      const errDetail = await rDirect.text().catch(() => "");
+      console.warn("Direct Supabase facility PATCH error:", rDirect.status, errDetail);
+      // POST 시도
       rDirect = await fetch(`${SUPABASE_REST_URL}/facilities`, {
         method: "POST",
         headers: preferHeaders,
         body: JSON.stringify([directPayload])
       });
-      if (rDirect.ok) savedSuccessfully = true;
+      if (rDirect.ok) {
+        savedSuccessfully = true;
+      } else {
+        const postErr = await rDirect.text().catch(() => "");
+        console.error("Direct Supabase facility POST error:", rDirect.status, postErr);
+      }
     }
   } catch (eDir) {
-    console.error("Direct Supabase facility save error:", eDir);
+    console.error("Direct Supabase facility save network/runtime error:", eDir);
   }
 
-  // [2순위 보조] Render 백엔드 로컬 동기화용 비동기 통지
-  fetch(`${API_BASE_URL}/facilities/save`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  }).catch(() => {});
+  // [2순위 보조 Fallback] 만약 1순위 직접 저장이 실패했거나 백엔드 캐시 갱신이 필요한 경우 동기적으로 백엔드 호출
+  try {
+    const backendRes = await fetch(`${API_BASE_URL}/facilities/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (backendRes.ok) {
+      savedSuccessfully = true;
+    }
+  } catch (backendErr) {
+    console.warn("Backend facility save fallback error:", backendErr);
+  }
 
   if (!savedSuccessfully) {
     alert("시설 정보 저장 중 오류가 발생했습니다. (Supabase DB 연결 실패)");

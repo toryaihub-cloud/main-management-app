@@ -1390,8 +1390,18 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     db_payload[k] = v
             
             # Form aliases to actual DB columns
-            if req_json.get("building_approval_dates"):
-                db_payload["approval_date"] = req_json["building_approval_dates"]
+            raw_app_date = req_json.get("approval_date") or req_json.get("building_approval_dates")
+            if raw_app_date and str(raw_app_date).strip() and str(raw_app_date).strip() not in ["-", "None", "null", "미상"]:
+                import re
+                clean_d = re.sub(r"[./]", "-", str(raw_app_date).strip())
+                m = re.match(r"^(\d{4})-(\d{1,2})-(\d{1,2})", clean_d)
+                if m:
+                    db_payload["approval_date"] = f"{m.group(1)}-{m.group(2).zfill(2)}-{m.group(3).zfill(2)}"
+                else:
+                    db_payload["approval_date"] = None
+            else:
+                db_payload["approval_date"] = None
+
             if req_json.get("building_new_old_type"):
                 db_payload["is_new_building"] = req_json["building_new_old_type"]
 
