@@ -1845,5 +1845,38 @@ tr:hover {
   gap: 0.3rem;
 }
 
+/* Correction Orders Batch Selection Tabs */
+.correction-batch-btn {
+  padding: 0.45rem 0.95rem !important;
+  font-size: 0.83rem !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  cursor: pointer !important;
+}
+
+.correction-batch-btn.active {
+  background: #0284C7 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #0284C7 !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35) !important;
+}
+
+.correction-batch-btn.inactive {
+  background: #FFFFFF !important;
+  color: #475569 !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+.correction-batch-btn.inactive:hover {
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #94A3B8 !important;
+}
+
 
 

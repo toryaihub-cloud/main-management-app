@@ -3559,8 +3559,8 @@ function renderCorrectionBatchTabs() {
     const label = meta.batch_label || `${idx + 1}차 (${r})`;
     const isActive = r === currentCorrectionBatch;
     return `
-      <button class="btn ${isActive ? 'btn-primary' : 'btn-outline'} correction-batch-btn" id="btn-batch-${r}" onclick="switchCorrectionBatch('${r}')">
-        <i class="fa-solid fa-calendar-check"></i> ${label}
+      <button class="btn correction-batch-btn ${isActive ? 'active' : 'inactive'}" id="btn-batch-${r}" onclick="switchCorrectionBatch('${r}')">
+        <i class="fa-solid fa-calendar-check" style="${isActive ? 'color: #FFFFFF;' : 'color: #0284C7;'}"></i> ${label}
       </button>
     `;
   }).join('');
