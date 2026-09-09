@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260903_table_style_unify">
+  <link rel="stylesheet" href="styles.css?v=20260909_sidebar_layout">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- SheetJS (xlsx) CDN for Excel Upload/Parse -->
@@ -42,47 +42,73 @@
     </div>
   </div>
 
-  <!-- Header & Navigation -->
-  <header>
-    <div class="brand">
-      <div class="brand-icon">EV</div>
-      <div class="brand-title">
-        <h1>친환경차 주차·충전시설 통합 관제</h1>
-        <p>통합시설관리 & 행정처분 스마트 관리</p>
+  <!-- App Layout Wrapper (Left Sidebar + Main Content) -->
+  <div id="app-layout" class="app-layout">
+    <!-- Left Vertical Sidebar -->
+    <aside id="app-sidebar" class="app-sidebar">
+      <!-- Sidebar Header: Brand + Collapse Toggle Button -->
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="brand-icon">EV</div>
+          <div class="sidebar-brand-title">
+            <h1>친환경차 관제</h1>
+            <p>통합 시설 & 행정처분</p>
+          </div>
+        </div>
+        <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" onclick="toggleSidebar(false)" title="사이드바 숨기기">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
       </div>
-    </div>
 
-    <nav class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('dashboard')">
-        <i class="fa-solid fa-chart-pie"></i> 대시보드
-      </button>
-      <button class="tab-btn" onclick="switchTab('facilities')">
-        <i class="fa-solid fa-building"></i> 통합 시설 관리
-      </button>
-      <button class="tab-btn" onclick="switchTab('dispositions')">
-        <i class="fa-solid fa-gavel"></i> 행정처분 내역 관리
-      </button>
-      <button class="tab-btn" onclick="switchTab('correction-orders')">
-        <i class="fa-solid fa-file-signature"></i> 시정명령
-      </button>
-      <button class="tab-btn" onclick="switchTab('operations')">
-        <i class="fa-solid fa-charging-station"></i> 운영현황 관리
-      </button>
-      <button id="tab-users" class="tab-btn admin-only" onclick="switchTab('users')" style="display: none;">
-        <i class="fa-solid fa-users-gear"></i> 계정 관리 (ADMIN)
-      </button>
-    </nav>
+      <!-- Sidebar Navigation: Requested Order -->
+      <!-- 1. 대시보드 -> 2. 통합시설관리 -> 3. 운영현황 관리 -> 4. 행정처분 내역 관리 -> 5. 시정명령 -> 6. 계정관리 -->
+      <nav class="sidebar-nav">
+        <button id="tab-dashboard" class="tab-btn active" onclick="switchTab('dashboard')">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>대시보드</span>
+        </button>
+        <button id="tab-facilities" class="tab-btn" onclick="switchTab('facilities')">
+          <i class="fa-solid fa-building"></i>
+          <span>통합 시설 관리</span>
+        </button>
+        <button id="tab-operations" class="tab-btn" onclick="switchTab('operations')">
+          <i class="fa-solid fa-charging-station"></i>
+          <span>운영현황 관리</span>
+        </button>
+        <button id="tab-dispositions" class="tab-btn" onclick="switchTab('dispositions')">
+          <i class="fa-solid fa-gavel"></i>
+          <span>행정처분 내역 관리</span>
+        </button>
+        <button id="tab-correction-orders" class="tab-btn" onclick="switchTab('correction-orders')">
+          <i class="fa-solid fa-file-signature"></i>
+          <span>시정명령</span>
+        </button>
+        <button id="tab-users" class="tab-btn admin-only" onclick="switchTab('users')" style="display: none;">
+          <i class="fa-solid fa-users-gear"></i>
+          <span>계정 관리 (ADMIN)</span>
+        </button>
+      </nav>
 
-    <div class="user-profile">
-      <span id="user-display-info" class="user-info-text"><i class="fa-solid fa-user-shield"></i> 관리자</span>
-      <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="handleLogout()">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
-      </button>
-    </div>
-  </header>
+      <!-- Sidebar Footer: User Profile & Logout -->
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <span id="user-display-info" class="user-info-text"><i class="fa-solid fa-user-shield"></i> 관리자</span>
+          <button class="btn btn-secondary sidebar-logout-btn" onclick="handleLogout()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+          </button>
+        </div>
+      </div>
+    </aside>
 
-  <!-- Main Container -->
-  <main class="app-container">
+    <!-- Main Content Area -->
+    <div id="main-content-wrapper" class="main-content-wrapper">
+      <!-- Floating Sidebar Open Button (사이드바 숨김 시 표시) -->
+      <button id="sidebar-open-btn" class="sidebar-floating-toggle-btn" onclick="toggleSidebar(true)" title="사이드바 열기">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Main Container -->
+      <main class="app-container">
 
     <!-- 1. Dashboard View -->
     <section id="view-dashboard" class="view-section active">
@@ -475,6 +501,8 @@
     </section>
 
   </main>
+    </div> <!-- /main-content-wrapper -->
+  </div> <!-- /app-layout -->
 
   <!-- Facility Detail Popup Modal (ECO-CAR style) -->
   <div id="modal-facility-detail" class="modal-backdrop" style="display:none; overflow:hidden !important; align-items:center; justify-content:center; padding:0 !important;">
@@ -1470,6 +1498,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260909_return_to_op"></script>
+  <script src="app.js?v=20260909_sidebar_layout"></script>
 </body>
 </html>

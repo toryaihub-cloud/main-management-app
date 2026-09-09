@@ -138,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   checkLoginSession();
   setupLightboxEvents();
+  initSidebarState();
 });
 
 // 1. Authentication Logic (Always Show Login Screen + Remember Username)
@@ -347,28 +348,49 @@ function switchTab(tabName) {
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
   document.querySelectorAll(".view-section").forEach(sec => sec.classList.remove("active"));
 
-  if (tabName === 'dashboard') {
-    document.querySelectorAll(".tab-btn")[0].classList.add("active");
-    document.getElementById("view-dashboard").classList.add("active");
-  } else if (tabName === 'facilities') {
-    document.querySelectorAll(".tab-btn")[1].classList.add("active");
-    document.getElementById("view-facilities").classList.add("active");
-  } else if (tabName === 'dispositions') {
-    document.querySelectorAll(".tab-btn")[2].classList.add("active");
-    document.getElementById("view-dispositions").classList.add("active");
+  const targetBtn = document.getElementById(`tab-${tabName}`);
+  if (targetBtn) {
+    targetBtn.classList.add("active");
+  }
+
+  const targetView = document.getElementById(`view-${tabName}`);
+  if (targetView) {
+    targetView.classList.add("active");
+  }
+
+  if (tabName === 'dispositions') {
     filterDispositions();
   } else if (tabName === 'correction-orders') {
-    document.querySelectorAll(".tab-btn")[3].classList.add("active");
-    document.getElementById("view-correction-orders").classList.add("active");
     fetchCorrectionOrders();
   } else if (tabName === 'operations') {
-    document.querySelectorAll(".tab-btn")[4].classList.add("active");
-    document.getElementById("view-operations").classList.add("active");
     fetchOperations();
   } else if (tabName === 'users') {
-    document.getElementById("tab-users").classList.add("active");
-    document.getElementById("view-users").classList.add("active");
     fetchUsers();
+  }
+}
+
+// 3-1. Sidebar Toggle & Collapse Logic
+function toggleSidebar(show) {
+  const sidebar = document.getElementById("app-sidebar");
+  const openBtn = document.getElementById("sidebar-open-btn");
+  if (!sidebar) return;
+
+  const willShow = (typeof show === "boolean") ? show : sidebar.classList.contains("collapsed");
+  if (willShow) {
+    sidebar.classList.remove("collapsed");
+    if (openBtn) openBtn.classList.remove("visible");
+    localStorage.setItem("sidebarCollapsed", "false");
+  } else {
+    sidebar.classList.add("collapsed");
+    if (openBtn) openBtn.classList.add("visible");
+    localStorage.setItem("sidebarCollapsed", "true");
+  }
+}
+
+function initSidebarState() {
+  const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+  if (isCollapsed) {
+    toggleSidebar(false);
   }
 }
 
