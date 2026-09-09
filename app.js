@@ -1158,7 +1158,95 @@ function openFacilityDetailModal(key) {
     compElem.className = `badge ${facility.compliance_status === '이행완료' ? 'badge-emerald' : (facility.compliance_status === '미이행' ? 'badge-rose' : 'badge-amber')}`;
   }
 
-  // Parking & Charger Slash Ratio Info
+  // 2. Render Detail Counts & Slash Info
+  updateModalDetailCounts(facility);
+
+  const decName = (facility.manager_name_decrypted && !facility.manager_name_decrypted.startsWith("gAAAAA")) ? facility.manager_name_decrypted : (facility.manager_name || '-');
+  const decContact = (facility.manager_contact_decrypted && !facility.manager_contact_decrypted.startsWith("gAAAAA")) ? facility.manager_contact_decrypted : (facility.manager_contact || '-');
+
+  safeSetText("detail-manager-name", decName);
+  safeSetText("detail-manager-contact", decContact);
+  safeSetText("detail-management-body", facility.management_body);
+
+  const totalHh = facility.total_households ? `${facility.total_households}세대` : '-';
+  const evReg = facility.ev_registered_cnt ? `${facility.ev_registered_cnt}대` : '-';
+
+  const repStr = facility.charger_reported ? (facility.charger_reported === '여' ? '신고' : (facility.charger_reported === '부' ? '미신고' : facility.charger_reported)) : '-';
+  const insStr = facility.insurance_enrolled ? (facility.insurance_enrolled === '여' ? '가입' : (facility.insurance_enrolled === '부' ? '미가입' : facility.insurance_enrolled)) : '-';
+  const repIns = (repStr !== '-' || insStr !== '-') ? `${repStr} / ${insStr}` : '-';
+
+  let fireMan = facility.fire_manual_distributed || '-';
+  if (fireMan === '여') fireMan = '배부';
+  else if (fireMan === '부') fireMan = '미배부';
+
+  safeSetText("detail-total-households", totalHh);
+  safeSetText("detail-ev-registered", evReg);
+  safeSetText("detail-reported-insurance", repIns);
+  safeSetText("detail-fire-manual", fireMan);
+  
+  const invElem = document.getElementById("detail-investigation-status");
+  if (invElem) invElem.innerText = facility.investigation_status || '-';
+
+  const delFacBtn = document.getElementById("btn-delete-facility");
+  if (delFacBtn) {
+    const isAdmin = currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN");
+    delFacBtn.style.display = isAdmin ? "inline-flex" : "none";
+  }
+
+  document.getElementById("btn-edit-from-detail").onclick = () => {
+    closeModal("modal-facility-detail");
+    openFacilityModal(key);
+  };
+
+  // 3. Open Modal Pop-up Instantly (All-in-One 3-column Layout)
+  const detailModalElem = document.getElementById("modal-facility-detail");
+  if (detailModalElem) {
+    detailModalElem.style.display = "flex";
+    detailModalElem.classList.add("active");
+  }
+
+  // 4. Load Photos Non-blocking in Background
+  loadFacilityPhotos(facility.facility_key, facility.facility_name);
+
+  // 5. Background Live Single-Record Sync from Supabase DB (Ensure 100% fresh detail counts)
+  (async () => {
+    try {
+      const rLive = await fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(key)}`, {
+        headers: {
+          "apikey": SUPABASE_SECRET_KEY,
+          "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`
+        }
+      });
+      if (rLive.ok) {
+        const liveRows = await rLive.json();
+        if (liveRows && liveRows.length > 0) {
+          const liveFac = liveRows[0];
+          let changed = false;
+          const countKeys = [
+            'parking_ground_cnt', 'parking_underground_cnt', 'parking_installed_cnt', 'parking_required_cnt', 'parking_uninstalled_cnt',
+            'charger_fast_req_cnt', 'charger_fast_cnt', 'charger_slow_cnt', 'charger_installed_cnt', 'charger_required_cnt', 'charger_uninstalled_cnt'
+          ];
+          for (const k of countKeys) {
+            if (facility[k] !== liveFac[k]) {
+              facility[k] = liveFac[k];
+              changed = true;
+            }
+          }
+          if (changed) {
+            const idx = facilitiesData.findIndex(f => f.facility_key === key);
+            if (idx >= 0) facilitiesData[idx] = { ...facilitiesData[idx], ...liveFac };
+            try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
+            if (detailModalElem && detailModalElem.classList.contains("active") && currentFacilityDetail?.facility_key === key) {
+              updateModalDetailCounts(facility);
+            }
+          }
+        }
+      }
+    } catch (eLive) {}
+  })();
+}
+
+function updateModalDetailCounts(facility) {
   const reqP = parseInt(facility.parking_required_cnt) || 0;
   const unP = parseInt(facility.parking_uninstalled_cnt) || 0;
   let actP = (facility.parking_installed_cnt !== undefined && facility.parking_installed_cnt !== null && facility.parking_installed_cnt !== '') ? parseInt(facility.parking_installed_cnt) : 0;
@@ -1169,7 +1257,6 @@ function openFacilityDetailModal(key) {
   if ((facility.compliance_status === '이행완료' || unP === 0) && actP < reqP) {
     actP = reqP;
   }
-  const pctP = reqP > 0 ? Math.min(100, Math.round((actP / reqP) * 100)) : (facility.compliance_status === '이행완료' ? 100 : 0);
 
   const reqC = parseInt(facility.charger_required_cnt) || 0;
   const unC = parseInt(facility.charger_uninstalled_cnt) || 0;
@@ -1181,7 +1268,6 @@ function openFacilityDetailModal(key) {
   if ((facility.compliance_status === '이행완료' || unC === 0) && actC < reqC) {
     actC = reqC;
   }
-  const pctC = reqC > 0 ? Math.min(100, Math.round((actC / reqC) * 100)) : (facility.compliance_status === '이행완료' ? 100 : 0);
 
   const parkSlashElem = document.getElementById("detail-parking-slash-info");
   if (parkSlashElem) parkSlashElem.innerText = `${actP}면 / ${reqP}면 (설치/의무)`;
@@ -1221,53 +1307,7 @@ function openFacilityDetailModal(key) {
     fastUnElem.style.color = uninstalledFast > 0 ? 'var(--danger)' : 'var(--text-main)';
   }
 
-  const decName = (facility.manager_name_decrypted && !facility.manager_name_decrypted.startsWith("gAAAAA")) ? facility.manager_name_decrypted : (facility.manager_name || '-');
-  const decContact = (facility.manager_contact_decrypted && !facility.manager_contact_decrypted.startsWith("gAAAAA")) ? facility.manager_contact_decrypted : (facility.manager_contact || '-');
-
-  safeSetText("detail-manager-name", decName);
-  safeSetText("detail-manager-contact", decContact);
-  safeSetText("detail-management-body", facility.management_body);
-
-  const totalHh = facility.total_households ? `${facility.total_households}세대` : '-';
-  const evReg = facility.ev_registered_cnt ? `${facility.ev_registered_cnt}대` : '-';
-
-  const repStr = facility.charger_reported ? (facility.charger_reported === '여' ? '신고' : (facility.charger_reported === '부' ? '미신고' : facility.charger_reported)) : '-';
-  const insStr = facility.insurance_enrolled ? (facility.insurance_enrolled === '여' ? '가입' : (facility.insurance_enrolled === '부' ? '미가입' : facility.insurance_enrolled)) : '-';
-  const repIns = (repStr !== '-' || insStr !== '-') ? `${repStr} / ${insStr}` : '-';
-
-  let fireMan = facility.fire_manual_distributed || '-';
-  if (fireMan === '여') fireMan = '배부';
-  else if (fireMan === '부') fireMan = '미배부';
-
-  safeSetText("detail-total-households", totalHh);
-  safeSetText("detail-ev-registered", evReg);
-  safeSetText("detail-reported-insurance", repIns);
-  safeSetText("detail-fire-manual", fireMan);
-  
-  const invElem = document.getElementById("detail-investigation-status");
-  if (invElem) invElem.innerText = facility.investigation_status || '-';
-
-  const delFacBtn = document.getElementById("btn-delete-facility");
-  if (delFacBtn) {
-    const isAdmin = currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN");
-    delFacBtn.style.display = isAdmin ? "inline-flex" : "none";
-  }
-
-  document.getElementById("btn-edit-from-detail").onclick = () => {
-    closeModal("modal-facility-detail");
-    openFacilityModal(key);
-  };
-
-  // 2. Open Modal Pop-up Instantly (All-in-One 3-column Layout)
-  const detailModalElem = document.getElementById("modal-facility-detail");
-  if (detailModalElem) {
-    detailModalElem.style.display = "flex";
-    detailModalElem.classList.add("active");
-  }
   renderModalDetailDonutChart(facility);
-
-  // 3. Load Photos Non-blocking in Background
-  loadFacilityPhotos(facility.facility_key, facility.facility_name);
 }
 
 function switchDetailTab(tabName) {
