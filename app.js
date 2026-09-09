@@ -3755,7 +3755,7 @@ function filterCorrectionOrders() {
   });
 
   const countElem = document.getElementById("corr-filtered-count");
-  if (countElem) countElem.innerText = filtered.length;
+  if (countElem) countElem.innerText = `총 ${filtered.length}건 검색`;
 
   if (filtered.length === 0) {
     tbody.innerHTML = `

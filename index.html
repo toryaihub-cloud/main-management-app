@@ -290,30 +290,38 @@
         </div>
       </div>
 
-      <!-- Search & Filter Controls -->
-      <div class="card" style="margin-bottom:1rem; padding:0.8rem 1rem;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:0.8rem; flex-wrap:wrap;">
-          <div style="display:flex; gap:0.5rem; align-items:center; flex:1; min-width:260px;">
-            <div class="search-box-wrapper" style="position:relative; display:flex; align-items:center; flex:1;">
-              <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:0.8rem; color:var(--text-muted); font-size:0.9rem;"></i>
-              <input type="text" id="corr-search-input" class="input-box" placeholder="검색..." oninput="filterCorrectionOrders()" style="padding-left:2.3rem; width:100%;">
-            </div>
-            <select id="corr-filter-method" class="input-box" style="width:140px;" onchange="filterCorrectionOrders()">
-              <option value="">통지방법 전체</option>
-              <option value="등기">등기 발송</option>
-              <option value="공문">공문 발송</option>
-            </select>
-            <select id="corr-filter-delivery" class="input-box" style="width:140px;" onchange="filterCorrectionOrders()">
-              <option value="">도달여부 전체</option>
-              <option value="도달">도달 완료</option>
-              <option value="미도달">미도달 / 반송</option>
-            </select>
+      <!-- Search & Filter Toolbar (통합시설관리와 레이아웃 및 룩앤필 100% 일치) -->
+      <div class="toolbar">
+        <div class="search-filter-group">
+          <!-- Search Input with Magnifying Glass Icon -->
+          <div class="search-box-wrapper" style="position:relative; display:flex; align-items:center;">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:0.8rem; color:var(--text-muted); font-size:0.9rem;"></i>
+            <input type="text" id="corr-search-input" class="input-box" placeholder="검색..." oninput="filterCorrectionOrders()" style="padding-left:2.3rem;">
           </div>
-          <div style="font-size:0.85rem; color:#64748B;">
-            조회 결과: <strong id="corr-filtered-count" style="color:var(--primary);">0</strong>건
-          </div>
+
+          <!-- Advanced Filters (통지방법 & 도달여부) -->
+          <select id="corr-filter-method" class="select-box" onchange="filterCorrectionOrders()">
+            <option value="">통지방법 전체</option>
+            <option value="등기">등기 발송</option>
+            <option value="공문">공문 발송</option>
+          </select>
+
+          <select id="corr-filter-delivery" class="select-box" onchange="filterCorrectionOrders()">
+            <option value="">도달여부 전체</option>
+            <option value="도달">도달 완료</option>
+            <option value="미도달">미도달 / 반송</option>
+          </select>
+
+          <span id="corr-filtered-count" class="result-badge">총 0건 검색</span>
+        </div>
+
+        <div class="action-btn-group" style="display:flex; gap:0.4rem; align-items:center;">
+          <button class="btn btn-primary" onclick="openNewCorrectionOrderModal()">
+            <i class="fa-solid fa-plus"></i> 신규 건 추가
+          </button>
         </div>
       </div>
+
 
       <!-- Data Table -->
       <div class="card">
@@ -1462,6 +1470,6 @@
   <!-- Hidden Container for Report Print -->
   <div id="print-report-container"></div>
 
-  <script src="app.js?v=20260909_op_filter_operator"></script>
+  <script src="app.js?v=20260909_corr_filter_unify"></script>
 </body>
 </html>
