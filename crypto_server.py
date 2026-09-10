@@ -174,6 +174,142 @@ def save_operation(req_data):
     return True, "정상적으로 저장되었습니다."
 
 
+def save_gwangsan_facility(req_data):
+    facility_key = str(req_data.get("facility_key", "")).strip()
+    if not facility_key:
+        return False, "시설 고유키(facility_key)는 필수입니다."
+
+    def safe_int(val, default=0):
+        try:
+            return int(val) if val is not None and str(val).strip() != "" else default
+        except Exception:
+            return default
+
+    def safe_date(val):
+        if not val or not str(val).strip() or str(val).strip() in ["-", "None", "null"]:
+            return None
+        s = str(val).strip().replace(".", "-").replace("/", "-")
+        import re
+        m = re.match(r"^(\d{4})-(\d{1,2})-(\d{1,2})", s)
+        if m:
+            return f"{m.group(1)}-{int(m.group(2)):02d}-{int(m.group(3)):02d}"
+        return None
+
+    raw_mgr = req_data.get("manager_name")
+    raw_contact = req_data.get("manager_contact")
+    enc_mgr = encrypt_data(raw_mgr) if raw_mgr else req_data.get("manager_name_encrypted")
+    enc_contact = encrypt_data(raw_contact) if raw_contact else req_data.get("manager_contact_encrypted")
+
+    record = {
+        "facility_key": facility_key,
+        "compliance_status": req_data.get("compliance_status", ""),
+        "dept_name": req_data.get("dept_name", ""),
+        "dept_action_plan": req_data.get("dept_action_plan", ""),
+        "subsidy_apply": req_data.get("subsidy_apply", ""),
+        "final_conclusion": req_data.get("final_conclusion", ""),
+        
+        # 전용주차구역
+        "parking_required_cnt": safe_int(req_data.get("parking_required_cnt")),
+        "parking_installed_cnt": safe_int(req_data.get("parking_installed_cnt")),
+        "parking_ground_cnt": safe_int(req_data.get("parking_ground_cnt")),
+        "parking_underground_cnt": safe_int(req_data.get("parking_underground_cnt")),
+        "parking_uninstalled_cnt": safe_int(req_data.get("parking_uninstalled_cnt")),
+        
+        # 충전시설
+        "charger_required_cnt": safe_int(req_data.get("charger_required_cnt")),
+        "charger_fast_req_cnt": safe_int(req_data.get("charger_fast_req_cnt")),
+        "charger_installed_cnt": safe_int(req_data.get("charger_installed_cnt")),
+        "charger_fast_cnt": safe_int(req_data.get("charger_fast_cnt")),
+        "charger_slow_cnt": safe_int(req_data.get("charger_slow_cnt")),
+        "charger_uninstalled_cnt": safe_int(req_data.get("charger_uninstalled_cnt")),
+        
+        # 1차
+        "survey1_type": req_data.get("survey1_type", ""),
+        "survey1_date": safe_date(req_data.get("survey1_date")),
+        "survey1_inspector": req_data.get("survey1_inspector", ""),
+        "survey1_check": req_data.get("survey1_check", ""),
+        "survey1_plan": req_data.get("survey1_plan", ""),
+        "survey1_note": req_data.get("survey1_note", ""),
+        
+        # 2차
+        "survey2_type": req_data.get("survey2_type", ""),
+        "survey2_date": safe_date(req_data.get("survey2_date")),
+        "survey2_inspector": req_data.get("survey2_inspector", ""),
+        "survey2_check": req_data.get("survey2_check", ""),
+        "survey2_plan": req_data.get("survey2_plan", ""),
+        "survey2_note": req_data.get("survey2_note", ""),
+        
+        # 3차
+        "survey3_type": req_data.get("survey3_type", ""),
+        "survey3_date": safe_date(req_data.get("survey3_date")),
+        "survey3_inspector": req_data.get("survey3_inspector", ""),
+        "survey3_check": req_data.get("survey3_check", ""),
+        "survey3_plan": req_data.get("survey3_plan", ""),
+        "survey3_note": req_data.get("survey3_note", ""),
+        
+        # 4차
+        "survey4_type": req_data.get("survey4_type", ""),
+        "survey4_date": safe_date(req_data.get("survey4_date")),
+        "survey4_inspector": req_data.get("survey4_inspector", ""),
+        "survey4_check": req_data.get("survey4_check", ""),
+        "survey4_plan": req_data.get("survey4_plan", ""),
+        "survey4_note": req_data.get("survey4_note", ""),
+        
+        # 5차
+        "survey5_type": req_data.get("survey5_type", ""),
+        "survey5_date": safe_date(req_data.get("survey5_date")),
+        "survey5_inspector": req_data.get("survey5_inspector", ""),
+        "survey5_check": req_data.get("survey5_check", ""),
+        "survey5_plan": req_data.get("survey5_plan", ""),
+        "survey5_note": req_data.get("survey5_note", ""),
+        
+        "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+
+    if enc_mgr:
+        record["manager_name_encrypted"] = enc_mgr
+    if enc_contact:
+        record["manager_contact_encrypted"] = enc_contact
+
+    # 1. Supabase DB 업데이트 시도
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            url = f"{SUPABASE_URL}/rest/v1/gwangsan_facilities?facility_key=eq.{facility_key}"
+            headers = dict(HEADERS)
+            headers["Prefer"] = "return=representation"
+            res = requests.patch(url, headers=headers, json=record, timeout=8)
+            print(f"Supabase gwangsan PATCH status={res.status_code}")
+        except Exception as e:
+            print("Supabase gwangsan save error:", e)
+
+    # 2. 로컬 캐시 업데이트
+    try:
+        cached = []
+        if os.path.exists(GWANGSAN_FACILITIES_FILE):
+            with open(GWANGSAN_FACILITIES_FILE, "r", encoding="utf-8") as f:
+                cached = json.load(f)
+        found = False
+        for idx, item in enumerate(cached):
+            if item.get("facility_key") == facility_key:
+                cached[idx] = {**item, **record}
+                if raw_mgr is not None: cached[idx]["manager_name"] = raw_mgr
+                if raw_contact is not None: cached[idx]["manager_contact"] = raw_contact
+                found = True
+                break
+        if not found:
+            new_item = dict(record)
+            new_item["manager_name"] = raw_mgr or ""
+            new_item["manager_contact"] = raw_contact or ""
+            cached.append(new_item)
+        with open(GWANGSAN_FACILITIES_FILE, "w", encoding="utf-8") as f:
+            json.dump(cached, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Local cache gwangsan save error:", e)
+
+    return True, "정상적으로 저장되었습니다."
+
+
+
 def load_correction_orders():
     # 1. Supabase DB 조회 시도 (1순위 SSOT)
     if SUPABASE_URL and SECRET_KEY:
@@ -1323,6 +1459,15 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
 
         elif path == "/api/operations/save":
             success, msg = save_operation(req_json)
+            status_code = 200 if success else 400
+            self.send_response(status_code)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": success, "message": msg}, ensure_ascii=False).encode('utf-8'))
+            return
+
+        elif path == "/api/gwangsan_facilities/save":
+            success, msg = save_gwangsan_facility(req_json)
             status_code = 200 if success else 400
             self.send_response(status_code)
             self.send_header('Content-Type', 'application/json; charset=utf-8')

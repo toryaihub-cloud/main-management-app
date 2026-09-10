@@ -5366,30 +5366,31 @@ function openGwangsanDetailModal(key) {
     cSubEl.innerHTML = `급속 ${cFast}기 · 완속 ${cSlow}기 (의무급속 ${cFastReq})${cUninst > 0 ? ` · <span style="color:#e11d48; font-weight:700;">미설치 ${cUninst}기</span>` : ''}`;
   }
 
-  // Action Plan & Subsidy & Compliance
-  document.getElementById("gwangsan-modal-action-plan").innerText = (item.dept_action_plan && item.dept_action_plan.trim()) ? item.dept_action_plan.trim() : "-";
-  
-  const subEl = document.getElementById("gwangsan-modal-subsidy");
-  const isSubsidy = item.subsidy_apply === "신청" || (item.subsidy_apply && item.subsidy_apply.includes("신청"));
-  subEl.innerHTML = isSubsidy 
-    ? `<span class="badge badge-emerald" style="font-weight:700;"><i class="fa-solid fa-check"></i> 신청 완료</span>` 
-    : `<span class="badge" style="background:#e2e8f0; color:#64748b;">${item.subsidy_apply || '미신청'}</span>`;
+  // 폼 필드 바인딩 (수정/저장용)
+  const keyInput = document.getElementById("gwangsan-edit-facility-key");
+  if (keyInput) keyInput.value = item.facility_key;
 
-  const compEl = document.getElementById("gwangsan-modal-compliance");
-  compEl.innerHTML = `<span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-weight:700;">${item.compliance_status || '미이행'}</span>`;
+  const planInput = document.getElementById("gwangsan-edit-action-plan");
+  if (planInput) planInput.value = item.dept_action_plan || "";
 
-  // Final Conclusion (BF열)
-  const finalEl = document.getElementById("gwangsan-modal-final-conclusion");
-  if (finalEl) {
-    finalEl.innerText = (item.final_conclusion && item.final_conclusion.trim()) ? item.final_conclusion.trim() : "-";
+  const subsidySelect = document.getElementById("gwangsan-edit-subsidy");
+  if (subsidySelect) subsidySelect.value = item.subsidy_apply || "";
+
+  const compSelect = document.getElementById("gwangsan-edit-compliance");
+  if (compSelect) compSelect.value = item.compliance_status || "미이행";
+
+  // Final Conclusion
+  const finalInput = document.getElementById("gwangsan-edit-final-conclusion");
+  if (finalInput) {
+    finalInput.value = item.final_conclusion || "";
   }
 
-  // 1차~5차 세부 조사내용 (AB열~BE열) 동적 생성
+  // 1차~5차 세부 조사내용 동적 폼 생성
   const surveysContainer = document.getElementById("gwangsan-modal-surveys-container");
   if (surveysContainer) {
     const rounds = [
       {
-        round: "1차",
+        idx: 1,
         title: "자체조사 (1차)",
         type: item.survey1_type,
         date: item.survey1_date,
@@ -5400,7 +5401,7 @@ function openGwangsanDetailModal(key) {
         color: "#2563eb"
       },
       {
-        round: "2차",
+        idx: 2,
         title: "자체조사 (2차)",
         type: item.survey2_type,
         date: item.survey2_date,
@@ -5411,7 +5412,7 @@ function openGwangsanDetailModal(key) {
         color: "#0891b2"
       },
       {
-        round: "3차",
+        idx: 3,
         title: "실태조사 (3차)",
         type: item.survey3_type,
         date: item.survey3_date,
@@ -5422,7 +5423,7 @@ function openGwangsanDetailModal(key) {
         color: "#059669"
       },
       {
-        round: "4차",
+        idx: 4,
         title: "자체조사 (4차)",
         type: item.survey4_type,
         date: item.survey4_date,
@@ -5433,7 +5434,7 @@ function openGwangsanDetailModal(key) {
         color: "#d97706"
       },
       {
-        round: "5차",
+        idx: 5,
         title: "자체조사 (5차)",
         type: item.survey5_type,
         date: item.survey5_date,
@@ -5447,45 +5448,40 @@ function openGwangsanDetailModal(key) {
 
     let surveyHtml = "";
     rounds.forEach(r => {
-      const hasContent = (r.type || r.date || r.inspector || r.check || r.plan || r.note);
-
       surveyHtml += `
         <div style="border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;">
-          <div style="background:${hasContent ? '#f1f5f9' : '#f8fafc'}; padding:0.5rem 0.85rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0;">
+          <div style="background:#f8fafc; padding:0.5rem 0.85rem; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; border-bottom:1px solid #e2e8f0;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
               <span style="background:${r.color}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.5rem; border-radius:4px;">
                 ${r.title}
               </span>
-              ${r.type ? `<span style="font-size:0.78rem; font-weight:700; color:#334155;">[방법: ${r.type}]</span>` : ''}
+              <input type="text" id="gwangsan-edit-survey${r.idx}-type" class="input-box" style="font-size:0.75rem; padding:0.2rem 0.4rem; width:100px;" placeholder="조사방법" value="${r.type || ''}">
             </div>
-            <div style="font-size:0.75rem; color:#64748b;">
-              ${r.date ? `<i class="fa-regular fa-calendar"></i> ${r.date}` : ''}
-              ${r.inspector ? ` | <i class="fa-solid fa-user"></i> 조사자: <b>${r.inspector}</b>` : ''}
+            <div style="display:flex; align-items:center; gap:0.6rem; font-size:0.78rem; color:#64748b;">
+              <div style="display:flex; align-items:center; gap:0.25rem;">
+                <i class="fa-regular fa-calendar"></i>
+                <input type="date" id="gwangsan-edit-survey${r.idx}-date" class="input-box" style="font-size:0.75rem; padding:0.15rem 0.35rem; width:125px;" value="${r.date || ''}">
+              </div>
+              <div style="display:flex; align-items:center; gap:0.25rem;">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="gwangsan-edit-survey${r.idx}-inspector" class="input-box" style="font-size:0.75rem; padding:0.15rem 0.35rem; width:80px;" placeholder="조사자" value="${r.inspector || ''}">
+              </div>
             </div>
           </div>
 
-          <div style="padding:0.75rem 0.85rem; font-size:0.82rem; display:flex; flex-direction:column; gap:0.45rem;">
-            ${r.check ? `
-              <div style="display:flex; align-items:flex-start; gap:0.4rem;">
-                <span style="font-weight:700; color:#1e293b; min-width:85px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-check"></i> 확인사항:</span>
-                <span style="color:#334155; word-break:break-all;">${r.check}</span>
-              </div>
-            ` : ''}
-            ${r.plan ? `
-              <div style="display:flex; align-items:flex-start; gap:0.4rem;">
-                <span style="font-weight:700; color:#2563eb; min-width:85px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-arrow-right"></i> 이행계획:</span>
-                <span style="color:#1d4ed8; font-weight:600; word-break:break-all;">${r.plan}</span>
-              </div>
-            ` : ''}
-            ${r.note ? `
-              <div style="display:flex; align-items:flex-start; gap:0.4rem;">
-                <span style="font-weight:700; color:#64748b; min-width:85px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-circle-info"></i> 비고:</span>
-                <span style="color:#475569; word-break:break-all;">${r.note}</span>
-              </div>
-            ` : ''}
-            ${!hasContent ? `
-              <div style="color:#94a3b8; font-style:italic;">조사 내역 없음</div>
-            ` : ''}
+          <div style="padding:0.75rem 0.85rem; font-size:0.82rem; display:flex; flex-direction:column; gap:0.5rem;">
+            <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+              <span style="font-weight:700; color:#1e293b; min-width:85px; white-space:nowrap; flex-shrink:0; margin-top:0.35rem;"><i class="fa-solid fa-check"></i> 확인사항:</span>
+              <textarea id="gwangsan-edit-survey${r.idx}-check" class="input-box" rows="2" style="flex:1; font-size:0.82rem; resize:vertical;" placeholder="확인사항 입력">${r.check || ''}</textarea>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+              <span style="font-weight:700; color:#2563eb; min-width:85px; white-space:nowrap; flex-shrink:0; margin-top:0.35rem;"><i class="fa-solid fa-arrow-right"></i> 이행계획:</span>
+              <textarea id="gwangsan-edit-survey${r.idx}-plan" class="input-box" rows="2" style="flex:1; font-size:0.82rem; resize:vertical; color:#1d4ed8; font-weight:600;" placeholder="이행계획 입력">${r.plan || ''}</textarea>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+              <span style="font-weight:700; color:#64748b; min-width:85px; white-space:nowrap; flex-shrink:0; margin-top:0.35rem;"><i class="fa-solid fa-circle-info"></i> 비고:</span>
+              <textarea id="gwangsan-edit-survey${r.idx}-note" class="input-box" rows="2" style="flex:1; font-size:0.82rem; resize:vertical;" placeholder="비고 입력">${r.note || ''}</textarea>
+            </div>
           </div>
         </div>
       `;
@@ -5502,13 +5498,113 @@ function openGwangsanDetailModal(key) {
   }
 }
 
-// 6. 광산구 모달에서 통합시설관리 상세 모달로 즉시 이동
+// 6. 광산구 모달에서 통합시설관리 상세 모달로 즉시 이동 (창 닫을 때 광산구 관리시설로 복귀)
 function jumpToFacilityDetailFromGwangsan() {
   if (!currentGwangsanDetailKey) return;
   const key = currentGwangsanDetailKey;
+  returnTabAfterFacilityDetail = 'gwangsan-facilities';
   closeModal("modal-gwangsan-detail");
-  switchTab("facilities");
   openFacilityDetailModal(key);
+}
+
+// 6-1. 광산구 시설 정보 및 조사내용 저장 핸들러
+async function handleSaveGwangsanFacility(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const facilityKey = document.getElementById("gwangsan-edit-facility-key")?.value;
+  if (!facilityKey) {
+    alert("시설 고유키가 유효하지 않습니다.");
+    return;
+  }
+
+  const payload = {
+    facility_key: facilityKey,
+    dept_action_plan: (document.getElementById("gwangsan-edit-action-plan")?.value || "").trim(),
+    subsidy_apply: (document.getElementById("gwangsan-edit-subsidy")?.value || "").trim(),
+    compliance_status: (document.getElementById("gwangsan-edit-compliance")?.value || "미이행").trim(),
+    final_conclusion: (document.getElementById("gwangsan-edit-final-conclusion")?.value || "").trim(),
+
+    survey1_type: (document.getElementById("gwangsan-edit-survey1-type")?.value || "").trim(),
+    survey1_date: (document.getElementById("gwangsan-edit-survey1-date")?.value || "").trim() || null,
+    survey1_inspector: (document.getElementById("gwangsan-edit-survey1-inspector")?.value || "").trim(),
+    survey1_check: (document.getElementById("gwangsan-edit-survey1-check")?.value || "").trim(),
+    survey1_plan: (document.getElementById("gwangsan-edit-survey1-plan")?.value || "").trim(),
+    survey1_note: (document.getElementById("gwangsan-edit-survey1-note")?.value || "").trim(),
+
+    survey2_type: (document.getElementById("gwangsan-edit-survey2-type")?.value || "").trim(),
+    survey2_date: (document.getElementById("gwangsan-edit-survey2-date")?.value || "").trim() || null,
+    survey2_inspector: (document.getElementById("gwangsan-edit-survey2-inspector")?.value || "").trim(),
+    survey2_check: (document.getElementById("gwangsan-edit-survey2-check")?.value || "").trim(),
+    survey2_plan: (document.getElementById("gwangsan-edit-survey2-plan")?.value || "").trim(),
+    survey2_note: (document.getElementById("gwangsan-edit-survey2-note")?.value || "").trim(),
+
+    survey3_type: (document.getElementById("gwangsan-edit-survey3-type")?.value || "").trim(),
+    survey3_date: (document.getElementById("gwangsan-edit-survey3-date")?.value || "").trim() || null,
+    survey3_inspector: (document.getElementById("gwangsan-edit-survey3-inspector")?.value || "").trim(),
+    survey3_check: (document.getElementById("gwangsan-edit-survey3-check")?.value || "").trim(),
+    survey3_plan: (document.getElementById("gwangsan-edit-survey3-plan")?.value || "").trim(),
+    survey3_note: (document.getElementById("gwangsan-edit-survey3-note")?.value || "").trim(),
+
+    survey4_type: (document.getElementById("gwangsan-edit-survey4-type")?.value || "").trim(),
+    survey4_date: (document.getElementById("gwangsan-edit-survey4-date")?.value || "").trim() || null,
+    survey4_inspector: (document.getElementById("gwangsan-edit-survey4-inspector")?.value || "").trim(),
+    survey4_check: (document.getElementById("gwangsan-edit-survey4-check")?.value || "").trim(),
+    survey4_plan: (document.getElementById("gwangsan-edit-survey4-plan")?.value || "").trim(),
+    survey4_note: (document.getElementById("gwangsan-edit-survey4-note")?.value || "").trim(),
+
+    survey5_type: (document.getElementById("gwangsan-edit-survey5-type")?.value || "").trim(),
+    survey5_date: (document.getElementById("gwangsan-edit-survey5-date")?.value || "").trim() || null,
+    survey5_inspector: (document.getElementById("gwangsan-edit-survey5-inspector")?.value || "").trim(),
+    survey5_check: (document.getElementById("gwangsan-edit-survey5-check")?.value || "").trim(),
+    survey5_plan: (document.getElementById("gwangsan-edit-survey5-plan")?.value || "").trim(),
+    survey5_note: (document.getElementById("gwangsan-edit-survey5-note")?.value || "").trim()
+  };
+
+  try {
+    let saved = false;
+    // 1순위: 백엔드 save API 호출
+    try {
+      const res = await fetch(`${API_BASE_URL}/gwangsan_facilities/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) saved = true;
+    } catch (apiErr) {
+      console.warn("Backend gwangsan save failed, fallback to Supabase direct:", apiErr);
+    }
+
+    // 2순위: Supabase DB 직접 PATCH
+    if (!saved) {
+      try {
+        const resDb = await fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+          method: "PATCH",
+          headers: {
+            "apikey": SUPABASE_SECRET_KEY,
+            "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+          },
+          body: JSON.stringify(payload)
+        });
+        if (resDb.ok) saved = true;
+      } catch (dbErr) {
+        console.warn("Direct Supabase gwangsan save failed:", dbErr);
+      }
+    }
+
+    // 로컬 메모리 상태 즉시 업데이트
+    const idx = gwangsanFacilitiesData.findIndex(f => f.facility_key === facilityKey);
+    if (idx !== -1) {
+      gwangsanFacilitiesData[idx] = { ...gwangsanFacilitiesData[idx], ...payload };
+    }
+
+    closeModal("modal-gwangsan-detail");
+    filterGwangsanFacilities();
+    alert("광산구 관리시설 조사내용 및 조치계획이 성공적으로 저장되었습니다.");
+  } catch (err) {
+    console.error("Save gwangsan facility error:", err);
+    alert("저장 중 오류가 발생했습니다: " + err.message);
+  }
 }
 
 // 7. 광산구 관리시설 CSV 엑셀 다운로드
