@@ -27,8 +27,44 @@ USERS_FILE = os.path.join(os.path.dirname(__file__), "users_db.json")
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "settings.json")
 NOTES_FILE = os.path.join(os.path.dirname(__file__), "dispositions_notes.json")
 CORRECTION_ORDERS_FILE = os.path.join(os.path.dirname(__file__), "correction_orders_cache.json")
+GWANGSAN_FACILITIES_FILE = os.path.join(os.path.dirname(__file__), "gwangsan_facilities_cache.json")
 OPERATIONS_FILE = os.path.join(os.path.dirname(__file__), "operations_cache.json")
 ECOCAR_HTML_PATH = r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\ECO-CAR.html"
+
+def load_gwangsan_facilities():
+    # 1. Supabase DB 조회 시도 (1순위 SSOT)
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/gwangsan_facilities?select=*&order=id.asc", headers=HEADERS, timeout=8)
+            if res.status_code == 200:
+                rows = res.json()
+                if rows and len(rows) > 0:
+                    for item in rows:
+                        item["manager_name"] = decrypt_data(item.get("manager_name_encrypted")) if item.get("manager_name_encrypted") else ""
+                        item["manager_contact"] = decrypt_data(item.get("manager_contact_encrypted")) if item.get("manager_contact_encrypted") else ""
+                    try:
+                        with open(GWANGSAN_FACILITIES_FILE, "w", encoding="utf-8") as f:
+                            json.dump(rows, f, ensure_ascii=False, indent=2)
+                    except Exception:
+                        pass
+                    return rows
+        except Exception as e:
+            print(f"Supabase load_gwangsan_facilities error: {e}")
+
+    # 2. 로컬 캐시 fallback
+    if os.path.exists(GWANGSAN_FACILITIES_FILE):
+        try:
+            with open(GWANGSAN_FACILITIES_FILE, "r", encoding="utf-8") as f:
+                rows = json.load(f)
+            for item in rows:
+                if "manager_name" not in item:
+                    item["manager_name"] = decrypt_data(item.get("manager_name_encrypted")) if item.get("manager_name_encrypted") else ""
+                if "manager_contact" not in item:
+                    item["manager_contact"] = decrypt_data(item.get("manager_contact_encrypted")) if item.get("manager_contact_encrypted") else ""
+            return rows
+        except Exception as e:
+            print(f"Local load_gwangsan_facilities error: {e}")
+    return []
 
 def load_operations():
     # 1. Supabase DB 조회 시도 (1순위 SSOT)
@@ -961,6 +997,13 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
 
         elif path == "/api/operations":
             data = load_operations()
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
+
+        elif path == "/api/gwangsan_facilities":
+            data = load_gwangsan_facilities()
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()

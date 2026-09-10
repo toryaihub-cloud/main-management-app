@@ -138,6 +138,23 @@ def sync():
     except Exception as e:
         print(f"[sync] Operations sync note: {e} (로컬 캐시 보존)")
 
+    # 4. Gwangsan Facilities 동기화 (광산구 관리시설)
+    try:
+        res = requests.get(f"{SUPABASE_URL}/rest/v1/gwangsan_facilities?select=*&order=id.asc", headers=HEADERS, timeout=15)
+        if res.status_code == 200:
+            raw_gw = res.json()
+            if raw_gw and len(raw_gw) > 0:
+                for item in raw_gw:
+                    item["manager_name"] = decrypt_data(item.get("manager_name_encrypted")) if item.get("manager_name_encrypted") else ""
+                    item["manager_contact"] = decrypt_data(item.get("manager_contact_encrypted")) if item.get("manager_contact_encrypted") else ""
+                with open('gwangsan_facilities_cache.json', 'w', encoding='utf-8') as f:
+                    json.dump(raw_gw, f, ensure_ascii=False, indent=2)
+                print(f"[sync] gwangsan_facilities_cache.json 업데이트 완료 ({len(raw_gw)}건)")
+        else:
+            print(f"[sync] Gwangsan facilities note: status={res.status_code} (로컬 캐시 보존)")
+    except Exception as e:
+        print(f"[sync] Gwangsan facilities sync note: {e} (로컬 캐시 보존)")
+
     print("[sync] 캐시 동기화 완료! 이제 git add/commit/push 해도 안전합니다.")
     return True
 

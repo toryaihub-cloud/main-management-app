@@ -410,7 +410,7 @@ async function loadData() {
   }
 
   // 2. Fetch fresh data
-  await Promise.all([fetchFacilities(), fetchDispositions(), fetchCorrectionOrders(), fetchOperations()]);
+  await Promise.all([fetchFacilities(), fetchDispositions(), fetchCorrectionOrders(), fetchOperations(), fetchGwangsanFacilities()]);
   if (currentUser && (currentUser.role === "ADMIN" || currentUser.username === "ADMIN")) {
     await fetchUsers();
   }
@@ -485,6 +485,8 @@ function switchTab(tabName) {
     fetchCorrectionOrders();
   } else if (tabName === 'operations') {
     fetchOperations();
+  } else if (tabName === 'gwangsan-facilities') {
+    fetchGwangsanFacilities();
   } else if (tabName === 'users') {
     fetchUsers();
   }
@@ -4961,5 +4963,578 @@ function exportOperationsExcel() {
   link.click();
   document.body.removeChild(link);
 }
+
+// =========================================================================
+// 17. 광산구 관리시설 현황 및 1~5차 세부 조사내용 관리 모듈 (Gwangsan Facilities)
+// =========================================================================
+let gwangsanFacilitiesData = [];
+let currentGwangsanDetailKey = null;
+
+// 광산구 관리부서 고유 테마 색상 맵
+const GWANGSAN_DEPT_COLORS = {
+  "교통지도과": { bg: "#EFF6FF", text: "#1D4ED8", border: "#BFDBFE", badgeBg: "#2563EB" },
+  "시민경제과": { bg: "#F0FDF4", text: "#15803D", border: "#BBF7D0", badgeBg: "#16A34A" },
+  "체육진흥과": { bg: "#FAF5FF", text: "#7E22CE", border: "#E9D5FF", badgeBg: "#9333EA" },
+  "도시공원과": { bg: "#FFFBEB", text: "#B45309", border: "#FDE68A", badgeBg: "#D97706" },
+  "시설지원과": { bg: "#FDF2F8", text: "#BE185D", border: "#FBCFE8", badgeBg: "#DB2777" },
+  "청소행정과": { bg: "#ECFEFF", text: "#0E7490", border: "#A5F3FC", badgeBg: "#0891B2" }
+};
+
+// 1. 광산구 관리시설 데이터 로드 (Supabase DB 1순위 -> 백엔드 API 2순위 -> 로컬 캐시 3순위)
+async function fetchGwangsanFacilities(forceRefresh = false) {
+  let list = [];
+
+  // [1순위] Supabase DB 직접 조회
+  try {
+    const resDb = await fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?select=*&order=id.asc`, {
+      headers: {
+        "apikey": SUPABASE_SECRET_KEY,
+        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`
+      }
+    });
+    if (resDb.ok) {
+      const dbRows = await resDb.json();
+      if (Array.isArray(dbRows) && dbRows.length > 0) {
+        list = await Promise.all(dbRows.map(async f => {
+          let decMgr = await decryptFernet(f.manager_name_encrypted);
+          let decContact = await decryptFernet(f.manager_contact_encrypted);
+          return {
+            ...f,
+            manager_name: decMgr || (f.manager_name_encrypted && !f.manager_name_encrypted.startsWith("gAAAAA") ? f.manager_name_encrypted : (f.manager_name || "")),
+            manager_contact: decContact || (f.manager_contact_encrypted && !f.manager_contact_encrypted.startsWith("gAAAAA") ? f.manager_contact_encrypted : (f.manager_contact || ""))
+          };
+        }));
+      }
+    }
+  } catch (errDb) {
+    console.warn("Direct Supabase gwangsan_facilities fetch failed, fallback to local/cache:", errDb);
+  }
+
+  // [2순위] 백엔드 API
+  if (list.length === 0) {
+    try {
+      const resApi = await fetch(`${API_BASE_URL}/gwangsan_facilities`);
+      if (resApi.ok) {
+        const raw = await resApi.json();
+        list = Array.isArray(raw) ? raw : (raw.data || []);
+      }
+    } catch (eApi) {}
+  }
+
+  // [3순위] 로컬 정적 캐시 파일
+  if (list.length === 0) {
+    try {
+      const resStatic = await fetch("gwangsan_facilities_cache.json?v=" + Date.now());
+      if (resStatic.ok) {
+        const raw = await resStatic.json();
+        list = Array.isArray(raw) ? raw : (raw.data || []);
+      }
+    } catch (eStatic) {}
+  }
+
+  if (list.length > 0) {
+    gwangsanFacilitiesData = list;
+    try {
+      localStorage.setItem("cached_gwangsan_facilities", JSON.stringify(gwangsanFacilitiesData));
+    } catch(e) {}
+  } else {
+    // localStorage 캐시 복구
+    try {
+      const cached = localStorage.getItem("cached_gwangsan_facilities");
+      if (cached) gwangsanFacilitiesData = JSON.parse(cached);
+    } catch(e) {}
+  }
+
+  updateGwangsanStats();
+  filterGwangsanFacilities();
+}
+
+// 2. 상단 4칸 핵심 현황 통계 업데이트
+function updateGwangsanStats() {
+  const total = gwangsanFacilitiesData.length;
+  let compliant = 0;
+  let nonCompliant = 0;
+  let subsidyCount = 0;
+
+  gwangsanFacilitiesData.forEach(item => {
+    if (item.compliance_status === "이행완료") compliant++;
+    else nonCompliant++;
+
+    if (item.subsidy_apply === "신청" || (item.subsidy_apply && item.subsidy_apply.includes("신청"))) {
+      subsidyCount++;
+    }
+  });
+
+  const totalEl = document.getElementById("stat-gwangsan-total");
+  const compEl = document.getElementById("stat-gwangsan-compliant");
+  const nonCompEl = document.getElementById("stat-gwangsan-non-compliant");
+  const subEl = document.getElementById("stat-gwangsan-subsidy");
+
+  if (totalEl) totalEl.innerText = `${total}개소`;
+  if (compEl) compEl.innerText = `${compliant}개소`;
+  if (nonCompEl) nonCompEl.innerText = `${nonCompliant}개소`;
+  if (subEl) subEl.innerText = `${subsidyCount}건`;
+}
+
+// 3. 관리부서(BI열) 기준 리스트 렌더링
+function renderGwangsanFacilities(data) {
+  const container = document.getElementById("gwangsan-facility-list-container");
+  if (!container) return;
+
+  if (!data || data.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:3rem 1rem; color:var(--text-muted); background:#fff; border-radius:8px; border:1px dashed var(--border-color);">
+        <i class="fa-solid fa-folder-open" style="font-size:2.5rem; color:#cbd5e1; margin-bottom:0.8rem; display:block;"></i>
+        <div style="font-weight:600; font-size:1rem;">검색 조건과 일치하는 광산구 관리시설이 없습니다.</div>
+      </div>
+    `;
+    return;
+  }
+
+  // 관리부서별 그룹핑 (교통지도과, 시민경제과, 체육진흥과, 도시공원과, 시설지원과, 청소행정과 순)
+  const deptOrder = ["교통지도과", "시민경제과", "체육진흥과", "도시공원과", "시설지원과", "청소행정과"];
+  const grouped = {};
+
+  data.forEach(item => {
+    const dept = item.dept_name ? item.dept_name.trim() : "기타부서";
+    if (!grouped[dept]) grouped[dept] = [];
+    grouped[dept].append ? grouped[dept].append(item) : grouped[dept].push(item);
+  });
+
+  // 정렬된 부서 키 목록 (정의된 순서 우선, 나머지 뒤로)
+  const sortedDepts = Object.keys(grouped).sort((a, b) => {
+    const idxA = deptOrder.indexOf(a);
+    const idxB = deptOrder.indexOf(b);
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+    if (idxA !== -1) return -1;
+    if (idxB !== -1) return 1;
+    return a.localeCompare(b, "ko");
+  });
+
+  let html = "";
+
+  sortedDepts.forEach(dept => {
+    const items = grouped[dept];
+    const deptColor = GWANGSAN_DEPT_COLORS[dept] || { bg: "#F8FAFC", text: "#334155", border: "#E2E8F0", badgeBg: "#64748B" };
+    const deptCompliant = items.filter(i => i.compliance_status === "이행완료").length;
+    const deptNonCompliant = items.length - deptCompliant;
+
+    html += `
+      <div class="gwangsan-dept-section" style="background:#fff; border:1px solid ${deptColor.border}; border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <!-- 부서 헤더 -->
+        <div style="background:${deptColor.bg}; border-bottom:1px solid ${deptColor.border}; padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <span style="background:${deptColor.badgeBg}; color:#fff; font-size:0.8rem; font-weight:800; padding:0.25rem 0.65rem; border-radius:6px;">
+              <i class="fa-solid fa-building-user"></i> ${dept}
+            </span>
+            <span style="font-size:0.95rem; font-weight:800; color:${deptColor.text};">소관 관리시설</span>
+            <span style="font-size:0.82rem; font-weight:700; color:var(--text-muted);">총 ${items.length}개소</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.78rem;">
+            <span class="badge badge-emerald" style="padding:0.2rem 0.5rem;"><i class="fa-solid fa-circle-check"></i> 이행완료 ${deptCompliant}</span>
+            ${deptNonCompliant > 0 ? `<span class="badge badge-rose" style="padding:0.2rem 0.5rem;"><i class="fa-solid fa-triangle-exclamation"></i> 미이행 ${deptNonCompliant}</span>` : ''}
+          </div>
+        </div>
+
+        <!-- 시설 리스트 테이블/카드 -->
+        <div style="display:flex; flex-direction:column; divide-y:1px solid #f1f5f9;">
+          ${items.map(f => {
+            const isComp = f.compliance_status === "이행완료";
+            const pReq = f.parking_required_cnt ?? 0;
+            const pInst = f.parking_installed_cnt ?? 0;
+            const pUn = f.parking_uninstalled_cnt ?? 0;
+            const pGround = f.parking_ground_cnt ?? 0;
+            const pUnder = f.parking_underground_cnt ?? 0;
+
+            const cReq = f.charger_required_cnt ?? 0;
+            const cFastReq = f.charger_fast_req_cnt ?? 0;
+            const cInst = f.charger_installed_cnt ?? 0;
+            const cFast = f.charger_fast_cnt ?? 0;
+            const cSlow = f.charger_slow_cnt ?? 0;
+            const cUn = f.charger_uninstalled_cnt ?? 0;
+
+            const plan = f.dept_action_plan ? f.dept_action_plan.trim() : "-";
+            const subsidy = f.subsidy_apply ? f.subsidy_apply.trim() : "";
+            const isSubsidy = subsidy === "신청" || subsidy.includes("신청");
+
+            return `
+              <div style="padding:0.9rem 1.25rem; border-bottom:1px solid #f1f5f9; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+                
+                <!-- 1. 기본 정보 (시설명, KEY, 주소) -->
+                <div style="flex:2; min-width:260px;">
+                  <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.25rem;">
+                    <span class="badge badge-indigo" style="font-size:0.75rem; font-weight:700;">${f.facility_key}</span>
+                    <span style="font-weight:800; font-size:0.95rem; color:#1e293b; cursor:pointer;" onclick="openGwangsanDetailModal('${f.facility_key}')" title="세부 조사내용 보기">
+                      ${f.facility_name}
+                    </span>
+                    <span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-size:0.72rem; padding:0.15rem 0.45rem;">
+                      ${f.compliance_status || '미이행'}
+                    </span>
+                  </div>
+                  <div style="font-size:0.8rem; color:#64748b; line-height:1.35;">
+                    <i class="fa-solid fa-location-dot" style="font-size:0.75rem; color:#94a3b8;"></i> ${f.address_doro || f.address_jibun || '-'}
+                  </div>
+                </div>
+
+                <!-- 2. 전용주차구역 현황 -->
+                <div style="flex:1.2; min-width:170px; font-size:0.8rem; background:#f8fafc; padding:0.5rem 0.75rem; border-radius:6px; border:1px solid #e2e8f0;">
+                  <div style="font-weight:700; color:#2563eb; margin-bottom:0.2rem; display:flex; align-items:center; gap:0.3rem;">
+                    <i class="fa-solid fa-square-parking"></i> 전용주차구역
+                  </div>
+                  <div style="color:#334155;">
+                    설치/의무: <b>${pInst}</b> / <b>${pReq}</b>면
+                    ${pUn > 0 ? `<span style="color:#e11d48; font-weight:700; margin-left:0.2rem;">(미설치 ${pUn})</span>` : ''}
+                  </div>
+                  <div style="font-size:0.72rem; color:#64748b;">
+                    지상 ${pGround} / 지하 ${pUnder}
+                  </div>
+                </div>
+
+                <!-- 3. 충전시설 현황 -->
+                <div style="flex:1.4; min-width:190px; font-size:0.8rem; background:#f8fafc; padding:0.5rem 0.75rem; border-radius:6px; border:1px solid #e2e8f0;">
+                  <div style="font-weight:700; color:#d97706; margin-bottom:0.2rem; display:flex; align-items:center; gap:0.3rem;">
+                    <i class="fa-solid fa-bolt"></i> 충전시설
+                  </div>
+                  <div style="color:#334155;">
+                    설치/의무: <b>${cInst}</b> / <b>${cReq}</b>기
+                    ${cUn > 0 ? `<span style="color:#e11d48; font-weight:700; margin-left:0.2rem;">(미설치 ${cUn})</span>` : ''}
+                  </div>
+                  <div style="font-size:0.72rem; color:#64748b;">
+                    급속 ${cFast}(의무 ${cFastReq}) / 완속 ${cSlow}
+                  </div>
+                </div>
+
+                <!-- 4. 부서 조치계획 (BJ열) & 보조사업 신청 (BK열) -->
+                <div style="flex:2; min-width:240px; font-size:0.82rem; background:${plan !== '-' ? '#eff6ff' : '#f8fafc'}; padding:0.5rem 0.75rem; border-radius:6px; border:1px solid ${plan !== '-' ? '#bfdbfe' : '#e2e8f0'};">
+                  <div style="font-weight:700; color:#1e40af; margin-bottom:0.2rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fa-solid fa-list-check"></i> 부서 조치계획</span>
+                    ${isSubsidy ? `<span class="badge badge-indigo" style="font-size:0.7rem; padding:0.1rem 0.4rem;"><i class="fa-solid fa-check"></i> 보조사업 신청</span>` : (subsidy ? `<span class="badge" style="font-size:0.7rem; background:#e2e8f0; color:#475569;">${subsidy}</span>` : '')}
+                  </div>
+                  <div style="color:#0f172a; font-weight:600; line-height:1.35; max-height:2.8rem; overflow:hidden; text-overflow:ellipsis;" title="${plan}">
+                    ${plan}
+                  </div>
+                </div>
+
+                <!-- 5. 액션 버튼 -->
+                <div style="min-width:105px; text-align:right;">
+                  <button type="button" class="btn btn-secondary" style="padding:0.4rem 0.75rem; font-size:0.78rem; font-weight:700;" onclick="openGwangsanDetailModal('${f.facility_key}')">
+                    <i class="fa-solid fa-magnifying-glass"></i> 조사내용
+                  </button>
+                </div>
+
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// 4. 광산구 관리시설 필터링
+function filterGwangsanFacilities() {
+  const query = (document.getElementById("gwangsan-search-input")?.value || "").toLowerCase().trim();
+  const deptFilter = document.getElementById("gwangsan-filter-dept")?.value || "ALL";
+  const compFilter = document.getElementById("gwangsan-filter-compliance")?.value || "ALL";
+  const subFilter = document.getElementById("gwangsan-filter-subsidy")?.value || "ALL";
+
+  let filtered = gwangsanFacilitiesData.filter(item => {
+    // 1. 검색어 필터 (시설명, 주소, KEY)
+    if (query) {
+      const matchName = (item.facility_name || "").toLowerCase().includes(query);
+      const matchKey = (item.facility_key || "").toLowerCase().includes(query);
+      const matchDoro = (item.address_doro || "").toLowerCase().includes(query);
+      const matchJibun = (item.address_jibun || "").toLowerCase().includes(query);
+      const matchPlan = (item.dept_action_plan || "").toLowerCase().includes(query);
+      if (!matchName && !matchKey && !matchDoro && !matchJibun && !matchPlan) return false;
+    }
+
+    // 2. 관리부서 필터
+    if (deptFilter !== "ALL" && item.dept_name !== deptFilter) return false;
+
+    // 3. 이행상태 필터
+    if (compFilter !== "ALL" && item.compliance_status !== compFilter) return false;
+
+    // 4. 보조사업 신청 필터
+    if (subFilter === "신청" && !(item.subsidy_apply === "신청" || (item.subsidy_apply && item.subsidy_apply.includes("신청")))) return false;
+    if (subFilter === "미신청" && (item.subsidy_apply === "신청" || (item.subsidy_apply && item.subsidy_apply.includes("신청")))) return false;
+
+    return true;
+  });
+
+  const countBadge = document.getElementById("gwangsan-count-badge");
+  if (countBadge) countBadge.innerText = `총 ${filtered.length}건 검색`;
+
+  renderGwangsanFacilities(filtered);
+}
+
+// 5. 1차~5차 세부 조사내용(AB열~BE열) 및 최종결론(BF열) 상세보기 모달 오픈
+function openGwangsanDetailModal(key) {
+  const item = gwangsanFacilitiesData.find(f => f.facility_key === key);
+  if (!item) return;
+
+  currentGwangsanDetailKey = key;
+
+  // Header
+  document.getElementById("gwangsan-modal-key").innerText = item.facility_key;
+  document.getElementById("gwangsan-modal-title").innerText = item.facility_name;
+  
+  const deptEl = document.getElementById("gwangsan-modal-dept");
+  if (deptEl) {
+    deptEl.innerText = item.dept_name || "관리부서 미지정";
+    const deptColor = GWANGSAN_DEPT_COLORS[item.dept_name] || { badgeBg: "#4338CA" };
+    deptEl.style.background = deptColor.badgeBg;
+  }
+
+  // Summary Information
+  const addr = item.address_doro || item.address_jibun || "-";
+  document.getElementById("gwangsan-modal-address").innerText = addr;
+  document.getElementById("gwangsan-modal-dates").innerText = `${item.permission_date || '-'} / ${item.approval_date || '-'}`;
+  
+  const pReq = item.parking_required_cnt ?? 0;
+  const pInst = item.parking_installed_cnt ?? 0;
+  const pGround = item.parking_ground_cnt ?? 0;
+  const pUnder = item.parking_underground_cnt ?? 0;
+  document.getElementById("gwangsan-modal-parking").innerText = `${pInst}면 / ${pReq}면 (지상 ${pGround}, 지하 ${pUnder})`;
+
+  const cReq = item.charger_required_cnt ?? 0;
+  const cFastReq = item.charger_fast_req_cnt ?? 0;
+  const cInst = item.charger_installed_cnt ?? 0;
+  const cFast = item.charger_fast_cnt ?? 0;
+  const cSlow = item.charger_slow_cnt ?? 0;
+  document.getElementById("gwangsan-modal-charger").innerText = `${cInst}기 / ${cReq}기 (급속 ${cFast}, 완속 ${cSlow}, 의무급속 ${cFastReq})`;
+
+  // Action Plan & Subsidy & Compliance
+  document.getElementById("gwangsan-modal-action-plan").innerText = item.dept_action_plan || "(등록된 부서 조치계획 없음)";
+  
+  const subEl = document.getElementById("gwangsan-modal-subsidy");
+  const isSubsidy = item.subsidy_apply === "신청" || (item.subsidy_apply && item.subsidy_apply.includes("신청"));
+  subEl.innerHTML = isSubsidy 
+    ? `<span class="badge badge-emerald" style="font-weight:700;"><i class="fa-solid fa-check"></i> 신청 완료</span>` 
+    : `<span class="badge" style="background:#e2e8f0; color:#64748b;">${item.subsidy_apply || '미신청'}</span>`;
+
+  const compEl = document.getElementById("gwangsan-modal-compliance");
+  const isComp = item.compliance_status === "이행완료";
+  compEl.innerHTML = `<span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-weight:700;">${item.compliance_status || '미이행'}</span>`;
+
+  // Final Conclusion (BF열)
+  const finalEl = document.getElementById("gwangsan-modal-final-conclusion");
+  if (finalEl) {
+    finalEl.innerText = item.final_conclusion && item.final_conclusion.trim() ? item.final_conclusion.trim() : "최종결론 내용이 등록되지 않았습니다.";
+  }
+
+  // 1차~5차 세부 조사내용 (AB열~BE열) 동적 생성
+  const surveysContainer = document.getElementById("gwangsan-modal-surveys-container");
+  if (surveysContainer) {
+    const rounds = [
+      {
+        round: "1차",
+        title: "자체조사 (1차)",
+        type: item.survey1_type,
+        date: item.survey1_date,
+        inspector: item.survey1_inspector,
+        check: item.survey1_check,
+        plan: item.survey1_plan,
+        note: item.survey1_note,
+        color: "#2563eb"
+      },
+      {
+        round: "2차",
+        title: "자체조사 (2차)",
+        type: item.survey2_type,
+        date: item.survey2_date,
+        inspector: item.survey2_inspector,
+        check: item.survey2_check,
+        plan: item.survey2_plan,
+        note: item.survey2_note,
+        color: "#0891b2"
+      },
+      {
+        round: "3차",
+        title: "실태조사 (3차)",
+        type: item.survey3_type,
+        date: item.survey3_date,
+        inspector: item.survey3_inspector,
+        check: item.survey3_check,
+        plan: item.survey3_plan,
+        note: item.survey3_note,
+        color: "#059669"
+      },
+      {
+        round: "4차",
+        title: "자체조사 (4차)",
+        type: item.survey4_type,
+        date: item.survey4_date,
+        inspector: item.survey4_inspector,
+        check: item.survey4_check,
+        plan: item.survey4_plan,
+        note: item.survey4_note,
+        color: "#d97706"
+      },
+      {
+        round: "5차",
+        title: "자체조사 (5차)",
+        type: item.survey5_type,
+        date: item.survey5_date,
+        inspector: item.survey5_inspector,
+        check: item.survey5_check,
+        plan: item.survey5_plan,
+        note: item.survey5_note,
+        color: "#7c3aed"
+      }
+    ];
+
+    let surveyHtml = "";
+    rounds.forEach(r => {
+      const hasContent = (r.type || r.date || r.inspector || r.check || r.plan || r.note);
+
+      surveyHtml += `
+        <div style="border:1px solid ${hasContent ? '#cbd5e1' : '#f1f5f9'}; border-radius:8px; overflow:hidden; background:${hasContent ? '#fff' : '#f8fafc'}; opacity:${hasContent ? '1' : '0.65'};">
+          <div style="background:${hasContent ? '#f1f5f9' : '#f8fafc'}; padding:0.5rem 0.85rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid ${hasContent ? '#e2e8f0' : '#f1f5f9'};">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span style="background:${r.color}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.5rem; border-radius:4px;">
+                ${r.title}
+              </span>
+              ${r.type ? `<span style="font-size:0.78rem; font-weight:700; color:#334155;">[방법: ${r.type}]</span>` : ''}
+            </div>
+            <div style="font-size:0.75rem; color:#64748b;">
+              ${r.date ? `<i class="fa-regular fa-calendar"></i> ${r.date}` : ''}
+              ${r.inspector ? ` | <i class="fa-solid fa-user"></i> 조사자: <b>${r.inspector}</b>` : ''}
+            </div>
+          </div>
+
+          <div style="padding:0.75rem 0.85rem; font-size:0.82rem; display:flex; flex-direction:column; gap:0.4rem;">
+            ${r.check ? `
+              <div>
+                <span style="font-weight:700; color:#1e293b; display:inline-block; width:70px;"><i class="fa-solid fa-check"></i> 확인사항:</span>
+                <span style="color:#334155;">${r.check}</span>
+              </div>
+            ` : ''}
+            ${r.plan ? `
+              <div>
+                <span style="font-weight:700; color:#2563eb; display:inline-block; width:70px;"><i class="fa-solid fa-arrow-right"></i> 이행계획:</span>
+                <span style="color:#1d4ed8; font-weight:600;">${r.plan}</span>
+              </div>
+            ` : ''}
+            ${r.note ? `
+              <div>
+                <span style="font-weight:700; color:#64748b; display:inline-block; width:70px;"><i class="fa-solid fa-circle-info"></i> 비고:</span>
+                <span style="color:#475569;">${r.note}</span>
+              </div>
+            ` : ''}
+            ${!hasContent ? `
+              <div style="color:#94a3b8; font-style:italic;">조사 내역 없음</div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    });
+
+    surveysContainer.innerHTML = surveyHtml;
+  }
+
+  // 모달 열기
+  const modal = document.getElementById("modal-gwangsan-detail");
+  if (modal) {
+    modal.style.display = "flex";
+    modal.classList.add("active");
+  }
+}
+
+// 6. 광산구 모달에서 통합시설관리 상세 모달로 즉시 이동
+function jumpToFacilityDetailFromGwangsan() {
+  if (!currentGwangsanDetailKey) return;
+  const key = currentGwangsanDetailKey;
+  closeModal("modal-gwangsan-detail");
+  switchTab("facilities");
+  openFacilityDetailModal(key);
+}
+
+// 7. 광산구 관리시설 CSV 엑셀 다운로드
+function exportGwangsanExcel() {
+  if (!gwangsanFacilitiesData || gwangsanFacilitiesData.length === 0) {
+    alert("다운로드할 광산구 관리시설 데이터가 없습니다.");
+    return;
+  }
+
+  const headers = [
+    "연번", "KEY", "관리부서", "시설명", "시설구분", "의무이행여부",
+    "도로명주소", "지번주소", "건축허가일", "사용승인일자",
+    "의무주차면수", "설치주차면수", "지상면수", "지하면수", "미설치면수",
+    "의무충전기수", "의무급속기수", "설치충전기수", "급속기수", "완속기수", "미설치충전기수",
+    "부서조치계획", "보조사업신청", "최종결론",
+    "1차조사일", "1차조사자", "1차확인사항", "1차이행계획",
+    "2차조사일", "2차조사자", "2차확인사항", "2차이행계획",
+    "3차조사일", "3차조사자", "3차확인사항", "3차이행계획",
+    "4차조사일", "4차조사자", "4차확인사항", "4차이행계획",
+    "5차조사일", "5차조사자", "5차확인사항", "5차이행계획"
+  ];
+
+  const csvRows = [headers.join(",")];
+
+  gwangsanFacilitiesData.forEach((item, idx) => {
+    const row = [
+      idx + 1,
+      `"${item.facility_key || ""}"`,
+      `"${(item.dept_name || "").replace(/"/g, '""')}"`,
+      `"${(item.facility_name || "").replace(/"/g, '""')}"`,
+      `"${(item.facility_category || "").replace(/"/g, '""')}"`,
+      `"${(item.compliance_status || "").replace(/"/g, '""')}"`,
+      `"${(item.address_doro || "").replace(/"/g, '""')}"`,
+      `"${(item.address_jibun || "").replace(/"/g, '""')}"`,
+      `"${item.permission_date || ""}"`,
+      `"${item.approval_date || ""}"`,
+      item.parking_required_cnt ?? 0,
+      item.parking_installed_cnt ?? 0,
+      item.parking_ground_cnt ?? 0,
+      item.parking_underground_cnt ?? 0,
+      item.parking_uninstalled_cnt ?? 0,
+      item.charger_required_cnt ?? 0,
+      item.charger_fast_req_cnt ?? 0,
+      item.charger_installed_cnt ?? 0,
+      item.charger_fast_cnt ?? 0,
+      item.charger_slow_cnt ?? 0,
+      item.charger_uninstalled_cnt ?? 0,
+      `"${(item.dept_action_plan || "").replace(/"/g, '""')}"`,
+      `"${(item.subsidy_apply || "").replace(/"/g, '""')}"`,
+      `"${(item.final_conclusion || "").replace(/"/g, '""')}"`,
+      `"${item.survey1_date || ""}"`,
+      `"${(item.survey1_inspector || "").replace(/"/g, '""')}"`,
+      `"${(item.survey1_check || "").replace(/"/g, '""')}"`,
+      `"${(item.survey1_plan || "").replace(/"/g, '""')}"`,
+      `"${item.survey2_date || ""}"`,
+      `"${(item.survey2_inspector || "").replace(/"/g, '""')}"`,
+      `"${(item.survey2_check || "").replace(/"/g, '""')}"`,
+      `"${(item.survey2_plan || "").replace(/"/g, '""')}"`,
+      `"${item.survey3_date || ""}"`,
+      `"${(item.survey3_inspector || "").replace(/"/g, '""')}"`,
+      `"${(item.survey3_check || "").replace(/"/g, '""')}"`,
+      `"${(item.survey3_plan || "").replace(/"/g, '""')}"`,
+      `"${item.survey4_date || ""}"`,
+      `"${(item.survey4_inspector || "").replace(/"/g, '""')}"`,
+      `"${(item.survey4_check || "").replace(/"/g, '""')}"`,
+      `"${(item.survey4_plan || "").replace(/"/g, '""')}"`,
+      `"${item.survey5_date || ""}"`,
+      `"${(item.survey5_inspector || "").replace(/"/g, '""')}"`,
+      `"${(item.survey5_check || "").replace(/"/g, '""')}"`,
+      `"${(item.survey5_plan || "").replace(/"/g, '""')}"`
+    ];
+    csvRows.push(row.join(","));
+  });
+
+  const csvContent = "\uFEFF" + csvRows.join("\r\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `광산구_관리시설_조사현황_${today}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 
 

@@ -75,6 +75,10 @@
           <i class="fa-solid fa-charging-station"></i>
           <span>운영현황 관리</span>
         </button>
+        <button id="tab-gwangsan-facilities" class="tab-btn" onclick="switchTab('gwangsan-facilities')">
+          <i class="fa-solid fa-landmark"></i>
+          <span>광산구 관리시설</span>
+        </button>
         <button id="tab-dispositions" class="tab-btn" onclick="switchTab('dispositions')">
           <i class="fa-solid fa-gavel"></i>
           <span>행정처분 내역 관리</span>
@@ -505,6 +509,97 @@
       <!-- Operations Cards Grid Container -->
       <div id="operations-card-container" class="op-cards-grid">
         <!-- Dynamically rendered operation cards -->
+      </div>
+    </section>
+
+    <!-- 4-1. 광산구 관리시설 현황 뷰 (Gwangsan Facilities View) -->
+    <section id="view-gwangsan-facilities" class="view-section">
+      <!-- 4-Stat Header Dashboard for Gwangsan Facilities -->
+      <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1rem;">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">광산구 총 관리시설</span>
+            <div class="stat-icon"><i class="fa-solid fa-landmark" style="color: #2563eb;"></i></div>
+          </div>
+          <div class="stat-value" id="stat-gwangsan-total">31</div>
+          <div class="stat-desc">6개 부서 소관 시설 현황</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">의무설치 이행완료</span>
+            <div class="stat-icon"><i class="fa-solid fa-circle-check" style="color: #10b981;"></i></div>
+          </div>
+          <div class="stat-value" id="stat-gwangsan-compliant" style="color:#059669;">-</div>
+          <div class="stat-desc">주차/충전 기준 충족 시설</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">의무설치 미이행</span>
+            <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i></div>
+          </div>
+          <div class="stat-value" id="stat-gwangsan-non-compliant" style="color:#E11D48;">-</div>
+          <div class="stat-desc">조치계획 추진 필요 시설</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">보조사업 신청 시설</span>
+            <div class="stat-icon"><i class="fa-solid fa-hand-holding-dollar" style="color: #8b5cf6;"></i></div>
+          </div>
+          <div class="stat-value" id="stat-gwangsan-subsidy" style="color:#7C3AED;">-</div>
+          <div class="stat-desc">설치지원 보조사업 접수</div>
+        </div>
+      </div>
+
+      <!-- Search & Filter Toolbar -->
+      <div class="toolbar">
+        <div class="search-filter-group">
+          <!-- Search Input -->
+          <div class="search-box-wrapper" style="position:relative; display:flex; align-items:center;">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:0.8rem; color:var(--text-muted); font-size:0.9rem;"></i>
+            <input type="text" id="gwangsan-search-input" class="input-box" placeholder="시설명, 주소, KEY 검색..." oninput="filterGwangsanFacilities()" style="padding-left:2.3rem;">
+          </div>
+          
+          <!-- 관리부서 필터 -->
+          <select id="gwangsan-filter-dept" class="select-box" onchange="filterGwangsanFacilities()">
+            <option value="ALL">관리부서 전체</option>
+            <option value="교통지도과">교통지도과 (14)</option>
+            <option value="시민경제과">시민경제과 (5)</option>
+            <option value="체육진흥과">체육진흥과 (5)</option>
+            <option value="도시공원과">도시공원과 (5)</option>
+            <option value="시설지원과">시설지원과 (1)</option>
+            <option value="청소행정과">청소행정과 (1)</option>
+          </select>
+
+          <!-- 이행여부 필터 -->
+          <select id="gwangsan-filter-compliance" class="select-box" onchange="filterGwangsanFacilities()">
+            <option value="ALL">이행상태 전체</option>
+            <option value="이행완료">이행완료</option>
+            <option value="미이행">미이행</option>
+          </select>
+
+          <!-- 보조사업 신청 필터 -->
+          <select id="gwangsan-filter-subsidy" class="select-box" onchange="filterGwangsanFacilities()">
+            <option value="ALL">보조사업 신청 전체</option>
+            <option value="신청">신청 시설만</option>
+            <option value="미신청">미신청 시설</option>
+          </select>
+
+          <span id="gwangsan-count-badge" class="result-badge">총 0건 검색</span>
+        </div>
+
+        <div class="action-btn-group" style="display:flex; gap:0.5rem; align-items:center;">
+          <button class="btn btn-secondary" style="padding: 0.45rem 0.8rem; font-size: 0.82rem;" onclick="fetchGwangsanFacilities(true)">
+            <i class="fa-solid fa-arrows-rotate"></i> 새로고침
+          </button>
+          <button class="btn btn-primary" style="padding: 0.45rem 0.8rem; font-size: 0.82rem;" onclick="exportGwangsanExcel()">
+            <i class="fa-solid fa-file-excel"></i> 엑셀 저장
+          </button>
+        </div>
+      </div>
+
+      <!-- Gwangsan Facilities List Container (부서별 리스트 형태) -->
+      <div id="gwangsan-facility-list-container" style="display:flex; flex-direction:column; gap:1.2rem; margin-top:0.5rem;">
+        <!-- Dynamically rendered departmental facility list -->
       </div>
     </section>
 
@@ -1530,6 +1625,97 @@
             </div>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 광산구 관리시설 세부 조사내용 및 부서 조치계획 상세보기 모달 -->
+  <div id="modal-gwangsan-detail" class="modal-backdrop" style="display:none; align-items:center; justify-content:center; z-index:9999;">
+    <div class="modal-content" style="max-width:920px; width:95%; max-height:90vh; display:flex; flex-direction:column; border-radius:12px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);">
+      <!-- Header -->
+      <div class="modal-header" style="background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:1rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span id="gwangsan-modal-dept" class="badge" style="background:#4338CA; color:#fff; font-size:0.78rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:6px;">관리부서</span>
+          <span id="gwangsan-modal-key" class="badge badge-indigo" style="font-size:0.8rem; font-weight:700;">KEY</span>
+          <h2 id="gwangsan-modal-title" style="font-size:1.15rem; font-weight:800; color:#1e293b; margin:0;">시설명</h2>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('modal-gwangsan-detail')">&times;</button>
+      </div>
+
+      <!-- Scrollable Body -->
+      <div class="modal-body" style="padding:1.25rem; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:1.2rem; background:#fff;">
+        
+        <!-- Summary Box: Basic & Action Plan -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem;">
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:0.8rem; font-size:0.85rem;">
+            <div>
+              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block;">도로명/지번주소</span>
+              <span id="gwangsan-modal-address" style="color:#1E293B; font-weight:600;">-</span>
+            </div>
+            <div>
+              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block;">건축허가 / 사용승인일</span>
+              <span id="gwangsan-modal-dates" style="color:#1E293B; font-weight:600;">-</span>
+            </div>
+            <div>
+              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block;">전용주차구역 (설치/의무)</span>
+              <span id="gwangsan-modal-parking" style="color:#1E293B; font-weight:700;">-</span>
+            </div>
+            <div>
+              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block;">충전시설 (설치/의무)</span>
+              <span id="gwangsan-modal-charger" style="color:#1E293B; font-weight:700;">-</span>
+            </div>
+          </div>
+
+          <!-- Highlight: Action Plan & Subsidy -->
+          <div style="margin-top:0.8rem; padding-top:0.8rem; border-top:1px dashed #cbd5e1; display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
+            <div style="flex:1; min-width:240px;">
+              <span style="font-size:0.75rem; font-weight:700; color:#4338CA; display:flex; align-items:center; gap:0.3rem;">
+                <i class="fa-solid fa-list-check"></i> 부서 조치계획 (BJ열)
+              </span>
+              <div id="gwangsan-modal-action-plan" style="font-size:0.92rem; font-weight:700; color:#0f172a; margin-top:0.2rem;">-</div>
+            </div>
+            <div style="min-width:140px;">
+              <span style="font-size:0.75rem; font-weight:700; color:#059669; display:flex; align-items:center; gap:0.3rem;">
+                <i class="fa-solid fa-hand-holding-dollar"></i> 보조사업 신청 (BK열)
+              </span>
+              <div id="gwangsan-modal-subsidy" style="margin-top:0.2rem;">-</div>
+            </div>
+            <div style="min-width:120px;">
+              <span style="font-size:0.75rem; font-weight:700; color:#64748B; display:block;">의무이행 상태</span>
+              <div id="gwangsan-modal-compliance" style="margin-top:0.2rem;">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Highlight Box: Final Conclusion (BF열) -->
+        <div style="background:linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border:1px solid #bfdbfe; border-radius:10px; padding:1rem;">
+          <div style="display:flex; align-items:center; gap:0.5rem; color:#1d4ed8; font-weight:800; font-size:0.88rem; margin-bottom:0.4rem;">
+            <i class="fa-solid fa-bullhorn"></i> 실태조사 최종결론 (BF열)
+          </div>
+          <div id="gwangsan-modal-final-conclusion" style="font-size:0.95rem; font-weight:700; color:#1e293b; line-height:1.5;">
+            -
+          </div>
+        </div>
+
+        <!-- Section: 1차~5차 세부 조사내용 (AB열~BE열) -->
+        <div>
+          <div style="font-size:0.95rem; font-weight:800; color:#1e293b; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+            <i class="fa-solid fa-clipboard-check" style="color:#2563eb;"></i> 1차 ~ 5차 차수별 세부 조사 내역 (AB열 ~ BE열)
+          </div>
+
+          <div id="gwangsan-modal-surveys-container" style="display:flex; flex-direction:column; gap:0.75rem;">
+            <!-- Dynamically rendered survey rounds (1차~5차) -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:0.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" class="btn btn-secondary" style="font-size:0.82rem;" onclick="jumpToFacilityDetailFromGwangsan()">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> 통합시설관리 상세 열기
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-gwangsan-detail')">닫기</button>
       </div>
     </div>
   </div>

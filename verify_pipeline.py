@@ -188,6 +188,10 @@ def run_tests():
         with open("operations_cache.json", "r", encoding="utf-8") as f:
             op_cache = json.load(f)
         log(f"operations_cache.json 파싱 성공 (총 {len(op_cache)}개 운영시설)", True)
+
+        with open("gwangsan_facilities_cache.json", "r", encoding="utf-8") as f:
+            gw_cache = json.load(f)
+        log(f"gwangsan_facilities_cache.json 파싱 성공 (총 {len(gw_cache)}개 광산구 관리시설)", True)
     except Exception as e:
         log(f"캐시 파일 파싱 오류: {e}", False)
         all_passed = False
