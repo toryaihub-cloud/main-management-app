@@ -4845,7 +4845,11 @@ function openOperationModal(facilityKey) {
   setVal("op-edit-manager-name", item.manager_name || "");
   setVal("op-edit-manager-contact", item.manager_contact || "");
 
-  // 헤더 뱃지 설정
+  // 헤더 및 뱃지 설정
+  const titleEl = document.getElementById("op-modal-facility-title");
+  if (titleEl) {
+    titleEl.textContent = `${item.facility_name || "시설명"} 상세 / 수정`;
+  }
   const keyBadge = document.getElementById("op-modal-key-badge");
   const statusBadge = document.getElementById("op-modal-status-badge");
   if (keyBadge) keyBadge.textContent = item.facility_key || "-";
