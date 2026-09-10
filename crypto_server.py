@@ -171,6 +171,69 @@ def save_operation(req_data):
     except Exception as e:
         print("Local cache operation save error:", e)
 
+    # === [연계 동기화] 통합시설관리(facilities) 및 광산구관리시설(gwangsan_facilities)에 동일 항목 동기화 ===
+    shared_sync = {
+        "facility_name": record["facility_name"],
+        "address_doro": record["address_doro"],
+        "parking_ground_cnt": record["parking_ground_cnt"],
+        "parking_underground_cnt": record["parking_underground_cnt"],
+        "parking_uninstalled_cnt": record["parking_uninstalled_cnt"],
+        "parking_installed_cnt": record["parking_ground_cnt"] + record["parking_underground_cnt"],
+        "charger_installed_cnt": record["charger_installed_cnt"],
+        "charger_fast_cnt": record["charger_fast_cnt"],
+        "charger_slow_cnt": record["charger_slow_cnt"],
+        "charger_uninstalled_cnt": record["charger_uninstalled_cnt"],
+        "updated_at": record["updated_at"]
+    }
+    if enc_mgr: shared_sync["manager_name_encrypted"] = enc_mgr
+    if enc_contact: shared_sync["manager_contact_encrypted"] = enc_contact
+
+    # 1. Supabase DB 연쇄 동기화
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            prefer_h = {**HEADERS, "Prefer": "return=representation"}
+            # facilities PATCH
+            requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{facility_key}", headers=prefer_h, json=shared_sync, timeout=5)
+            # gwangsan_facilities PATCH
+            requests.patch(f"{SUPABASE_URL}/rest/v1/gwangsan_facilities?facility_key=eq.{facility_key}", headers=prefer_h, json=shared_sync, timeout=5)
+        except Exception as eSync:
+            print("Operation sync to facilities/gwangsan error:", eSync)
+
+    # 2. 로컬 캐시 연쇄 동기화
+    try:
+        # facilities 캐시 동기화
+        global FACILITIES_CACHE
+        if os.path.exists(LOCAL_FACILITIES_FILE):
+            with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as ff:
+                f_list = json.load(ff)
+            for idx, item in enumerate(f_list):
+                if item.get("facility_key") == facility_key:
+                    f_list[idx] = {**item, **shared_sync}
+                    if raw_mgr: f_list[idx]["manager_name"] = raw_mgr
+                    if raw_contact: f_list[idx]["manager_contact"] = raw_contact
+                    break
+            with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as ff:
+                json.dump(f_list, ff, ensure_ascii=False, indent=2)
+            FACILITIES_CACHE["data"] = None  # 캐시 갱신 유도
+    except Exception as eF:
+        print("Local facilities cache sync error from op:", eF)
+
+    try:
+        # gwangsan_facilities 캐시 동기화
+        if os.path.exists(GWANGSAN_FACILITIES_FILE):
+            with open(GWANGSAN_FACILITIES_FILE, "r", encoding="utf-8") as gf:
+                g_list = json.load(gf)
+            for idx, item in enumerate(g_list):
+                if item.get("facility_key") == facility_key:
+                    g_list[idx] = {**item, **shared_sync}
+                    if raw_mgr: g_list[idx]["manager_name"] = raw_mgr
+                    if raw_contact: g_list[idx]["manager_contact"] = raw_contact
+                    break
+            with open(GWANGSAN_FACILITIES_FILE, "w", encoding="utf-8") as gf:
+                json.dump(g_list, gf, ensure_ascii=False, indent=2)
+    except Exception as eG:
+        print("Local gwangsan cache sync error from op:", eG)
+
     return True, "정상적으로 저장되었습니다."
 
 
@@ -305,6 +368,78 @@ def save_gwangsan_facility(req_data):
             json.dump(cached, f, ensure_ascii=False, indent=2)
     except Exception as e:
         print("Local cache gwangsan save error:", e)
+
+    # === [연계 동기화] 통합시설관리(facilities) 및 운영현황관리(operations)에 동일 항목 동기화 ===
+    fac_sync = {"updated_at": record["updated_at"]}
+    if record.get("compliance_status"):
+        fac_sync["compliance_status"] = record["compliance_status"]
+    if record.get("facility_name"):
+        fac_sync["facility_name"] = record["facility_name"]
+    if record.get("address_doro"):
+        fac_sync["address_doro"] = record["address_doro"]
+    if record.get("address_jibun"):
+        fac_sync["address_jibun"] = record["address_jibun"]
+    if enc_mgr:
+        fac_sync["manager_name_encrypted"] = enc_mgr
+    if enc_contact:
+        fac_sync["manager_contact_encrypted"] = enc_contact
+
+    if "parking_ground_cnt" in req_data and req_data.get("parking_ground_cnt") is not None:
+        fac_sync["parking_ground_cnt"] = record["parking_ground_cnt"]
+        fac_sync["parking_underground_cnt"] = record["parking_underground_cnt"]
+        fac_sync["parking_uninstalled_cnt"] = record["parking_uninstalled_cnt"]
+        fac_sync["parking_installed_cnt"] = record["parking_installed_cnt"]
+    if "charger_installed_cnt" in req_data and req_data.get("charger_installed_cnt") is not None:
+        fac_sync["charger_installed_cnt"] = record["charger_installed_cnt"]
+        fac_sync["charger_fast_cnt"] = record["charger_fast_cnt"]
+        fac_sync["charger_slow_cnt"] = record["charger_slow_cnt"]
+        fac_sync["charger_uninstalled_cnt"] = record["charger_uninstalled_cnt"]
+
+    # 1. Supabase DB 연쇄 동기화
+    if SUPABASE_URL and SECRET_KEY:
+        try:
+            prefer_h = {**HEADERS, "Prefer": "return=representation"}
+            # facilities PATCH
+            requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{facility_key}", headers=prefer_h, json=fac_sync, timeout=5)
+            # operations PATCH
+            op_sync = {k: v for k, v in fac_sync.items() if k in ["facility_name", "address_doro", "parking_ground_cnt", "parking_underground_cnt", "parking_uninstalled_cnt", "charger_installed_cnt", "charger_fast_cnt", "charger_slow_cnt", "charger_uninstalled_cnt", "manager_name_encrypted", "manager_contact_encrypted", "updated_at"]}
+            requests.patch(f"{SUPABASE_URL}/rest/v1/operations?facility_key=eq.{facility_key}", headers=prefer_h, json=op_sync, timeout=5)
+        except Exception as eSync:
+            print("Gwangsan sync to facilities/operations error:", eSync)
+
+    # 2. 로컬 캐시 연쇄 동기화
+    try:
+        global FACILITIES_CACHE
+        if os.path.exists(LOCAL_FACILITIES_FILE):
+            with open(LOCAL_FACILITIES_FILE, "r", encoding="utf-8") as ff:
+                f_list = json.load(ff)
+            for idx, item in enumerate(f_list):
+                if item.get("facility_key") == facility_key:
+                    f_list[idx] = {**item, **fac_sync}
+                    if raw_mgr: f_list[idx]["manager_name"] = raw_mgr
+                    if raw_contact: f_list[idx]["manager_contact"] = raw_contact
+                    break
+            with open(LOCAL_FACILITIES_FILE, "w", encoding="utf-8") as ff:
+                json.dump(f_list, ff, ensure_ascii=False, indent=2)
+            FACILITIES_CACHE["data"] = None
+    except Exception as eF:
+        print("Local facilities cache sync error from gwangsan:", eF)
+
+    try:
+        if os.path.exists(OPERATIONS_FILE):
+            with open(OPERATIONS_FILE, "r", encoding="utf-8") as of:
+                o_list = json.load(of)
+            for idx, item in enumerate(o_list):
+                if item.get("facility_key") == facility_key:
+                    op_sync = {k: v for k, v in fac_sync.items() if k in ["facility_name", "address_doro", "parking_ground_cnt", "parking_underground_cnt", "parking_uninstalled_cnt", "charger_installed_cnt", "charger_fast_cnt", "charger_slow_cnt", "charger_uninstalled_cnt", "updated_at"]}
+                    o_list[idx] = {**item, **op_sync}
+                    if raw_mgr: o_list[idx]["manager_name"] = raw_mgr
+                    if raw_contact: o_list[idx]["manager_contact"] = raw_contact
+                    break
+            with open(OPERATIONS_FILE, "w", encoding="utf-8") as of:
+                json.dump(o_list, of, ensure_ascii=False, indent=2)
+    except Exception as eO:
+        print("Local operations cache sync error from gwangsan:", eO)
 
     return True, "정상적으로 저장되었습니다."
 
@@ -1637,6 +1772,85 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 print("Supabase facilities save error:", e)
 
+            # === [연계 동기화] 운영현황관리(operations) 및 광산구관리시설(gwangsan_facilities)에 동일 항목 동기화 ===
+            now_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            op_sync = {
+                "facility_name": db_payload.get("facility_name"),
+                "address_doro": db_payload.get("address_doro"),
+                "parking_ground_cnt": db_payload.get("parking_ground_cnt"),
+                "parking_underground_cnt": db_payload.get("parking_underground_cnt"),
+                "parking_uninstalled_cnt": db_payload.get("parking_uninstalled_cnt"),
+                "charger_installed_cnt": req_json.get("charger_installed_cnt"),
+                "charger_fast_cnt": db_payload.get("charger_fast_cnt"),
+                "charger_slow_cnt": db_payload.get("charger_slow_cnt"),
+                "charger_uninstalled_cnt": db_payload.get("charger_uninstalled_cnt"),
+                "manager_name_encrypted": db_payload.get("manager_name_encrypted"),
+                "manager_contact_encrypted": db_payload.get("manager_contact_encrypted"),
+                "updated_at": now_iso
+            }
+            op_sync = {k: v for k, v in op_sync.items() if v is not None}
+
+            gw_sync = {
+                "facility_name": db_payload.get("facility_name"),
+                "address_doro": db_payload.get("address_doro"),
+                "address_jibun": db_payload.get("address_jibun"),
+                "compliance_status": db_payload.get("compliance_status"),
+                "parking_required_cnt": db_payload.get("parking_required_cnt"),
+                "parking_installed_cnt": req_json.get("parking_installed_cnt"),
+                "parking_ground_cnt": db_payload.get("parking_ground_cnt"),
+                "parking_underground_cnt": db_payload.get("parking_underground_cnt"),
+                "parking_uninstalled_cnt": db_payload.get("parking_uninstalled_cnt"),
+                "charger_required_cnt": db_payload.get("charger_required_cnt"),
+                "charger_fast_req_cnt": db_payload.get("charger_fast_req_cnt"),
+                "charger_installed_cnt": req_json.get("charger_installed_cnt"),
+                "charger_fast_cnt": db_payload.get("charger_fast_cnt"),
+                "charger_slow_cnt": db_payload.get("charger_slow_cnt"),
+                "charger_uninstalled_cnt": db_payload.get("charger_uninstalled_cnt"),
+                "approval_date": db_payload.get("approval_date"),
+                "manager_name_encrypted": db_payload.get("manager_name_encrypted"),
+                "manager_contact_encrypted": db_payload.get("manager_contact_encrypted"),
+                "updated_at": now_iso
+            }
+            gw_sync = {k: v for k, v in gw_sync.items() if v is not None}
+
+            if SUPABASE_URL and SECRET_KEY:
+                try:
+                    prefer_h = {**HEADERS, "Prefer": "return=representation"}
+                    requests.patch(f"{SUPABASE_URL}/rest/v1/operations?facility_key=eq.{fac_key}", headers=prefer_h, json=op_sync, timeout=5)
+                    requests.patch(f"{SUPABASE_URL}/rest/v1/gwangsan_facilities?facility_key=eq.{fac_key}", headers=prefer_h, json=gw_sync, timeout=5)
+                except Exception as eSync:
+                    print("Facilities save sync to operations/gwangsan DB error:", eSync)
+
+            try:
+                if os.path.exists(OPERATIONS_FILE):
+                    with open(OPERATIONS_FILE, "r", encoding="utf-8") as of:
+                        o_list = json.load(of)
+                    for idx, item in enumerate(o_list):
+                        if item.get("facility_key") == fac_key:
+                            o_list[idx] = {**item, **op_sync}
+                            if req_json.get("manager_name_decrypted"): o_list[idx]["manager_name"] = req_json["manager_name_decrypted"]
+                            if req_json.get("manager_contact_decrypted"): o_list[idx]["manager_contact"] = req_json["manager_contact_decrypted"]
+                            break
+                    with open(OPERATIONS_FILE, "w", encoding="utf-8") as of:
+                        json.dump(o_list, of, ensure_ascii=False, indent=2)
+            except Exception as eOf:
+                print("Local operations cache sync error from facilities:", eOf)
+
+            try:
+                if os.path.exists(GWANGSAN_FACILITIES_FILE):
+                    with open(GWANGSAN_FACILITIES_FILE, "r", encoding="utf-8") as gf:
+                        g_list = json.load(gf)
+                    for idx, item in enumerate(g_list):
+                        if item.get("facility_key") == fac_key:
+                            g_list[idx] = {**item, **gw_sync}
+                            if req_json.get("manager_name_decrypted"): g_list[idx]["manager_name"] = req_json["manager_name_decrypted"]
+                            if req_json.get("manager_contact_decrypted"): g_list[idx]["manager_contact"] = req_json["manager_contact_decrypted"]
+                            break
+                    with open(GWANGSAN_FACILITIES_FILE, "w", encoding="utf-8") as gf:
+                        json.dump(g_list, gf, ensure_ascii=False, indent=2)
+            except Exception as eGf:
+                print("Local gwangsan cache sync error from facilities:", eGf)
+
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
@@ -1912,16 +2126,41 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                             json.dump(FACILITIES_CACHE["data"], f, ensure_ascii=False, indent=2)
                     except Exception as e: print("Facility delete local cache save note:", e)
 
-                # Supabase DB에서 시설 및 관련 처분 데이터 삭제
+                # Supabase DB에서 시설 및 관련 처분, 운영현황, 광산구관리시설 데이터 연쇄 삭제
                 if SUPABASE_URL and SECRET_KEY:
                     try:
-                        # 1. 관련 처분 데이터 먼저 삭제
+                        # 1. 관련 처분 데이터 삭제
                         requests.delete(f"{SUPABASE_URL}/rest/v1/dispositions?facility_key=eq.{key}", headers=HEADERS, timeout=5)
-                        # 2. 시설 데이터 삭제
+                        # 2. 관련 운영현황 데이터 연쇄 삭제
+                        requests.delete(f"{SUPABASE_URL}/rest/v1/operations?facility_key=eq.{key}", headers=HEADERS, timeout=5)
+                        # 3. 관련 광산구 관리시설 데이터 연쇄 삭제
+                        requests.delete(f"{SUPABASE_URL}/rest/v1/gwangsan_facilities?facility_key=eq.{key}", headers=HEADERS, timeout=5)
+                        # 4. 통합 시설 데이터 삭제
                         res = requests.delete(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{key}", headers=HEADERS, timeout=5)
                         print(f"Supabase facilities DELETE key={key} status={res.status_code}")
                     except Exception as e:
                         print("Supabase facilities delete error:", e)
+
+                # 로컬 운영현황 및 광산구관리시설 캐시 파일에서도 연쇄 제거
+                try:
+                    if os.path.exists(OPERATIONS_FILE):
+                        with open(OPERATIONS_FILE, "r", encoding="utf-8") as of:
+                            o_data = json.load(of)
+                        o_data = [o for o in o_data if o.get("facility_key") != key]
+                        with open(OPERATIONS_FILE, "w", encoding="utf-8") as of:
+                            json.dump(o_data, of, ensure_ascii=False, indent=2)
+                except Exception as eOdel:
+                    print("Local operations delete note:", eOdel)
+
+                try:
+                    if os.path.exists(GWANGSAN_FACILITIES_FILE):
+                        with open(GWANGSAN_FACILITIES_FILE, "r", encoding="utf-8") as gf:
+                            g_data = json.load(gf)
+                        g_data = [g for g in g_data if g.get("facility_key") != key]
+                        with open(GWANGSAN_FACILITIES_FILE, "w", encoding="utf-8") as gf:
+                            json.dump(g_data, gf, ensure_ascii=False, indent=2)
+                except Exception as eGdel:
+                    print("Local gwangsan delete note:", eGdel)
 
                 # 캐시 무효화하여 다음 조회 시 Supabase 최신 상태 반영
                 FACILITIES_CACHE["data"] = None

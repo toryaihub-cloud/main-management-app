@@ -2730,6 +2730,83 @@ async function saveFacility() {
     localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
   } catch(e) {}
 
+  // === [연계 동기화] 운영현황관리(operationsData) 및 광산구관리시설(gwangsanFacilitiesData) 인메모리 및 DB 연쇄 동기화 ===
+  const sharedSync = {
+    facility_name: payload.facility_name,
+    address_doro: payload.address_doro,
+    parking_ground_cnt: payload.parking_ground_cnt,
+    parking_underground_cnt: payload.parking_underground_cnt,
+    parking_uninstalled_cnt: payload.parking_uninstalled_cnt,
+    charger_installed_cnt: payload.charger_installed_cnt,
+    charger_fast_cnt: payload.charger_fast_cnt,
+    charger_slow_cnt: payload.charger_slow_cnt,
+    charger_uninstalled_cnt: payload.charger_uninstalled_cnt,
+    manager_name: mgrName,
+    manager_contact: mgrContact,
+    manager_name_encrypted: encMgrName,
+    manager_contact_encrypted: encMgrContact
+  };
+
+  // 1. operationsData 동기화
+  if (Array.isArray(operationsData)) {
+    const opIdx = operationsData.findIndex(o => o.facility_key === key);
+    if (opIdx !== -1) {
+      operationsData[opIdx] = { ...operationsData[opIdx], ...sharedSync };
+      try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch(e) {}
+      if (typeof filterOperations === "function") filterOperations();
+    }
+  }
+
+  // 2. gwangsanFacilitiesData 동기화
+  if (Array.isArray(gwangsanFacilitiesData)) {
+    const gwIdx = gwangsanFacilitiesData.findIndex(g => g.facility_key === key);
+    if (gwIdx !== -1) {
+      gwangsanFacilitiesData[gwIdx] = {
+        ...gwangsanFacilitiesData[gwIdx],
+        ...sharedSync,
+        address_jibun: payload.address_jibun,
+        compliance_status: payload.compliance_status,
+        parking_required_cnt: payload.parking_required_cnt,
+        parking_installed_cnt: payload.parking_installed_cnt,
+        charger_required_cnt: payload.charger_required_cnt,
+        charger_fast_req_cnt: payload.charger_fast_req_cnt,
+        approval_date: payload.approval_date
+      };
+      try { localStorage.setItem("cached_gwangsan_facilities", JSON.stringify(gwangsanFacilitiesData)); } catch(e) {}
+      if (typeof filterGwangsanFacilities === "function") filterGwangsanFacilities();
+      if (typeof updateGwangsanStats === "function") updateGwangsanStats();
+    }
+  }
+
+  // 3. Supabase DB에 직접 PATCH (비동기 안전 전송)
+  try {
+    const dbHeaders = {
+      "apikey": SUPABASE_SECRET_KEY,
+      "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+      "Content-Type": "application/json"
+    };
+    fetch(`${SUPABASE_REST_URL}/operations?facility_key=eq.${encodeURIComponent(key)}`, {
+      method: "PATCH",
+      headers: dbHeaders,
+      body: JSON.stringify(sharedSync)
+    }).catch(() => {});
+
+    fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(key)}`, {
+      method: "PATCH",
+      headers: dbHeaders,
+      body: JSON.stringify({
+        ...sharedSync,
+        address_jibun: payload.address_jibun,
+        compliance_status: payload.compliance_status,
+        parking_required_cnt: payload.parking_required_cnt,
+        parking_installed_cnt: payload.parking_installed_cnt,
+        charger_required_cnt: payload.charger_required_cnt,
+        charger_fast_req_cnt: payload.charger_fast_req_cnt,
+        approval_date: payload.approval_date
+      })
+    }).catch(() => {});
+  } catch(eDbSync) {}
+
   alert("시설 정보가 성공적으로 저장되었습니다.");
   closeModal('modal-facility');
 
@@ -2748,9 +2825,17 @@ async function saveFacility() {
 async function deleteFacility(key) {
   if (!confirm(`정말 시설 (${key})을 삭제하시겠습니까?`)) return;
   try {
-    // 1. [모범 아키텍처] Supabase DB 직접 즉시 삭제
+    // 1. [모범 아키텍처] Supabase DB 직접 즉시 연쇄 삭제 (처분, 시설, 운영현황, 광산구관리시설)
     try {
       await fetch(`${SUPABASE_REST_URL}/dispositions?facility_key=eq.${encodeURIComponent(key)}`, {
+        method: "DELETE",
+        headers: { "apikey": SUPABASE_SECRET_KEY, "Authorization": `Bearer ${SUPABASE_SECRET_KEY}` }
+      });
+      await fetch(`${SUPABASE_REST_URL}/operations?facility_key=eq.${encodeURIComponent(key)}`, {
+        method: "DELETE",
+        headers: { "apikey": SUPABASE_SECRET_KEY, "Authorization": `Bearer ${SUPABASE_SECRET_KEY}` }
+      });
+      await fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(key)}`, {
         method: "DELETE",
         headers: { "apikey": SUPABASE_SECRET_KEY, "Authorization": `Bearer ${SUPABASE_SECRET_KEY}` }
       });
@@ -2770,14 +2855,22 @@ async function deleteFacility(key) {
     alert("시설이 성공적으로 삭제되었습니다.");
     closeModal('modal-facility-detail');
 
-    // 로컬 메모리 및 브라우저 캐시에서 즉시 제거
+    // 로컬 메모리 및 브라우저 캐시에서 일괄 연쇄 제거
     facilitiesData = facilitiesData.filter(f => f.facility_key !== key);
     dispositionsData = dispositionsData.filter(d => d.facility_key !== key);
+    operationsData = operationsData.filter(o => o.facility_key !== key);
+    gwangsanFacilitiesData = gwangsanFacilitiesData.filter(g => g.facility_key !== key);
+
     try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
     try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch(e) {}
+    try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch(e) {}
+    try { localStorage.setItem("cached_gwangsan_facilities", JSON.stringify(gwangsanFacilitiesData)); } catch(e) {}
 
     filterFacilities();
     updateDashboardStats();
+    if (typeof filterOperations === "function") filterOperations();
+    if (typeof filterGwangsanFacilities === "function") filterGwangsanFacilities();
+    if (typeof updateGwangsanStats === "function") updateGwangsanStats();
   } catch (err) {
     console.error(err);
     alert("삭제 중 오류가 발생했습니다.");
@@ -4872,6 +4965,65 @@ async function handleSaveOperation(e) {
     } else {
       operationsData.push(payload);
     }
+    try { localStorage.setItem("cached_operations", JSON.stringify(operationsData)); } catch(e) {}
+
+    // === [연계 동기화] 통합시설관리(facilitiesData) 및 광산구관리시설(gwangsanFacilitiesData) 인메모리 및 DB 연쇄 동기화 ===
+    const sharedSync = {
+      facility_name: payload.facility_name,
+      address_doro: payload.address_doro,
+      parking_ground_cnt: payload.parking_ground_cnt,
+      parking_underground_cnt: payload.parking_underground_cnt,
+      parking_uninstalled_cnt: payload.parking_uninstalled_cnt,
+      parking_installed_cnt: payload.parking_ground_cnt + payload.parking_underground_cnt,
+      charger_installed_cnt: payload.charger_installed_cnt,
+      charger_fast_cnt: payload.charger_fast_cnt,
+      charger_slow_cnt: payload.charger_slow_cnt,
+      charger_uninstalled_cnt: payload.charger_uninstalled_cnt,
+      manager_name: mgrName,
+      manager_contact: mgrContact
+    };
+
+    // 1. facilitiesData 동기화
+    if (Array.isArray(facilitiesData)) {
+      const fIdx = facilitiesData.findIndex(f => f.facility_key === facilityKey);
+      if (fIdx !== -1) {
+        facilitiesData[fIdx] = { ...facilitiesData[fIdx], ...sharedSync };
+        try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
+        if (typeof filterFacilities === "function") filterFacilities();
+        if (typeof updateDashboardStats === "function") updateDashboardStats();
+      }
+    }
+
+    // 2. gwangsanFacilitiesData 동기화
+    if (Array.isArray(gwangsanFacilitiesData)) {
+      const gIdx = gwangsanFacilitiesData.findIndex(g => g.facility_key === facilityKey);
+      if (gIdx !== -1) {
+        gwangsanFacilitiesData[gIdx] = { ...gwangsanFacilitiesData[gIdx], ...sharedSync };
+        try { localStorage.setItem("cached_gwangsan_facilities", JSON.stringify(gwangsanFacilitiesData)); } catch(e) {}
+        if (typeof filterGwangsanFacilities === "function") filterGwangsanFacilities();
+        if (typeof updateGwangsanStats === "function") updateGwangsanStats();
+      }
+    }
+
+    // 3. Supabase DB 직접 PATCH
+    try {
+      const dbHeaders = {
+        "apikey": SUPABASE_SECRET_KEY,
+        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+        "Content-Type": "application/json"
+      };
+      fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+        method: "PATCH",
+        headers: dbHeaders,
+        body: JSON.stringify(sharedSync)
+      }).catch(() => {});
+
+      fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+        method: "PATCH",
+        headers: dbHeaders,
+        body: JSON.stringify(sharedSync)
+      }).catch(() => {});
+    } catch(eDbSync) {}
 
     closeModal("modal-operation-detail");
     initOperationReasonFilter();
@@ -5682,9 +5834,41 @@ async function handleSaveGwangsanFacility(e) {
     if (idx !== -1) {
       gwangsanFacilitiesData[idx] = { ...gwangsanFacilitiesData[idx], ...payload };
     }
+    try { localStorage.setItem("cached_gwangsan_facilities", JSON.stringify(gwangsanFacilitiesData)); } catch(e) {}
+
+    // === [연계 동기화] 통합시설관리(facilitiesData) 및 운영현황관리(operationsData) 인메모리 및 DB 연쇄 동기화 ===
+    const gwSyncPayload = {
+      compliance_status: payload.compliance_status
+    };
+
+    // 1. facilitiesData 동기화
+    if (Array.isArray(facilitiesData)) {
+      const fIdx = facilitiesData.findIndex(f => f.facility_key === facilityKey);
+      if (fIdx !== -1) {
+        facilitiesData[fIdx] = { ...facilitiesData[fIdx], ...gwSyncPayload };
+        try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch(e) {}
+        if (typeof filterFacilities === "function") filterFacilities();
+        if (typeof updateDashboardStats === "function") updateDashboardStats();
+      }
+    }
+
+    // 2. Supabase DB 직접 PATCH
+    try {
+      const dbHeaders = {
+        "apikey": SUPABASE_SECRET_KEY,
+        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+        "Content-Type": "application/json"
+      };
+      fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+        method: "PATCH",
+        headers: dbHeaders,
+        body: JSON.stringify(gwSyncPayload)
+      }).catch(() => {});
+    } catch(eDbSync) {}
 
     // 리스트 화면 갱신
     filterGwangsanFacilities();
+    updateGwangsanStats();
     // 모달을 최신 정보로 재오픈 및 조회 모드로 복귀
     openGwangsanDetailModal(facilityKey);
     setGwangsanModalMode(false);
