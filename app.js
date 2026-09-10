@@ -5160,20 +5160,21 @@ function renderGwangsanFacilities(data) {
             return `
               <div style="padding:0.9rem 1.25rem; border-bottom:1px solid #f1f5f9; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
                 
-                <!-- 1. 기본 정보 (시설명, KEY, 주소) -->
-                <div style="flex:2; min-width:260px;">
-                  <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.25rem;">
-                    <span class="badge badge-indigo" style="font-size:0.75rem; font-weight:700;">${f.facility_key}</span>
-                    <span style="font-weight:800; font-size:0.95rem; color:#1e293b; cursor:pointer;" onclick="openGwangsanDetailModal('${f.facility_key}')" title="세부 조사내용 보기">
-                      ${f.facility_name}
-                    </span>
-                    <span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-size:0.72rem; padding:0.15rem 0.45rem;">
-                      ${f.compliance_status || '미이행'}
-                    </span>
+                <!-- 1. 기본 정보 (시설명, 주소 - KEY는 삭제) -->
+                <div style="flex:2; min-width:220px;">
+                  <div style="font-weight:800; font-size:0.98rem; color:#1e293b; cursor:pointer; margin-bottom:0.25rem;" onclick="openGwangsanDetailModal('${f.facility_key}')" title="세부 조사내용 보기">
+                    ${f.facility_name}
                   </div>
                   <div style="font-size:0.8rem; color:#64748b; line-height:1.35;">
                     <i class="fa-solid fa-location-dot" style="font-size:0.75rem; color:#94a3b8;"></i> ${f.address_doro || f.address_jibun || '-'}
                   </div>
+                </div>
+
+                <!-- 2. 이행완료 여부 (독립 컬럼 세로 일렬 정렬) -->
+                <div style="width:85px; flex-shrink:0; text-align:center; display:flex; justify-content:center; align-items:center;">
+                  <span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-size:0.75rem; font-weight:700; width:68px; text-align:center; display:inline-block; padding:0.25rem 0.4rem; border-radius:6px;">
+                    ${f.compliance_status || '미이행'}
+                  </span>
                 </div>
 
                 <!-- 2. 전용주차구역 현황 -->
@@ -5366,7 +5367,31 @@ function openGwangsanDetailModal(key) {
     cSubEl.innerHTML = `급속 ${cFast}기 · 완속 ${cSlow}기 (의무급속 ${cFastReq})${cUninst > 0 ? ` · <span style="color:#e11d48; font-weight:700;">미설치 ${cUninst}기</span>` : ''}`;
   }
 
-  // 폼 필드 바인딩 (수정/저장용)
+  // 1. 조회 모드 데이터 바인딩
+  const viewPlanEl = document.getElementById("gwangsan-view-action-plan");
+  if (viewPlanEl) viewPlanEl.innerText = item.dept_action_plan ? item.dept_action_plan.trim() : "-";
+
+  const viewSubsidyEl = document.getElementById("gwangsan-view-subsidy");
+  if (viewSubsidyEl) {
+    const subVal = item.subsidy_apply ? item.subsidy_apply.trim() : "";
+    if (subVal === "신청" || subVal.includes("신청")) {
+      viewSubsidyEl.innerHTML = `<span class="badge badge-indigo" style="font-size:0.78rem; padding:0.15rem 0.5rem;"><i class="fa-solid fa-check"></i> 신청</span>`;
+    } else if (subVal) {
+      viewSubsidyEl.innerText = subVal;
+    } else {
+      viewSubsidyEl.innerText = "-";
+    }
+  }
+
+  const viewCompEl = document.getElementById("gwangsan-view-compliance");
+  if (viewCompEl) {
+    viewCompEl.innerHTML = `<span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-size:0.8rem; padding:0.2rem 0.55rem;">${item.compliance_status || '미이행'}</span>`;
+  }
+
+  const viewFinalEl = document.getElementById("gwangsan-view-final-conclusion");
+  if (viewFinalEl) viewFinalEl.innerText = item.final_conclusion ? item.final_conclusion.trim() : "-";
+
+  // 2. 수정 모드 폼 필드 바인딩 (수정/저장용)
   const keyInput = document.getElementById("gwangsan-edit-facility-key");
   if (keyInput) keyInput.value = item.facility_key;
 
@@ -5379,76 +5404,114 @@ function openGwangsanDetailModal(key) {
   const compSelect = document.getElementById("gwangsan-edit-compliance");
   if (compSelect) compSelect.value = item.compliance_status || "미이행";
 
-  // Final Conclusion
   const finalInput = document.getElementById("gwangsan-edit-final-conclusion");
-  if (finalInput) {
-    finalInput.value = item.final_conclusion || "";
+  if (finalInput) finalInput.value = item.final_conclusion || "";
+
+  // 1차~5차 세부 조사내용 공통 데이터 정의
+  const rounds = [
+    {
+      idx: 1,
+      title: "자체조사 (1차)",
+      type: item.survey1_type,
+      date: item.survey1_date,
+      inspector: item.survey1_inspector,
+      check: item.survey1_check,
+      plan: item.survey1_plan,
+      note: item.survey1_note,
+      color: "#2563eb"
+    },
+    {
+      idx: 2,
+      title: "자체조사 (2차)",
+      type: item.survey2_type,
+      date: item.survey2_date,
+      inspector: item.survey2_inspector,
+      check: item.survey2_check,
+      plan: item.survey2_plan,
+      note: item.survey2_note,
+      color: "#0891b2"
+    },
+    {
+      idx: 3,
+      title: "실태조사 (3차)",
+      type: item.survey3_type,
+      date: item.survey3_date,
+      inspector: item.survey3_inspector,
+      check: item.survey3_check,
+      plan: item.survey3_plan,
+      note: item.survey3_note,
+      color: "#059669"
+    },
+    {
+      idx: 4,
+      title: "자체조사 (4차)",
+      type: item.survey4_type,
+      date: item.survey4_date,
+      inspector: item.survey4_inspector,
+      check: item.survey4_check,
+      plan: item.survey4_plan,
+      note: item.survey4_note,
+      color: "#d97706"
+    },
+    {
+      idx: 5,
+      title: "자체조사 (5차)",
+      type: item.survey5_type,
+      date: item.survey5_date,
+      inspector: item.survey5_inspector,
+      check: item.survey5_check,
+      plan: item.survey5_plan,
+      note: item.survey5_note,
+      color: "#7c3aed"
+    }
+  ];
+
+  // 3. 조회 모드 1차~5차 카드 HTML 생성
+  const viewSurveysContainer = document.getElementById("gwangsan-modal-view-surveys");
+  if (viewSurveysContainer) {
+    let viewSurveyHtml = "";
+    rounds.forEach(r => {
+      viewSurveyHtml += `
+        <div style="border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;">
+          <div style="background:#f8fafc; padding:0.5rem 0.85rem; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; border-bottom:1px solid #e2e8f0;">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span style="background:${r.color}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.5rem; border-radius:4px;">
+                ${r.title}
+              </span>
+              ${r.type ? `<span class="badge badge-indigo" style="font-size:0.75rem; padding:0.1rem 0.45rem;">${r.type}</span>` : ''}
+            </div>
+            <div style="display:flex; align-items:center; gap:0.6rem; font-size:0.78rem; color:#64748b;">
+              <span><i class="fa-regular fa-calendar"></i> ${r.date || '-'}</span>
+              <span><i class="fa-solid fa-user"></i> ${r.inspector || '-'}</span>
+            </div>
+          </div>
+
+          <div style="padding:0.75rem 0.85rem; font-size:0.82rem; display:flex; flex-direction:column; gap:0.45rem;">
+            <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+              <span style="font-weight:700; color:#1e293b; min-width:72px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-check"></i> 확인사항:</span>
+              <span style="color:#334155; line-height:1.45; word-break:break-word;">${r.check ? r.check : '-'}</span>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+              <span style="font-weight:700; color:#2563eb; min-width:72px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-arrow-right"></i> 이행계획:</span>
+              <span style="color:#1d4ed8; font-weight:600; line-height:1.45; word-break:break-word;">${r.plan ? r.plan : '-'}</span>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+              <span style="font-weight:700; color:#64748b; min-width:72px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-circle-info"></i> 비고:</span>
+              <span style="color:#64748b; line-height:1.45; word-break:break-word;">${r.note ? r.note : '-'}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    viewSurveysContainer.innerHTML = viewSurveyHtml;
   }
 
-  // 1차~5차 세부 조사내용 동적 폼 생성
-  const surveysContainer = document.getElementById("gwangsan-modal-surveys-container");
-  if (surveysContainer) {
-    const rounds = [
-      {
-        idx: 1,
-        title: "자체조사 (1차)",
-        type: item.survey1_type,
-        date: item.survey1_date,
-        inspector: item.survey1_inspector,
-        check: item.survey1_check,
-        plan: item.survey1_plan,
-        note: item.survey1_note,
-        color: "#2563eb"
-      },
-      {
-        idx: 2,
-        title: "자체조사 (2차)",
-        type: item.survey2_type,
-        date: item.survey2_date,
-        inspector: item.survey2_inspector,
-        check: item.survey2_check,
-        plan: item.survey2_plan,
-        note: item.survey2_note,
-        color: "#0891b2"
-      },
-      {
-        idx: 3,
-        title: "실태조사 (3차)",
-        type: item.survey3_type,
-        date: item.survey3_date,
-        inspector: item.survey3_inspector,
-        check: item.survey3_check,
-        plan: item.survey3_plan,
-        note: item.survey3_note,
-        color: "#059669"
-      },
-      {
-        idx: 4,
-        title: "자체조사 (4차)",
-        type: item.survey4_type,
-        date: item.survey4_date,
-        inspector: item.survey4_inspector,
-        check: item.survey4_check,
-        plan: item.survey4_plan,
-        note: item.survey4_note,
-        color: "#d97706"
-      },
-      {
-        idx: 5,
-        title: "자체조사 (5차)",
-        type: item.survey5_type,
-        date: item.survey5_date,
-        inspector: item.survey5_inspector,
-        check: item.survey5_check,
-        plan: item.survey5_plan,
-        note: item.survey5_note,
-        color: "#7c3aed"
-      }
-    ];
-
-    let surveyHtml = "";
+  // 4. 수정 모드 1차~5차 세부 조사내용 동적 폼 생성
+  const editSurveysContainer = document.getElementById("gwangsan-modal-edit-surveys");
+  if (editSurveysContainer) {
+    let editSurveyHtml = "";
     rounds.forEach(r => {
-      surveyHtml += `
+      editSurveyHtml += `
         <div style="border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;">
           <div style="background:#f8fafc; padding:0.5rem 0.85rem; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; border-bottom:1px solid #e2e8f0;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -5486,15 +5549,37 @@ function openGwangsanDetailModal(key) {
         </div>
       `;
     });
-
-    surveysContainer.innerHTML = surveyHtml;
+    editSurveysContainer.innerHTML = editSurveyHtml;
   }
+
+  // 5. 기본 모드는 항상 조회 모드로 초기화
+  setGwangsanModalMode(false);
 
   // 모달 열기
   const modal = document.getElementById("modal-gwangsan-detail");
   if (modal) {
     modal.style.display = "flex";
     modal.classList.add("active");
+  }
+}
+
+// 5-1. 광산구 모달 조회 / 수정 모드 토글 함수
+function setGwangsanModalMode(isEdit) {
+  const viewModeEl = document.getElementById("gwangsan-modal-view-mode");
+  const editModeEl = document.getElementById("gwangsan-modal-edit-mode");
+  const viewBtnGroup = document.getElementById("gwangsan-footer-view-buttons");
+  const editBtnGroup = document.getElementById("gwangsan-footer-edit-buttons");
+
+  if (isEdit) {
+    if (viewModeEl) viewModeEl.style.display = "none";
+    if (editModeEl) editModeEl.style.display = "flex";
+    if (viewBtnGroup) viewBtnGroup.style.display = "none";
+    if (editBtnGroup) editBtnGroup.style.display = "flex";
+  } else {
+    if (viewModeEl) viewModeEl.style.display = "flex";
+    if (editModeEl) editModeEl.style.display = "none";
+    if (viewBtnGroup) viewBtnGroup.style.display = "flex";
+    if (editBtnGroup) editBtnGroup.style.display = "none";
   }
 }
 
@@ -5598,8 +5683,11 @@ async function handleSaveGwangsanFacility(e) {
       gwangsanFacilitiesData[idx] = { ...gwangsanFacilitiesData[idx], ...payload };
     }
 
-    closeModal("modal-gwangsan-detail");
+    // 리스트 화면 갱신
     filterGwangsanFacilities();
+    // 모달을 최신 정보로 재오픈 및 조회 모드로 복귀
+    openGwangsanDetailModal(facilityKey);
+    setGwangsanModalMode(false);
     alert("광산구 관리시설 조사내용 및 조치계획이 성공적으로 저장되었습니다.");
   } catch (err) {
     console.error("Save gwangsan facility error:", err);
