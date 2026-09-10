@@ -5270,10 +5270,26 @@ function filterGwangsanFacilities() {
   renderGwangsanFacilities(filtered);
 }
 
+// 광산구 모달용 미니 SVG 도넛 차트 생성 함수
+function renderGwangsanDonutSvg(pct, color) {
+  const safePct = Math.max(0, Math.min(100, Math.round(pct)));
+  return `
+    <svg viewBox="0 0 36 36" style="width:52px; height:52px; display:block;">
+      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e2e8f0" stroke-width="4" />
+      <path stroke-dasharray="${safePct}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" />
+      <text x="18" y="20.5" font-size="8.5" font-weight="800" text-anchor="middle" fill="${color}">${safePct}%</text>
+    </svg>
+  `;
+}
+
 // 5. 1차~5차 세부 조사내용(AB열~BE열) 및 최종결론(BF열) 상세보기 모달 오픈
 function openGwangsanDetailModal(key) {
+  if (!gwangsanFacilitiesData) return;
   const item = gwangsanFacilitiesData.find(f => f.facility_key === key);
-  if (!item) return;
+  if (!item) {
+    alert("해당 시설의 상세 정보를 찾을 수 없습니다.");
+    return;
+  }
 
   currentGwangsanDetailKey = key;
 
@@ -5288,23 +5304,67 @@ function openGwangsanDetailModal(key) {
     deptEl.style.background = deptColor.badgeBg;
   }
 
+  const isComp = item.compliance_status === "이행완료";
+
   // Summary Information
   const addr = item.address_doro || item.address_jibun || "-";
   document.getElementById("gwangsan-modal-address").innerText = addr;
   document.getElementById("gwangsan-modal-dates").innerText = `${item.permission_date || '-'} / ${item.approval_date || '-'}`;
   
+  // 전용주차구역 계산 및 도넛 차트
   const pReq = item.parking_required_cnt ?? 0;
   const pInst = item.parking_installed_cnt ?? 0;
   const pGround = item.parking_ground_cnt ?? 0;
   const pUnder = item.parking_underground_cnt ?? 0;
-  document.getElementById("gwangsan-modal-parking").innerText = `${pInst}면 / ${pReq}면 (지상 ${pGround}, 지하 ${pUnder})`;
+  const pUninst = item.parking_uninstalled_cnt ?? Math.max(0, pReq - pInst);
+  const pPct = pReq > 0 ? Math.min(100, Math.round((pInst / pReq) * 100)) : (isComp ? 100 : 0);
+  const pIsDone = (pInst >= pReq && pReq > 0) || isComp;
+  const pColor = pIsDone ? '#059669' : (pPct > 0 ? '#d97706' : '#e11d48');
 
+  const pDonutEl = document.getElementById("gwangsan-modal-parking-donut");
+  if (pDonutEl) pDonutEl.innerHTML = renderGwangsanDonutSvg(pPct, pColor);
+
+  const pBadgeEl = document.getElementById("gwangsan-modal-parking-badge");
+  if (pBadgeEl) {
+    pBadgeEl.className = `badge ${pIsDone ? 'badge-emerald' : 'badge-rose'}`;
+    pBadgeEl.innerText = pIsDone ? '이행' : '미이행';
+  }
+
+  const pTextEl = document.getElementById("gwangsan-modal-parking");
+  if (pTextEl) pTextEl.innerText = `${pInst}면 / 의무 ${pReq}면 (${pPct}%)`;
+
+  const pSubEl = document.getElementById("gwangsan-modal-parking-sub");
+  if (pSubEl) {
+    pSubEl.innerHTML = `지상 ${pGround}면 · 지하 ${pUnder}면${pUninst > 0 ? ` · <span style="color:#e11d48; font-weight:700;">미설치 ${pUninst}면</span>` : ''}`;
+  }
+
+  // 충전시설 계산 및 도넛 차트
   const cReq = item.charger_required_cnt ?? 0;
   const cFastReq = item.charger_fast_req_cnt ?? 0;
   const cInst = item.charger_installed_cnt ?? 0;
   const cFast = item.charger_fast_cnt ?? 0;
   const cSlow = item.charger_slow_cnt ?? 0;
-  document.getElementById("gwangsan-modal-charger").innerText = `${cInst}기 / ${cReq}기 (급속 ${cFast}, 완속 ${cSlow}, 의무급속 ${cFastReq})`;
+  const cUninst = item.charger_uninstalled_cnt ?? Math.max(0, cReq - cInst);
+  const cPct = cReq > 0 ? Math.min(100, Math.round((cInst / cReq) * 100)) : (isComp ? 100 : 0);
+  const cIsDone = (cInst >= cReq && cReq > 0) || isComp;
+  const cColor = cIsDone ? '#059669' : (cPct > 0 ? '#d97706' : '#e11d48');
+
+  const cDonutEl = document.getElementById("gwangsan-modal-charger-donut");
+  if (cDonutEl) cDonutEl.innerHTML = renderGwangsanDonutSvg(cPct, cColor);
+
+  const cBadgeEl = document.getElementById("gwangsan-modal-charger-badge");
+  if (cBadgeEl) {
+    cBadgeEl.className = `badge ${cIsDone ? 'badge-emerald' : 'badge-rose'}`;
+    cBadgeEl.innerText = cIsDone ? '이행' : '미이행';
+  }
+
+  const cTextEl = document.getElementById("gwangsan-modal-charger");
+  if (cTextEl) cTextEl.innerText = `${cInst}기 / 의무 ${cReq}기 (${cPct}%)`;
+
+  const cSubEl = document.getElementById("gwangsan-modal-charger-sub");
+  if (cSubEl) {
+    cSubEl.innerHTML = `급속 ${cFast}기 · 완속 ${cSlow}기 (의무급속 ${cFastReq})${cUninst > 0 ? ` · <span style="color:#e11d48; font-weight:700;">미설치 ${cUninst}기</span>` : ''}`;
+  }
 
   // Action Plan & Subsidy & Compliance
   document.getElementById("gwangsan-modal-action-plan").innerText = item.dept_action_plan || "(등록된 부서 조치계획 없음)";
@@ -5316,7 +5376,6 @@ function openGwangsanDetailModal(key) {
     : `<span class="badge" style="background:#e2e8f0; color:#64748b;">${item.subsidy_apply || '미신청'}</span>`;
 
   const compEl = document.getElementById("gwangsan-modal-compliance");
-  const isComp = item.compliance_status === "이행완료";
   compEl.innerHTML = `<span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-weight:700;">${item.compliance_status || '미이행'}</span>`;
 
   // Final Conclusion (BF열)
@@ -5405,23 +5464,23 @@ function openGwangsanDetailModal(key) {
             </div>
           </div>
 
-          <div style="padding:0.75rem 0.85rem; font-size:0.82rem; display:flex; flex-direction:column; gap:0.4rem;">
+          <div style="padding:0.75rem 0.85rem; font-size:0.82rem; display:flex; flex-direction:column; gap:0.45rem;">
             ${r.check ? `
-              <div>
-                <span style="font-weight:700; color:#1e293b; display:inline-block; width:70px;"><i class="fa-solid fa-check"></i> 확인사항:</span>
-                <span style="color:#334155;">${r.check}</span>
+              <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+                <span style="font-weight:700; color:#1e293b; min-width:85px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-check"></i> 확인사항:</span>
+                <span style="color:#334155; word-break:break-all;">${r.check}</span>
               </div>
             ` : ''}
             ${r.plan ? `
-              <div>
-                <span style="font-weight:700; color:#2563eb; display:inline-block; width:70px;"><i class="fa-solid fa-arrow-right"></i> 이행계획:</span>
-                <span style="color:#1d4ed8; font-weight:600;">${r.plan}</span>
+              <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+                <span style="font-weight:700; color:#2563eb; min-width:85px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-arrow-right"></i> 이행계획:</span>
+                <span style="color:#1d4ed8; font-weight:600; word-break:break-all;">${r.plan}</span>
               </div>
             ` : ''}
             ${r.note ? `
-              <div>
-                <span style="font-weight:700; color:#64748b; display:inline-block; width:70px;"><i class="fa-solid fa-circle-info"></i> 비고:</span>
-                <span style="color:#475569;">${r.note}</span>
+              <div style="display:flex; align-items:flex-start; gap:0.4rem;">
+                <span style="font-weight:700; color:#64748b; min-width:85px; white-space:nowrap; flex-shrink:0;"><i class="fa-solid fa-circle-info"></i> 비고:</span>
+                <span style="color:#475569; word-break:break-all;">${r.note}</span>
               </div>
             ` : ''}
             ${!hasContent ? `

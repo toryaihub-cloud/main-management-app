@@ -1646,37 +1646,63 @@
       <div class="modal-body" style="padding:1.25rem; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:1.2rem; background:#fff;">
         
         <!-- Summary Box: Basic & Action Plan -->
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem;">
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:0.8rem; font-size:0.85rem;">
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1.1rem; display:flex; flex-direction:column; gap:1rem;">
+          <!-- Basic info (주소, 허가일) -->
+          <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:0.8rem; font-size:0.85rem; padding-bottom:0.8rem; border-bottom:1px solid #e2e8f0;">
             <div>
-              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block;">도로명/지번주소</span>
+              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block; margin-bottom:2px;"><i class="fa-solid fa-location-dot"></i> 도로명 / 지번주소</span>
               <span id="gwangsan-modal-address" style="color:#1E293B; font-weight:600;">-</span>
             </div>
             <div>
-              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block;">건축허가 / 사용승인일</span>
+              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block; margin-bottom:2px;"><i class="fa-solid fa-calendar-check"></i> 건축허가 / 사용승인일</span>
               <span id="gwangsan-modal-dates" style="color:#1E293B; font-weight:600;">-</span>
             </div>
-            <div>
-              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block;">전용주차구역 (설치/의무)</span>
-              <span id="gwangsan-modal-parking" style="color:#1E293B; font-weight:700;">-</span>
+          </div>
+
+          <!-- 도넛 차트가 포함된 전용주차구역 & 충전시설 현황 카드 (2열 그리드) -->
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:0.9rem;">
+            <!-- 전용주차구역 카드 -->
+            <div style="background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <div id="gwangsan-modal-parking-donut" style="flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                <!-- SVG Donut Chart -->
+              </div>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+                  <span style="font-size:0.8rem; font-weight:700; color:#334155;"><i class="fa-solid fa-square-parking" style="color:#2563eb;"></i> 전용주차구역</span>
+                  <span id="gwangsan-modal-parking-badge" class="badge badge-emerald" style="font-size:0.72rem; font-weight:700;">이행</span>
+                </div>
+                <div id="gwangsan-modal-parking" style="color:#0f172a; font-weight:800; font-size:0.95rem; margin-bottom:2px;">-</div>
+                <div id="gwangsan-modal-parking-sub" style="color:#64748B; font-size:0.75rem;">-</div>
+              </div>
             </div>
-            <div>
-              <span style="color:#64748B; font-size:0.75rem; font-weight:600; display:block;">충전시설 (설치/의무)</span>
-              <span id="gwangsan-modal-charger" style="color:#1E293B; font-weight:700;">-</span>
+
+            <!-- 충전시설 카드 -->
+            <div style="background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <div id="gwangsan-modal-charger-donut" style="flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                <!-- SVG Donut Chart -->
+              </div>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+                  <span style="font-size:0.8rem; font-weight:700; color:#334155;"><i class="fa-solid fa-charging-station" style="color:#059669;"></i> 충전시설</span>
+                  <span id="gwangsan-modal-charger-badge" class="badge badge-emerald" style="font-size:0.72rem; font-weight:700;">이행</span>
+                </div>
+                <div id="gwangsan-modal-charger" style="color:#0f172a; font-weight:800; font-size:0.95rem; margin-bottom:2px;">-</div>
+                <div id="gwangsan-modal-charger-sub" style="color:#64748B; font-size:0.75rem;">-</div>
+              </div>
             </div>
           </div>
 
           <!-- Highlight: Action Plan & Subsidy -->
-          <div style="margin-top:0.8rem; padding-top:0.8rem; border-top:1px dashed #cbd5e1; display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
+          <div style="padding-top:0.8rem; border-top:1px dashed #cbd5e1; display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
             <div style="flex:1; min-width:240px;">
               <span style="font-size:0.75rem; font-weight:700; color:#4338CA; display:flex; align-items:center; gap:0.3rem;">
-                <i class="fa-solid fa-list-check"></i> 부서 조치계획 (BJ열)
+                <i class="fa-solid fa-list-check"></i> 부서 조치계획
               </span>
               <div id="gwangsan-modal-action-plan" style="font-size:0.92rem; font-weight:700; color:#0f172a; margin-top:0.2rem;">-</div>
             </div>
             <div style="min-width:140px;">
               <span style="font-size:0.75rem; font-weight:700; color:#059669; display:flex; align-items:center; gap:0.3rem;">
-                <i class="fa-solid fa-hand-holding-dollar"></i> 보조사업 신청 (BK열)
+                <i class="fa-solid fa-hand-holding-dollar"></i> 보조사업 신청
               </span>
               <div id="gwangsan-modal-subsidy" style="margin-top:0.2rem;">-</div>
             </div>
@@ -1687,20 +1713,20 @@
           </div>
         </div>
 
-        <!-- Highlight Box: Final Conclusion (BF열) -->
+        <!-- Highlight Box: Final Conclusion -->
         <div style="background:linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border:1px solid #bfdbfe; border-radius:10px; padding:1rem;">
           <div style="display:flex; align-items:center; gap:0.5rem; color:#1d4ed8; font-weight:800; font-size:0.88rem; margin-bottom:0.4rem;">
-            <i class="fa-solid fa-bullhorn"></i> 실태조사 최종결론 (BF열)
+            <i class="fa-solid fa-bullhorn"></i> 실태조사 최종결론
           </div>
           <div id="gwangsan-modal-final-conclusion" style="font-size:0.95rem; font-weight:700; color:#1e293b; line-height:1.5;">
             -
           </div>
         </div>
 
-        <!-- Section: 1차~5차 세부 조사내용 (AB열~BE열) -->
+        <!-- Section: 1차~5차 세부 조사내용 -->
         <div>
           <div style="font-size:0.95rem; font-weight:800; color:#1e293b; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
-            <i class="fa-solid fa-clipboard-check" style="color:#2563eb;"></i> 1차 ~ 5차 차수별 세부 조사 내역 (AB열 ~ BE열)
+            <i class="fa-solid fa-clipboard-check" style="color:#2563eb;"></i> 1차 ~ 5차 차수별 세부 조사 내역
           </div>
 
           <div id="gwangsan-modal-surveys-container" style="display:flex; flex-direction:column; gap:0.75rem;">
