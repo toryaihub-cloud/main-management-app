@@ -5216,10 +5216,10 @@ function renderGwangsanFacilities(data) {
                   </div>
                 </div>
 
-                <!-- 5. 액션 버튼 -->
-                <div style="min-width:105px; text-align:right;">
-                  <button type="button" class="btn btn-secondary" style="padding:0.4rem 0.75rem; font-size:0.78rem; font-weight:700;" onclick="openGwangsanDetailModal('${f.facility_key}')">
-                    <i class="fa-solid fa-magnifying-glass"></i> 조사내용
+                <!-- 5. 액션 버튼 (운영현황 관리 상세 / 수정 버튼 톤앤매너 일치) -->
+                <div style="min-width:115px; text-align:right;">
+                  <button type="button" class="btn btn-primary" style="padding:0.4rem 0.75rem; font-size:0.78rem; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem;" onclick="openGwangsanDetailModal('${f.facility_key}')">
+                    <i class="fa-solid fa-pen-to-square"></i> 상세 / 수정
                   </button>
                 </div>
 
