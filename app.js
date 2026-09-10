@@ -786,9 +786,9 @@ function updateDashboardStats() {
     totalChargerUninstalled += (parseInt(f.charger_uninstalled_cnt) || 0);
   });
 
-  const strTotal = total.toLocaleString();
-  const strCompleted = completed.toLocaleString();
-  const strUninstalled = uninstalled.toLocaleString();
+  const strTotal = `${total.toLocaleString()}개소`;
+  const strCompleted = `${completed.toLocaleString()}개소`;
+  const strUninstalled = `${uninstalled.toLocaleString()}개소`;
   const strCounts = `${totalParkingUninstalled}면 / ${totalChargerUninstalled}기`;
 
   // 대시보드 통계 카드
@@ -4607,10 +4607,10 @@ function renderOperations() {
   const elUnopChargers = document.getElementById("stat-op-unoperated-chargers");
   const elBadge = document.getElementById("op-count-badge");
 
-  if (elTotal) elTotal.textContent = totalCount.toLocaleString();
-  if (elNormal) elNormal.textContent = normalCount.toLocaleString();
-  if (elUnop) elUnop.textContent = unopCount.toLocaleString();
-  if (elUnopChargers) elUnopChargers.textContent = unopChargers.toLocaleString();
+  if (elTotal) elTotal.textContent = `${totalCount.toLocaleString()}개소`;
+  if (elNormal) elNormal.textContent = `${normalCount.toLocaleString()}개소`;
+  if (elUnop) elUnop.textContent = `${unopCount.toLocaleString()}개소`;
+  if (elUnopChargers) elUnopChargers.textContent = `${unopChargers.toLocaleString()}기`;
   if (elBadge) elBadge.textContent = `총 ${filteredOperationsData.length}건 검색`;
 
   // 2. 카드 그리드 렌더링
@@ -5070,10 +5070,10 @@ function updateGwangsanStats() {
   const nonCompEl = document.getElementById("stat-gwangsan-non-compliant");
   const subEl = document.getElementById("stat-gwangsan-subsidy");
 
-  if (totalEl) totalEl.innerText = `${total}개소`;
-  if (compEl) compEl.innerText = `${compliant}개소`;
-  if (nonCompEl) nonCompEl.innerText = `${nonCompliant}개소`;
-  if (subEl) subEl.innerText = `${subsidyCount}건`;
+  if (totalEl) totalEl.innerText = `${total.toLocaleString()}개소`;
+  if (compEl) compEl.innerText = `${compliant.toLocaleString()}개소`;
+  if (nonCompEl) nonCompEl.innerText = `${nonCompliant.toLocaleString()}개소`;
+  if (subEl) subEl.innerText = `${subsidyCount.toLocaleString()}건`;
 }
 
 // 3. 관리부서(BI열) 기준 리스트 렌더링
