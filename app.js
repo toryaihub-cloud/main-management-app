@@ -5238,7 +5238,7 @@ function renderGwangsanFacilities(data) {
 function filterGwangsanFacilities() {
   const query = (document.getElementById("gwangsan-search-input")?.value || "").toLowerCase().trim();
   const deptFilter = document.getElementById("gwangsan-filter-dept")?.value || "ALL";
-  const compFilter = document.getElementById("gwangsan-filter-compliance")?.value || "ALL";
+  const compFilter = document.getElementById("gwangsan-filter-compliance")?.value || "미이행";
   const subFilter = document.getElementById("gwangsan-filter-subsidy")?.value || "ALL";
 
   let filtered = gwangsanFacilitiesData.filter(item => {
