@@ -5367,7 +5367,7 @@ function openGwangsanDetailModal(key) {
   }
 
   // Action Plan & Subsidy & Compliance
-  document.getElementById("gwangsan-modal-action-plan").innerText = item.dept_action_plan || "(등록된 부서 조치계획 없음)";
+  document.getElementById("gwangsan-modal-action-plan").innerText = (item.dept_action_plan && item.dept_action_plan.trim()) ? item.dept_action_plan.trim() : "-";
   
   const subEl = document.getElementById("gwangsan-modal-subsidy");
   const isSubsidy = item.subsidy_apply === "신청" || (item.subsidy_apply && item.subsidy_apply.includes("신청"));
@@ -5381,7 +5381,7 @@ function openGwangsanDetailModal(key) {
   // Final Conclusion (BF열)
   const finalEl = document.getElementById("gwangsan-modal-final-conclusion");
   if (finalEl) {
-    finalEl.innerText = item.final_conclusion && item.final_conclusion.trim() ? item.final_conclusion.trim() : "최종결론 내용이 등록되지 않았습니다.";
+    finalEl.innerText = (item.final_conclusion && item.final_conclusion.trim()) ? item.final_conclusion.trim() : "-";
   }
 
   // 1차~5차 세부 조사내용 (AB열~BE열) 동적 생성
@@ -5450,8 +5450,8 @@ function openGwangsanDetailModal(key) {
       const hasContent = (r.type || r.date || r.inspector || r.check || r.plan || r.note);
 
       surveyHtml += `
-        <div style="border:1px solid ${hasContent ? '#cbd5e1' : '#f1f5f9'}; border-radius:8px; overflow:hidden; background:${hasContent ? '#fff' : '#f8fafc'}; opacity:${hasContent ? '1' : '0.65'};">
-          <div style="background:${hasContent ? '#f1f5f9' : '#f8fafc'}; padding:0.5rem 0.85rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid ${hasContent ? '#e2e8f0' : '#f1f5f9'};">
+        <div style="border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;">
+          <div style="background:${hasContent ? '#f1f5f9' : '#f8fafc'}; padding:0.5rem 0.85rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
               <span style="background:${r.color}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.5rem; border-radius:4px;">
                 ${r.title}
