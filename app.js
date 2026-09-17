@@ -2024,8 +2024,28 @@ function renderDispositionsCards(data) {
     const opinionDate = findValue(d => d.opinion_submit_date);
 
     const repCorrectionTarget = fac.correction_order_target || facilityRecord.correction_order || findValue(d => d.correction_order) || '-';
-    const correctionDate = findValue(d => d.correction_order_date);
-    const correctionPeriod = findValue(d => d.correction_period);
+    
+    // 1차 vs 2차 재통지 시정명령 일자 및 시정기간
+    const correctionDate1 = findValue(d => d.correction_order_date);
+    const correctionPeriod1 = findValue(d => d.correction_period);
+
+    const correctionDate2 = findValue(d => d.correction_order_date_2);
+    const correctionPeriod2 = findValue(d => d.correction_period_2);
+
+    const hasSecond = (correctionDate2 && correctionDate2 !== '-' && correctionDate2 !== 'None') || (correctionPeriod2 && correctionPeriod2 !== '-' && correctionPeriod2 !== 'None');
+
+    const displayCorrectionDate = (hasSecond && correctionDate2 && correctionDate2 !== '-' && correctionDate2 !== 'None') ? correctionDate2 : correctionDate1;
+    const displayCorrectionPeriod = (hasSecond && correctionPeriod2 && correctionPeriod2 !== '-' && correctionPeriod2 !== 'None') ? correctionPeriod2 : correctionPeriod1;
+
+    const dateLabelHtml = hasSecond
+      ? `<span style="color:var(--text-muted); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;"><span class="badge" style="background:#2563EB; color:#FFFFFF; font-size:0.65rem; padding:0.1rem 0.35rem;">2차 재통지</span> 시정명령 일자:</span>`
+      : `<span style="color:var(--text-muted); font-weight:600;">시정명령 일자:</span>`;
+
+    const periodLabelHtml = hasSecond
+      ? `<span style="color:var(--text-muted); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;"><span class="badge" style="background:#2563EB; color:#FFFFFF; font-size:0.65rem; padding:0.1rem 0.35rem;">2차</span> 시정기간:</span>`
+      : `<span style="color:var(--text-muted); font-weight:600;">시정기간:</span>`;
+
+    const periodColor = hasSecond ? '#1D4ED8' : '#0284C7';
 
     card.innerHTML = `
       <div>
@@ -2066,16 +2086,16 @@ function renderDispositionsCards(data) {
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px dashed rgba(0,0,0,0.08); padding-bottom: 0.35rem;">
-            <span style="color:var(--text-muted); font-weight:600;">시정명령 일자:</span>
+            ${dateLabelHtml}
             <div style="text-align:right; font-weight:700; color:#E11D48;">
-              ${correctionDate}
+              ${displayCorrectionDate}
             </div>
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:var(--text-muted); font-weight:600;">시정기간:</span>
-            <div style="text-align:right; font-weight:700; color:#0284C7;">
-              ${correctionPeriod}
+            ${periodLabelHtml}
+            <div style="text-align:right; font-weight:700; color:${periodColor};">
+              ${displayCorrectionPeriod}
             </div>
           </div>
         </div>

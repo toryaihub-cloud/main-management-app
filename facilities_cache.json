@@ -39,6 +39,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "부",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -125,6 +126,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "부",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -211,6 +213,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "전남광주특별시장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -254,7 +257,6 @@
         "note": null
       }
     },
-    "correction_order_target": "전남광주특별시장",
     "manager_name_decrypted": "박상원",
     "manager_contact_decrypted": "010-6462-7445"
   },
@@ -298,6 +300,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -384,6 +387,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -470,6 +474,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -556,6 +561,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "(재)광주미래차모빌리티진흥원 원장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -599,7 +605,6 @@
         "note": null
       }
     },
-    "correction_order_target": "(재)광주미래차모빌리티진흥원 원장",
     "manager_name_decrypted": "신주혁",
     "manager_contact_decrypted": "960-7216"
   },
@@ -643,6 +648,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -729,6 +735,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -815,6 +822,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -901,6 +909,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주교통공사 사장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -944,7 +953,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주교통공사 사장",
     "manager_name_decrypted": "강정묵",
     "manager_contact_decrypted": "010-4608-6731"
   },
@@ -988,6 +996,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1074,6 +1083,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1160,6 +1170,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주광역시 도시공사 사장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1203,7 +1214,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주광역시 도시공사 사장",
     "manager_name_decrypted": "이수호",
     "manager_contact_decrypted": "010-3643-2131"
   },
@@ -1247,6 +1257,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주광역시인재교육원장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1290,7 +1301,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주광역시인재교육원장",
     "manager_name_decrypted": "조만열",
     "manager_contact_decrypted": "613-7022"
   },
@@ -1334,6 +1344,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "final_conclusion": "총 5대(완속1, 완속2채널 2)",
     "job_parking_cnt": 0,
     "surveys": {
@@ -1421,6 +1432,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1507,6 +1519,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1593,6 +1606,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "(재)광주미래차모빌리티진흥원 원장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1636,7 +1650,6 @@
         "note": null
       }
     },
-    "correction_order_target": "(재)광주미래차모빌리티진흥원 원장",
     "manager_name_decrypted": "김주환",
     "manager_contact_decrypted": "010-4158-4462"
   },
@@ -1680,6 +1693,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "한국교툥안전공단 이사장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1723,7 +1737,6 @@
         "note": null
       }
     },
-    "correction_order_target": "한국교툥안전공단 이사장",
     "manager_name_decrypted": "문효석",
     "manager_contact_decrypted": "010-2955-6034"
   },
@@ -1767,6 +1780,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주광역시소방학교장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1810,7 +1824,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주광역시소방학교장",
     "manager_name_decrypted": "이정석",
     "manager_contact_decrypted": "613-8923"
   },
@@ -1854,6 +1867,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "한국철도공사 사장",
     "job_parking_cnt": 0,
     "order_addr": "서울 용산구 한강대로 69, 용산푸르지오써밋 14층 코레일네트웍스",
     "surveys": {
@@ -1898,7 +1912,6 @@
         "note": null
       }
     },
-    "correction_order_target": "한국철도공사 사장",
     "manager_name_decrypted": "김도영",
     "manager_contact_decrypted": "010-2650-3970"
   },
@@ -1942,6 +1955,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "전남광주특별시 농업기술센터소장 / 농업지원과",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -1985,7 +1999,6 @@
         "note": null
       }
     },
-    "correction_order_target": "전남광주특별시 농업기술센터소장 / 농업지원과",
     "manager_name_decrypted": "김성로",
     "manager_contact_decrypted": "613-5274"
   },
@@ -2029,6 +2042,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주광역시 도시공사 사장",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2072,7 +2086,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주광역시 도시공사 사장",
     "manager_name_decrypted": "김진영",
     "manager_contact_decrypted": "010-9918-3405"
   },
@@ -2116,6 +2129,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2202,6 +2216,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2288,6 +2303,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2374,6 +2390,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2460,6 +2477,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2546,6 +2564,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2632,6 +2651,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2718,6 +2738,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "부",
     "extra_info": null,
+    "correction_order_target": "신창프뤼몰타운 관리단",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2761,7 +2782,6 @@
         "note": null
       }
     },
-    "correction_order_target": "신창프뤼몰타운 관리단",
     "manager_name_decrypted": "최상훈",
     "manager_contact_decrypted": "010-3911-5481"
   },
@@ -2805,6 +2825,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "최창선, 오지연(신창사우나 소유자)",
     "job_parking_cnt": 0,
     "order_addr": "시정명령 주소 별도",
     "surveys": {
@@ -2849,7 +2870,6 @@
         "note": null
       }
     },
-    "correction_order_target": "최창선, 오지연(신창사우나 소유자)",
     "manager_name_decrypted": "오지연",
     "manager_contact_decrypted": "010-4566-5359"
   },
@@ -2893,6 +2913,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "부",
     "extra_info": null,
+    "correction_order_target": "유한회사하남에이치 법인대표",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -2936,7 +2957,6 @@
         "note": null
       }
     },
-    "correction_order_target": "유한회사하남에이치 법인대표",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": ""
   },
@@ -2980,6 +3000,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3066,6 +3087,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3152,6 +3174,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "남부대학교 총장",
     "final_conclusion": "2026년 내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -3196,7 +3219,6 @@
         "note": null
       }
     },
-    "correction_order_target": "남부대학교 총장",
     "manager_name_decrypted": "김명완",
     "manager_contact_decrypted": "970-0026"
   },
@@ -3240,6 +3262,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3326,6 +3349,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "주식회사 한듬레포츠 소유자",
     "final_conclusion": "2026년 6월 설치예정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -3370,7 +3394,6 @@
         "note": null
       }
     },
-    "correction_order_target": "주식회사 한듬레포츠 소유자",
     "manager_name_decrypted": "김진태",
     "manager_contact_decrypted": "010-3632-9885"
   },
@@ -3414,6 +3437,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3500,6 +3524,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3586,6 +3611,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "최기석,박영숙(명성골프장소유자)",
     "final_conclusion": "2026년 내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -3630,7 +3656,6 @@
         "note": null
       }
     },
-    "correction_order_target": "최기석,박영숙(명성골프장소유자)",
     "manager_name_decrypted": "최기선",
     "manager_contact_decrypted": "010-3602-0706"
   },
@@ -3674,6 +3699,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "주식회사일진스포렉스 대표이사",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3717,7 +3743,6 @@
         "note": null
       }
     },
-    "correction_order_target": "주식회사일진스포렉스 대표이사",
     "manager_name_decrypted": "김진문",
     "manager_contact_decrypted": "010-6690-4000"
   },
@@ -3761,6 +3786,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3847,6 +3873,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3933,6 +3960,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "수완동 올핀스빌딩 소유자",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -3976,7 +4004,6 @@
         "note": null
       }
     },
-    "correction_order_target": "수완동 올핀스빌딩 소유자",
     "manager_name_decrypted": "김현명",
     "manager_contact_decrypted": "010-6392-9593"
   },
@@ -4020,6 +4047,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "수영빌딩 관리단",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4063,7 +4091,6 @@
         "note": null
       }
     },
-    "correction_order_target": "수영빌딩 관리단",
     "manager_name_decrypted": "임동휴",
     "manager_contact_decrypted": "959-6278"
   },
@@ -4107,6 +4134,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4193,6 +4221,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "성덕주차타워 소유자",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4236,7 +4265,6 @@
         "note": null
       }
     },
-    "correction_order_target": "성덕주차타워 소유자",
     "manager_name_decrypted": "최상운",
     "manager_contact_decrypted": "010-3911-5481"
   },
@@ -4280,6 +4308,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4366,6 +4395,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4452,6 +4482,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "콜롬버스 관리단",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4495,7 +4526,6 @@
         "note": null
       }
     },
-    "correction_order_target": "콜롬버스 관리단",
     "manager_name_decrypted": "양만송",
     "manager_contact_decrypted": "010-5664-7204"
   },
@@ -4539,6 +4569,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4625,6 +4656,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4711,6 +4743,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4797,6 +4830,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4883,6 +4917,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -4969,6 +5004,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 150,
     "surveys": {
       "1st": {
@@ -5055,6 +5091,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -5141,6 +5178,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -5227,6 +5265,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -5313,6 +5352,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -5399,6 +5439,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -5485,6 +5526,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "주식회사 오엔에스 소유자",
     "final_conclusion": "2026년 내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -5529,7 +5571,6 @@
         "note": null
       }
     },
-    "correction_order_target": "주식회사 오엔에스 소유자",
     "manager_name_decrypted": "전의종",
     "manager_contact_decrypted": "010-3350-4900"
   },
@@ -5573,6 +5614,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -5659,6 +5701,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "우인개발주식회사 사내이사",
     "final_conclusion": "미정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -5703,7 +5746,6 @@
         "note": null
       }
     },
-    "correction_order_target": "우인개발주식회사 사내이사",
     "manager_name_decrypted": "윤재복",
     "manager_contact_decrypted": "010-7175-1868"
   },
@@ -5747,6 +5789,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "주식회사 신보예가 소유자",
     "job_parking_cnt": 0,
     "order_addr": "시정명령 주소 별도(2026.5.20.시설명 변경, 기존 \"월계동주차빌딩(첨단sky주차타워)\")",
     "surveys": {
@@ -5791,7 +5834,6 @@
         "note": null
       }
     },
-    "correction_order_target": "주식회사 신보예가 소유자",
     "manager_name_decrypted": "김진영",
     "manager_contact_decrypted": "010-9298-4321"
   },
@@ -5835,6 +5877,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -5921,6 +5964,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": "유한회사 첨단제이제이파킹 소유자",
     "job_parking_cnt": 0,
     "order_addr": "시정명령 주소 별도(2026.5.20.시설명 변경, 기존 \"월계동주차빌딩(첨단sky주차타워)\")",
     "surveys": {
@@ -5965,7 +6009,6 @@
         "note": null
       }
     },
-    "correction_order_target": "유한회사 첨단제이제이파킹 소유자",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "381-3222"
   },
@@ -6009,6 +6052,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -6095,6 +6139,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -6181,6 +6226,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -6267,6 +6313,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -6353,6 +6400,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "폭스존 관리단",
     "final_conclusion": "미정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -6397,7 +6445,6 @@
         "note": null
       }
     },
-    "correction_order_target": "폭스존 관리단",
     "manager_name_decrypted": "김수환",
     "manager_contact_decrypted": "010-3698-4255"
   },
@@ -6441,6 +6488,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -6527,6 +6575,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -6613,6 +6662,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -6699,6 +6749,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -6785,6 +6836,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "정재훈(세계로365병원소유자)",
     "final_conclusion": "시정명령 기간 내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -6829,7 +6881,6 @@
         "note": null
       }
     },
-    "correction_order_target": "정재훈(세계로365병원소유자)",
     "manager_name_decrypted": "조현종",
     "manager_contact_decrypted": "010-9474-1553"
   },
@@ -6873,6 +6924,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "유한회사 남궁 법인대표",
     "final_conclusion": "미정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -6917,7 +6969,6 @@
         "note": null
       }
     },
-    "correction_order_target": "유한회사 남궁 법인대표",
     "manager_name_decrypted": "김민규",
     "manager_contact_decrypted": "010-5236-2962"
   },
@@ -6961,6 +7012,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "유한회사 국선 법인대표",
     "final_conclusion": "미정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -7005,7 +7057,6 @@
         "note": null
       }
     },
-    "correction_order_target": "유한회사 국선 법인대표",
     "manager_name_decrypted": "김민규",
     "manager_contact_decrypted": "010-5236-2962"
   },
@@ -7049,6 +7100,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7135,6 +7187,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "주식회사 무등산랜드 법인대표",
     "final_conclusion": "2027년 상반기 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -7179,7 +7232,6 @@
         "note": null
       }
     },
-    "correction_order_target": "주식회사 무등산랜드 법인대표",
     "manager_name_decrypted": "이명남",
     "manager_contact_decrypted": "010-9095-3019"
   },
@@ -7223,6 +7275,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7309,6 +7362,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7395,6 +7449,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "애플타워관리단",
     "final_conclusion": "미정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -7439,7 +7494,6 @@
         "note": null
       }
     },
-    "correction_order_target": "애플타워관리단",
     "manager_name_decrypted": "문지혁",
     "manager_contact_decrypted": "010-9034-8688"
   },
@@ -7483,6 +7537,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7569,6 +7624,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7655,6 +7711,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7741,6 +7798,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7827,6 +7885,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7913,6 +7972,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -7999,6 +8059,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8085,6 +8146,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8171,6 +8233,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8257,6 +8320,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8343,6 +8407,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8429,6 +8494,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "대한상공회의소 광주인력개발원장",
     "final_conclusion": "2026년 설치예정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -8473,7 +8539,6 @@
         "note": null
       }
     },
-    "correction_order_target": "대한상공회의소 광주인력개발원장",
     "manager_name_decrypted": "김성철",
     "manager_contact_decrypted": "940-3512"
   },
@@ -8517,6 +8582,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8603,6 +8669,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8689,6 +8756,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8775,6 +8843,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8861,6 +8930,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -8947,6 +9017,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9033,6 +9104,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9119,6 +9191,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9205,6 +9278,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9291,6 +9365,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9377,6 +9452,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9463,6 +9539,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9549,6 +9626,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9635,6 +9713,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9721,6 +9800,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9807,6 +9887,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9893,6 +9974,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -9979,6 +10061,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10065,6 +10148,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10151,6 +10235,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10237,6 +10322,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10323,6 +10409,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "천지연금사우나 소유자",
     "final_conclusion": "2026년 내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -10367,7 +10454,6 @@
         "note": null
       }
     },
-    "correction_order_target": "천지연금사우나 소유자",
     "manager_name_decrypted": "정우철",
     "manager_contact_decrypted": "010-3629-1835"
   },
@@ -10411,6 +10497,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": "안순옥",
     "final_conclusion": "2026년 내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -10455,7 +10542,6 @@
         "note": null
       }
     },
-    "correction_order_target": "안순옥",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "010-5090-6884(전에일하던직원)"
   },
@@ -10499,6 +10585,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10585,6 +10672,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10671,6 +10759,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10757,6 +10846,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10843,6 +10933,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -10929,6 +11020,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -11015,6 +11107,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "㈜구시월드 소유자",
     "final_conclusion": "2027년 상반기 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -11059,7 +11152,6 @@
         "note": null
       }
     },
-    "correction_order_target": "㈜구시월드 소유자",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "955-1919"
   },
@@ -11103,6 +11195,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": "최형기, 오향란",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -11146,7 +11239,6 @@
         "note": null
       }
     },
-    "correction_order_target": "최형기, 오향란",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "010-5637-9335, 010-3619-9335"
   },
@@ -11190,6 +11282,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "전주이씨효령대군파수원판관공광주완동종회",
     "final_conclusion": "2026년 상반기 내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -11234,7 +11327,6 @@
         "note": null
       }
     },
-    "correction_order_target": "전주이씨효령대군파수원판관공광주완동종회",
     "manager_name_decrypted": "명재율",
     "manager_contact_decrypted": "010-4604-8422"
   },
@@ -11278,6 +11370,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -11364,6 +11457,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -11450,6 +11544,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -11536,6 +11631,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주기쁜소식광주교회 대표자",
     "final_conclusion": "2026년 내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -11580,7 +11676,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주기쁜소식광주교회 대표자",
     "manager_name_decrypted": "이상육",
     "manager_contact_decrypted": "010-5381-4902"
   },
@@ -11624,6 +11719,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "대한예수교장로회첨단겨자씨교회 대표자",
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -11667,7 +11763,6 @@
         "note": null
       }
     },
-    "correction_order_target": "대한예수교장로회첨단겨자씨교회 대표자",
     "manager_name_decrypted": "백순철",
     "manager_contact_decrypted": "010-4212-1963"
   },
@@ -11711,6 +11806,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "예상산업주식회사 대표이사",
     "final_conclusion": "2026년 설치예정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -11755,7 +11851,6 @@
         "note": null
       }
     },
-    "correction_order_target": "예상산업주식회사 대표이사",
     "manager_name_decrypted": "김성원",
     "manager_contact_decrypted": "511-0066"
   },
@@ -11799,6 +11894,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -11885,6 +11981,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -11971,6 +12068,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "이천연",
     "final_conclusion": "미정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -12015,7 +12113,6 @@
         "note": null
       }
     },
-    "correction_order_target": "이천연",
     "manager_name_decrypted": "백형준",
     "manager_contact_decrypted": "010-3025-4277"
   },
@@ -12059,6 +12156,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -12145,6 +12243,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -12231,6 +12330,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "김영환",
     "final_conclusion": "미정",
     "job_parking_cnt": 0,
     "order_addr": "광주 서구 유덕로 71 김영환빌딩",
@@ -12276,7 +12376,6 @@
         "note": null
       }
     },
-    "correction_order_target": "김영환",
     "manager_name_decrypted": "이경란",
     "manager_contact_decrypted": "010-4004-8750"
   },
@@ -12320,6 +12419,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "유한회사 동국상운 대표이사",
     "final_conclusion": "미정",
     "job_parking_cnt": 0,
     "surveys": {
@@ -12364,7 +12464,6 @@
         "note": null
       }
     },
-    "correction_order_target": "유한회사 동국상운 대표이사",
     "manager_name_decrypted": "조윤형",
     "manager_contact_decrypted": "954-3456"
   },
@@ -12408,6 +12507,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -12494,6 +12594,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -12580,6 +12681,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "한국건설주식회사 분양사",
     "final_conclusion": "2026년 상반기 내 설치",
     "job_parking_cnt": 0,
     "order_addr": "광주 서구 상무대로 995 3층,한국건설",
@@ -12625,7 +12727,6 @@
         "note": null
       }
     },
-    "correction_order_target": "한국건설주식회사 분양사",
     "manager_name_decrypted": "박복희",
     "manager_contact_decrypted": "951-1696"
   },
@@ -12669,6 +12770,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -12755,6 +12857,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -12841,6 +12944,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -12927,6 +13031,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13013,6 +13118,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13099,6 +13205,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13185,6 +13292,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13271,6 +13379,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13357,6 +13466,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13443,6 +13553,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13529,6 +13640,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13615,6 +13727,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13701,6 +13814,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13787,6 +13901,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13873,6 +13988,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -13959,6 +14075,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14045,6 +14162,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "전남광주특별시 교육청 교육공간조성과장",
     "final_conclusion": "2026년 연도내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -14089,7 +14207,6 @@
         "note": null
       }
     },
-    "correction_order_target": "전남광주특별시 교육청 교육공간조성과장",
     "manager_name_decrypted": "배선호",
     "manager_contact_decrypted": "970-0552"
   },
@@ -14133,6 +14250,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14219,6 +14337,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14305,6 +14424,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14391,6 +14511,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14477,6 +14598,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "전남광주특별시 교육청 교육공간조성과장",
     "final_conclusion": "2026년 연도내 설치",
     "job_parking_cnt": 0,
     "surveys": {
@@ -14521,7 +14643,6 @@
         "note": null
       }
     },
-    "correction_order_target": "전남광주특별시 교육청 교육공간조성과장",
     "manager_name_decrypted": "류지애",
     "manager_contact_decrypted": "960-3506"
   },
@@ -14565,6 +14686,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "전남광주특별시 교육청 교육공간조성과장",
     "covenant": "54",
     "job_parking_cnt": 0,
     "surveys": {
@@ -14609,7 +14731,6 @@
         "note": null
       }
     },
-    "correction_order_target": "전남광주특별시 교육청 교육공간조성과장",
     "manager_name_decrypted": "최진익",
     "manager_contact_decrypted": "958-3803"
   },
@@ -14653,6 +14774,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14739,6 +14861,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14825,6 +14948,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14911,6 +15035,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -14997,6 +15122,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -15083,6 +15209,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -15169,6 +15296,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -15255,6 +15383,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 693,
     "surveys": {
       "1st": {
@@ -15341,6 +15470,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 227,
     "surveys": {
       "1st": {
@@ -15427,6 +15557,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "500",
     "job_parking_cnt": 500,
     "surveys": {
@@ -15514,6 +15645,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 482,
     "surveys": {
       "1st": {
@@ -15600,6 +15732,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 278,
     "surveys": {
       "1st": {
@@ -15686,6 +15819,7 @@
     "parallel_parking_cnt": 12,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 660,
     "surveys": {
       "1st": {
@@ -15772,6 +15906,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 963,
     "surveys": {
       "1st": {
@@ -15858,6 +15993,7 @@
     "parallel_parking_cnt": 10,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 721,
     "surveys": {
       "1st": {
@@ -15944,6 +16080,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 259,
     "surveys": {
       "1st": {
@@ -16030,6 +16167,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "284",
     "job_parking_cnt": 232,
     "surveys": {
@@ -16117,6 +16255,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 466,
     "surveys": {
       "1st": {
@@ -16203,6 +16342,7 @@
     "parallel_parking_cnt": 58,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1555,
     "surveys": {
       "1st": {
@@ -16289,6 +16429,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1231,
     "surveys": {
       "1st": {
@@ -16375,6 +16516,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 556,
     "surveys": {
       "1st": {
@@ -16461,6 +16603,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 667,
     "surveys": {
       "1st": {
@@ -16547,6 +16690,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "564",
     "job_parking_cnt": 559,
     "surveys": {
@@ -16634,6 +16778,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 153,
     "surveys": {
       "1st": {
@@ -16720,6 +16865,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 881,
     "surveys": {
       "1st": {
@@ -16806,6 +16952,7 @@
     "parallel_parking_cnt": 11,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 417,
     "surveys": {
       "1st": {
@@ -16892,6 +17039,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 762,
     "surveys": {
       "1st": {
@@ -16978,6 +17126,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 846,
     "surveys": {
       "1st": {
@@ -17064,6 +17213,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1360,
     "surveys": {
       "1st": {
@@ -17150,6 +17300,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1833,
     "surveys": {
       "1st": {
@@ -17236,6 +17387,7 @@
     "parallel_parking_cnt": 27,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1090,
     "surveys": {
       "1st": {
@@ -17322,6 +17474,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 731,
     "surveys": {
       "1st": {
@@ -17408,6 +17561,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1531,
     "surveys": {
       "1st": {
@@ -17494,6 +17648,7 @@
     "parallel_parking_cnt": 17,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1624,
     "surveys": {
       "1st": {
@@ -17580,6 +17735,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 729,
     "surveys": {
       "1st": {
@@ -17666,6 +17822,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 437,
     "surveys": {
       "1st": {
@@ -17752,6 +17909,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 408,
     "surveys": {
       "1st": {
@@ -17838,6 +17996,7 @@
     "parallel_parking_cnt": 10,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1078,
     "surveys": {
       "1st": {
@@ -17924,6 +18083,7 @@
     "parallel_parking_cnt": 26,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 724,
     "surveys": {
       "1st": {
@@ -18010,6 +18170,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 628,
     "surveys": {
       "1st": {
@@ -18096,6 +18257,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "222",
     "job_parking_cnt": 178,
     "surveys": {
@@ -18183,6 +18345,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 665,
     "surveys": {
       "1st": {
@@ -18269,6 +18432,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 432,
     "surveys": {
       "1st": {
@@ -18355,6 +18519,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1301,
     "surveys": {
       "1st": {
@@ -18441,6 +18606,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1205,
     "surveys": {
       "1st": {
@@ -18527,6 +18693,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 320,
     "surveys": {
       "1st": {
@@ -18613,6 +18780,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 2060,
     "surveys": {
       "1st": {
@@ -18699,6 +18867,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 827,
     "surveys": {
       "1st": {
@@ -18785,6 +18954,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1410,
     "surveys": {
       "1st": {
@@ -18871,6 +19041,7 @@
     "parallel_parking_cnt": 28,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1859,
     "surveys": {
       "1st": {
@@ -18957,6 +19128,7 @@
     "parallel_parking_cnt": 24,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1254,
     "surveys": {
       "1st": {
@@ -19043,6 +19215,7 @@
     "parallel_parking_cnt": 9,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 788,
     "surveys": {
       "1st": {
@@ -19129,6 +19302,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 568,
     "surveys": {
       "1st": {
@@ -19215,6 +19389,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 327,
     "surveys": {
       "1st": {
@@ -19301,6 +19476,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 490,
     "surveys": {
       "1st": {
@@ -19387,6 +19563,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "general_mixed": "공공+민간",
     "job_parking_cnt": 347,
     "surveys": {
@@ -19474,6 +19651,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 272,
     "surveys": {
       "1st": {
@@ -19560,6 +19738,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1262,
     "surveys": {
       "1st": {
@@ -19646,6 +19825,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "쌍암힐스테이트리버파크 입주자대표회의",
     "job_parking_cnt": 1437,
     "surveys": {
       "1st": {
@@ -19689,7 +19869,6 @@
         "note": null
       }
     },
-    "correction_order_target": "쌍암힐스테이트리버파크 입주자대표회의",
     "manager_name_decrypted": "김민욱",
     "manager_contact_decrypted": "010-2722-4413"
   },
@@ -19733,6 +19912,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1403,
     "surveys": {
       "1st": {
@@ -19819,6 +19999,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1253,
     "surveys": {
       "1st": {
@@ -19905,6 +20086,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 705,
     "surveys": {
       "1st": {
@@ -19991,6 +20173,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 220,
     "surveys": {
       "1st": {
@@ -20077,6 +20260,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 215,
     "surveys": {
       "1st": {
@@ -20163,6 +20347,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 400,
     "surveys": {
       "1st": {
@@ -20249,6 +20434,7 @@
     "parallel_parking_cnt": 19,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 668,
     "surveys": {
       "1st": {
@@ -20335,6 +20521,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 884,
     "surveys": {
       "1st": {
@@ -20421,6 +20608,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 409,
     "surveys": {
       "1st": {
@@ -20507,6 +20695,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 198,
     "surveys": {
       "1st": {
@@ -20593,6 +20782,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 727,
     "surveys": {
       "1st": {
@@ -20679,6 +20869,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 616,
     "surveys": {
       "1st": {
@@ -20765,6 +20956,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 469,
     "surveys": {
       "1st": {
@@ -20851,6 +21043,7 @@
     "parallel_parking_cnt": 14,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 677,
     "surveys": {
       "1st": {
@@ -20937,6 +21130,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 434,
     "surveys": {
       "1st": {
@@ -21023,6 +21217,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 518,
     "surveys": {
       "1st": {
@@ -21109,6 +21304,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 203,
     "surveys": {
       "1st": {
@@ -21195,6 +21391,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 193,
     "surveys": {
       "1st": {
@@ -21281,6 +21478,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 723,
     "surveys": {
       "1st": {
@@ -21367,6 +21565,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 318,
     "surveys": {
       "1st": {
@@ -21453,6 +21652,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 139,
     "surveys": {
       "1st": {
@@ -21539,6 +21739,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 973,
     "surveys": {
       "1st": {
@@ -21625,6 +21826,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 597,
     "surveys": {
       "1st": {
@@ -21711,6 +21913,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 218,
     "surveys": {
       "1st": {
@@ -21797,6 +22000,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 267,
     "surveys": {
       "1st": {
@@ -21883,6 +22087,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1077,
     "surveys": {
       "1st": {
@@ -21969,6 +22174,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 176,
     "surveys": {
       "1st": {
@@ -22055,6 +22261,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 405,
     "surveys": {
       "1st": {
@@ -22141,6 +22348,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1234,
     "surveys": {
       "1st": {
@@ -22227,6 +22435,7 @@
     "parallel_parking_cnt": 10,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 522,
     "surveys": {
       "1st": {
@@ -22313,6 +22522,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 278,
     "surveys": {
       "1st": {
@@ -22399,6 +22609,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 150,
     "surveys": {
       "1st": {
@@ -22485,6 +22696,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 597,
     "surveys": {
       "1st": {
@@ -22571,6 +22783,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 264,
     "surveys": {
       "1st": {
@@ -22657,6 +22870,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 426,
     "surveys": {
       "1st": {
@@ -22743,6 +22957,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 218,
     "surveys": {
       "1st": {
@@ -22829,6 +23044,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 60,
     "surveys": {
       "1st": {
@@ -22915,6 +23131,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 773,
     "surveys": {
       "1st": {
@@ -23001,6 +23218,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 366,
     "surveys": {
       "1st": {
@@ -23087,6 +23305,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1342,
     "surveys": {
       "1st": {
@@ -23173,6 +23392,7 @@
     "parallel_parking_cnt": 16,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 534,
     "surveys": {
       "1st": {
@@ -23259,6 +23479,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 696,
     "surveys": {
       "1st": {
@@ -23345,6 +23566,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "500",
     "job_parking_cnt": 513,
     "surveys": {
@@ -23432,6 +23654,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 683,
     "surveys": {
       "1st": {
@@ -23518,6 +23741,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 81,
     "surveys": {
       "1st": {
@@ -23604,6 +23828,7 @@
     "parallel_parking_cnt": 12,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 441,
     "surveys": {
       "1st": {
@@ -23690,6 +23915,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 438,
     "surveys": {
       "1st": {
@@ -23776,6 +24002,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 640,
     "surveys": {
       "1st": {
@@ -23862,6 +24089,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1114,
     "surveys": {
       "1st": {
@@ -23948,6 +24176,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 254,
     "surveys": {
       "1st": {
@@ -24034,6 +24263,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 467,
     "surveys": {
       "1st": {
@@ -24120,6 +24350,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 903,
     "surveys": {
       "1st": {
@@ -24206,6 +24437,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 625,
     "surveys": {
       "1st": {
@@ -24292,6 +24524,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 265,
     "surveys": {
       "1st": {
@@ -24378,6 +24611,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 179,
     "surveys": {
       "1st": {
@@ -24464,6 +24698,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 779,
     "surveys": {
       "1st": {
@@ -24550,6 +24785,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 765,
     "surveys": {
       "1st": {
@@ -24636,6 +24872,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 338,
     "surveys": {
       "1st": {
@@ -24722,6 +24959,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1231,
     "surveys": {
       "1st": {
@@ -24808,6 +25046,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 740,
     "surveys": {
       "1st": {
@@ -24894,6 +25133,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 995,
     "surveys": {
       "1st": {
@@ -24980,6 +25220,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 524,
     "surveys": {
       "1st": {
@@ -25066,6 +25307,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 435,
     "surveys": {
       "1st": {
@@ -25152,6 +25394,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "general_mixed": "공공+민간",
     "job_parking_cnt": 996,
     "surveys": {
@@ -25239,6 +25482,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1202,
     "surveys": {
       "1st": {
@@ -25325,6 +25569,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 208,
     "surveys": {
       "1st": {
@@ -25411,6 +25656,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 234,
     "surveys": {
       "1st": {
@@ -25497,6 +25743,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 491,
     "surveys": {
       "1st": {
@@ -25583,6 +25830,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 230,
     "surveys": {
       "1st": {
@@ -25669,6 +25917,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 300,
     "surveys": {
       "1st": {
@@ -25755,6 +26004,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 459,
     "surveys": {
       "1st": {
@@ -25841,6 +26091,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "256",
     "job_parking_cnt": 256,
     "surveys": {
@@ -25928,6 +26179,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "505",
     "job_parking_cnt": 505,
     "surveys": {
@@ -26015,6 +26267,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주광역시 도시공사 사장",
     "job_parking_cnt": 376,
     "surveys": {
       "1st": {
@@ -26058,7 +26311,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주광역시 도시공사 사장",
     "manager_name_decrypted": "송화석",
     "manager_contact_decrypted": "010-2650-1326"
   },
@@ -26102,6 +26354,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 238,
     "surveys": {
       "1st": {
@@ -26188,6 +26441,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 250,
     "surveys": {
       "1st": {
@@ -26274,6 +26528,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 381,
     "surveys": {
       "1st": {
@@ -26360,6 +26615,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 340,
     "surveys": {
       "1st": {
@@ -26446,6 +26702,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 421,
     "surveys": {
       "1st": {
@@ -26532,6 +26789,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "276",
     "job_parking_cnt": 276,
     "surveys": {
@@ -26619,6 +26877,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 473,
     "surveys": {
       "1st": {
@@ -26705,6 +26964,7 @@
     "parallel_parking_cnt": 10,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 227,
     "surveys": {
       "1st": {
@@ -26791,6 +27051,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 423,
     "surveys": {
       "1st": {
@@ -26877,6 +27138,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 357,
     "surveys": {
       "1st": {
@@ -26963,6 +27225,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 369,
     "surveys": {
       "1st": {
@@ -27049,6 +27312,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 353,
     "surveys": {
       "1st": {
@@ -27135,6 +27399,7 @@
     "parallel_parking_cnt": 7,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 414,
     "surveys": {
       "1st": {
@@ -27221,6 +27486,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 324,
     "surveys": {
       "1st": {
@@ -27307,6 +27573,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 337,
     "surveys": {
       "1st": {
@@ -27393,6 +27660,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 235,
     "surveys": {
       "1st": {
@@ -27479,6 +27747,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 248,
     "surveys": {
       "1st": {
@@ -27565,6 +27834,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 467,
     "surveys": {
       "1st": {
@@ -27651,6 +27921,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 304,
     "surveys": {
       "1st": {
@@ -27737,6 +28008,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 280,
     "surveys": {
       "1st": {
@@ -27823,6 +28095,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주광역시 도시공사 사장",
     "job_parking_cnt": 575,
     "surveys": {
       "1st": {
@@ -27866,7 +28139,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주광역시 도시공사 사장",
     "manager_name_decrypted": "고병두",
     "manager_contact_decrypted": "010-4077-9239"
   },
@@ -27910,6 +28182,7 @@
     "parallel_parking_cnt": 15,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 745,
     "surveys": {
       "1st": {
@@ -27996,6 +28269,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 402,
     "surveys": {
       "1st": {
@@ -28082,6 +28356,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 387,
     "surveys": {
       "1st": {
@@ -28168,6 +28443,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 451,
     "surveys": {
       "1st": {
@@ -28254,6 +28530,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "general_mixed": "공공+민간",
     "job_parking_cnt": 357,
     "surveys": {
@@ -28341,6 +28618,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 398,
     "surveys": {
       "1st": {
@@ -28427,6 +28705,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 608,
     "surveys": {
       "1st": {
@@ -28513,6 +28792,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 520,
     "surveys": {
       "1st": {
@@ -28599,6 +28879,7 @@
     "parallel_parking_cnt": 10,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 784,
     "surveys": {
       "1st": {
@@ -28685,6 +28966,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 704,
     "surveys": {
       "1st": {
@@ -28771,6 +29053,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 291,
     "surveys": {
       "1st": {
@@ -28857,6 +29140,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 332,
     "surveys": {
       "1st": {
@@ -28943,6 +29227,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 435,
     "surveys": {
       "1st": {
@@ -29029,6 +29314,7 @@
     "parallel_parking_cnt": 14,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 689,
     "surveys": {
       "1st": {
@@ -29115,6 +29401,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1047,
     "surveys": {
       "1st": {
@@ -29201,6 +29488,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주광역시 도시공사 사장",
     "job_parking_cnt": 722,
     "surveys": {
       "1st": {
@@ -29244,7 +29532,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주광역시 도시공사 사장",
     "manager_name_decrypted": "권용환",
     "manager_contact_decrypted": "955-7183"
   },
@@ -29288,6 +29575,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 301,
     "surveys": {
       "1st": {
@@ -29374,6 +29662,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 267,
     "surveys": {
       "1st": {
@@ -29460,6 +29749,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 562,
     "surveys": {
       "1st": {
@@ -29546,6 +29836,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1016,
     "surveys": {
       "1st": {
@@ -29632,6 +29923,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1105,
     "surveys": {
       "1st": {
@@ -29718,6 +30010,7 @@
     "parallel_parking_cnt": 16,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 903,
     "surveys": {
       "1st": {
@@ -29804,6 +30097,7 @@
     "parallel_parking_cnt": 18,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 825,
     "surveys": {
       "1st": {
@@ -29890,6 +30184,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 542,
     "surveys": {
       "1st": {
@@ -29976,6 +30271,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 529,
     "surveys": {
       "1st": {
@@ -30062,6 +30358,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 546,
     "surveys": {
       "1st": {
@@ -30148,6 +30445,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 568,
     "surveys": {
       "1st": {
@@ -30234,6 +30532,7 @@
     "parallel_parking_cnt": 11,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 924,
     "surveys": {
       "1st": {
@@ -30320,6 +30619,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "수완1차중흥아파트 입주자대표회의",
     "job_parking_cnt": 1220,
     "surveys": {
       "1st": {
@@ -30363,7 +30663,6 @@
         "note": null
       }
     },
-    "correction_order_target": "수완1차중흥아파트 입주자대표회의",
     "manager_name_decrypted": "박영미",
     "manager_contact_decrypted": "959-1221"
   },
@@ -30407,6 +30706,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 893,
     "surveys": {
       "1st": {
@@ -30493,6 +30793,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 611,
     "surveys": {
       "1st": {
@@ -30579,6 +30880,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 251,
     "surveys": {
       "1st": {
@@ -30665,6 +30967,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 406,
     "surveys": {
       "1st": {
@@ -30751,6 +31054,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 266,
     "surveys": {
       "1st": {
@@ -30837,6 +31141,7 @@
     "parallel_parking_cnt": 13,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1000,
     "surveys": {
       "1st": {
@@ -30923,6 +31228,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 990,
     "surveys": {
       "1st": {
@@ -31009,6 +31315,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "수완대방3차아파트 입주자대표회의",
     "job_parking_cnt": 806,
     "surveys": {
       "1st": {
@@ -31052,7 +31359,6 @@
         "note": null
       }
     },
-    "correction_order_target": "수완대방3차아파트 입주자대표회의",
     "manager_name_decrypted": "홍희수",
     "manager_contact_decrypted": "962-1693"
   },
@@ -31096,6 +31402,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 490,
     "surveys": {
       "1st": {
@@ -31182,6 +31489,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 531,
     "surveys": {
       "1st": {
@@ -31268,6 +31576,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 228,
     "surveys": {
       "1st": {
@@ -31354,6 +31663,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 268,
     "surveys": {
       "1st": {
@@ -31440,6 +31750,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "수완대방6차아파트 입주자대표회의",
     "job_parking_cnt": 1029,
     "surveys": {
       "1st": {
@@ -31483,7 +31794,6 @@
         "note": null
       }
     },
-    "correction_order_target": "수완대방6차아파트 입주자대표회의",
     "manager_name_decrypted": "양정남",
     "manager_contact_decrypted": "955-0926"
   },
@@ -31527,6 +31837,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 381,
     "surveys": {
       "1st": {
@@ -31613,6 +31924,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 489,
     "surveys": {
       "1st": {
@@ -31699,6 +32011,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 384,
     "surveys": {
       "1st": {
@@ -31785,6 +32098,7 @@
     "parallel_parking_cnt": 9,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1222,
     "surveys": {
       "1st": {
@@ -31871,6 +32185,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 254,
     "surveys": {
       "1st": {
@@ -31957,6 +32272,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 694,
     "surveys": {
       "1st": {
@@ -32043,6 +32359,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 409,
     "surveys": {
       "1st": {
@@ -32129,6 +32446,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 1078,
     "surveys": {
       "1st": {
@@ -32215,6 +32533,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 624,
     "surveys": {
       "1st": {
@@ -32301,6 +32620,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 500,
     "surveys": {
       "1st": {
@@ -32387,6 +32707,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "244",
     "job_parking_cnt": 244,
     "surveys": {
@@ -32474,6 +32795,7 @@
     "parallel_parking_cnt": 14,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 571,
     "surveys": {
       "1st": {
@@ -32560,6 +32882,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 234,
     "surveys": {
       "1st": {
@@ -32646,6 +32969,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 545,
     "surveys": {
       "1st": {
@@ -32732,6 +33056,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 352,
     "surveys": {
       "1st": {
@@ -32818,6 +33143,7 @@
     "parallel_parking_cnt": 12,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 413,
     "surveys": {
       "1st": {
@@ -32904,6 +33230,7 @@
     "parallel_parking_cnt": 17,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 367,
     "surveys": {
       "1st": {
@@ -32990,6 +33317,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 478,
     "surveys": {
       "1st": {
@@ -33076,6 +33404,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 627,
     "surveys": {
       "1st": {
@@ -33162,6 +33491,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 291,
     "surveys": {
       "1st": {
@@ -33248,6 +33578,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 146,
     "surveys": {
       "1st": {
@@ -33334,6 +33665,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 737,
     "surveys": {
       "1st": {
@@ -33420,6 +33752,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 557,
     "surveys": {
       "1st": {
@@ -33506,6 +33839,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 874,
     "surveys": {
       "1st": {
@@ -33592,6 +33926,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 278,
     "surveys": {
       "1st": {
@@ -33678,6 +34013,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "184",
     "job_parking_cnt": 184,
     "surveys": {
@@ -33765,6 +34101,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 192,
     "surveys": {
       "1st": {
@@ -33851,6 +34188,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 157,
     "surveys": {
       "1st": {
@@ -33937,6 +34275,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 198,
     "surveys": {
       "1st": {
@@ -34023,6 +34362,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 208,
     "surveys": {
       "1st": {
@@ -34109,6 +34449,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 207,
     "surveys": {
       "1st": {
@@ -34195,6 +34536,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 240,
     "surveys": {
       "1st": {
@@ -34281,6 +34623,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 193,
     "surveys": {
       "1st": {
@@ -34367,6 +34710,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 131,
     "surveys": {
       "1st": {
@@ -34453,6 +34797,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 138,
     "surveys": {
       "1st": {
@@ -34539,6 +34884,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "호반청암빌라트 입주자대표회의",
     "job_parking_cnt": 93,
     "surveys": {
       "1st": {
@@ -34582,7 +34928,6 @@
         "note": null
       }
     },
-    "correction_order_target": "호반청암빌라트 입주자대표회의",
     "manager_name_decrypted": "이강돈",
     "manager_contact_decrypted": "010-8240-9569"
   },
@@ -34626,6 +34971,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 78,
     "surveys": {
       "1st": {
@@ -34712,6 +35058,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "general_mixed": "공공+민간",
     "job_parking_cnt": 98,
     "surveys": {
@@ -34799,6 +35146,7 @@
     "parallel_parking_cnt": 3,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 172,
     "surveys": {
       "1st": {
@@ -34885,6 +35233,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 204,
     "surveys": {
       "1st": {
@@ -34971,6 +35320,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 150,
     "surveys": {
       "1st": {
@@ -35057,6 +35407,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 157,
     "surveys": {
       "1st": {
@@ -35143,6 +35494,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 76,
     "surveys": {
       "1st": {
@@ -35229,6 +35581,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 192,
     "surveys": {
       "1st": {
@@ -35315,6 +35668,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 140,
     "surveys": {
       "1st": {
@@ -35401,6 +35755,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 90,
     "surveys": {
       "1st": {
@@ -35487,6 +35842,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 200,
     "surveys": {
       "1st": {
@@ -35573,6 +35929,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 201,
     "surveys": {
       "1st": {
@@ -35659,6 +36016,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "general_mixed": "공공+민간",
     "job_parking_cnt": 175,
     "surveys": {
@@ -35746,6 +36104,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 134,
     "surveys": {
       "1st": {
@@ -35832,6 +36191,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 193,
     "surveys": {
       "1st": {
@@ -35918,6 +36278,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "general_mixed": "공공+민간",
     "job_parking_cnt": 131,
     "surveys": {
@@ -36005,6 +36366,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 115,
     "surveys": {
       "1st": {
@@ -36091,6 +36453,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 176,
     "surveys": {
       "1st": {
@@ -36177,6 +36540,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 181,
     "surveys": {
       "1st": {
@@ -36263,6 +36627,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 152,
     "surveys": {
       "1st": {
@@ -36349,6 +36714,7 @@
     "parallel_parking_cnt": 5,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 215,
     "surveys": {
       "1st": {
@@ -36435,6 +36801,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "삼라극동아파트 입주자대표회의",
     "job_parking_cnt": 68,
     "surveys": {
       "1st": {
@@ -36478,7 +36845,6 @@
         "note": null
       }
     },
-    "correction_order_target": "삼라극동아파트 입주자대표회의",
     "manager_name_decrypted": "관리사무소",
     "manager_contact_decrypted": "942-3412"
   },
@@ -36522,6 +36888,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 197,
     "surveys": {
       "1st": {
@@ -36608,6 +36975,7 @@
     "parallel_parking_cnt": 8,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 208,
     "surveys": {
       "1st": {
@@ -36694,6 +37062,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 103,
     "surveys": {
       "1st": {
@@ -36780,6 +37149,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 115,
     "surveys": {
       "1st": {
@@ -36866,6 +37236,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": "광주광역시 도시공사 사장",
     "job_parking_cnt": 154,
     "surveys": {
       "1st": {
@@ -36909,7 +37280,6 @@
         "note": null
       }
     },
-    "correction_order_target": "광주광역시 도시공사 사장",
     "manager_name_decrypted": "김여기",
     "manager_contact_decrypted": "954-3633"
   },
@@ -36953,6 +37323,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 273,
     "surveys": {
       "1st": {
@@ -37039,6 +37410,7 @@
     "parallel_parking_cnt": 4,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 181,
     "surveys": {
       "1st": {
@@ -37125,6 +37497,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 282,
     "surveys": {
       "1st": {
@@ -37211,6 +37584,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 211,
     "surveys": {
       "1st": {
@@ -37297,6 +37671,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 273,
     "surveys": {
       "1st": {
@@ -37383,6 +37758,7 @@
     "parallel_parking_cnt": 6,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 217,
     "surveys": {
       "1st": {
@@ -37469,6 +37845,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 108,
     "surveys": {
       "1st": {
@@ -37555,6 +37932,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 53,
     "surveys": {
       "1st": {
@@ -37641,6 +38019,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 125,
     "surveys": {
       "1st": {
@@ -37727,6 +38106,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 54,
     "surveys": {
       "1st": {
@@ -37813,6 +38193,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -37899,6 +38280,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -37985,6 +38367,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "107",
     "job_parking_cnt": 0,
     "surveys": {
@@ -38072,6 +38455,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -38158,6 +38542,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "136",
     "job_parking_cnt": 0,
     "surveys": {
@@ -38245,6 +38630,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "",
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -38331,6 +38717,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -38417,6 +38804,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -38503,6 +38891,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -38589,6 +38978,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "180",
     "job_parking_cnt": 0,
     "surveys": {
@@ -38676,6 +39066,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "190",
     "job_parking_cnt": 0,
     "surveys": {
@@ -38763,6 +39154,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -38849,6 +39241,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "59",
     "job_parking_cnt": 0,
     "surveys": {
@@ -38936,6 +39329,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -39022,6 +39416,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "56",
     "job_parking_cnt": 0,
     "surveys": {
@@ -39109,6 +39504,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "64",
     "job_parking_cnt": 0,
     "surveys": {
@@ -39196,6 +39592,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "52",
     "job_parking_cnt": 0,
     "surveys": {
@@ -39283,6 +39680,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -39369,6 +39767,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -39455,6 +39854,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -39541,6 +39941,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "84",
     "job_parking_cnt": 0,
     "surveys": {
@@ -39628,6 +40029,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "98",
     "job_parking_cnt": 0,
     "surveys": {
@@ -39715,6 +40117,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "55",
     "job_parking_cnt": 0,
     "surveys": {
@@ -39802,6 +40205,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "52",
     "job_parking_cnt": 0,
     "surveys": {
@@ -39889,6 +40293,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "171",
     "job_parking_cnt": 0,
     "surveys": {
@@ -39976,6 +40381,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -40062,6 +40468,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -40148,6 +40555,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -40234,6 +40642,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -40320,6 +40729,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -40406,6 +40816,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -40492,6 +40903,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "131",
     "job_parking_cnt": 131,
     "surveys": {
@@ -40579,6 +40991,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": "여",
     "extra_info": null,
+    "correction_order_target": null,
     "general_mixed": "공공+민간",
     "job_parking_cnt": 0,
     "surveys": {
@@ -40666,6 +41079,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": "주식회사 노블힐스 사내이사",
     "final_conclusion": "2026년 내 설치",
     "job_parking_cnt": 352,
     "order_addr": "시정명령 주소 별도",
@@ -40711,7 +41125,6 @@
         "note": null
       }
     },
-    "correction_order_target": "주식회사 노블힐스 사내이사",
     "manager_name_decrypted": "",
     "manager_contact_decrypted": "385-5294 / 010-3203-8409(유연수전무)/010-8028-4348(주식회사노블힐스)/010-2299-1209(주식회사노블힐스실무자)"
   },
@@ -40755,6 +41168,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -40841,6 +41255,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "60",
     "job_parking_cnt": 0,
     "surveys": {
@@ -40928,6 +41343,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -41014,6 +41430,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -41100,6 +41517,7 @@
     "parallel_parking_cnt": 1,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
@@ -41186,6 +41604,7 @@
     "parallel_parking_cnt": 2,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "covenant": "270",
     "job_parking_cnt": 0,
     "surveys": {
@@ -41273,6 +41692,7 @@
     "parallel_parking_cnt": 0,
     "fire_manual_distributed": null,
     "extra_info": null,
+    "correction_order_target": null,
     "job_parking_cnt": 0,
     "surveys": {
       "1st": {
