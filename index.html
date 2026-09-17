@@ -1215,6 +1215,8 @@
             <div style="font-weight:700; color:#D97706; margin-bottom:0.8rem; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
               <i class="fa-solid fa-gavel" style="color:#D97706;"></i> 3. 의견제출 및 시정명령 정보
             </div>
+
+            <!-- 의견제출 -->
             <div class="form-grid">
               <div class="form-group">
                 <label class="form-label">의견제출 여부</label>
@@ -1231,33 +1233,75 @@
                 <label class="form-label">의견 내용</label>
                 <input type="text" id="disp-opinion-content" class="input-box" placeholder="의견제출 내용 요약">
               </div>
-              <div class="form-group">
-                <label class="form-label">Y열 시정명령대상</label>
-                <input type="text" id="disp-correction-order" class="input-box" placeholder="예: 전남광주특별시장">
+            </div>
+
+            <!-- [1차 시정명령] -->
+            <div style="margin-top:0.9rem; padding:0.8rem; background:#FFFFFF; border:1px solid #CBD5E1; border-radius:0.4rem;">
+              <div style="font-weight:700; color:#334155; margin-bottom:0.6rem; font-size:0.88rem; display:flex; align-items:center; gap:0.4rem;">
+                <span class="badge" style="background:#E2E8F0; color:#334155; font-size:0.75rem; padding:0.15rem 0.5rem;">1차</span> 1차 시정명령 및 반송 이력
               </div>
-              <div class="form-group">
-                <label class="form-label">시정명령일자</label>
-                <input type="date" id="disp-correction-date" class="input-box">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">1차 시정명령대상</label>
+                  <input type="text" id="disp-correction-order" class="input-box" placeholder="예: 전남광주특별시장">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">1차 시정명령일자</label>
+                  <input type="date" id="disp-correction-date" class="input-box">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">1차 시정기간</label>
+                  <input type="text" id="disp-correction-period" class="input-box" placeholder="예: 2026.08.31 ~ 2027.08.30">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">1차 통지방법</label>
+                  <input type="text" id="disp-correction-notice-method" class="input-box" placeholder="우편등기 등">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">1차 통지 반송내역 / 상태</label>
+                  <input type="text" id="disp-correction-return-details" class="input-box" placeholder="반송 사유 (예: 폐문부재, 수취인불명 등)">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">1차 고시/공고</label>
+                  <input type="text" id="disp-correction-public" class="input-box">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label">1차 시정명령 사유 및 내용</label>
+                  <textarea id="disp-correction-reason" class="input-box" rows="2" placeholder="1차 시정명령 사유"></textarea>
+                </div>
               </div>
-              <div class="form-group full">
-                <label class="form-label">시정명령 사유 및 내용</label>
-                <textarea id="disp-correction-reason" class="input-box" rows="2" placeholder="시정명령 사유"></textarea>
+            </div>
+
+            <!-- [2차 시정명령 (재통지)] -->
+            <div style="margin-top:0.9rem; padding:0.8rem; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:0.4rem;">
+              <div style="font-weight:700; color:#1D4ED8; margin-bottom:0.6rem; font-size:0.88rem; display:flex; align-items:center; gap:0.4rem;">
+                <span class="badge" style="background:#2563EB; color:#FFFFFF; font-size:0.75rem; padding:0.15rem 0.5rem;">2차</span> 2차 시정명령 (재통지 및 재시정기간)
               </div>
-              <div class="form-group">
-                <label class="form-label">시정기간</label>
-                <input type="text" id="disp-correction-period" class="input-box" placeholder="예: 2026.08.31 ~ 2027.08.30">
-              </div>
-              <div class="form-group">
-                <label class="form-label">시정 통지방법</label>
-                <input type="text" id="disp-correction-notice-method" class="input-box" placeholder="우편등기 등">
-              </div>
-              <div class="form-group">
-                <label class="form-label">시정 통지 반송내역</label>
-                <input type="text" id="disp-correction-return-details" class="input-box" placeholder="반송 사유">
-              </div>
-              <div class="form-group">
-                <label class="form-label">시정 고시/공고</label>
-                <input type="text" id="disp-correction-public" class="input-box">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">2차 시정명령일자</label>
+                  <input type="date" id="disp-correction-date-2" class="input-box">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">2차 시정기간</label>
+                  <input type="text" id="disp-correction-period-2" class="input-box" placeholder="예: 2026.09.25 ~ 2027.09.24">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">2차 통지방법</label>
+                  <input type="text" id="disp-correction-notice-method-2" class="input-box" placeholder="우편등기, 교부 등">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">2차 통지 반송내역 / 도달여부</label>
+                  <input type="text" id="disp-correction-return-details-2" class="input-box" placeholder="예: 도달, 2차 반송 등">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">2차 고시/공고</label>
+                  <input type="text" id="disp-correction-public-2" class="input-box" placeholder="2차 고시공고 번호 또는 내용">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label">2차 시정명령 사유 및 내용</label>
+                  <textarea id="disp-correction-reason-2" class="input-box" rows="2" placeholder="2차 시정명령 재통지 사유 또는 조치내용"></textarea>
+                </div>
               </div>
             </div>
           </div>

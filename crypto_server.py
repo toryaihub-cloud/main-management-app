@@ -1872,6 +1872,9 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "correction_order", "correction_order_date", "correction_reason",
                 "correction_period", "correction_notice_method",
                 "correction_return_details", "correction_public",
+                "correction_order_2", "correction_order_date_2", "correction_reason_2",
+                "correction_period_2", "correction_notice_method_2",
+                "correction_return_details_2", "correction_public_2",
                 "target_name_encrypted", "recipient_name_encrypted",
                 "mail_address_encrypted", "abstract_address_encrypted",
                 "reg_num_encrypted", "contact_encrypted", "note"
@@ -1898,7 +1901,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     if enc: db_payload[enc_key] = enc
 
             # 날짜 필드 빈 문자열을 None으로 변환
-            date_fields = ["advance_notice_date", "advance_notice_send_date", "abstract_send_date", "opinion_submit_date", "correction_order_date"]
+            date_fields = ["advance_notice_date", "advance_notice_send_date", "abstract_send_date", "opinion_submit_date", "correction_order_date", "correction_order_date_2"]
             for df in date_fields:
                 if df in db_payload and (db_payload[df] == "" or db_payload[df] == "None"):
                     db_payload[df] = None
@@ -1911,6 +1914,12 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     print(f"Supabase dispositions PATCH status={res.status_code} id={disp_id}")
                     if res.status_code in [200, 204]:
                         supabase_saved = True
+                    elif res.status_code >= 400 and "_2" in res.text:
+                        # 신규 2차 컬럼이 Supabase에 아직 없을 경우 기존 컬럼만으로 안전 재시도
+                        fallback_payload = {k: v for k, v in db_payload.items() if not k.endswith("_2")}
+                        res_retry = requests.patch(f"{SUPABASE_URL}/rest/v1/dispositions?id=eq.{disp_id}", headers=prefer_headers, json=fallback_payload, timeout=5)
+                        if res_retry.status_code in [200, 204]:
+                            supabase_saved = True
                 else:
                     res = requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[db_payload], timeout=5)
                     print(f"Supabase dispositions POST status={res.status_code}")
@@ -1922,6 +1931,17 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                                 req_json["id"] = created_id
                                 disp_id = created_id
                                 supabase_saved = True
+                    elif res.status_code >= 400 and "_2" in res.text:
+                        fallback_payload = {k: v for k, v in db_payload.items() if not k.endswith("_2")}
+                        res_retry = requests.post(f"{SUPABASE_URL}/rest/v1/dispositions", headers=prefer_headers, json=[fallback_payload], timeout=5)
+                        if res_retry.status_code in [200, 201]:
+                            saved_rows = res_retry.json()
+                            if saved_rows and len(saved_rows) > 0:
+                                created_id = saved_rows[0].get("id")
+                                if created_id:
+                                    req_json["id"] = created_id
+                                    disp_id = created_id
+                                    supabase_saved = True
                 
                 # 다음 조회 시 Supabase DB에서 최신 데이터로 로드되도록 캐시 무효화
                 DISPOSITIONS_CACHE["data"] = None

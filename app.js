@@ -2353,13 +2353,37 @@ function openDispositionDetailModal(key) {
                 <div style="display:flex; flex-direction:column; gap:0.4rem;">
                   <div><strong>의견제출 여부/일자:</strong> ${d.opinion_submitted === 'O' ? '<span style="color:#059669; font-weight:bold;">🟢 제출</span>' : '⚪ 미제출'} (${d.opinion_submit_date || '-'})</div>
                   <div><strong>의견 내용:</strong> ${d.opinion_content || '-'}</div>
-                  <hr style="border:0; border-top:1px dashed #E2E8F0; margin:0.4rem 0;">
-                  <div><strong>시정명령대상:</strong> ${d.correction_order || '-'}</div>
-                  <div><strong>시정명령일자:</strong> ${d.correction_order_date || '-'}</div>
-                  <div><strong>시정명령 사유:</strong> ${d.correction_reason || '-'}</div>
-                  <div><strong>시정기간:</strong> ${d.correction_period || '-'}</div>
-                  <div><strong>통지방법 / 반송내역:</strong> ${d.correction_notice_method || '-'} / ${d.correction_return_details || '-'}</div>
-                  <div><strong>고시/공고:</strong> ${d.correction_public || '-'}</div>
+                  
+                  <!-- 1차 시정명령 정보 -->
+                  <div style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed #E2E8F0;">
+                    <div style="font-size:0.8rem; font-weight:700; color:#475569; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.3rem;">
+                      <span class="badge" style="background:#E2E8F0; color:#334155; font-size:0.68rem; padding:0.1rem 0.35rem;">1차</span> 1차 시정명령 및 반송 이력
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                      <div><strong>시정명령일자:</strong> ${d.correction_order_date || '-'}</div>
+                      <div><strong>시정명령대상:</strong> ${d.correction_order || '-'}</div>
+                      <div><strong>1차 시정기간:</strong> <span style="font-weight:600;">${d.correction_period || '-'}</span></div>
+                      <div><strong>통지방법 / 반송내역:</strong> ${d.correction_notice_method || '-'} / ${d.correction_return_details ? (d.correction_return_details.includes('반송') ? `<span style="color:#DC2626; font-weight:bold;">🔴 ${d.correction_return_details}</span>` : `<span style="color:#059669; font-weight:bold;">🟢 ${d.correction_return_details}</span>`) : '-'}</div>
+                      ${d.correction_reason ? `<div><strong>시정명령 사유:</strong> ${d.correction_reason}</div>` : ''}
+                      ${d.correction_public ? `<div><strong>고시/공고:</strong> ${d.correction_public}</div>` : ''}
+                    </div>
+                  </div>
+
+                  <!-- 2차 시정명령 (재통지) 정보 (입력되어 있는 경우에만 표시) -->
+                  ${(d.correction_period_2 || d.correction_order_date_2 || d.correction_return_details_2 || d.correction_reason_2) ? `
+                    <div style="margin-top:0.5rem; padding:0.6rem; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:0.4rem; font-size:0.83rem;">
+                      <div style="font-size:0.8rem; font-weight:700; color:#1D4ED8; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.3rem;">
+                        <span class="badge" style="background:#2563EB; color:#FFFFFF; font-size:0.68rem; padding:0.1rem 0.35rem;">2차 재통지</span> 2차 시정명령 및 재시정기간
+                      </div>
+                      <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                        <div><strong>2차 시정명령일자:</strong> ${d.correction_order_date_2 || '-'}</div>
+                        <div><strong>2차 시정기간:</strong> <span style="color:#1D4ED8; font-weight:bold;">${d.correction_period_2 || '-'}</span></div>
+                        <div><strong>통지방법 / 반송내역:</strong> ${d.correction_notice_method_2 || '-'} / ${d.correction_return_details_2 ? (d.correction_return_details_2.includes('반송') ? `<span style="color:#DC2626; font-weight:bold;">🔴 ${d.correction_return_details_2}</span>` : `<span style="color:#059669; font-weight:bold;">🟢 ${d.correction_return_details_2}</span>`) : '-'}</div>
+                        ${d.correction_reason_2 ? `<div><strong>2차 사유/내용:</strong> ${d.correction_reason_2}</div>` : ''}
+                        ${d.correction_public_2 ? `<div><strong>2차 고시/공고:</strong> ${d.correction_public_2}</div>` : ''}
+                      </div>
+                    </div>
+                  ` : ''}
                 </div>
               </div>
 
@@ -3150,6 +3174,14 @@ function openDispositionModal(id = null) {
         setVal("disp-correction-return-details", item.correction_return_details);
         setVal("disp-correction-public", item.correction_public);
 
+        // 3-2. 2차 시정명령 (재통지) 정보
+        setDateVal("disp-correction-date-2", item.correction_order_date_2);
+        setVal("disp-correction-period-2", item.correction_period_2);
+        setVal("disp-correction-notice-method-2", item.correction_notice_method_2);
+        setVal("disp-correction-return-details-2", item.correction_return_details_2);
+        setVal("disp-correction-public-2", item.correction_public_2);
+        setVal("disp-correction-reason-2", item.correction_reason_2);
+
         // 4. 개인정보 & 비고
         setVal("disp-reg-num", getCleanVal(item.reg_num_decrypted, item.reg_num_encrypted));
         resolveAsyncInput("disp-reg-num", item.reg_num_encrypted);
@@ -3162,6 +3194,12 @@ function openDispositionModal(id = null) {
       const titleEl = document.getElementById("modal-disposition-title");
       if (titleEl) titleEl.innerText = "신규등록";
       setVal("disp-id", "");
+      setDateVal("disp-correction-date-2", null);
+      setVal("disp-correction-period-2", "");
+      setVal("disp-correction-notice-method-2", "");
+      setVal("disp-correction-return-details-2", "");
+      setVal("disp-correction-public-2", "");
+      setVal("disp-correction-reason-2", "");
     }
 
     // 현상태 제어: '시설'인 경우에만 편집 허용, '소유자/관리자' 등 하위 정보는 자동 연동 및 비활성화
@@ -3261,6 +3299,16 @@ async function saveDisposition() {
     correction_notice_method: document.getElementById("disp-correction-notice-method").value.trim(),
     correction_return_details: document.getElementById("disp-correction-return-details").value.trim(),
     correction_public: document.getElementById("disp-correction-public").value.trim(),
+
+    // 2차 시정명령 (재통지) 필드
+    correction_order_2: (document.getElementById("disp-correction-period-2")?.value || "").trim() ? "2차시정명령" : "",
+    correction_order_date_2: getDateVal("disp-correction-date-2"),
+    correction_period_2: (document.getElementById("disp-correction-period-2")?.value || "").trim(),
+    correction_notice_method_2: (document.getElementById("disp-correction-notice-method-2")?.value || "").trim(),
+    correction_return_details_2: (document.getElementById("disp-correction-return-details-2")?.value || "").trim(),
+    correction_public_2: (document.getElementById("disp-correction-public-2")?.value || "").trim(),
+    correction_reason_2: (document.getElementById("disp-correction-reason-2")?.value || "").trim(),
+
     note: document.getElementById("disp-note").value.trim(),
     target_name_decrypted: targetName,
     mail_address_decrypted: mailAddr,
@@ -3304,6 +3352,13 @@ async function saveDisposition() {
       correction_notice_method: payload.correction_notice_method,
       correction_return_details: payload.correction_return_details,
       correction_public: payload.correction_public,
+      correction_order_2: payload.correction_order_2,
+      correction_order_date_2: payload.correction_order_date_2,
+      correction_period_2: payload.correction_period_2,
+      correction_notice_method_2: payload.correction_notice_method_2,
+      correction_return_details_2: payload.correction_return_details_2,
+      correction_public_2: payload.correction_public_2,
+      correction_reason_2: payload.correction_reason_2,
       note: payload.note
     };
 
@@ -3316,21 +3371,37 @@ async function saveDisposition() {
 
     if (id) {
       // 기존 처분 수정: Supabase DB에 직접 PATCH!
-      const rPatch = await fetch(`${SUPABASE_REST_URL}/dispositions?id=eq.${id}`, {
+      let rPatch = await fetch(`${SUPABASE_REST_URL}/dispositions?id=eq.${id}`, {
         method: "PATCH",
         headers: preferHeaders,
         body: JSON.stringify(directPayload)
       });
+      if (!rPatch.ok) {
+        const safePayload = Object.fromEntries(Object.entries(directPayload).filter(([k]) => !k.endsWith("_2")));
+        rPatch = await fetch(`${SUPABASE_REST_URL}/dispositions?id=eq.${id}`, {
+          method: "PATCH",
+          headers: preferHeaders,
+          body: JSON.stringify(safePayload)
+        });
+      }
       if (rPatch.ok) {
         actualId = parseInt(id);
       }
     } else {
       // 신규 처분 생성: Supabase DB에 직접 POST!
-      const rPost = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
+      let rPost = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
         method: "POST",
         headers: preferHeaders,
         body: JSON.stringify([directPayload])
       });
+      if (!rPost.ok) {
+        const safePayload = Object.fromEntries(Object.entries(directPayload).filter(([k]) => !k.endsWith("_2")));
+        rPost = await fetch(`${SUPABASE_REST_URL}/dispositions`, {
+          method: "POST",
+          headers: preferHeaders,
+          body: JSON.stringify([safePayload])
+        });
+      }
       if (rPost.ok) {
         const rows = await rPost.json().catch(() => []);
         if (rows && rows.length > 0) {

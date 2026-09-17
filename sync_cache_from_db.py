@@ -108,6 +108,11 @@ def sync():
                     if not item.get(dec_field) and old_item.get(dec_field):
                         item[dec_field] = old_item[dec_field]
 
+                # 2차 시정명령 필드 보존 (DB 컬럼 미반영 상태에서도 로컬 캐시의 2차 값 보존)
+                for sec_field in ['correction_order_2', 'correction_order_date_2', 'correction_reason_2', 'correction_period_2', 'correction_notice_method_2', 'correction_return_details_2', 'correction_public_2']:
+                    if not item.get(sec_field) and old_item.get(sec_field):
+                        item[sec_field] = old_item[sec_field]
+
                 processed_dispositions.append(item)
 
             processed_dispositions = [d for d in processed_dispositions if str(d.get('id')) not in DELETED_DISPOSITION_IDS and d.get('facility_key') not in DELETED_FACILITY_KEYS]
