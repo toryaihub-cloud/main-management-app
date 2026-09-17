@@ -2357,7 +2357,7 @@ function openDispositionDetailModal(key) {
                   <!-- 1차 시정명령 정보 -->
                   <div style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed #E2E8F0;">
                     <div style="font-size:0.8rem; font-weight:700; color:#475569; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.3rem;">
-                      <span class="badge" style="background:#E2E8F0; color:#334155; font-size:0.68rem; padding:0.1rem 0.35rem;">1차</span> 1차 시정명령 및 반송 이력
+                      <span class="badge" style="background:#E2E8F0; color:#334155; font-size:0.68rem; padding:0.1rem 0.35rem;">1차</span> 시정명령 및 반송 이력
                     </div>
                     <div style="display:flex; flex-direction:column; gap:0.25rem;">
                       <div><strong>시정명령일자:</strong> ${d.correction_order_date || '-'}</div>
@@ -2373,7 +2373,7 @@ function openDispositionDetailModal(key) {
                   ${(d.correction_period_2 || d.correction_order_date_2 || d.correction_return_details_2 || d.correction_reason_2) ? `
                     <div style="margin-top:0.5rem; padding:0.6rem; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:0.4rem; font-size:0.83rem;">
                       <div style="font-size:0.8rem; font-weight:700; color:#1D4ED8; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.3rem;">
-                        <span class="badge" style="background:#2563EB; color:#FFFFFF; font-size:0.68rem; padding:0.1rem 0.35rem;">2차 재통지</span> 2차 시정명령 및 재시정기간
+                        <span class="badge" style="background:#2563EB; color:#FFFFFF; font-size:0.68rem; padding:0.1rem 0.35rem;">2차 재통지</span> 시정명령 및 재시정기간
                       </div>
                       <div style="display:flex; flex-direction:column; gap:0.25rem;">
                         <div><strong>2차 시정명령일자:</strong> ${d.correction_order_date_2 || '-'}</div>
