@@ -2023,6 +2023,7 @@ function renderDispositionsCards(data) {
     const opinionStatus = formatStatusBadge(rawOpinionStatus, 'opinion');
     const opinionDate = findValue(d => d.opinion_submit_date);
 
+    const repCorrectionTarget = fac.correction_order_target || facilityRecord.correction_order || findValue(d => d.correction_order) || '-';
     const correctionDate = findValue(d => d.correction_order_date);
     const correctionPeriod = findValue(d => d.correction_period);
 
@@ -2054,6 +2055,13 @@ function renderDispositionsCards(data) {
             <span style="color:var(--text-muted); font-weight:600;">의견제출 일자 / 여부:</span>
             <div style="text-align:right; font-weight:600;">
               <span>${opinionDate}</span> <span style="margin-left:0.25rem;">(${opinionStatus})</span>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px dashed rgba(0,0,0,0.08); padding-bottom: 0.35rem;">
+            <span style="color:var(--text-muted); font-weight:600;">시정명령대상:</span>
+            <div style="text-align:right; font-weight:700; color:#D97706; max-width:65%; word-break:break-all;">
+              ${repCorrectionTarget}
             </div>
           </div>
 
@@ -2154,6 +2162,8 @@ function openDispositionDetailModal(key) {
     const canvasPId = `modal-disp-donut-p-${key}`;
     const canvasCId = `modal-disp-donut-c-${key}`;
 
+    const repCorrectionTarget = fac.correction_order_target || fItem.correction_order || '-';
+
     // 1. Facility Info Summary Card (Only Jibun Address, Dual Donut Charts, Left Status & Fast Charger Non-compliance)
     const facCardHtml = `
       <div class="disp-sub-card" style="background: #FFFFFF; border: 1px solid #CBD5E1; margin-bottom: 1.25rem; padding: 1.25rem; border-radius:0.75rem; box-shadow:0 4px 12px rgba(15,23,42,0.05);">
@@ -2169,6 +2179,15 @@ function openDispositionDetailModal(key) {
             <div style="display:flex; justify-content:space-between;">
               <span style="color:var(--text-muted); font-weight:600;">시설명:</span>
               <strong style="color:#0F172A;">${fac.facility_name || facName}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="color:var(--text-muted); font-weight:600;">시정명령대상:</span>
+              <div style="display:flex; align-items:center; gap:0.35rem; max-width:65%;">
+                <strong style="color:#D97706; text-align:right; word-break:break-all;">${repCorrectionTarget}</strong>
+                <button type="button" class="btn btn-secondary" style="padding:0.1rem 0.35rem; font-size:0.68rem; line-height:1;" onclick="editRepCorrectionTarget('${key}')" title="대표 시정명령대상 수정">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
             </div>
             <div style="display:flex; justify-content:space-between;">
               <span style="color:var(--text-muted); font-weight:600;">지번주소:</span>
@@ -3256,6 +3275,59 @@ function editDisposition(id) {
   openDispositionModal(id);
 }
 
+async function editRepCorrectionTarget(key) {
+  const fac = facilitiesData.find(f => f.facility_key === key);
+  const currentVal = (fac && fac.correction_order_target) || "";
+  const facName = fac ? fac.facility_name : key;
+  const newVal = prompt(`[${facName}] 대표 시정명령대상을 입력하세요:\n(소유자가 여러 명인 경우 대표로 표시되는 대상입니다)`, currentVal);
+  if (newVal === null) return;
+  const trimmed = newVal.trim();
+
+  // 1. facilitiesData 업데이트
+  if (fac) {
+    fac.correction_order_target = trimmed;
+  }
+
+  // 2. dispositionsData '시설' 레코드의 correction_order 동기화
+  const facDisp = dispositionsData.find(d => d.facility_key === key && d.target_type === '시설');
+  if (facDisp) {
+    facDisp.correction_order = trimmed;
+  }
+
+  // 3. Supabase DB & 백엔드 저장
+  try {
+    fetch(`${API_BASE_URL}/facilities/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ facility_key: key, correction_order_target: trimmed })
+    }).catch(() => {});
+
+    if (facDisp && facDisp.id) {
+      fetch(`${SUPABASE_REST_URL}/dispositions?id=eq.${facDisp.id}`, {
+        method: "PATCH",
+        headers: {
+          "apikey": SUPABASE_SECRET_KEY,
+          "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ correction_order: trimmed })
+      }).catch(() => {});
+    }
+  } catch(e) {
+    console.warn("Save correction order target failed:", e);
+  }
+
+  // 4. 로컬 스토리지 캐시 저장
+  try {
+    localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
+    localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
+  } catch(e) {}
+
+  alert("대표 시정명령대상이 성공적으로 저장되었습니다.");
+  openDispositionDetailModal(key);
+  filterDispositions();
+}
+
 async function saveDisposition() {
   try {
     const id = document.getElementById("disp-id").value;
@@ -3411,16 +3483,32 @@ async function saveDisposition() {
     }
 
     // [현상태 일괄 연동] '시설'의 현상태가 변경된 경우, 동일 시설의 모든 하위 처분 레코드(소유자, 관리자 등)의 현상태도 Supabase DB에 일괄 동기화!
-    if (payload.target_type === '시설' && payload.current_status) {
-      try {
-        await fetch(`${SUPABASE_REST_URL}/dispositions?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
-          method: "PATCH",
-          headers: preferHeaders,
-          body: JSON.stringify({ current_status: payload.current_status })
-        });
-      } catch (errSync) {
-        console.warn("Cascade status update to sub-dispositions failed:", errSync);
+    if (payload.target_type === '시설') {
+      if (payload.current_status) {
+        try {
+          await fetch(`${SUPABASE_REST_URL}/dispositions?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+            method: "PATCH",
+            headers: preferHeaders,
+            body: JSON.stringify({ current_status: payload.current_status })
+          });
+        } catch (errSync) {
+          console.warn("Cascade status update to sub-dispositions failed:", errSync);
+        }
       }
+
+      // [대표 시정명령대상 연동] '시설'의 시정명령대상(correction_order)이 수정된 경우 facilitiesData의 대표 시정명령대상에도 동기화!
+      const facObj = facilitiesData.find(f => f.facility_key === facilityKey);
+      if (facObj) {
+        facObj.correction_order_target = payload.correction_order || "";
+      }
+      try {
+        fetch(`${API_BASE_URL}/facilities/save`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ facility_key: facilityKey, correction_order_target: payload.correction_order || "" })
+        }).catch(() => {});
+        localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData));
+      } catch(e) {}
     }
   } catch (eDir) {
     console.error("Direct Supabase disposition save error:", eDir);

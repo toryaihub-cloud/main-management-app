@@ -819,7 +819,8 @@ FACILITY_EXTRA_FIELDS = [
     "total_households", "ev_registered_cnt", "charger_reported",
     "insurance_enrolled", "parallel_parking_status", "parallel_parking_cnt",
     "fire_manual_distributed", "covenant", "general_mixed",
-    "final_conclusion", "job_parking_cnt", "order_addr", "surveys"
+    "final_conclusion", "job_parking_cnt", "order_addr", "surveys",
+    "correction_order_target"
 ]
 
 def merge_facility_extra_fields(db_item, cached_item):
@@ -1705,7 +1706,8 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "parking_ground_cnt", "parking_underground_cnt",
                 "charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt",
                 "total_households", "ev_registered_cnt", "charger_reported",
-                "insurance_enrolled", "fire_manual_distributed"
+                "insurance_enrolled", "fire_manual_distributed",
+                "correction_order_target"
             }
             db_payload = {}
             for k, v in req_json.items():
@@ -1758,7 +1760,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 res = requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{fac_key}", headers=prefer_headers, json=db_payload, timeout=5)
                 print(f"Supabase facilities PATCH status={res.status_code} key={fac_key}")
                 # 만약 새 컬럼 때문에 400 에러가 난다면, 새 컬럼을 제외하고 재시도
-                OPTIONAL_COLS = ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt", "total_households", "ev_registered_cnt", "charger_reported", "insurance_enrolled", "fire_manual_distributed"]
+                OPTIONAL_COLS = ["charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt", "total_households", "ev_registered_cnt", "charger_reported", "insurance_enrolled", "fire_manual_distributed", "correction_order_target"]
                 if res.status_code == 400 and any(k in db_payload for k in OPTIONAL_COLS):
                     safe_payload = {k: v for k, v in db_payload.items() if k not in OPTIONAL_COLS}
                     res = requests.patch(f"{SUPABASE_URL}/rest/v1/facilities?facility_key=eq.{fac_key}", headers=prefer_headers, json=safe_payload, timeout=5)
