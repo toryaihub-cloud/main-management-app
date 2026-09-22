@@ -270,6 +270,11 @@
             <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:0.8rem; color:var(--text-muted); font-size:0.9rem;"></i>
             <input type="text" id="disposition-search" class="input-box" placeholder="검색..." oninput="filterDispositions()" style="padding-left:2.3rem;">
           </div>
+
+          <!-- 시설구분 전체 필터 (통합시설관리와 동일 조건) -->
+          <select id="disposition-filter-category" class="select-box" onchange="filterDispositions()">
+            <option value="">시설구분 전체</option>
+          </select>
           
           <select id="disposition-filter-status" class="select-box" onchange="filterDispositions()">
             <option value="">현상태 전체</option>

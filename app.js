@@ -711,6 +711,7 @@ async function fetchUsers() {
 // 5. Populate Filter Options
 function populateFilterOptions() {
   const categorySelect = document.getElementById("facility-filter-category");
+  const dispCategorySelect = document.getElementById("disposition-filter-category");
   const dongSelect = document.getElementById("facility-filter-dong");
 
   const categories = new Set();
@@ -726,6 +727,15 @@ function populateFilterOptions() {
     Array.from(categories).sort().forEach(c => {
       categorySelect.innerHTML += `<option value="${c}">${c}</option>`;
     });
+  }
+
+  if (dispCategorySelect) {
+    const currentDispCat = dispCategorySelect.value;
+    dispCategorySelect.innerHTML = '<option value="">시설구분 전체</option>';
+    Array.from(categories).sort().forEach(c => {
+      dispCategorySelect.innerHTML += `<option value="${c}">${c}</option>`;
+    });
+    if (currentDispCat) dispCategorySelect.value = currentDispCat;
   }
 
   if (dongSelect) {
@@ -976,22 +986,25 @@ function filterFacilities() {
 function filterDispositions() {
   const queryElem = document.getElementById("disposition-search");
   const query = queryElem ? queryElem.value.toLowerCase().trim() : "";
+  const categoryFilter = document.getElementById("disposition-filter-category") ? document.getElementById("disposition-filter-category").value : "";
   const statusFilter = document.getElementById("disposition-filter-status") ? document.getElementById("disposition-filter-status").value : "";
   const targetFilter = document.getElementById("disposition-filter-target") ? document.getElementById("disposition-filter-target").value : "";
 
   const filtered = dispositionsData.filter(d => {
     const fac = facilitiesData.find(f => f.facility_key === d.facility_key) || {};
     const facName = (fac.facility_name || "").toLowerCase();
+    const facCategory = fac.facility_category || "";
     const key = (d.facility_key || "").toLowerCase();
     const status = (d.current_status || "").toLowerCase();
     const targetName = (d.target_name_decrypted || "").toLowerCase();
 
     const matchQuery = !query || key.includes(query) || status.includes(query) || targetName.includes(query) || facName.includes(query);
+    const matchCategory = !categoryFilter || (facCategory === categoryFilter);
     const matchStatus = !statusFilter || 
       (statusFilter === "UNASSIGNED_STATUS" ? (!d.current_status || d.current_status.trim() === "" || d.current_status === "현상태 미지정" || d.current_status === "상태미지정") : (d.current_status === statusFilter));
     const matchTarget = !targetFilter || d.target_type === targetFilter;
 
-    return matchQuery && matchStatus && matchTarget;
+    return matchQuery && matchCategory && matchStatus && matchTarget;
   });
 
   const countBadge = document.getElementById("disp-result-count");
@@ -2047,16 +2060,28 @@ function renderDispositionsCards(data) {
 
     const periodColor = hasSecond ? '#1D4ED8' : '#0284C7';
 
+    const facCategory = fac.facility_category || '구분 미지정';
+
     card.innerHTML = `
       <div>
         <div class="disp-card-header">
           <span class="facility-card-key">${key}</span>
           <span class="badge ${statusClass}">${currentStatus}</span>
         </div>
-        <div class="disp-card-title" style="font-size:1.15rem; font-weight:700; margin-bottom:0.4rem;">${facName}</div>
+        <div class="disp-card-title" style="font-size:1.15rem; font-weight:700; margin-bottom:0.25rem;">${facName}</div>
+        <div class="facility-card-category" style="font-size:0.8rem; color:#0284C7; font-weight:600; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.35rem;">
+          <i class="fa-solid fa-shapes"></i> <span>${facCategory}</span>
+        </div>
         <div class="disp-card-address" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.1rem;"><i class="fa-solid fa-location-dot"></i> ${addressStr}</div>
 
         <div class="disp-summary-box" style="background: rgba(255,255,255,0.85); border:1px solid rgba(0,0,0,0.08); font-size: 0.88rem; display: flex; flex-direction: column; gap: 0.5rem; padding: 0.95rem; border-radius: 0.6rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px dashed rgba(0,0,0,0.08); padding-bottom: 0.35rem;">
+            <span style="color:var(--text-muted); font-weight:600;">시설구분:</span>
+            <div style="text-align:right; font-weight:600; color:#0F172A;">
+              ${facCategory}
+            </div>
+          </div>
+
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px dashed rgba(0,0,0,0.08); padding-bottom: 0.35rem;">
             <span style="color:var(--text-muted); font-weight:600;">사전통지 발송 / 반송:</span>
             <div style="text-align:right; font-weight:600;">
