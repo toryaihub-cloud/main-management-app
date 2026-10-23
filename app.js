@@ -198,6 +198,26 @@ function sanitizeDate(dateStr) {
   return null;
 }
 
+// 건축허가일 / 사용승인일 안전 분리 파싱 함수 (예: '2023-06-13/2026-07-06' 또는 '2020-12-31 / -')
+function parseBuildingDates(rawStr) {
+  if (!rawStr || typeof rawStr !== 'string') return { permission_date: null, approval_date: null };
+  const str = rawStr.trim();
+  if (!str || str === '-' || str.toLowerCase() === 'none' || str === 'null') {
+    return { permission_date: null, approval_date: null };
+  }
+  if (str.includes('/')) {
+    const parts = str.split('/');
+    return {
+      permission_date: sanitizeDate(parts[0]),
+      approval_date: sanitizeDate(parts[1])
+    };
+  }
+  return {
+    permission_date: sanitizeDate(str),
+    approval_date: null
+  };
+}
+
 // Smart synchronous resolver with fallback
 function resolveDecrypted(decVal, encVal) {
   if (decVal && typeof decVal === 'string' && !decVal.startsWith('gAAAAA') && decVal !== '-' && decVal !== 'None') {
@@ -1162,9 +1182,11 @@ function openFacilityDetailModal(key) {
   safeSetText("detail-facility-name", facility.facility_name);
   safeSetText("detail-category", facility.facility_category);
   safeSetText("detail-address-doro", facility.address_doro);
-  safeSetText("detail-address-jibun", facility.address_jibun);
-  safeSetText("detail-dates", `${facility.permission_date || '-'} / ${facility.approval_date || '-'}`);
-  safeSetText("detail-new-old", facility.is_new_building);
+  const dispDates = (facility.permission_date || facility.approval_date)
+    ? `${facility.permission_date || '-'} / ${facility.approval_date || '-'}`
+    : (facility.building_approval_dates || '-');
+  safeSetText("detail-dates", dispDates);
+  safeSetText("detail-new-old", facility.is_new_building || facility.building_new_old_type);
   safeSetText("detail-ownership", facility.facility_ownership_type);
 
   const compElem = document.getElementById("detail-compliance");
@@ -2610,8 +2632,12 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-address-doro").value = item.address_doro || "";
       document.getElementById("fac-address-jibun").value = item.address_jibun || "";
       document.getElementById("fac-dong").value = item.dong_name || "";
-      document.getElementById("fac-dates").value = item.building_approval_dates || "";
-      document.getElementById("fac-new-old").value = item.building_new_old_type || "신축";
+      let initialDates = item.building_approval_dates || "";
+      if (!initialDates && (item.permission_date || item.approval_date)) {
+        initialDates = `${item.permission_date || "-"} / ${item.approval_date || "-"}`;
+      }
+      document.getElementById("fac-dates").value = initialDates;
+      document.getElementById("fac-new-old").value = item.is_new_building || item.building_new_old_type || "신축";
       document.getElementById("fac-register").value = item.building_register_num || 0;
       document.getElementById("fac-parking-req").value = item.parking_required_cnt || 0;
       document.getElementById("fac-parking-inst").value = item.parking_installed_cnt || 0;
@@ -2666,9 +2692,10 @@ async function saveFacility() {
   const encMgrName = await encryptFernet(mgrName);
   const encMgrContact = await encryptFernet(mgrContact);
 
-  // 날짜 필드 정제 (빈 문자열이면 null로 처리하여 Postgres DATE 400 Bad Request 방지)
+  // 날짜 필드 정제 (건축허가일 / 사용승인일 분리 파싱)
   const rawDate = document.getElementById("fac-dates").value.trim();
-  const sanitizedApprovalDate = sanitizeDate(rawDate);
+  const parsedDates = parseBuildingDates(rawDate);
+  const newOldVal = document.getElementById("fac-new-old").value;
 
   const payload = {
     facility_key: key,
@@ -2680,8 +2707,10 @@ async function saveFacility() {
     address_jibun: document.getElementById("fac-address-jibun").value.trim(),
     dong_name: document.getElementById("fac-dong").value.trim(),
     building_approval_dates: rawDate,
-    approval_date: sanitizedApprovalDate,
-    building_new_old_type: document.getElementById("fac-new-old").value,
+    permission_date: parsedDates.permission_date,
+    approval_date: parsedDates.approval_date,
+    is_new_building: newOldVal,
+    building_new_old_type: newOldVal,
     building_register_num: document.getElementById("fac-register").value.trim(),
     parking_required_cnt: parseInt(document.getElementById("fac-parking-req").value) || 0,
     parking_installed_cnt: parseInt(document.getElementById("fac-parking-inst").value) || 0,
@@ -2718,8 +2747,9 @@ async function saveFacility() {
       address_doro: payload.address_doro,
       address_jibun: payload.address_jibun,
       dong_name: payload.dong_name,
-      approval_date: sanitizedApprovalDate,
-      is_new_building: payload.building_new_old_type,
+      permission_date: parsedDates.permission_date,
+      approval_date: parsedDates.approval_date,
+      is_new_building: newOldVal,
       building_register_num: payload.building_register_num,
       parking_required_cnt: payload.parking_required_cnt,
       parking_installed_cnt: payload.parking_installed_cnt,

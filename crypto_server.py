@@ -1715,19 +1715,39 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     db_payload[k] = v
             
             # Form aliases to actual DB columns
-            raw_app_date = req_json.get("approval_date") or req_json.get("building_approval_dates")
-            if raw_app_date and str(raw_app_date).strip() and str(raw_app_date).strip() not in ["-", "None", "null", "미상"]:
-                import re
-                clean_d = re.sub(r"[./]", "-", str(raw_app_date).strip())
+            import re
+            def parse_clean_date(d_str):
+                if not d_str or str(d_str).strip() in ["-", "None", "null", "미상", ""]:
+                    return None
+                clean_d = re.sub(r"[./]", "-", str(d_str).strip())
                 m = re.match(r"^(\d{4})-(\d{1,2})-(\d{1,2})", clean_d)
                 if m:
-                    db_payload["approval_date"] = f"{m.group(1)}-{m.group(2).zfill(2)}-{m.group(3).zfill(2)}"
-                else:
-                    db_payload["approval_date"] = None
-            else:
-                db_payload["approval_date"] = None
+                    return f"{m.group(1)}-{m.group(2).zfill(2)}-{m.group(3).zfill(2)}"
+                return None
 
-            if req_json.get("building_new_old_type"):
+            # 1. permission_date 및 approval_date 명시값 우선
+            if "permission_date" in req_json:
+                db_payload["permission_date"] = parse_clean_date(req_json.get("permission_date"))
+            if "approval_date" in req_json:
+                db_payload["approval_date"] = parse_clean_date(req_json.get("approval_date"))
+
+            # 2. building_approval_dates 슬래시 분리 파싱 지원
+            raw_b_dates = req_json.get("building_approval_dates")
+            if raw_b_dates and str(raw_b_dates).strip():
+                raw_str = str(raw_b_dates).strip()
+                if "/" in raw_str:
+                    p_part, a_part = raw_str.split("/", 1)
+                    if not db_payload.get("permission_date"):
+                        db_payload["permission_date"] = parse_clean_date(p_part)
+                    if not db_payload.get("approval_date"):
+                        db_payload["approval_date"] = parse_clean_date(a_part)
+                elif not db_payload.get("permission_date") and not db_payload.get("approval_date"):
+                    db_payload["permission_date"] = parse_clean_date(raw_str)
+
+            # 3. is_new_building / building_new_old_type 동기화
+            if req_json.get("is_new_building"):
+                db_payload["is_new_building"] = req_json["is_new_building"]
+            elif req_json.get("building_new_old_type"):
                 db_payload["is_new_building"] = req_json["building_new_old_type"]
 
             # Reverse-calculate uninstalled_cnt based on user-provided installed_cnt
