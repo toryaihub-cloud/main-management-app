@@ -1344,6 +1344,19 @@ function updateModalDetailCounts(facility) {
     fastUnElem.style.color = uninstalledFast > 0 ? 'var(--danger)' : 'var(--text-main)';
   }
 
+  const chargerGroundUnderElem = document.getElementById("detail-charger-ground-underground");
+  if (chargerGroundUnderElem) {
+    const cGround = facility.charger_ground_cnt !== undefined && facility.charger_ground_cnt !== null ? facility.charger_ground_cnt : 0;
+    const cUnderground = facility.charger_underground_cnt !== undefined && facility.charger_underground_cnt !== null ? facility.charger_underground_cnt : 0;
+    chargerGroundUnderElem.innerText = `${cGround}기 / ${cUnderground}기`;
+  }
+
+  const chargerLocElem = document.getElementById("detail-charger-location");
+  if (chargerLocElem) {
+    const loc = facility.charger_location || (facility.extra_info && facility.extra_info.charger_location) || '-';
+    chargerLocElem.innerText = loc;
+  }
+
   renderModalDetailDonutChart(facility);
 }
 
@@ -2650,6 +2663,9 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-fast-req").value = item.charger_fast_req_cnt || 0;
       document.getElementById("fac-slow-cnt").value = item.charger_slow_cnt || 0;
       document.getElementById("fac-fast-cnt").value = item.charger_fast_cnt || 0;
+      document.getElementById("fac-charger-ground").value = item.charger_ground_cnt || 0;
+      document.getElementById("fac-charger-underground").value = item.charger_underground_cnt || 0;
+      document.getElementById("fac-charger-location").value = item.charger_location || (item.extra_info && item.extra_info.charger_location) || "";
       document.getElementById("fac-management-body").value = item.management_body || "";
       if (item.manager_name_decrypted) document.getElementById("fac-manager-name").value = item.manager_name_decrypted;
       if (item.manager_contact_decrypted) document.getElementById("fac-manager-contact").value = item.manager_contact_decrypted;
@@ -2674,6 +2690,9 @@ function openFacilityModal(key = null) {
     document.getElementById("fac-charger-reported").value = "";
     document.getElementById("fac-insurance-enrolled").value = "";
     document.getElementById("fac-fire-manual-distributed").value = "";
+    document.getElementById("fac-charger-ground").value = 0;
+    document.getElementById("fac-charger-underground").value = 0;
+    document.getElementById("fac-charger-location").value = "";
   }
   document.getElementById("modal-facility").classList.add("active");
 }
@@ -2723,6 +2742,9 @@ async function saveFacility() {
     charger_fast_req_cnt: parseInt(document.getElementById("fac-fast-req").value) || 0,
     charger_slow_cnt: parseInt(document.getElementById("fac-slow-cnt").value) || 0,
     charger_fast_cnt: parseInt(document.getElementById("fac-fast-cnt").value) || 0,
+    charger_ground_cnt: parseInt(document.getElementById("fac-charger-ground").value) || 0,
+    charger_underground_cnt: parseInt(document.getElementById("fac-charger-underground").value) || 0,
+    charger_location: (document.getElementById("fac-charger-location").value || "").trim(),
     management_body: document.getElementById("fac-management-body").value.trim(),
     manager_name_encrypted: encMgrName,
     manager_contact_encrypted: encMgrContact,
@@ -2762,6 +2784,11 @@ async function saveFacility() {
       charger_fast_req_cnt: payload.charger_fast_req_cnt,
       charger_slow_cnt: payload.charger_slow_cnt,
       charger_fast_cnt: payload.charger_fast_cnt,
+      extra_info: {
+        charger_ground_cnt: payload.charger_ground_cnt,
+        charger_underground_cnt: payload.charger_underground_cnt,
+        charger_location: payload.charger_location
+      },
       management_body: payload.management_body,
       manager_name_encrypted: encMgrName,
       manager_contact_encrypted: encMgrContact,

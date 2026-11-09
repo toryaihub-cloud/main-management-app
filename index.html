@@ -772,9 +772,10 @@
                     <tr>
                       <th><i class="fa-solid fa-bolt" style="color:#EAB308;"></i> 충전</th>
                       <td style="text-align:center;"><span id="detail-charger-slash-info">0기 / 0기</span></td>
-                      <td style="text-align:center; line-height:1.35;">
-                        완속/급속: <span id="detail-slow-fast-installed" style="color:var(--primary); font-weight:600;">0기 / 0기</span><br>
-                        <span style="color:#64748B;">급속미이행: <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:600;">0기</span></span>
+                      <td style="text-align:left; padding:0.4rem 0.6rem; line-height:1.45; font-size:0.8rem;">
+                        <div>완속/급속: <span id="detail-slow-fast-installed" style="color:var(--primary); font-weight:600;">0기 / 0기</span> <span style="color:#64748B; font-size:0.75rem;">(급속미이행: <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:600;">0기</span>)</span></div>
+                        <div>지상/지하: <span id="detail-charger-ground-underground" style="font-weight:600; color:#0F172A;">0기 / 0기</span></div>
+                        <div style="color:#475569; word-break:break-all;">설치장소: <span id="detail-charger-location" style="font-weight:500; color:#334155;">-</span></div>
                       </td>
                       <td style="text-align:center; color:var(--danger); font-weight:600;"><span id="detail-charger-uninstalled">0</span>기</td>
                     </tr>
@@ -1043,6 +1044,18 @@
               <div class="form-group">
                 <label class="form-label">설치 급속 충전기수</label>
                 <input type="number" id="fac-fast-cnt" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">충전 지상 설치기수</label>
+                <input type="number" id="fac-charger-ground" class="input-box" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">충전 지하 설치기수</label>
+                <input type="number" id="fac-charger-underground" class="input-box" value="0">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">충전기 설치장소</label>
+                <input type="text" id="fac-charger-location" class="input-box" placeholder="예: 지상1층 주차장, 지하1층 B08">
               </div>
             </div>
           </div>

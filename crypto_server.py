@@ -816,6 +816,7 @@ def process_facility_item(item):
 FACILITY_EXTRA_FIELDS = [
     "parking_installed_cnt", "charger_installed_cnt",
     "charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt",
+    "charger_ground_cnt", "charger_underground_cnt", "charger_location",
     "total_households", "ev_registered_cnt", "charger_reported",
     "insurance_enrolled", "parallel_parking_status", "parallel_parking_cnt",
     "fire_manual_distributed", "covenant", "general_mixed",
