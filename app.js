@@ -414,7 +414,7 @@ function handleLogout() {
 }
 
 // 2. Data Loading & Settings
-const APP_DATA_VERSION = "20261109_v3";
+const APP_DATA_VERSION = "20261109_v4";
 async function loadData() {
   try {
     const curVer = localStorage.getItem("app_cache_version");
@@ -621,8 +621,12 @@ async function fetchFacilities() {
         list = await Promise.all(dbRows.map(async f => {
           let decMgrName = await decryptFernet(f.manager_name_encrypted);
           let decMgrContact = await decryptFernet(f.manager_contact_encrypted);
+          const extra = f.extra_info || {};
           return {
             ...f,
+            charger_ground_cnt: (f.charger_ground_cnt !== undefined && f.charger_ground_cnt !== null) ? f.charger_ground_cnt : (extra.charger_ground_cnt !== undefined ? extra.charger_ground_cnt : 0),
+            charger_underground_cnt: (f.charger_underground_cnt !== undefined && f.charger_underground_cnt !== null) ? f.charger_underground_cnt : (extra.charger_underground_cnt !== undefined ? extra.charger_underground_cnt : 0),
+            charger_location: f.charger_location || extra.charger_location || "",
             building_approval_dates: (f.permission_date || f.approval_date)
               ? `${f.permission_date || '-'} / ${f.approval_date || '-'}`
               : (f.building_approval_dates || ""),
@@ -1359,8 +1363,13 @@ function updateModalDetailCounts(facility) {
 
   const chargerGroundUnderElem = document.getElementById("detail-charger-ground-underground");
   if (chargerGroundUnderElem) {
-    const cGround = facility.charger_ground_cnt !== undefined && facility.charger_ground_cnt !== null ? facility.charger_ground_cnt : 0;
-    const cUnderground = facility.charger_underground_cnt !== undefined && facility.charger_underground_cnt !== null ? facility.charger_underground_cnt : 0;
+    const extra = facility.extra_info || {};
+    const cGround = (facility.charger_ground_cnt !== undefined && facility.charger_ground_cnt !== null && facility.charger_ground_cnt !== '')
+      ? facility.charger_ground_cnt
+      : ((extra.charger_ground_cnt !== undefined && extra.charger_ground_cnt !== null && extra.charger_ground_cnt !== '') ? extra.charger_ground_cnt : 0);
+    const cUnderground = (facility.charger_underground_cnt !== undefined && facility.charger_underground_cnt !== null && facility.charger_underground_cnt !== '')
+      ? facility.charger_underground_cnt
+      : ((extra.charger_underground_cnt !== undefined && extra.charger_underground_cnt !== null && extra.charger_underground_cnt !== '') ? extra.charger_underground_cnt : 0);
     chargerGroundUnderElem.innerText = `${cGround}기 / ${cUnderground}기`;
   }
 
@@ -2678,9 +2687,10 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-fast-req").value = item.charger_fast_req_cnt || 0;
       document.getElementById("fac-slow-cnt").value = item.charger_slow_cnt || 0;
       document.getElementById("fac-fast-cnt").value = item.charger_fast_cnt || 0;
-      document.getElementById("fac-charger-ground").value = item.charger_ground_cnt || 0;
-      document.getElementById("fac-charger-underground").value = item.charger_underground_cnt || 0;
-      document.getElementById("fac-charger-location").value = item.charger_location || (item.extra_info && item.extra_info.charger_location) || "";
+      const editExtra = item.extra_info || {};
+      document.getElementById("fac-charger-ground").value = (item.charger_ground_cnt !== undefined && item.charger_ground_cnt !== null) ? item.charger_ground_cnt : (editExtra.charger_ground_cnt ?? 0);
+      document.getElementById("fac-charger-underground").value = (item.charger_underground_cnt !== undefined && item.charger_underground_cnt !== null) ? item.charger_underground_cnt : (editExtra.charger_underground_cnt ?? 0);
+      document.getElementById("fac-charger-location").value = item.charger_location || editExtra.charger_location || "";
       document.getElementById("fac-management-body").value = item.management_body || "";
       if (item.manager_name_decrypted) document.getElementById("fac-manager-name").value = item.manager_name_decrypted;
       if (item.manager_contact_decrypted) document.getElementById("fac-manager-contact").value = item.manager_contact_decrypted;
