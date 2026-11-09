@@ -414,7 +414,18 @@ function handleLogout() {
 }
 
 // 2. Data Loading & Settings
+const APP_DATA_VERSION = "20261109_v3";
 async function loadData() {
+  try {
+    const curVer = localStorage.getItem("app_cache_version");
+    if (curVer !== APP_DATA_VERSION) {
+      localStorage.removeItem("cached_facilities");
+      localStorage.removeItem("cached_operations");
+      localStorage.removeItem("cached_gwangsan_facilities");
+      localStorage.setItem("app_cache_version", APP_DATA_VERSION);
+    }
+  } catch(e) {}
+
   // 1. Instant Render from Local Cache if available for 0.0001s response
   const cachedFac = localStorage.getItem("cached_facilities");
   const cachedDisp = localStorage.getItem("cached_dispositions");
@@ -612,7 +623,9 @@ async function fetchFacilities() {
           let decMgrContact = await decryptFernet(f.manager_contact_encrypted);
           return {
             ...f,
-            building_approval_dates: f.approval_date || f.building_approval_dates || "",
+            building_approval_dates: (f.permission_date || f.approval_date)
+              ? `${f.permission_date || '-'} / ${f.approval_date || '-'}`
+              : (f.building_approval_dates || ""),
             building_new_old_type: f.is_new_building || f.building_new_old_type || "신축",
             manager_name_decrypted: decMgrName || (f.manager_name_encrypted && !f.manager_name_encrypted.startsWith("gAAAAA") ? f.manager_name_encrypted : (f.manager_name || "")),
             manager_contact_decrypted: decMgrContact || (f.manager_contact_encrypted && !f.manager_contact_encrypted.startsWith("gAAAAA") ? f.manager_contact_encrypted : (f.manager_contact || ""))
@@ -1186,7 +1199,7 @@ function openFacilityDetailModal(key) {
     ? `${facility.permission_date || '-'} / ${facility.approval_date || '-'}`
     : (facility.building_approval_dates || '-');
   safeSetText("detail-dates", dispDates);
-  safeSetText("detail-new-old", facility.is_new_building || facility.building_new_old_type);
+  safeSetText("detail-new-old", facility.is_new_building || facility.building_new_old_type || '-');
   safeSetText("detail-ownership", facility.facility_ownership_type);
 
   const compElem = document.getElementById("detail-compliance");
@@ -2645,9 +2658,11 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-address-doro").value = item.address_doro || "";
       document.getElementById("fac-address-jibun").value = item.address_jibun || "";
       document.getElementById("fac-dong").value = item.dong_name || "";
-      let initialDates = item.building_approval_dates || "";
-      if (!initialDates && (item.permission_date || item.approval_date)) {
+      let initialDates = "";
+      if (item.permission_date || item.approval_date) {
         initialDates = `${item.permission_date || "-"} / ${item.approval_date || "-"}`;
+      } else if (item.building_approval_dates) {
+        initialDates = item.building_approval_dates;
       }
       document.getElementById("fac-dates").value = initialDates;
       document.getElementById("fac-new-old").value = item.is_new_building || item.building_new_old_type || "신축";
@@ -2685,6 +2700,8 @@ function openFacilityModal(key = null) {
   } else {
     document.getElementById("modal-facility-title").innerText = "신규 시설 등록";
     document.getElementById("fac-key").readOnly = false;
+    document.getElementById("fac-dates").value = "";
+    document.getElementById("fac-new-old").value = "신축";
     document.getElementById("fac-total-households").value = "";
     document.getElementById("fac-ev-registered-cnt").value = "";
     document.getElementById("fac-charger-reported").value = "";
