@@ -414,7 +414,7 @@ function handleLogout() {
 }
 
 // 2. Data Loading & Settings
-const APP_DATA_VERSION = "20261109_v4";
+const APP_DATA_VERSION = "20261117_v5";
 async function loadData() {
   try {
     const curVer = localStorage.getItem("app_cache_version");
@@ -621,7 +621,10 @@ async function fetchFacilities() {
         list = await Promise.all(dbRows.map(async f => {
           let decMgrName = await decryptFernet(f.manager_name_encrypted);
           let decMgrContact = await decryptFernet(f.manager_contact_encrypted);
-          const extra = f.extra_info || {};
+          let extra = f.extra_info || {};
+          if (typeof extra === 'string') {
+            try { extra = JSON.parse(extra); } catch(e) { extra = {}; }
+          }
           return {
             ...f,
             charger_ground_cnt: (f.charger_ground_cnt !== undefined && f.charger_ground_cnt !== null) ? f.charger_ground_cnt : (extra.charger_ground_cnt !== undefined ? extra.charger_ground_cnt : 0),
@@ -1363,7 +1366,10 @@ function updateModalDetailCounts(facility) {
 
   const chargerGroundUnderElem = document.getElementById("detail-charger-ground-underground");
   if (chargerGroundUnderElem) {
-    const extra = facility.extra_info || {};
+    let extra = facility.extra_info || {};
+    if (typeof extra === 'string') {
+      try { extra = JSON.parse(extra); } catch(e) { extra = {}; }
+    }
     const cGround = (facility.charger_ground_cnt !== undefined && facility.charger_ground_cnt !== null && facility.charger_ground_cnt !== '')
       ? facility.charger_ground_cnt
       : ((extra.charger_ground_cnt !== undefined && extra.charger_ground_cnt !== null && extra.charger_ground_cnt !== '') ? extra.charger_ground_cnt : 0);
