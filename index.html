@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>친환경차 전용주차구역 및 충전시설 행정처분 통합 관리 시스템</title>
-  <link rel="stylesheet" href="styles.css?v=20260909_batch_tab_and_disp_target">
+  <link rel="stylesheet" href="styles.css?v=20261117_fix_table_layout">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- SheetJS (xlsx) CDN for Excel Upload/Parse -->
@@ -753,13 +753,19 @@
                   </div>
                 </div>
 
-                <table class="detail-info-table" style="margin-bottom:0.35rem;">
+                <table class="detail-info-table" style="margin-bottom:0.35rem; table-layout:fixed; width:100%;">
+                  <colgroup>
+                    <col style="width: 14%;">
+                    <col style="width: 25%;">
+                    <col style="width: 47%;">
+                    <col style="width: 14%;">
+                  </colgroup>
                   <thead>
                     <tr>
-                      <th style="width:16%;">구분</th>
-                      <th style="width:28%;">설치 / 의무</th>
-                      <th style="width:38%;">세부 설치 내역</th>
-                      <th style="width:18%;">미설치</th>
+                      <th>구분</th>
+                      <th>설치 / 의무</th>
+                      <th>세부 설치 내역</th>
+                      <th>미설치</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -772,10 +778,10 @@
                     <tr>
                       <th><i class="fa-solid fa-bolt" style="color:#EAB308;"></i> 충전</th>
                       <td style="text-align:center;"><span id="detail-charger-slash-info">0기 / 0기</span></td>
-                      <td style="text-align:left; padding:0.4rem 0.6rem; line-height:1.45; font-size:0.8rem;">
-                        <div>완속/급속: <span id="detail-slow-fast-installed" style="color:var(--primary); font-weight:600;">0기 / 0기</span> <span style="color:#64748B; font-size:0.75rem;">(급속미이행: <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:600;">0기</span>)</span></div>
+                      <td style="text-align:left; padding:0.3rem 0.5rem; line-height:1.4; font-size:0.78rem; word-break:break-all; overflow-wrap:anywhere; white-space:normal;">
+                        <div>완속/급속: <span id="detail-slow-fast-installed" style="color:var(--primary); font-weight:600;">0기 / 0기</span> <span style="color:#64748B; font-size:0.74rem;">(급속미이행: <span id="detail-fast-uninstalled" style="color:var(--danger); font-weight:600;">0기</span>)</span></div>
                         <div>지상/지하: <span id="detail-charger-ground-underground" style="font-weight:600; color:#0F172A;">0기 / 0기</span></div>
-                        <div style="color:#475569; word-break:break-all;">설치장소: <span id="detail-charger-location" style="font-weight:500; color:#334155;">-</span></div>
+                        <div style="color:#475569; word-break:break-all; overflow-wrap:anywhere; white-space:normal; font-size:0.74rem; margin-top:2px;">설치장소: <span id="detail-charger-location" style="font-weight:500; color:#334155; word-break:break-all; overflow-wrap:anywhere;">-</span></div>
                       </td>
                       <td style="text-align:center; color:var(--danger); font-weight:600;"><span id="detail-charger-uninstalled">0</span>기</td>
                     </tr>
