@@ -414,7 +414,7 @@ function handleLogout() {
 }
 
 // 2. Data Loading & Settings
-const APP_DATA_VERSION = "20261118_v6";
+const APP_DATA_VERSION = "20261118_v7";
 async function loadData() {
   try {
     const curVer = localStorage.getItem("app_cache_version");
@@ -3256,7 +3256,9 @@ function openDispositionModal(id = null) {
       return "";
     };
 
-    const resolveAsyncInput = (elemId, encVal) => {
+    const resolveAsyncInput = (elemId, encVal, decVal) => {
+      // 이미 복호화된 값이 명시적으로 빈 문자열("")이면 사용자가 삭제/초기화한 데이터이므로 재복호화하여 되살리지 않음
+      if (decVal === "") return;
       if (encVal && typeof encVal === 'string' && encVal.startsWith('gAAAAA')) {
         decryptFernet(encVal).then(dec => {
           if (dec) {
@@ -3291,21 +3293,21 @@ function openDispositionModal(id = null) {
         setVal("disp-target-type", item.target_type || "소유자");
         setVal("disp-status", item.current_status);
         setVal("disp-target-name", targetName);
-        resolveAsyncInput("disp-target-name", item.target_name_encrypted);
+        resolveAsyncInput("disp-target-name", item.target_name_encrypted, item.target_name_decrypted);
         setVal("disp-notice-target", item.advance_notice_target);
 
         // 2. 사전통지 & 초본주소 정보
         setVal("disp-notice-method", item.advance_notice_method);
         setVal("disp-mail-address", getCleanVal(item.mail_address_decrypted, item.mail_address_encrypted));
-        resolveAsyncInput("disp-mail-address", item.mail_address_encrypted);
+        resolveAsyncInput("disp-mail-address", item.mail_address_encrypted, item.mail_address_decrypted);
         setVal("disp-zip-code", item.zip_code);
         setVal("disp-recipient-name", getCleanVal(item.recipient_name_decrypted, item.recipient_name_encrypted));
-        resolveAsyncInput("disp-recipient-name", item.recipient_name_encrypted);
+        resolveAsyncInput("disp-recipient-name", item.recipient_name_encrypted, item.recipient_name_decrypted);
         setDateVal("disp-notice-send-date", item.advance_notice_send_date);
         setVal("disp-notice-return-status", item.advance_notice_return_status);
         setDateVal("disp-abstract-send-date", item.abstract_send_date);
         setVal("disp-abstract-address", getCleanVal(item.abstract_address_decrypted, item.abstract_address_encrypted));
-        resolveAsyncInput("disp-abstract-address", item.abstract_address_encrypted);
+        resolveAsyncInput("disp-abstract-address", item.abstract_address_encrypted, item.abstract_address_decrypted);
         setVal("disp-abstract-return-status", item.abstract_return_status);
         setVal("disp-notice-public", item.notice_public);
         setVal("disp-notice-public-period", item.notice_public_period);
@@ -3332,9 +3334,9 @@ function openDispositionModal(id = null) {
 
         // 4. 개인정보 & 비고
         setVal("disp-reg-num", getCleanVal(item.reg_num_decrypted, item.reg_num_encrypted));
-        resolveAsyncInput("disp-reg-num", item.reg_num_encrypted);
+        resolveAsyncInput("disp-reg-num", item.reg_num_encrypted, item.reg_num_decrypted);
         setVal("disp-contact", getCleanVal(item.contact_decrypted, item.contact_encrypted));
-        resolveAsyncInput("disp-contact", item.contact_encrypted);
+        resolveAsyncInput("disp-contact", item.contact_encrypted, item.contact_decrypted);
         setVal("disp-note", item.note);
       }
     } else {
@@ -3516,7 +3518,15 @@ async function saveDisposition() {
     recipient_name_decrypted: recipientName,
     abstract_address_decrypted: abstractAddr,
     reg_num_decrypted: regNum,
-    contact_decrypted: contact
+    contact_decrypted: contact,
+
+    // 암호화 필드 동기화 (빈값이면 ""로 초기화하여 캐시의 기존 암호화 토큰이 살아나지 않도록 방지)
+    target_name_encrypted: targetName ? targetName : "",
+    mail_address_encrypted: mailAddr ? mailAddr : "",
+    recipient_name_encrypted: recipientName ? recipientName : "",
+    abstract_address_encrypted: abstractAddr ? abstractAddr : "",
+    reg_num_encrypted: regNum ? regNum : "",
+    contact_encrypted: contact ? contact : ""
   };
 
   if (id) payload.id = parseInt(id);
@@ -3528,12 +3538,12 @@ async function saveDisposition() {
       facility_key: facilityKey,
       target_type: payload.target_type || '소유자',
       current_status: payload.current_status,
-      target_name_encrypted: payload.target_name_decrypted,
-      recipient_name_encrypted: payload.recipient_name_decrypted,
-      reg_num_encrypted: payload.reg_num_decrypted,
-      contact_encrypted: payload.contact_decrypted,
-      mail_address_encrypted: payload.mail_address_decrypted,
-      abstract_address_encrypted: payload.abstract_address_decrypted,
+      target_name_encrypted: payload.target_name_decrypted || "",
+      recipient_name_encrypted: payload.recipient_name_decrypted || "",
+      reg_num_encrypted: payload.reg_num_decrypted || "",
+      contact_encrypted: payload.contact_decrypted || "",
+      mail_address_encrypted: payload.mail_address_decrypted || "",
+      abstract_address_encrypted: payload.abstract_address_decrypted || "",
       zip_code: payload.zip_code,
       advance_notice_target: payload.advance_notice_target,
       advance_notice_method: payload.advance_notice_method,
@@ -3745,7 +3755,13 @@ async function saveDisposition() {
       recipient_name_decrypted: subRecipient,
       abstract_address_decrypted: subAbstractAddr,
       reg_num_decrypted: subReg,
-      contact_decrypted: subCon
+      contact_decrypted: subCon,
+      target_name_encrypted: subTargetName ? subTargetName : "",
+      mail_address_encrypted: subMailAddr ? subMailAddr : "",
+      recipient_name_encrypted: subRecipient ? subRecipient : "",
+      abstract_address_encrypted: subAbstractAddr ? subAbstractAddr : "",
+      reg_num_encrypted: subReg ? subReg : "",
+      contact_encrypted: subCon ? subCon : ""
     };
 
     // [서브 카드 1순위] Supabase DB에 직접 POST 생성
@@ -3755,9 +3771,9 @@ async function saveDisposition() {
         facility_key: facilityKey,
         target_type: subPayload.target_type,
         current_status: subPayload.current_status,
-        target_name_encrypted: subPayload.target_name_decrypted,
-        recipient_name_encrypted: subPayload.recipient_name_decrypted,
-        reg_num_encrypted: subPayload.reg_num_decrypted,
+        target_name_encrypted: subPayload.target_name_decrypted || "",
+        recipient_name_encrypted: subPayload.recipient_name_decrypted || "",
+        reg_num_encrypted: subPayload.reg_num_decrypted || "",
         contact_encrypted: subPayload.contact_decrypted,
         mail_address_encrypted: subPayload.mail_address_decrypted,
         abstract_address_encrypted: subPayload.abstract_address_decrypted,

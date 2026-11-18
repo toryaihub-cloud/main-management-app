@@ -848,14 +848,27 @@ def process_disposition_item(item):
         return val
 
     def resolve_dec(dec_key, enc_key, fallback_key):
-        val = item.get(dec_key)
-        if val and isinstance(val, str) and val.strip().startswith("gAAAAA"):
-            dec_res = smart_dec(val)
-            if dec_res: return dec_res
-        if val and not (isinstance(val, str) and val.strip().startswith("gAAAAA")):
-            return val
-        enc_res = smart_dec(item.get(enc_key))
-        if enc_res: return enc_res
+        # 1. dec_key가 item에 명시적으로 존재하는 경우 (빈 문자열이면 사용자가 삭제한 것으로 간주하여 빈값 반환)
+        if dec_key in item:
+            val = item.get(dec_key)
+            if val is None or val == "":
+                return ""
+            if isinstance(val, str):
+                if val.strip().startswith("gAAAAA"):
+                    dec_res = smart_dec(val)
+                    if dec_res: return dec_res
+                else:
+                    return val
+
+        # 2. enc_key가 item에 명시적으로 존재하는 경우
+        if enc_key in item:
+            enc_val = item.get(enc_key)
+            if enc_val is None or enc_val == "":
+                return ""
+            enc_res = smart_dec(enc_val)
+            if enc_res: return enc_res
+
+        # 3. fallback_key
         return item.get(fallback_key) or ""
 
     item["target_name_decrypted"] = resolve_dec("target_name_decrypted", "target_name_encrypted", "target_name")
@@ -1926,7 +1939,14 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 val = req_json.get(dec_key)
                 if val and isinstance(val, str) and val.strip():
                     enc = encrypt_data(val.strip())
-                    if enc: db_payload[enc_key] = enc
+                    if enc:
+                        db_payload[enc_key] = enc
+                        req_json[enc_key] = enc
+                else:
+                    # 빈값이거나 공백인 경우 DB 및 로컬 캐시에서도 확실히 빈 문자열로 초기화 (되살아남 방지)
+                    db_payload[enc_key] = ""
+                    req_json[enc_key] = ""
+                    req_json[dec_key] = ""
 
             # 날짜 필드 빈 문자열을 None으로 변환
             date_fields = ["advance_notice_date", "advance_notice_send_date", "abstract_send_date", "opinion_submit_date", "correction_order_date", "correction_order_date_2"]
