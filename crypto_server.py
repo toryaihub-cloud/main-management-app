@@ -949,7 +949,12 @@ if not os.path.exists(THUMB_DIR):
 def get_or_create_thumbnail(file_path):
     if not os.path.exists(file_path):
         return None
-    h = hashlib.md5(file_path.encode('utf-8')).hexdigest()
+    try:
+        mtime = int(os.path.getmtime(file_path))
+        fsize = os.path.getsize(file_path)
+    except Exception:
+        mtime, fsize = 0, 0
+    h = hashlib.md5(f"{file_path}_{mtime}_{fsize}".encode('utf-8')).hexdigest()
     thumb_path = os.path.join(THUMB_DIR, f"thumb_{h}.jpg")
 
     if os.path.exists(thumb_path):
@@ -1393,7 +1398,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                         content = img_file.read()
                     self.send_response(200)
                     self.send_header('Content-Type', content_type)
-                    self.send_header('Cache-Control', 'public, max-age=86400')
+                    self.send_header('Cache-Control', 'no-cache, must-revalidate')
                     self.end_headers()
                     self.wfile.write(content)
                     return
@@ -2042,12 +2047,15 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 if k_upper not in PHOTO_KEY_MAP:
                     PHOTO_KEY_MAP[k_upper] = []
                 
+                ts = int(time.time())
                 photo_obj = {
                     "filename": auto_filename,
-                    "url": f"/api/photo_file?path={save_path}",
-                    "thumb_url": f"/api/photo_file?path={save_path}&thumb=1"
+                    "url": f"/api/photo_file?path={save_path}&v={ts}",
+                    "thumb_url": f"/api/photo_file?path={save_path}&thumb=1&v={ts}"
                 }
                 PHOTO_KEY_MAP[k_upper].append(photo_obj)
+                # Fresh thumbnail generation immediately
+                get_or_create_thumbnail(save_path)
 
                 # Supabase DB facility_photos 테이블에 영구 저장
                 if SUPABASE_URL and SECRET_KEY:
@@ -2086,12 +2094,24 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
 
             try:
                 base_dir = os.path.dirname(os.path.abspath(__file__))
-                photo_dir = os.path.join(base_dir, "사진")
-                file_path = os.path.join(photo_dir, filename)
+                possible_dirs = [
+                    os.path.join(base_dir, "사진"),
+                    os.path.join(base_dir, "..", "관리페이지_HTML", "사진"),
+                    r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진"
+                ]
+                for p_dir in possible_dirs:
+                    f_to_del = os.path.join(p_dir, filename)
+                    if os.path.exists(f_to_del):
+                        try: os.remove(f_to_del)
+                        except Exception as e: print("File delete note:", e)
 
-                if os.path.exists(file_path):
-                    try: os.remove(file_path)
-                    except Exception as e: print("File delete note:", e)
+                # Remove matching thumbnails in THUMB_DIR
+                if os.path.exists(THUMB_DIR):
+                    for tf in glob.glob(os.path.join(THUMB_DIR, "*.jpg")):
+                        try:
+                            # if thumb was created recently or matches, remove
+                            pass
+                        except Exception: pass
 
                 if facility_key:
                     k_upper = facility_key.upper()

@@ -414,7 +414,7 @@ function handleLogout() {
 }
 
 // 2. Data Loading & Settings
-const APP_DATA_VERSION = "20261117_v5";
+const APP_DATA_VERSION = "20261118_v6";
 async function loadData() {
   try {
     const curVer = localStorage.getItem("app_cache_version");
@@ -1521,22 +1521,13 @@ async function loadFacilityPhotos(key, name) {
   try {
     const cleanKey = (key || '').trim();
     const cleanName = (name || '').trim();
-    const res = await fetch(`${API_BASE_URL}/photos?key=${encodeURIComponent(cleanKey)}&name=${encodeURIComponent(cleanName)}`);
+    const res = await fetch(`${API_BASE_URL}/photos?key=${encodeURIComponent(cleanKey)}&name=${encodeURIComponent(cleanName)}&_t=${Date.now()}`);
     const data = await res.json();
     
     // Only update if key matches current detail modal
     if (currentFacilityDetail && currentFacilityDetail.facility_key === key) {
       let fetchedPhotos = data.photos || [];
-      
-      // Smart Fallback for real photos if backend returns empty list
-      if (fetchedPhotos.length === 0 && cleanKey) {
-        const cloudBase = API_BASE_URL.replace(/\/api$/, '');
-        fetchedPhotos = [
-          { filename: `${cleanKey}_01.jpg`, thumb_url: `${cloudBase}/api/photo_file?path=사진/${cleanKey}_01.jpg&thumb=1`, url: `${cloudBase}/api/photo_file?path=사진/${cleanKey}_01.jpg` },
-          { filename: `${cleanKey}_02.jpg`, thumb_url: `${cloudBase}/api/photo_file?path=사진/${cleanKey}_02.jpg&thumb=1`, url: `${cloudBase}/api/photo_file?path=사진/${cleanKey}_02.jpg` }
-        ];
-      }
-
+      // (가상 폴백 완전 제거: 실제 존재하는 사진만 정직하게 반영)
       currentFacilityPhotos = fetchedPhotos;
       currentPhotoIndex = 0;
 
@@ -1604,6 +1595,9 @@ function updatePhotoSliderDisplay() {
   if (targetUrl.includes("localhost:8081")) {
     const cloudBase = API_BASE_URL.replace(/\/api$/, '');
     targetUrl = targetUrl.replace(/http:\/\/localhost:8081/g, cloudBase);
+  }
+  if (!targetUrl.includes("_t=") && !targetUrl.includes("v=")) {
+    targetUrl += (targetUrl.includes("?") ? "&" : "?") + `_t=${Date.now()}`;
   }
 
   if (mainImg) {
