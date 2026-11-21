@@ -1358,13 +1358,19 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
 
                 if SUPABASE_URL and SECRET_KEY:
                     try:
-                        res = requests.get(f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}", headers=HEADERS, timeout=3)
+                        # filename 필드만 조회 (file_data는 용량이 크므로 조회 제외)
+                        res = requests.get(
+                            f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&select=filename",
+                            headers=HEADERS, timeout=3
+                        )
                         if res.status_code == 200:
                             db_photos = res.json()
                             for dp in db_photos:
                                 fn = dp.get("filename")
                                 if fn and fn not in seen_filenames:
                                     seen_filenames.add(fn)
+                                    # /api/photo_file?path=파일명 으로 요청하면
+                                    # 핸들러가 로컬→Supabase 순으로 fallback 처리
                                     photo_urls.append({
                                         "filename": fn,
                                         "thumb_url": f"{base_url}/api/photo_file?path={fn}&thumb=1",
@@ -1408,9 +1414,11 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
         elif path == "/api/photo_file":
             file_path = params.get("path", [None])[0]
             is_thumb = params.get("thumb", [None])[0] == "1"
-            
+
             if file_path:
                 fname = os.path.basename(file_path)
+
+                # 1순위: 로컬 캐시에 경로가 있으면 바로 사용
                 if fname in PHOTO_PATH_CACHE and os.path.exists(PHOTO_PATH_CACHE[fname]):
                     file_path = PHOTO_PATH_CACHE[fname]
                 else:
@@ -1422,10 +1430,47 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                         os.path.join(r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진", fname),
                         os.path.join(r"C:\Users\Administrator\Desktop\전기차\사진\7월_2차", fname)
                     ]
+                    local_found = None
                     for p in possible_paths:
                         if p and os.path.exists(p):
-                            file_path = p
+                            local_found = p
                             break
+                    if local_found:
+                        file_path = local_found
+                    else:
+                        # 2순위: 로컬에 없으면 Supabase DB에서 file_data(base64) 로 서빙
+                        if SUPABASE_URL and SECRET_KEY:
+                            try:
+                                import base64 as b64mod
+                                db_res = requests.get(
+                                    f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{fname}&select=file_data",
+                                    headers=HEADERS, timeout=5
+                                )
+                                if db_res.status_code == 200:
+                                    rows = db_res.json()
+                                    if rows and rows[0].get("file_data"):
+                                        raw_b64 = rows[0]["file_data"]
+                                        if "," in raw_b64:
+                                            raw_b64 = raw_b64.split(",", 1)[1]
+                                        img_bytes = b64mod.b64decode(raw_b64)
+                                        # 로컬 사진 폴더에 저장해 다음 요청부터는 로컬에서 서빙
+                                        save_dir = os.path.join(base_dir, "사진")
+                                        os.makedirs(save_dir, exist_ok=True)
+                                        save_p = os.path.join(save_dir, fname)
+                                        with open(save_p, "wb") as sf:
+                                            sf.write(img_bytes)
+                                        PHOTO_PATH_CACHE[fname] = save_p
+                                        self.send_response(200)
+                                        self.send_header('Content-Type', 'image/jpeg')
+                                        self.send_header('Cache-Control', 'no-cache, must-revalidate')
+                                        self.end_headers()
+                                        self.wfile.write(img_bytes)
+                                        return
+                            except Exception as db_err:
+                                print("Supabase photo_file fallback error:", db_err)
+                        self.send_response(404)
+                        self.end_headers()
+                        return
 
             target_path = file_path
             if is_thumb and file_path and os.path.exists(file_path):
@@ -2058,17 +2103,14 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
 
             try:
                 import base64, time
-                if "," in file_data:
-                    file_data = file_data.split(",", 1)[1]
+                # base64 헤더 제거
+                raw_b64 = file_data
+                if "," in raw_b64:
+                    raw_b64 = raw_b64.split(",", 1)[1]
                 
-                img_bytes = base64.b64decode(file_data)
+                img_bytes = base64.b64decode(raw_b64)
                 
-                base_dir = os.path.dirname(os.path.abspath(__file__))
-                photo_dir = os.path.join(base_dir, "사진")
-                if not os.path.exists(photo_dir):
-                    os.makedirs(photo_dir, exist_ok=True)
-                
-                # Calculate next sequence number (_01, _02, _03...) for facility_key
+                # 시퀀스 번호 계산 (_01, _02, _03...)
                 k_upper = facility_key.upper()
                 existing_photos = PHOTO_KEY_MAP.get(k_upper, [])
                 
@@ -2083,6 +2125,25 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                             if seq > max_seq: max_seq = seq
                         except Exception: pass
                 
+                # Supabase DB에 이미 저장된 사진까지 포함해 최대 번호 확인
+                if SUPABASE_URL and SECRET_KEY:
+                    try:
+                        db_check = requests.get(
+                            f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&select=filename",
+                            headers=HEADERS, timeout=3
+                        )
+                        if db_check.status_code == 200:
+                            for dp in db_check.json():
+                                dfn = dp.get("filename", "")
+                                dm = re.search(r'_(\d+)\.', dfn)
+                                if dm:
+                                    try:
+                                        seq = int(dm.group(1))
+                                        if seq > max_seq: max_seq = seq
+                                    except Exception: pass
+                    except Exception:
+                        pass
+
                 next_seq = max_seq + 1
                 seq_str = f"{next_seq:02d}"
                 
@@ -2091,40 +2152,60 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     ext = filename.split(".")[-1].lower()
                 
                 auto_filename = f"{k_upper}_{seq_str}.{ext}"
-                save_path = os.path.join(photo_dir, auto_filename)
 
-                with open(save_path, "wb") as f:
-                    f.write(img_bytes)
-
-                if k_upper not in PHOTO_KEY_MAP:
-                    PHOTO_KEY_MAP[k_upper] = []
-                
-                # PHOTO_PATH_CACHE에 등록해야 photo_file 핸들러에서 경로 조회 가능
-                PHOTO_PATH_CACHE[auto_filename] = save_path
-
-                ts = int(time.time())
-                photo_obj = {
-                    "filename": auto_filename,
-                    "url": f"/api/photo_file?path={save_path}&v={ts}",
-                    "thumb_url": f"/api/photo_file?path={save_path}&thumb=1&v={ts}"
-                }
-                PHOTO_KEY_MAP[k_upper].append(photo_obj)
-                # Fresh thumbnail generation immediately
-                get_or_create_thumbnail(save_path)
-
-                # Supabase DB facility_photos 테이블에 영구 저장
+                # ① Supabase DB에 file_data(base64)로 영구 저장 (최우선)
+                supabase_ok = False
                 if SUPABASE_URL and SECRET_KEY:
                     try:
                         photo_payload = {
                             "facility_key": k_upper,
                             "filename": auto_filename,
-                            "file_data": file_data
+                            "file_data": raw_b64
                         }
-                        requests.post(f"{SUPABASE_URL}/rest/v1/facility_photos", headers=HEADERS, json=[photo_payload], timeout=5)
+                        h_prefer = dict(HEADERS)
+                        h_prefer["Prefer"] = "return=minimal"
+                        sb_res = requests.post(
+                            f"{SUPABASE_URL}/rest/v1/facility_photos",
+                            headers=h_prefer, json=[photo_payload], timeout=10
+                        )
+                        if sb_res.status_code in [200, 201]:
+                            supabase_ok = True
+                            print(f"Supabase photo saved: {auto_filename}")
+                        else:
+                            print(f"Supabase photo save error: {sb_res.status_code} {sb_res.text[:200]}")
                     except Exception as e:
-                        print("Supabase photo upload sync note:", e)
+                        print("Supabase photo upload error:", e)
 
-                response = {"success": True, "filename": auto_filename, "url": photo_obj["url"]}
+                # ② 로컬 사진 폴더에도 저장 (서버 재시작 전까지 빠른 서빙용 캐시)
+                base_dir = os.path.dirname(os.path.abspath(__file__))
+                photo_dir = os.path.join(base_dir, "사진")
+                os.makedirs(photo_dir, exist_ok=True)
+                save_path = os.path.join(photo_dir, auto_filename)
+
+                try:
+                    with open(save_path, "wb") as f:
+                        f.write(img_bytes)
+                    PHOTO_PATH_CACHE[auto_filename] = save_path
+                    get_or_create_thumbnail(save_path)
+                except Exception as e:
+                    print("Local photo save note:", e)
+
+                # ③ 메모리 캐시(PHOTO_KEY_MAP) 갱신
+                if k_upper not in PHOTO_KEY_MAP:
+                    PHOTO_KEY_MAP[k_upper] = []
+                
+                ts = int(time.time())
+                photo_obj = {
+                    "filename": auto_filename,
+                    "url": f"/api/photo_file?path={auto_filename}&v={ts}",
+                    "thumb_url": f"/api/photo_file?path={auto_filename}&thumb=1&v={ts}"
+                }
+                PHOTO_KEY_MAP[k_upper].append(photo_obj)
+
+                if not supabase_ok and not os.path.exists(save_path):
+                    raise Exception("Supabase 저장 실패 및 로컬 저장도 실패")
+
+                response = {"success": True, "filename": auto_filename, "url": photo_obj["url"], "supabase_saved": supabase_ok}
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
