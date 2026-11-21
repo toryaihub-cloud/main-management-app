@@ -5,6 +5,13 @@
 """
 import os, sys, re, base64, time, requests
 
+# MIGRATION_DISABLED (2026-11-21)
+# 사진을 base64로 DB 테이블에 넣으면 Supabase 무료 플랜 DB 용량(500MB)을 초과합니다.
+# 기존 사진은 GitHub '사진' 폴더로 서빙하고, 신규 사진은 Supabase Storage에 저장하므로
+# 이 스크립트는 더 이상 실행하지 않습니다.
+print("이 스크립트는 사용 중지되었습니다. (DB 용량 초과 방지)")
+sys.exit(0)
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from crypto_server import SUPABASE_URL, SECRET_KEY, HEADERS, PHOTO_PATH_CACHE
 

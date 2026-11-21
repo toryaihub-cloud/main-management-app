@@ -1692,7 +1692,7 @@ async function handlePhotoUploadSelect(event) {
     noPhotoMsg.style.display = "block";
     noPhotoMsg.innerHTML = `
       <i class="fa-solid fa-circle-notch fa-spin" style="font-size:2.5rem; margin-bottom:0.6rem; color:#0284C7; display:block;"></i>
-      <span style="font-size:0.9rem; color:#94A3B8;">사진을 Supabase DB에 저장하는 중입니다...</span>
+      <span style="font-size:0.9rem; color:#94A3B8;">사진을 Supabase에 저장하는 중입니다...</span>
     `;
   }
 
@@ -1723,7 +1723,7 @@ async function handlePhotoUploadSelect(event) {
 
     // 서버가 Supabase DB 저장까지 확인한 경우에만 성공 처리
     if (res.ok && data.success && data.supabase_saved === true) {
-      alert(`사진(${data.filename})이 Supabase DB에 영구 저장되었습니다.`);
+      alert(`사진(${data.filename})이 Supabase에 영구 저장되었습니다.`);
     } else {
       alert("사진이 DB에 저장되지 않았습니다. 다시 시도해 주세요.\n사유: " + (data.message || `서버 응답 오류 (${res.status})`));
     }
@@ -1743,7 +1743,7 @@ async function deleteCurrentFacilityPhoto() {
   const currentPhoto = currentFacilityPhotos[currentPhotoIndex];
   if (!currentPhoto || !currentPhoto.filename) return;
 
-  if (!confirm(`정말 사진 (${currentPhoto.filename})을 Supabase DB에서 삭제하시겠습니까?`)) return;
+  if (!confirm(`정말 사진 (${currentPhoto.filename})을 삭제하시겠습니까?`)) return;
 
   const facilityKey = currentFacilityDetail ? currentFacilityDetail.facility_key : "";
   try {

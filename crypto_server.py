@@ -1058,6 +1058,94 @@ def init_photo_cache():
     except Exception as e:
         print("Error preloading photo cache:", e)
 
+# ======================================================================
+# 사진 영구 저장소: Supabase Storage (비공개 버킷)
+#  - 기존 사진(GitHub '사진' 폴더)은 배포 파일로 그대로 서빙
+#  - 신규 업로드 사진은 Supabase Storage에 파일로 저장
+#  - DB facility_photos 테이블에는 파일명과 상태 표식만 저장 (이미지 데이터 저장 안 함)
+#      file_data = "storage" : Storage에 저장된 신규 사진
+#      file_data = "deleted" : 삭제 처리된 기존(GitHub) 사진 표식
+# ======================================================================
+PHOTO_BUCKET = os.environ.get("PHOTO_BUCKET", "facility-photos")
+PHOTO_MARK_STORAGE = "storage"
+PHOTO_MARK_DELETED = "deleted"
+_PHOTO_BUCKET_READY = False
+
+def _storage_headers(content_type=None):
+    h = {"apikey": SECRET_KEY, "Authorization": f"Bearer {SECRET_KEY}"}
+    if content_type:
+        h["Content-Type"] = content_type
+    return h
+
+def ensure_photo_bucket():
+    """비공개 사진 버킷이 없으면 생성"""
+    global _PHOTO_BUCKET_READY
+    if _PHOTO_BUCKET_READY:
+        return True
+    r = requests.get(f"{SUPABASE_URL}/storage/v1/bucket/{PHOTO_BUCKET}", headers=_storage_headers(), timeout=10)
+    if r.status_code == 200:
+        _PHOTO_BUCKET_READY = True
+        return True
+    r = requests.post(
+        f"{SUPABASE_URL}/storage/v1/bucket",
+        headers=_storage_headers("application/json"),
+        json={"id": PHOTO_BUCKET, "name": PHOTO_BUCKET, "public": False},
+        timeout=10
+    )
+    if r.status_code in (200, 201) or "already exists" in r.text.lower():
+        _PHOTO_BUCKET_READY = True
+        return True
+    raise Exception(f"Storage 버킷 생성 실패: {r.status_code} {r.text[:200]}")
+
+def _photo_content_type(fname):
+    ext = os.path.splitext(fname)[1].lower()
+    return {".png": "image/png", ".gif": "image/gif", ".webp": "image/webp"}.get(ext, "image/jpeg")
+
+def storage_upload_photo(fname, img_bytes):
+    ensure_photo_bucket()
+    r = requests.post(
+        f"{SUPABASE_URL}/storage/v1/object/{PHOTO_BUCKET}/{quote(fname)}",
+        headers={**_storage_headers(_photo_content_type(fname)), "x-upsert": "false"},
+        data=img_bytes, timeout=60
+    )
+    if r.status_code not in (200, 201):
+        raise Exception(f"Storage 업로드 실패: {r.status_code} {r.text[:200]}")
+
+def storage_download_photo(fname):
+    r = requests.get(
+        f"{SUPABASE_URL}/storage/v1/object/authenticated/{PHOTO_BUCKET}/{quote(fname)}",
+        headers=_storage_headers(), timeout=30
+    )
+    if r.status_code == 200 and r.content:
+        return r.content
+    return None
+
+def storage_delete_photo(fname):
+    r = requests.delete(
+        f"{SUPABASE_URL}/storage/v1/object/{PHOTO_BUCKET}",
+        headers=_storage_headers("application/json"),
+        json={"prefixes": [fname]}, timeout=15
+    )
+    if r.status_code not in (200, 204):
+        raise Exception(f"Storage 삭제 실패: {r.status_code} {r.text[:200]}")
+
+def fetch_photo_marks(k_upper=None, filename=None):
+    """DB의 사진 표식 조회. 실패 시 예외. (이미지 데이터 없는 행만 조회)"""
+    q = f"{SUPABASE_URL}/rest/v1/facility_photos?select=id,facility_key,filename,file_data&file_data=in.({PHOTO_MARK_STORAGE},{PHOTO_MARK_DELETED})&order=id.asc"
+    if k_upper:
+        q += f"&facility_key=eq.{quote(k_upper)}"
+    if filename:
+        q += f"&filename=eq.{quote(filename)}"
+    r = requests.get(q, headers=HEADERS, timeout=10)
+    if r.status_code != 200:
+        raise Exception(f"사진 목록 DB 조회 실패: {r.status_code} {r.text[:200]}")
+    return r.json()
+
+def photo_seq_of(fn):
+    m = re.search(r'_(\d+)\.', fn or "")
+    return int(m.group(1)) if m else 9999
+
+
 def init_server_cache():
     global FACILITIES_CACHE, DISPOSITIONS_CACHE
     init_photo_cache()
@@ -1331,8 +1419,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
 
         elif path == "/api/photos":
             key = params.get("key", [None])[0]
-            name = params.get("name", [None])[0]
-            
+
             host = self.headers.get("Host", f"localhost:{PORT}")
             proto = self.headers.get("X-Forwarded-Proto", "http")
             base_url = f"{proto}://{host}"
@@ -1340,85 +1427,39 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             photo_urls = []
             if key:
                 k_upper = key.strip().upper()
+                # ① 기존 사진: 배포된 '사진' 폴더
+                local_items = {}
+                for item in (PHOTO_KEY_MAP.get(k_upper) or []):
+                    local_items.setdefault(item["filename"], item)
 
-                def _seq_of(fn):
-                    m = re.search(r'_(\d+)\.', fn or "")
-                    return int(m.group(1)) if m else 9999
-
-                db_ok = False
+                # ② DB 표식: 신규(Storage) 사진 추가, 삭제 표식 제외
+                storage_names = []
+                deleted_names = set()
                 if SUPABASE_URL and SECRET_KEY:
                     try:
-                        # Supabase DB가 단일 진실 공급원(SSOT): DB에 있는 사진만 표시
-                        # (file_data는 용량이 크므로 조회 제외)
-                        res = requests.get(
-                            f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&select=id,filename",
-                            headers=HEADERS, timeout=8
-                        )
-                        if res.status_code == 200:
-                            db_ok = True
-                            rows = sorted(res.json(), key=lambda r: (_seq_of(r.get("filename")), r.get("id", 0)))
-                            seen = set()
-                            for dp in rows:
-                                fn = dp.get("filename")
-                                if not fn or fn in seen:
-                                    continue
-                                seen.add(fn)
-                                v = dp.get("id", 0)
-                                photo_urls.append({
-                                    "filename": fn,
-                                    "thumb_url": f"{base_url}/api/photo_file?path={quote(fn)}&thumb=1&v={v}",
-                                    "url": f"{base_url}/api/photo_file?path={quote(fn)}&v={v}"
-                                })
-                        else:
-                            print("Supabase photos get error:", res.status_code, res.text[:200])
+                        for row in fetch_photo_marks(k_upper=k_upper):
+                            if row.get("file_data") == PHOTO_MARK_DELETED:
+                                deleted_names.add(row.get("filename"))
+                            elif row.get("filename"):
+                                storage_names.append(row.get("filename"))
                     except Exception as e:
-                        print("Supabase photos get error:", e)
+                        print("Supabase photo marks error:", e)
 
-                # DB 조회 자체가 실패했을 때만 로컬 캐시로 비상 표시
-                if not db_ok:
-                    seen = set()
-                    for item in (PHOTO_KEY_MAP.get(k_upper) or []):
-                        fn = item["filename"]
-                        if fn in seen:
-                            continue
-                        seen.add(fn)
-                        thumb = item["thumb_url"]
-                        full = item["url"]
-                        if thumb.startswith("/"): thumb = base_url + thumb
-                        if full.startswith("/"): full = base_url + full
-                        photo_urls.append({"filename": fn, "thumb_url": thumb, "url": full})
+                names = [n for n in local_items if n not in deleted_names]
+                names += [n for n in storage_names if n not in local_items and n not in deleted_names and n not in names]
+                names.sort(key=lambda n: (photo_seq_of(n), n))
+                for fn in names:
+                    photo_urls.append({
+                        "filename": fn,
+                        "thumb_url": f"{base_url}/api/photo_file?path={quote(fn)}&thumb=1",
+                        "url": f"{base_url}/api/photo_file?path={quote(fn)}"
+                    })
 
-            # No fake sample images - return exact real photos
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
             self.wfile.write(json.dumps({"photos": photo_urls}, ensure_ascii=False).encode('utf-8'))
             return
-
-            # If no photos by key, try matching by name
-            if not photo_urls and name:
-                clean_name = name.strip()
-                settings = load_settings()
-                photo_dir = settings.get("photo_dir_path", "")
-                if photo_dir and os.path.exists(photo_dir):
-                    matched_files = set()
-                    p = os.path.join(photo_dir, f"*{clean_name}*.*")
-                    for fpath in glob.glob(p):
-                        ext = os.path.splitext(fpath)[1].lower()
-                        if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
-                            matched_files.add(fpath)
-                    for fpath in sorted(list(matched_files)):
-                        filename = os.path.basename(fpath)
-                        photo_urls.append({
-                            "filename": filename,
-                            "thumb_url": f"{base_url}/api/photo_file?path={unquote(fpath)}&thumb=1",
-                            "url": f"{base_url}/api/photo_file?path={unquote(fpath)}"
-                        })
-            
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json; charset=utf-8')
-            self.end_headers()
-            self.wfile.write(json.dumps({"photos": photo_urls}, ensure_ascii=False).encode('utf-8'))
 
         elif path == "/api/photo_file":
             file_path = params.get("path", [None])[0]
@@ -1426,66 +1467,34 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
 
             if file_path:
                 fname = os.path.basename(file_path)
-
-                # 1순위: 로컬 캐시에 경로가 있으면 바로 사용
+                base_dir = os.path.dirname(os.path.abspath(__file__))
+                local_found = None
+                # 1순위: 로컬(배포 '사진' 폴더 또는 Storage에서 받아둔 캐시)
                 if fname in PHOTO_PATH_CACHE and os.path.exists(PHOTO_PATH_CACHE[fname]):
-                    file_path = PHOTO_PATH_CACHE[fname]
+                    local_found = PHOTO_PATH_CACHE[fname]
                 else:
-                    base_dir = os.path.dirname(os.path.abspath(__file__))
-                    possible_paths = [
-                        file_path,
-                        os.path.join(base_dir, "사진", fname),
-                        os.path.join(base_dir, "..", "관리페이지_HTML", "사진", fname),
-                        os.path.join(r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진", fname),
-                        os.path.join(r"C:\Users\Administrator\Desktop\전기차\사진\7월_2차", fname)
-                    ]
-                    local_found = None
-                    for p in possible_paths:
-                        if p and os.path.exists(p):
-                            local_found = p
-                            break
-                    if local_found:
-                        file_path = local_found
-                    else:
-                        # 2순위: 로컬에 없으면 Supabase DB에서 file_data(base64) 로 서빙
-                        if SUPABASE_URL and SECRET_KEY:
-                            try:
-                                import base64 as b64mod
-                                db_res = requests.get(
-                                    f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{quote(fname)}&select=file_data&order=id.desc&limit=1",
-                                    headers=HEADERS, timeout=20
-                                )
-                                if db_res.status_code == 200:
-                                    rows = db_res.json()
-                                    if rows and rows[0].get("file_data"):
-                                        raw_b64 = rows[0]["file_data"]
-                                        if "," in raw_b64:
-                                            raw_b64 = raw_b64.split(",", 1)[1]
-                                        img_bytes = b64mod.b64decode(raw_b64)
-                                        # 로컬 사진 폴더에 저장해 다음 요청부터는 로컬에서 서빙
-                                        save_dir = os.path.join(base_dir, "사진")
-                                        os.makedirs(save_dir, exist_ok=True)
-                                        save_p = os.path.join(save_dir, fname)
-                                        try:
-                                            with open(save_p, "wb") as sf:
-                                                sf.write(img_bytes)
-                                            PHOTO_PATH_CACHE[fname] = save_p
-                                            file_path = save_p
-                                            local_found = save_p
-                                        except Exception as save_err:
-                                            print("Local cache save note:", save_err)
-                                            self.send_response(200)
-                                            self.send_header('Content-Type', 'image/jpeg')
-                                            self.send_header('Cache-Control', 'no-cache, must-revalidate')
-                                            self.end_headers()
-                                            self.wfile.write(img_bytes)
-                                            return
-                            except Exception as db_err:
-                                print("Supabase photo_file fallback error:", db_err)
-                        if not local_found:
-                            self.send_response(404)
-                            self.end_headers()
-                            return
+                    p_local = os.path.join(base_dir, "사진", fname)
+                    if os.path.exists(p_local):
+                        local_found = p_local
+                # 2순위: Supabase Storage에서 받아 로컬 캐시에 저장
+                if not local_found and SUPABASE_URL and SECRET_KEY:
+                    try:
+                        img_bytes = storage_download_photo(fname)
+                        if img_bytes:
+                            save_dir = os.path.join(base_dir, "사진")
+                            os.makedirs(save_dir, exist_ok=True)
+                            save_p = os.path.join(save_dir, fname)
+                            with open(save_p, "wb") as sf:
+                                sf.write(img_bytes)
+                            PHOTO_PATH_CACHE[fname] = save_p
+                            local_found = save_p
+                    except Exception as e:
+                        print("Storage photo download error:", e)
+                if not local_found:
+                    self.send_response(404)
+                    self.end_headers()
+                    return
+                file_path = local_found
 
             target_path = file_path
             if is_thumb and file_path and os.path.exists(file_path):
@@ -2109,198 +2118,136 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             filename = req_json.get("filename", "").strip()
             file_data = req_json.get("file_data", "").strip()
 
-            if not facility_key or not file_data:
-                self.send_response(400)
+            def _json_reply(code, obj):
+                self.send_response(code)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
-                self.wfile.write(json.dumps({"success": False, "message": "필수 데이터 누락"}, ensure_ascii=False).encode('utf-8'))
+                self.wfile.write(json.dumps(obj, ensure_ascii=False).encode('utf-8'))
+
+            if not facility_key or not file_data:
+                _json_reply(400, {"success": False, "message": "필수 데이터 누락"})
+                return
+            if not (SUPABASE_URL and SECRET_KEY):
+                _json_reply(500, {"success": False, "message": "Supabase 설정이 없어 사진을 저장할 수 없습니다."})
                 return
 
             try:
-                import base64, time
-                # base64 헤더 제거
-                raw_b64 = file_data
-                if "," in raw_b64:
-                    raw_b64 = raw_b64.split(",", 1)[1]
-                
+                import base64
+                raw_b64 = file_data.split(",", 1)[1] if "," in file_data else file_data
                 img_bytes = base64.b64decode(raw_b64)
-                
-                # 시퀀스 번호 계산 (_01, _02, _03...)
                 k_upper = facility_key.upper()
-                existing_photos = PHOTO_KEY_MAP.get(k_upper, [])
-                
-                max_seq = 0
-                import re
-                for p in existing_photos:
-                    fn = p.get("filename", "")
-                    m = re.search(r'_(\d+)\.', fn)
-                    if m:
-                        try:
-                            seq = int(m.group(1))
-                            if seq > max_seq: max_seq = seq
-                        except Exception: pass
-                
-                # Supabase DB에 이미 저장된 사진까지 포함해 최대 번호 확인
-                if SUPABASE_URL and SECRET_KEY:
-                    try:
-                        db_check = requests.get(
-                            f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&select=filename",
-                            headers=HEADERS, timeout=10
-                        )
-                        if db_check.status_code != 200:
-                            raise Exception(f"Supabase 조회 실패 {db_check.status_code}")
-                        for dp in db_check.json():
-                            dfn = dp.get("filename", "")
-                            dm = re.search(r'_(\d+)\.', dfn)
-                            if dm:
-                                try:
-                                    seq = int(dm.group(1))
-                                    if seq > max_seq: max_seq = seq
-                                except Exception: pass
-                    except Exception as e:
-                        raise Exception(f"사진 번호 확인을 위한 DB 조회 실패: {e}")
 
-                next_seq = max_seq + 1
-                seq_str = f"{next_seq:02d}"
-                
+                # 다음 번호 = 기존 사진 + DB 표식(신규/삭제 포함) 중 최대 번호 + 1 (번호 재사용 방지)
+                max_seq = 0
+                for item in (PHOTO_KEY_MAP.get(k_upper) or []):
+                    sq = photo_seq_of(item.get("filename"))
+                    if sq != 9999: max_seq = max(max_seq, sq)
+                for row in fetch_photo_marks(k_upper=k_upper):
+                    sq = photo_seq_of(row.get("filename"))
+                    if sq != 9999: max_seq = max(max_seq, sq)
+
                 ext = "jpg"
                 if filename and "." in filename:
-                    ext = filename.split(".")[-1].lower()
-                
-                auto_filename = f"{k_upper}_{seq_str}.{ext}"
+                    ext = filename.rsplit(".", 1)[-1].lower()
+                    if ext not in ("jpg", "jpeg", "png", "gif", "webp"):
+                        ext = "jpg"
+                auto_filename = f"{k_upper}_{max_seq + 1:02d}.{ext}"
 
-                # ① Supabase DB에 file_data(base64)로 영구 저장 (필수)
-                #    Render 서버의 로컬 디스크는 재시작/슬립 시 초기화되므로
-                #    DB 저장에 실패하면 업로드 자체를 실패로 처리한다.
-                if not (SUPABASE_URL and SECRET_KEY):
-                    raise Exception("Supabase 설정이 없어 사진을 영구 저장할 수 없습니다.")
+                # ① Supabase Storage에 파일 저장
+                storage_upload_photo(auto_filename, img_bytes)
 
-                supabase_ok = False
-                last_err = ""
+                # ② DB에 파일명 표식 저장 (실패 시 Storage 파일도 되돌림)
                 h_prefer = dict(HEADERS)
                 h_prefer["Prefer"] = "return=minimal"
-                for attempt in range(3):
-                    photo_payload = {
-                        "facility_key": k_upper,
-                        "filename": auto_filename,
-                        "file_data": raw_b64
-                    }
-                    try:
-                        sb_res = requests.post(
-                            f"{SUPABASE_URL}/rest/v1/facility_photos",
-                            headers=h_prefer, json=[photo_payload], timeout=60
-                        )
-                        if sb_res.status_code in [200, 201, 204]:
-                            supabase_ok = True
-                            print(f"Supabase photo saved: {auto_filename}")
-                            break
-                        last_err = f"{sb_res.status_code} {sb_res.text[:200]}"
-                        print("Supabase photo save error:", last_err)
-                    except Exception as e:
-                        last_err = str(e)
-                        print("Supabase photo upload error:", e)
-                    time.sleep(1)
+                sb_res = requests.post(
+                    f"{SUPABASE_URL}/rest/v1/facility_photos",
+                    headers=h_prefer,
+                    json=[{"facility_key": k_upper, "filename": auto_filename, "file_data": PHOTO_MARK_STORAGE}],
+                    timeout=15
+                )
+                if sb_res.status_code not in (200, 201, 204):
+                    try: storage_delete_photo(auto_filename)
+                    except Exception: pass
+                    raise Exception(f"DB 등록 실패: {sb_res.status_code} {sb_res.text[:200]}")
 
-                if not supabase_ok:
-                    raise Exception(f"Supabase DB 저장 실패: {last_err}")
-
-                # ② DB 저장 확인 후 로컬 사진 폴더에 빠른 서빙용 캐시 저장
-                base_dir = os.path.dirname(os.path.abspath(__file__))
-                photo_dir = os.path.join(base_dir, "사진")
-                os.makedirs(photo_dir, exist_ok=True)
-                save_path = os.path.join(photo_dir, auto_filename)
+                # ③ 로컬 캐시 (서버 재시작 시 사라져도 Storage에서 다시 받음)
                 try:
+                    photo_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "사진")
+                    os.makedirs(photo_dir, exist_ok=True)
+                    save_path = os.path.join(photo_dir, auto_filename)
                     with open(save_path, "wb") as f:
                         f.write(img_bytes)
                     PHOTO_PATH_CACHE[auto_filename] = save_path
-                    get_or_create_thumbnail(save_path)
                 except Exception as e:
                     print("Local photo cache note:", e)
 
-                # ③ 메모리 캐시(PHOTO_KEY_MAP) 갱신
-                if k_upper not in PHOTO_KEY_MAP:
-                    PHOTO_KEY_MAP[k_upper] = []
-                ts = int(time.time())
-                photo_obj = {
-                    "filename": auto_filename,
-                    "url": f"/api/photo_file?path={auto_filename}&v={ts}",
-                    "thumb_url": f"/api/photo_file?path={auto_filename}&thumb=1&v={ts}"
-                }
-                PHOTO_KEY_MAP[k_upper].append(photo_obj)
-
-                response = {"success": True, "filename": auto_filename, "url": photo_obj["url"], "supabase_saved": supabase_ok}
-                self.send_response(200)
-                self.send_header('Content-Type', 'application/json; charset=utf-8')
-                self.end_headers()
-                self.wfile.write(json.dumps(response, ensure_ascii=False).encode('utf-8'))
+                print(f"Photo saved to Supabase Storage: {auto_filename}")
+                _json_reply(200, {"success": True, "filename": auto_filename, "supabase_saved": True})
             except Exception as e:
                 print("Photo upload error:", e)
-                self.send_response(500)
-                self.send_header('Content-Type', 'application/json; charset=utf-8')
-                self.end_headers()
-                self.wfile.write(json.dumps({"success": False, "message": str(e)}, ensure_ascii=False).encode('utf-8'))
+                _json_reply(500, {"success": False, "message": str(e)})
 
         elif path == "/api/photos/delete":
             facility_key = req_json.get("facility_key", "").strip()
-            filename = req_json.get("filename", "").strip()
+            filename = os.path.basename(req_json.get("filename", "").strip())
 
-            if not filename:
-                self.send_response(400)
+            def _json_reply(code, obj):
+                self.send_response(code)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
-                self.wfile.write(json.dumps({"success": False, "message": "삭제할 파일명 누락"}, ensure_ascii=False).encode('utf-8'))
+                self.wfile.write(json.dumps(obj, ensure_ascii=False).encode('utf-8'))
+
+            if not filename:
+                _json_reply(400, {"success": False, "message": "삭제할 파일명 누락"})
+                return
+            if not (SUPABASE_URL and SECRET_KEY):
+                _json_reply(500, {"success": False, "message": "Supabase 설정이 없어 삭제할 수 없습니다."})
                 return
 
             try:
-                base_dir = os.path.dirname(os.path.abspath(__file__))
-                possible_dirs = [
-                    os.path.join(base_dir, "사진"),
-                    os.path.join(base_dir, "..", "관리페이지_HTML", "사진"),
-                    r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진"
-                ]
-                for p_dir in possible_dirs:
-                    f_to_del = os.path.join(p_dir, filename)
-                    if os.path.exists(f_to_del):
-                        try: os.remove(f_to_del)
-                        except Exception as e: print("File delete note:", e)
+                import re
+                m = re.search(r'(K\d{4})', filename, re.IGNORECASE)
+                k_upper = (facility_key or (m.group(1) if m else "")).upper()
 
-                # Remove matching thumbnails in THUMB_DIR
-                if os.path.exists(THUMB_DIR):
-                    for tf in glob.glob(os.path.join(THUMB_DIR, "*.jpg")):
-                        try:
-                            # if thumb was created recently or matches, remove
-                            pass
-                        except Exception: pass
+                marks = fetch_photo_marks(filename=filename)
+                storage_rows = [r for r in marks if r.get("file_data") == PHOTO_MARK_STORAGE]
 
-                if facility_key:
-                    k_upper = facility_key.upper()
-                    if k_upper in PHOTO_KEY_MAP:
-                        PHOTO_KEY_MAP[k_upper] = [p for p in PHOTO_KEY_MAP[k_upper] if p.get("filename") != filename]
-                    
-                    if SUPABASE_URL and SECRET_KEY:
-                        del_res = requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&filename=eq.{quote(filename)}", headers=HEADERS, timeout=15)
-                        if del_res.status_code not in [200, 204]:
-                            raise Exception(f"Supabase DB 삭제 실패: {del_res.status_code} {del_res.text[:200]}")
-                else:
-                    for k in PHOTO_KEY_MAP:
-                        PHOTO_KEY_MAP[k] = [p for p in PHOTO_KEY_MAP[k] if p.get("filename") != filename]
-                    if SUPABASE_URL and SECRET_KEY:
-                        del_res = requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{quote(filename)}", headers=HEADERS, timeout=15)
-                        if del_res.status_code not in [200, 204]:
-                            raise Exception(f"Supabase DB 삭제 실패: {del_res.status_code} {del_res.text[:200]}")
+                if storage_rows:
+                    # 신규(Storage) 사진: Storage 파일과 DB 표식 삭제
+                    storage_delete_photo(filename)
+                    del_res = requests.delete(
+                        f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{quote(filename)}&file_data=eq.{PHOTO_MARK_STORAGE}",
+                        headers=HEADERS, timeout=15
+                    )
+                    if del_res.status_code not in (200, 204):
+                        raise Exception(f"DB 삭제 실패: {del_res.status_code} {del_res.text[:200]}")
+                elif not any(r.get("file_data") == PHOTO_MARK_DELETED for r in marks):
+                    # 기존(GitHub 배포) 사진: 재배포 시 되살아나지 않도록 삭제 표식 저장
+                    h_prefer = dict(HEADERS)
+                    h_prefer["Prefer"] = "return=minimal"
+                    ins = requests.post(
+                        f"{SUPABASE_URL}/rest/v1/facility_photos",
+                        headers=h_prefer,
+                        json=[{"facility_key": k_upper, "filename": filename, "file_data": PHOTO_MARK_DELETED}],
+                        timeout=15
+                    )
+                    if ins.status_code not in (200, 201, 204):
+                        raise Exception(f"DB 삭제 표식 저장 실패: {ins.status_code} {ins.text[:200]}")
 
+                # 로컬 파일/캐시 정리
+                p_local = os.path.join(os.path.dirname(os.path.abspath(__file__)), "사진", filename)
+                if os.path.exists(p_local):
+                    try: os.remove(p_local)
+                    except Exception as e: print("File delete note:", e)
                 PHOTO_PATH_CACHE.pop(filename, None)
-                response = {"success": True, "message": "사진이 성공적으로 삭제되었습니다."}
-                self.send_response(200)
-                self.send_header('Content-Type', 'application/json; charset=utf-8')
-                self.end_headers()
-                self.wfile.write(json.dumps(response, ensure_ascii=False).encode('utf-8'))
+                for k in list(PHOTO_KEY_MAP.keys()):
+                    PHOTO_KEY_MAP[k] = [p for p in PHOTO_KEY_MAP[k] if p.get("filename") != filename]
+
+                _json_reply(200, {"success": True, "message": "사진이 삭제되었습니다."})
             except Exception as e:
                 print("Photo delete error:", e)
-                self.send_response(500)
-                self.send_header('Content-Type', 'application/json; charset=utf-8')
-                self.end_headers()
-                self.wfile.write(json.dumps({"success": False, "message": str(e)}, ensure_ascii=False).encode('utf-8'))
+                _json_reply(500, {"success": False, "message": str(e)})
+
         else:
             super().do_POST()
 
