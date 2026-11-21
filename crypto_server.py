@@ -983,50 +983,78 @@ def get_or_create_thumbnail(file_path):
         return file_path
 
 PHOTO_KEY_MAP = {}
+PHOTO_PATH_CACHE = {}
 
 def init_photo_cache():
-    global PHOTO_KEY_MAP
+    global PHOTO_KEY_MAP, PHOTO_PATH_CACHE
     PHOTO_KEY_MAP = {}
+    PHOTO_PATH_CACHE = {}
     settings = load_settings()
     photo_dir = settings.get("photo_dir_path", "")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
     
-    possible_paths = [
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "사진"),
-        photo_dir,
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "관리페이지_HTML", "사진"),
-        r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진"
-    ]
-    for p in possible_paths:
-        if p and os.path.exists(p):
-            photo_dir = p
-            break
+    search_dirs = []
+    if photo_dir:
+        search_dirs.append(photo_dir)
+    search_dirs.extend([
+        os.path.join(base_dir, "사진"),
+        r"C:\Users\Administrator\Desktop\전기차\사진",
+        os.path.join(base_dir, "..", "관리페이지_HTML", "사진"),
+        r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진",
+        r"C:\Users\Administrator\Downloads\광산구 전기자동차 주차구역 등 실태조사_사진_20260722"
+    ])
+    
+    valid_dirs = []
+    seen_dirs = set()
+    for d in search_dirs:
+        if d and os.path.exists(d):
+            norm_d = os.path.normpath(os.path.abspath(d))
+            if norm_d not in seen_dirs:
+                seen_dirs.add(norm_d)
+                valid_dirs.append(norm_d)
 
-    if not photo_dir or not os.path.exists(photo_dir):
-        print("Photo directory not found:", photo_dir)
+    if not valid_dirs:
+        print("Photo directory not found in any search paths.")
         return
 
     try:
-        files = os.listdir(photo_dir)
-        for fname in files:
-            ext = os.path.splitext(fname)[1].lower()
-            if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
-                fpath = os.path.join(photo_dir, fname)
-                photo_obj = {
-                    "filename": fname,
-                    "thumb_url": f"/api/photo_file?path={unquote(fpath)}&thumb=1",
-                    "url": f"/api/photo_file?path={unquote(fpath)}"
-                }
-                match = re.search(r'(K\d{4})', fname, re.IGNORECASE)
-                if match:
-                    k_upper = match.group(1).upper()
-                    if k_upper not in PHOTO_KEY_MAP:
-                        PHOTO_KEY_MAP[k_upper] = []
-                    PHOTO_KEY_MAP[k_upper].append(photo_obj)
+        found_files = {}
+        for sdir in valid_dirs:
+            for root, _, files in os.walk(sdir):
+                for fname in files:
+                    ext = os.path.splitext(fname)[1].lower()
+                    if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
+                        if fname not in found_files:
+                            found_files[fname] = os.path.join(root, fname)
+
+        for fname, fpath in found_files.items():
+            PHOTO_PATH_CACHE[fname] = fpath
+            photo_obj = {
+                "filename": fname,
+                "thumb_url": f"/api/photo_file?path={unquote(fpath)}&thumb=1",
+                "url": f"/api/photo_file?path={unquote(fpath)}"
+            }
+            match = re.search(r'(K\d{4})', fname, re.IGNORECASE)
+            if match:
+                k_upper = match.group(1).upper()
+                if k_upper not in PHOTO_KEY_MAP:
+                    PHOTO_KEY_MAP[k_upper] = []
+                PHOTO_KEY_MAP[k_upper].append(photo_obj)
         
+        def sort_photo_seq(item):
+            fn = item["filename"]
+            m = re.search(r'_(\d+)\.', fn)
+            if m:
+                try:
+                    return (0, int(m.group(1)))
+                except Exception:
+                    pass
+            return (1, fn)
+
         for k in PHOTO_KEY_MAP:
-            PHOTO_KEY_MAP[k].sort(key=lambda x: x["filename"])
+            PHOTO_KEY_MAP[k].sort(key=sort_photo_seq)
             
-        print(f"Preloaded photo cache for {len(PHOTO_KEY_MAP)} facility keys with 2-Tier Thumbnails.")
+        print(f"Preloaded photo cache for {len(PHOTO_KEY_MAP)} facility keys ({len(PHOTO_PATH_CACHE)} photos) with 2-Tier Thumbnails.")
     except Exception as e:
         print("Error preloading photo cache:", e)
 
@@ -1383,17 +1411,21 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             
             if file_path:
                 fname = os.path.basename(file_path)
-                base_dir = os.path.dirname(os.path.abspath(__file__))
-                possible_paths = [
-                    file_path,
-                    os.path.join(base_dir, "사진", fname),
-                    os.path.join(base_dir, "..", "관리페이지_HTML", "사진", fname),
-                    os.path.join(r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진", fname)
-                ]
-                for p in possible_paths:
-                    if p and os.path.exists(p):
-                        file_path = p
-                        break
+                if fname in PHOTO_PATH_CACHE and os.path.exists(PHOTO_PATH_CACHE[fname]):
+                    file_path = PHOTO_PATH_CACHE[fname]
+                else:
+                    base_dir = os.path.dirname(os.path.abspath(__file__))
+                    possible_paths = [
+                        file_path,
+                        os.path.join(base_dir, "사진", fname),
+                        os.path.join(base_dir, "..", "관리페이지_HTML", "사진", fname),
+                        os.path.join(r"c:\Users\Administrator\Desktop\프로젝트\관리페이지_HTML\사진", fname),
+                        os.path.join(r"C:\Users\Administrator\Desktop\전기차\사진\7월_2차", fname)
+                    ]
+                    for p in possible_paths:
+                        if p and os.path.exists(p):
+                            file_path = p
+                            break
 
             target_path = file_path
             if is_thumb and file_path and os.path.exists(file_path):
@@ -2067,6 +2099,9 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 if k_upper not in PHOTO_KEY_MAP:
                     PHOTO_KEY_MAP[k_upper] = []
                 
+                # PHOTO_PATH_CACHE에 등록해야 photo_file 핸들러에서 경로 조회 가능
+                PHOTO_PATH_CACHE[auto_filename] = save_path
+
                 ts = int(time.time())
                 photo_obj = {
                     "filename": auto_filename,
