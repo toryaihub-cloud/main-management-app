@@ -1697,15 +1697,27 @@ async function handlePhotoUploadSelect(event) {
   }
 
   try {
-    const res = await fetchWithRetry(`${API_BASE_URL}/photos/upload`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        facility_key: facilityKey,
-        filename: fileName,
-        file_data: compressed.dataUrl
-      })
-    }, 3, 5000);
+    // 네트워크 단절(서버 슬립 등)일 때만 재시도하고,
+    // 서버가 응답한 오류(500 등)는 재시도하지 않고 사유를 그대로 표시
+    const uploadBody = JSON.stringify({
+      facility_key: facilityKey,
+      filename: fileName,
+      file_data: compressed.dataUrl
+    });
+    let res = null;
+    for (let i = 0; i < 3; i++) {
+      try {
+        res = await fetch(`${API_BASE_URL}/photos/upload`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: uploadBody
+        });
+        break;
+      } catch (netErr) {
+        if (i === 2) throw netErr;
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    }
     let data = {};
     try { data = await res.json(); } catch (e) { data = {}; }
 
