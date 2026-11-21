@@ -8,7 +8,7 @@ import os
 import glob
 import re
 import threading
-from urllib.parse import parse_qs, urlparse, unquote
+from urllib.parse import parse_qs, urlparse, unquote, quote
 from crypto_utils import encrypt_data, decrypt_data
 
 PORT = int(os.environ.get("PORT", 8081))
@@ -1338,46 +1338,55 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             base_url = f"{proto}://{host}"
 
             photo_urls = []
-            seen_filenames = set()
             if key:
                 k_upper = key.strip().upper()
-                raw_list = PHOTO_KEY_MAP.get(k_upper) or []
-                for item in raw_list:
-                    thumb = item["thumb_url"]
-                    full = item["url"]
-                    if thumb.startswith("/"): thumb = base_url + thumb
-                    if full.startswith("/"): full = base_url + full
-                    fn = item["filename"]
-                    if fn not in seen_filenames:
-                        seen_filenames.add(fn)
-                        photo_urls.append({
-                            "filename": fn,
-                            "thumb_url": thumb,
-                            "url": full
-                        })
 
+                def _seq_of(fn):
+                    m = re.search(r'_(\d+)\.', fn or "")
+                    return int(m.group(1)) if m else 9999
+
+                db_ok = False
                 if SUPABASE_URL and SECRET_KEY:
                     try:
-                        # filename 필드만 조회 (file_data는 용량이 크므로 조회 제외)
+                        # Supabase DB가 단일 진실 공급원(SSOT): DB에 있는 사진만 표시
+                        # (file_data는 용량이 크므로 조회 제외)
                         res = requests.get(
-                            f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&select=filename",
-                            headers=HEADERS, timeout=3
+                            f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&select=id,filename",
+                            headers=HEADERS, timeout=8
                         )
                         if res.status_code == 200:
-                            db_photos = res.json()
-                            for dp in db_photos:
+                            db_ok = True
+                            rows = sorted(res.json(), key=lambda r: (_seq_of(r.get("filename")), r.get("id", 0)))
+                            seen = set()
+                            for dp in rows:
                                 fn = dp.get("filename")
-                                if fn and fn not in seen_filenames:
-                                    seen_filenames.add(fn)
-                                    # /api/photo_file?path=파일명 으로 요청하면
-                                    # 핸들러가 로컬→Supabase 순으로 fallback 처리
-                                    photo_urls.append({
-                                        "filename": fn,
-                                        "thumb_url": f"{base_url}/api/photo_file?path={fn}&thumb=1",
-                                        "url": f"{base_url}/api/photo_file?path={fn}"
-                                    })
+                                if not fn or fn in seen:
+                                    continue
+                                seen.add(fn)
+                                v = dp.get("id", 0)
+                                photo_urls.append({
+                                    "filename": fn,
+                                    "thumb_url": f"{base_url}/api/photo_file?path={quote(fn)}&thumb=1&v={v}",
+                                    "url": f"{base_url}/api/photo_file?path={quote(fn)}&v={v}"
+                                })
+                        else:
+                            print("Supabase photos get error:", res.status_code, res.text[:200])
                     except Exception as e:
                         print("Supabase photos get error:", e)
+
+                # DB 조회 자체가 실패했을 때만 로컬 캐시로 비상 표시
+                if not db_ok:
+                    seen = set()
+                    for item in (PHOTO_KEY_MAP.get(k_upper) or []):
+                        fn = item["filename"]
+                        if fn in seen:
+                            continue
+                        seen.add(fn)
+                        thumb = item["thumb_url"]
+                        full = item["url"]
+                        if thumb.startswith("/"): thumb = base_url + thumb
+                        if full.startswith("/"): full = base_url + full
+                        photo_urls.append({"filename": fn, "thumb_url": thumb, "url": full})
 
             # No fake sample images - return exact real photos
             self.send_response(200)
@@ -1443,8 +1452,8 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                             try:
                                 import base64 as b64mod
                                 db_res = requests.get(
-                                    f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{fname}&select=file_data",
-                                    headers=HEADERS, timeout=5
+                                    f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{quote(fname)}&select=file_data&order=id.desc&limit=1",
+                                    headers=HEADERS, timeout=20
                                 )
                                 if db_res.status_code == 200:
                                     rows = db_res.json()
@@ -1457,20 +1466,26 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                                         save_dir = os.path.join(base_dir, "사진")
                                         os.makedirs(save_dir, exist_ok=True)
                                         save_p = os.path.join(save_dir, fname)
-                                        with open(save_p, "wb") as sf:
-                                            sf.write(img_bytes)
-                                        PHOTO_PATH_CACHE[fname] = save_p
-                                        self.send_response(200)
-                                        self.send_header('Content-Type', 'image/jpeg')
-                                        self.send_header('Cache-Control', 'no-cache, must-revalidate')
-                                        self.end_headers()
-                                        self.wfile.write(img_bytes)
-                                        return
+                                        try:
+                                            with open(save_p, "wb") as sf:
+                                                sf.write(img_bytes)
+                                            PHOTO_PATH_CACHE[fname] = save_p
+                                            file_path = save_p
+                                            local_found = save_p
+                                        except Exception as save_err:
+                                            print("Local cache save note:", save_err)
+                                            self.send_response(200)
+                                            self.send_header('Content-Type', 'image/jpeg')
+                                            self.send_header('Cache-Control', 'no-cache, must-revalidate')
+                                            self.end_headers()
+                                            self.wfile.write(img_bytes)
+                                            return
                             except Exception as db_err:
                                 print("Supabase photo_file fallback error:", db_err)
-                        self.send_response(404)
-                        self.end_headers()
-                        return
+                        if not local_found:
+                            self.send_response(404)
+                            self.end_headers()
+                            return
 
             target_path = file_path
             if is_thumb and file_path and os.path.exists(file_path):
@@ -2130,19 +2145,20 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     try:
                         db_check = requests.get(
                             f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&select=filename",
-                            headers=HEADERS, timeout=3
+                            headers=HEADERS, timeout=10
                         )
-                        if db_check.status_code == 200:
-                            for dp in db_check.json():
-                                dfn = dp.get("filename", "")
-                                dm = re.search(r'_(\d+)\.', dfn)
-                                if dm:
-                                    try:
-                                        seq = int(dm.group(1))
-                                        if seq > max_seq: max_seq = seq
-                                    except Exception: pass
-                    except Exception:
-                        pass
+                        if db_check.status_code != 200:
+                            raise Exception(f"Supabase 조회 실패 {db_check.status_code}")
+                        for dp in db_check.json():
+                            dfn = dp.get("filename", "")
+                            dm = re.search(r'_(\d+)\.', dfn)
+                            if dm:
+                                try:
+                                    seq = int(dm.group(1))
+                                    if seq > max_seq: max_seq = seq
+                                except Exception: pass
+                    except Exception as e:
+                        raise Exception(f"사진 번호 확인을 위한 DB 조회 실패: {e}")
 
                 next_seq = max_seq + 1
                 seq_str = f"{next_seq:02d}"
@@ -2153,47 +2169,57 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 
                 auto_filename = f"{k_upper}_{seq_str}.{ext}"
 
-                # ① Supabase DB에 file_data(base64)로 영구 저장 (최우선)
+                # ① Supabase DB에 file_data(base64)로 영구 저장 (필수)
+                #    Render 서버의 로컬 디스크는 재시작/슬립 시 초기화되므로
+                #    DB 저장에 실패하면 업로드 자체를 실패로 처리한다.
+                if not (SUPABASE_URL and SECRET_KEY):
+                    raise Exception("Supabase 설정이 없어 사진을 영구 저장할 수 없습니다.")
+
                 supabase_ok = False
-                if SUPABASE_URL and SECRET_KEY:
+                last_err = ""
+                h_prefer = dict(HEADERS)
+                h_prefer["Prefer"] = "return=minimal"
+                for attempt in range(3):
+                    photo_payload = {
+                        "facility_key": k_upper,
+                        "filename": auto_filename,
+                        "file_data": raw_b64
+                    }
                     try:
-                        photo_payload = {
-                            "facility_key": k_upper,
-                            "filename": auto_filename,
-                            "file_data": raw_b64
-                        }
-                        h_prefer = dict(HEADERS)
-                        h_prefer["Prefer"] = "return=minimal"
                         sb_res = requests.post(
                             f"{SUPABASE_URL}/rest/v1/facility_photos",
-                            headers=h_prefer, json=[photo_payload], timeout=10
+                            headers=h_prefer, json=[photo_payload], timeout=60
                         )
-                        if sb_res.status_code in [200, 201]:
+                        if sb_res.status_code in [200, 201, 204]:
                             supabase_ok = True
                             print(f"Supabase photo saved: {auto_filename}")
-                        else:
-                            print(f"Supabase photo save error: {sb_res.status_code} {sb_res.text[:200]}")
+                            break
+                        last_err = f"{sb_res.status_code} {sb_res.text[:200]}"
+                        print("Supabase photo save error:", last_err)
                     except Exception as e:
+                        last_err = str(e)
                         print("Supabase photo upload error:", e)
+                    time.sleep(1)
 
-                # ② 로컬 사진 폴더에도 저장 (서버 재시작 전까지 빠른 서빙용 캐시)
+                if not supabase_ok:
+                    raise Exception(f"Supabase DB 저장 실패: {last_err}")
+
+                # ② DB 저장 확인 후 로컬 사진 폴더에 빠른 서빙용 캐시 저장
                 base_dir = os.path.dirname(os.path.abspath(__file__))
                 photo_dir = os.path.join(base_dir, "사진")
                 os.makedirs(photo_dir, exist_ok=True)
                 save_path = os.path.join(photo_dir, auto_filename)
-
                 try:
                     with open(save_path, "wb") as f:
                         f.write(img_bytes)
                     PHOTO_PATH_CACHE[auto_filename] = save_path
                     get_or_create_thumbnail(save_path)
                 except Exception as e:
-                    print("Local photo save note:", e)
+                    print("Local photo cache note:", e)
 
                 # ③ 메모리 캐시(PHOTO_KEY_MAP) 갱신
                 if k_upper not in PHOTO_KEY_MAP:
                     PHOTO_KEY_MAP[k_upper] = []
-                
                 ts = int(time.time())
                 photo_obj = {
                     "filename": auto_filename,
@@ -2201,9 +2227,6 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                     "thumb_url": f"/api/photo_file?path={auto_filename}&thumb=1&v={ts}"
                 }
                 PHOTO_KEY_MAP[k_upper].append(photo_obj)
-
-                if not supabase_ok and not os.path.exists(save_path):
-                    raise Exception("Supabase 저장 실패 및 로컬 저장도 실패")
 
                 response = {"success": True, "filename": auto_filename, "url": photo_obj["url"], "supabase_saved": supabase_ok}
                 self.send_response(200)
@@ -2255,19 +2278,18 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                         PHOTO_KEY_MAP[k_upper] = [p for p in PHOTO_KEY_MAP[k_upper] if p.get("filename") != filename]
                     
                     if SUPABASE_URL and SECRET_KEY:
-                        try:
-                            requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&filename=eq.{filename}", headers=HEADERS, timeout=5)
-                        except Exception as e:
-                            print("Supabase photo delete sync error:", e)
+                        del_res = requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?facility_key=eq.{k_upper}&filename=eq.{quote(filename)}", headers=HEADERS, timeout=15)
+                        if del_res.status_code not in [200, 204]:
+                            raise Exception(f"Supabase DB 삭제 실패: {del_res.status_code} {del_res.text[:200]}")
                 else:
                     for k in PHOTO_KEY_MAP:
                         PHOTO_KEY_MAP[k] = [p for p in PHOTO_KEY_MAP[k] if p.get("filename") != filename]
                     if SUPABASE_URL and SECRET_KEY:
-                        try:
-                            requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{filename}", headers=HEADERS, timeout=3)
-                        except Exception as e:
-                            print("Supabase photo delete note:", e)
+                        del_res = requests.delete(f"{SUPABASE_URL}/rest/v1/facility_photos?filename=eq.{quote(filename)}", headers=HEADERS, timeout=15)
+                        if del_res.status_code not in [200, 204]:
+                            raise Exception(f"Supabase DB 삭제 실패: {del_res.status_code} {del_res.text[:200]}")
 
+                PHOTO_PATH_CACHE.pop(filename, None)
                 response = {"success": True, "message": "사진이 성공적으로 삭제되었습니다."}
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')

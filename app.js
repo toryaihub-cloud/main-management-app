@@ -1627,8 +1627,50 @@ function updatePhotoSliderDisplay() {
   }
 }
 
+// 업로드 전 브라우저에서 사진 크기 축소 (긴 변 1920px, JPEG 85%)
+// → 전송량을 줄여 Render 백엔드/Supabase 저장 타임아웃을 방지
+function compressImageFile(file, maxSide = 1920, quality = 0.85) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onerror = () => resolve(null);
+    reader.onload = (e) => {
+      const original = e.target.result;
+      const img = new Image();
+      img.onerror = () => resolve({ dataUrl: original, ext: (file.name.split('.').pop() || 'jpg').toLowerCase() });
+      img.onload = () => {
+        try {
+          let { width, height } = img;
+          const scale = Math.min(1, maxSide / Math.max(width, height));
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          // 압축본이 원본보다 크면 원본 사용
+          if (dataUrl.length < original.length || scale < 1) {
+            resolve({ dataUrl, ext: 'jpg' });
+          } else {
+            resolve({ dataUrl: original, ext: (file.name.split('.').pop() || 'jpg').toLowerCase() });
+          }
+        } catch (err) {
+          resolve({ dataUrl: original, ext: (file.name.split('.').pop() || 'jpg').toLowerCase() });
+        }
+      };
+      img.src = original;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 async function handlePhotoUploadSelect(event) {
-  const file = event.target.files[0];
+  const input = event.target;
+  const file = input.files[0];
+  input.value = "";
   if (!file) return;
   if (!currentFacilityDetail || !currentFacilityDetail.facility_key) {
     alert("선택된 시설이 없습니다.");
@@ -1636,35 +1678,52 @@ async function handlePhotoUploadSelect(event) {
   }
 
   const facilityKey = currentFacilityDetail.facility_key;
-  const fileName = `${facilityKey}_${Date.now()}.${file.name.split('.').pop()}`;
+  const facilityName = currentFacilityDetail.facility_name;
+  const noPhotoMsg = document.getElementById("no-photo-msg");
 
-  const reader = new FileReader();
-  reader.onload = async function (e) {
-    const base64Data = e.target.result;
-    try {
-      const res = await fetch(`${API_BASE_URL}/photos/upload`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          facility_key: facilityKey,
-          filename: fileName,
-          file_data: base64Data
-        })
-      });
-      const data = await res.json();
-      if (data.success) {
-        alert("Supabase Storage 클라우드에 사진이 성공적으로 업로드되었습니다.");
-        loadFacilityPhotos(facilityKey, currentFacilityDetail.facility_name);
-      } else {
-        alert("업로드 실패: " + (data.message || "오류가 발생했습니다."));
-      }
-    } catch (err) {
-      console.error(err);
-      alert("사진 업로드 중 네트워크 오류가 발생했습니다.");
+  const compressed = await compressImageFile(file);
+  if (!compressed) {
+    alert("사진 파일을 읽을 수 없습니다.");
+    return;
+  }
+  const fileName = `${facilityKey}_${Date.now()}.${compressed.ext}`;
+
+  if (noPhotoMsg) {
+    noPhotoMsg.style.display = "block";
+    noPhotoMsg.innerHTML = `
+      <i class="fa-solid fa-circle-notch fa-spin" style="font-size:2.5rem; margin-bottom:0.6rem; color:#0284C7; display:block;"></i>
+      <span style="font-size:0.9rem; color:#94A3B8;">사진을 Supabase DB에 저장하는 중입니다...</span>
+    `;
+  }
+
+  try {
+    const res = await fetchWithRetry(`${API_BASE_URL}/photos/upload`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        facility_key: facilityKey,
+        filename: fileName,
+        file_data: compressed.dataUrl
+      })
+    }, 3, 5000);
+    let data = {};
+    try { data = await res.json(); } catch (e) { data = {}; }
+
+    // 서버가 Supabase DB 저장까지 확인한 경우에만 성공 처리
+    if (res.ok && data.success && data.supabase_saved === true) {
+      alert(`사진(${data.filename})이 Supabase DB에 영구 저장되었습니다.`);
+    } else {
+      alert("사진이 DB에 저장되지 않았습니다. 다시 시도해 주세요.\n사유: " + (data.message || `서버 응답 오류 (${res.status})`));
     }
-  };
-  reader.readAsDataURL(file);
-  event.target.value = "";
+  } catch (err) {
+    console.error(err);
+    alert("사진 업로드 중 네트워크 오류가 발생했습니다. 사진이 저장되지 않았으니 다시 시도해 주세요.");
+  } finally {
+    // 항상 DB 기준 목록을 다시 불러와 실제 저장 상태를 표시
+    if (currentFacilityDetail && currentFacilityDetail.facility_key === facilityKey) {
+      loadFacilityPhotos(facilityKey, facilityName);
+    }
+  }
 }
 
 async function deleteCurrentFacilityPhoto() {
@@ -1672,7 +1731,7 @@ async function deleteCurrentFacilityPhoto() {
   const currentPhoto = currentFacilityPhotos[currentPhotoIndex];
   if (!currentPhoto || !currentPhoto.filename) return;
 
-  if (!confirm(`정말 사진 (${currentPhoto.filename})을 Supabase Storage 클라우드에서 삭제하시겠습니까?`)) return;
+  if (!confirm(`정말 사진 (${currentPhoto.filename})을 Supabase DB에서 삭제하시겠습니까?`)) return;
 
   const facilityKey = currentFacilityDetail ? currentFacilityDetail.facility_key : "";
   try {
