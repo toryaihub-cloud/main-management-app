@@ -460,6 +460,12 @@
             <option value="미도달">미도달 / 반송</option>
           </select>
 
+          <select id="corr-filter-compliance" class="select-box" onchange="filterCorrectionOrders()">
+            <option value="">이행여부 전체</option>
+            <option value="이행완료">이행완료</option>
+            <option value="미이행">미이행</option>
+          </select>
+
           <span id="corr-filtered-count" class="result-badge">총 0건 검색</span>
         </div>
 
@@ -485,8 +491,10 @@
                 <th style="width:200px;">시정명령대상</th>
                 <th style="width:90px; text-align:center;">통지방법</th>
                 <th style="width:180px;">수신인</th>
-                <th style="width:100px; text-align:center;">우편도달여부</th>
-                <th style="width:130px;">비고</th>
+                <th style="width:110px; text-align:center;">우편도달여부</th>
+                <th style="width:100px; text-align:center;">이행완료</th>
+                <th style="width:170px;">비고</th>
+                <th style="width:90px; text-align:center;">관리</th>
               </tr>
             </thead>
             <tbody id="correction-orders-tbody">
@@ -1616,13 +1624,31 @@
                 <option value="도달">도달</option>
                 <option value="반송">반송</option>
                 <option value="배송중">배송중</option>
+                <option value="미도달">미도달</option>
+                <option value="폐문부재">폐문부재</option>
+                <option value="수취인불명">수취인불명</option>
               </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 2fr; gap:0.8rem;">
+            <div class="form-group">
+              <label class="form-label">이행완료</label>
+              <select id="corr-edit-compliance" class="input-box">
+                <option value="">미이행</option>
+                <option value="이행완료">이행완료</option>
+              </select>
+              <div style="font-size:0.72rem; color:#64748B; margin-top:0.2rem;">통합시설의 이행여부가 이행완료가 되면 자동 연동</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">연결 시설 KEY</label>
+              <input type="text" id="corr-edit-fac-key" class="input-box" placeholder="예: K0019 (이행완료 연동용)">
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label">비고</label>
-            <input type="text" id="corr-edit-note" class="input-box" placeholder="비고 입력 (예: 이행완료, 대표자 추가발송 등)">
+            <input type="text" id="corr-edit-note" class="input-box" placeholder="비고 입력 (예: 대표자 추가발송, 명의자 변경으로 재발송 등)">
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.8rem;">
@@ -2030,6 +2056,6 @@
     <option value="시설지원과"></option>
     <option value="청소행정과"></option>
   </datalist>
-  <script src="app.js?v=20261124_v18_disp_report_style"></script>
+  <script src="app.js?v=20261124_v19_correction_edit"></script>
 </body>
 </html>

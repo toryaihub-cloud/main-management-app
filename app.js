@@ -3102,6 +3102,11 @@ async function saveFacility() {
     }
   } catch(eDbSync) {}
 
+  // 시정명령 연동: 이행여부가 이행완료로 바뀌면 해당 시설의 시정명령 건에도 이행완료 기록
+  if (payload.compliance_status === "이행완료") {
+    await syncCorrectionOrdersCompliance(key, true);
+  }
+
   alert("시설 정보가 성공적으로 저장되었습니다.");
   closeModal('modal-facility');
 
@@ -3973,6 +3978,9 @@ async function saveDisposition() {
       localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
     } catch(e) {}
 
+    if (payload.target_type === '시설' && (payload.current_status || "").includes("이행") && !(payload.current_status || "").includes("미이행")) {
+      await syncCorrectionOrdersCompliance(facilityKey, true);
+    }
     alert("행정처분 정보가 성공적으로 저장되었습니다." + (payload.target_type === '시설' ? "\n(해당 시설의 모든 하위 소유자/관리자의 현상태도 함께 일괄 동기화되었습니다)" : ""));
     closeModal('modal-disposition');
 
@@ -4201,64 +4209,115 @@ let allCorrectionOrders = [];
 let correctionMeta = {};
 let currentCorrectionBatch = '2026-06-30';
 
+// 차수별 요약(meta) 계산
+function buildCorrectionMeta(orders) {
+  const meta = {};
+  const rounds = [...new Set(orders.map(o => o.batch_round).filter(Boolean))].sort();
+  rounds.forEach((br, idx) => {
+    const b = orders.filter(o => o.batch_round === br);
+    const first = b[0] || {};
+    const off = b.filter(o => o.notice_method === "공문").length;
+    meta[br] = {
+      batch_round: br,
+      batch_label: `${idx + 1}차 (${String(br).replace(/-/g, ".")})`,
+      batch_title: first.batch_title || `${br} 시정명령`,
+      approval_date: first.approval_date || first.order_date || "-",
+      send_date: first.send_date || first.order_date || "-",
+      total_facilities: len_unique(b.map(o => o.facility_name)),
+      official_count: off,
+      mail_count: b.length - off,
+      row_count: b.length
+    };
+  });
+  return meta;
+}
+
+const CORR_ORDER_DB_COLS = ["batch_round", "batch_title", "order_date", "approval_date", "send_date", "facility_name", "facility_key",
+  "send_address", "zip_code", "target_name", "notice_method", "recipient_name", "delivery_status", "note", "compliance_status"];
+
+function corrDbHeaders(extra) {
+  return { "apikey": SUPABASE_SECRET_KEY, "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`, "Content-Type": "application/json", ...(extra || {}) };
+}
+
 async function fetchCorrectionOrders() {
-  let fetchedData = null;
-
+  let orders = null;
+  // [1순위] Supabase DB 직접 조회 (단일 진실 공급원)
   try {
-    const res = await fetch(`${API_BASE_URL}/correction_orders`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.orders && data.orders.length > 0) {
-        fetchedData = data;
-      }
-    }
+    const res = await fetch(`${SUPABASE_REST_URL}/correction_orders?select=*&order=id.asc`, { headers: corrDbHeaders() });
+    if (res.ok) orders = await res.json();
   } catch (err) {
-    console.warn("Backend API fetch correction orders failed:", err);
+    console.warn("Supabase correction_orders fetch failed:", err);
   }
-
-  if (!fetchedData) {
+  // [2순위] 백엔드 API
+  if (!Array.isArray(orders)) {
     try {
-      const resLocal = await fetch("correction_orders_cache.json?v=" + Date.now());
-      if (resLocal.ok) {
-        const data = await resLocal.json();
-        if (data && data.orders && data.orders.length > 0) {
-          fetchedData = data;
-        }
-      }
-    } catch (e) {
-      console.warn("Local cache fetch failed:", e);
-    }
+      const res = await fetch(`${API_BASE_URL}/correction_orders`);
+      if (res.ok) { const d = await res.json(); if (d && Array.isArray(d.orders)) orders = d.orders; }
+    } catch (err) { console.warn("Backend correction orders fetch failed:", err); }
   }
-
-  // Smart Merge with localStorage edits
-  const cached = localStorage.getItem("cached_correction_orders");
-  let orders = fetchedData ? (fetchedData.orders || []) : [];
-  let meta = fetchedData ? (fetchedData.meta || {}) : {};
-
-  if (cached) {
-    try {
-      const cData = JSON.parse(cached);
-      const cOrders = cData.orders || [];
-      if (cOrders.length > 0) {
-        const cMap = new Map(cOrders.map(o => [String(o.id), o]));
-        orders = orders.map(o => {
-          const cItem = cMap.get(String(o.id));
-          return cItem ? { ...o, ...cItem } : o;
-        });
-        cOrders.forEach(cItem => {
-          if (!orders.some(o => String(o.id) === String(cItem.id))) {
-            orders.push(cItem);
-          }
-        });
-        if (cData.meta) meta = { ...meta, ...cData.meta };
-      }
-    } catch(e) {}
+  // [3순위] 마지막으로 불러온 화면 캐시 (조회 전용, DB와 병합하지 않음)
+  if (!Array.isArray(orders)) {
+    try { const c = JSON.parse(localStorage.getItem("cached_correction_orders") || "null"); if (c && Array.isArray(c.orders)) orders = c.orders; } catch (e) {}
   }
-
-  allCorrectionOrders = orders;
-  correctionMeta = meta;
+  allCorrectionOrders = Array.isArray(orders) ? orders : [];
+  correctionMeta = buildCorrectionMeta(allCorrectionOrders);
   try { localStorage.setItem("cached_correction_orders", JSON.stringify({ meta: correctionMeta, orders: allCorrectionOrders })); } catch(e) {}
   renderCorrectionBatch(currentCorrectionBatch);
+}
+
+// 이행완료 판단: 시정명령 건의 이행완료 값 또는 연결 시설(통합시설/행정처분)의 이행여부
+function isCorrectionOrderCompleted(item) {
+  if ((item.compliance_status || "") === "이행완료") return true;
+  if (!item.facility_key) return false;
+  const fac = (Array.isArray(facilitiesData) ? facilitiesData : []).find(f => f.facility_key === item.facility_key);
+  if (fac && fac.compliance_status === "이행완료") return true;
+  const disp = (Array.isArray(dispositionsData) ? dispositionsData : []).find(d => d.facility_key === item.facility_key && d.target_type === "시설");
+  const st = disp ? (disp.current_status || "") : "";
+  return st.includes("이행") && !st.includes("미이행");
+}
+
+// 통합시설/행정처분에서 이행완료로 바뀌면 시정명령 건에도 이행완료 기록
+async function syncCorrectionOrdersCompliance(facilityKey, completed) {
+  if (!facilityKey || !completed) return;
+  try {
+    const res = await fetch(`${SUPABASE_REST_URL}/correction_orders?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+      method: "PATCH",
+      headers: corrDbHeaders(),
+      body: JSON.stringify({ compliance_status: "이행완료", updated_at: new Date().toISOString() })
+    });
+    if (!res.ok) console.warn("시정명령 이행완료 연동 실패:", res.status, await res.text().catch(() => ""));
+    (allCorrectionOrders || []).forEach(o => { if (o.facility_key === facilityKey) o.compliance_status = "이행완료"; });
+  } catch (e) {
+    console.warn("시정명령 이행완료 연동 오류:", e);
+  }
+}
+
+// 표에서 바로 수정 (우편도달여부 / 이행완료 / 비고)
+async function quickUpdateCorrectionOrder(id, field, value, el) {
+  const item = allCorrectionOrders.find(o => String(o.id) === String(id));
+  if (!item) return;
+  const prev = item[field];
+  const body = { [field]: value, updated_at: new Date().toISOString() };
+  if (el) el.disabled = true;
+  try {
+    const res = await fetch(`${SUPABASE_REST_URL}/correction_orders?id=eq.${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      headers: corrDbHeaders({ "Prefer": "return=representation" }),
+      body: JSON.stringify(body)
+    });
+    const rows = res.ok ? await res.json().catch(() => []) : [];
+    if (!res.ok || !rows.length) throw new Error(res.ok ? "DB에 해당 건이 없습니다." : `${res.status} ${await res.text().catch(() => "")}`);
+    Object.assign(item, rows[0]);
+    try { localStorage.setItem("cached_correction_orders", JSON.stringify({ meta: correctionMeta, orders: allCorrectionOrders })); } catch(e) {}
+    if (el) { el.style.outline = "2px solid #10B981"; setTimeout(() => { el.style.outline = ""; }, 900); }
+    if (field === "compliance_status") filterCorrectionOrders();
+  } catch (err) {
+    item[field] = prev;
+    alert("저장에 실패했습니다. 다시 시도해 주세요.\n사유: " + err.message);
+    filterCorrectionOrders();
+  } finally {
+    if (el) el.disabled = false;
+  }
 }
 
 function renderCorrectionBatchTabs() {
@@ -4367,6 +4426,10 @@ function openNewCorrectionOrderModal() {
   document.getElementById("corr-edit-recipient").value = "";
   document.getElementById("corr-edit-delivery").value = "";
   document.getElementById("corr-edit-note").value = "";
+  const compEl = document.getElementById("corr-edit-compliance");
+  if (compEl) compEl.value = "";
+  const keyEl = document.getElementById("corr-edit-fac-key");
+  if (keyEl) keyEl.value = "";
 
   const modal = document.getElementById("modal-correction-order");
   if (modal) {
@@ -4520,6 +4583,7 @@ function filterCorrectionOrders() {
   const searchKeyword = (document.getElementById("corr-search-input")?.value || "").trim().toLowerCase();
   const methodFilter = (document.getElementById("corr-filter-method")?.value || "").trim();
   const deliveryFilter = (document.getElementById("corr-filter-delivery")?.value || "").trim();
+  const complianceFilter = (document.getElementById("corr-filter-compliance")?.value || "").trim();
 
   // 현재 차수 데이터 추출
   const batchList = allCorrectionOrders.filter(o => o.batch_round === currentCorrectionBatch);
@@ -4530,6 +4594,11 @@ function filterCorrectionOrders() {
     if (deliveryFilter) {
       if (deliveryFilter === '도달' && item.delivery_status !== '도달') return false;
       if (deliveryFilter === '미도달' && item.delivery_status === '도달') return false;
+    }
+    if (complianceFilter) {
+      const done = isCorrectionOrderCompleted(item);
+      if (complianceFilter === "이행완료" && !done) return false;
+      if (complianceFilter === "미이행" && done) return false;
     }
     if (searchKeyword) {
       const targetStr = `${item.facility_name || ''} ${item.target_name || ''} ${item.recipient_name || ''} ${item.send_address || ''} ${item.note || ''}`.toLowerCase();
@@ -4544,7 +4613,7 @@ function filterCorrectionOrders() {
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="10" style="text-align:center; padding:2rem; color:var(--text-muted);">
+        <td colspan="12" style="text-align:center; padding:2rem; color:var(--text-muted);">
           <i class="fa-solid fa-circle-info" style="margin-right:0.4rem;"></i> 조건에 해당하는 시정명령 내역이 없습니다.
         </td>
       </tr>
@@ -4558,31 +4627,52 @@ function filterCorrectionOrders() {
       ? `<span class="badge badge-amber" style="font-size:0.75rem; padding:0.2rem 0.5rem;"><i class="fa-solid fa-envelope-open-text"></i> 공문</span>`
       : `<span class="badge badge-blue" style="font-size:0.75rem; padding:0.2rem 0.5rem;"><i class="fa-solid fa-paper-plane"></i> 등기</span>`;
 
-    let deliveryBadge = `<span style="color:#94A3B8; font-size:0.8rem;">-</span>`;
-    if (item.delivery_status === '도달') {
-      deliveryBadge = `<span class="badge badge-emerald" style="font-size:0.75rem; padding:0.2rem 0.5rem; font-weight:700;"><i class="fa-solid fa-check"></i> 도달</span>`;
-    } else if (item.delivery_status) {
-      deliveryBadge = `<span class="badge badge-rose" style="font-size:0.75rem; padding:0.2rem 0.5rem; font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> ${item.delivery_status}</span>`;
-    }
+    const esc = v => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const deliveryOpts = ["", "도달", "반송", "배송중", "미도달", "폐문부재", "수취인불명"];
+    if (item.delivery_status && !deliveryOpts.includes(item.delivery_status)) deliveryOpts.push(item.delivery_status);
+    const dColor = item.delivery_status === "도달" ? "#059669" : (item.delivery_status ? "#E11D48" : "#64748B");
+    const deliverySelect = `
+      <select class="select-box" style="font-size:0.78rem; padding:0.2rem 0.3rem; color:${dColor}; font-weight:700; min-width:88px;"
+        onchange="quickUpdateCorrectionOrder(${item.id}, 'delivery_status', this.value, this)">
+        ${deliveryOpts.map(v => `<option value="${esc(v)}" ${v === (item.delivery_status || "") ? "selected" : ""}>${v || "-"}</option>`).join("")}
+      </select>`;
 
-    const noteTag = item.note ? `<span style="font-size:0.8rem; background:#F8FAFC; padding:0.2rem 0.45rem; border-radius:4px; border:1px solid #CBD5E1; color:#334155; font-weight:500;">${item.note}</span>` : `<span style="color:#94A3B8;">-</span>`;
+    const done = isCorrectionOrderCompleted(item);
+    const autoDone = done && item.compliance_status !== "이행완료";
+    const complianceCell = `
+      <label style="display:inline-flex; align-items:center; gap:0.3rem; cursor:pointer; font-size:0.8rem; font-weight:700; color:${done ? '#059669' : '#94A3B8'};" title="${autoDone ? '통합시설/행정처분의 이행완료로 자동 표시' : '체크하면 이행완료로 저장'}">
+        <input type="checkbox" ${done ? "checked" : ""} ${autoDone ? "disabled" : ""}
+          onchange="quickUpdateCorrectionOrder(${item.id}, 'compliance_status', this.checked ? '이행완료' : null, this)">
+        ${done ? "이행완료" : "미이행"}${autoDone ? ' <i class="fa-solid fa-link" style="font-size:0.7rem;"></i>' : ""}
+      </label>`;
+
+    const noteInput = `
+      <input type="text" class="input-box" value="${esc(item.note)}" placeholder="비고 입력"
+        style="font-size:0.8rem; padding:0.25rem 0.4rem; width:100%; min-width:130px;"
+        onkeydown="if(event.key==='Enter'){this.blur();}"
+        onchange="quickUpdateCorrectionOrder(${item.id}, 'note', this.value.trim(), this)">`;
 
     return `
       <tr>
         <td style="text-align:center;"><span class="table-no-badge">${idx + 1}</span></td>
-        <td style="text-align:center; font-size:0.83rem; color:#334155; font-weight:600;">${item.order_date || '-'}</td>
+        <td style="text-align:center; font-size:0.83rem; color:#334155; font-weight:600;">${esc(item.order_date) || '-'}</td>
         <td>
           <span class="clickable-fac-name" onclick="openCorrectionOrderModal(${item.id})" title="클릭하여 내용 수정">
-            <i class="fa-regular fa-pen-to-square" style="font-size:0.75rem;"></i>${item.facility_name || '-'}
+            <i class="fa-regular fa-pen-to-square" style="font-size:0.75rem;"></i>${esc(item.facility_name) || '-'}
           </span>
         </td>
-        <td style="font-size:0.83rem; color:#334155; line-height:1.45; word-break:keep-all;">${item.send_address || '-'}</td>
-        <td style="text-align:center; font-size:0.8rem; color:#64748B; font-family:monospace; font-weight:600;">${item.zip_code || '-'}</td>
-        <td style="font-size:0.83rem; color:#1E293B;">${item.target_name || '-'}</td>
+        <td style="font-size:0.83rem; color:#334155; line-height:1.45; word-break:keep-all;">${esc(item.send_address) || '-'}</td>
+        <td style="text-align:center; font-size:0.8rem; color:#64748B; font-family:monospace; font-weight:600;">${esc(item.zip_code) || '-'}</td>
+        <td style="font-size:0.83rem; color:#1E293B;">${esc(item.target_name) || '-'}</td>
         <td style="text-align:center;">${methodBadge}</td>
-        <td style="font-size:0.83rem; font-weight:700; color:#0F172A;">${item.recipient_name || '-'}</td>
-        <td style="text-align:center;">${deliveryBadge}</td>
-        <td style="text-align:center;">${noteTag}</td>
+        <td style="font-size:0.83rem; font-weight:700; color:#0F172A;">${esc(item.recipient_name) || '-'}</td>
+        <td style="text-align:center;">${deliverySelect}</td>
+        <td style="text-align:center;">${complianceCell}</td>
+        <td>${noteInput}</td>
+        <td style="text-align:center; white-space:nowrap;">
+          <button type="button" class="btn btn-secondary" style="padding:0.25rem 0.45rem; font-size:0.75rem;" title="수정" onclick="openCorrectionOrderModal(${item.id})"><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="btn btn-rose" style="padding:0.25rem 0.45rem; font-size:0.75rem;" title="삭제" onclick="deleteCorrectionOrderById(${item.id})"><i class="fa-solid fa-trash-can"></i></button>
+        </td>
       </tr>
     `;
   }).join('');
@@ -4604,6 +4694,10 @@ function openCorrectionOrderModal(id) {
   document.getElementById("corr-edit-recipient").value = item.recipient_name || "";
   document.getElementById("corr-edit-delivery").value = item.delivery_status || "";
   document.getElementById("corr-edit-note").value = item.note || "";
+  const compEl = document.getElementById("corr-edit-compliance");
+  if (compEl) compEl.value = item.compliance_status === "이행완료" ? "이행완료" : "";
+  const keyEl = document.getElementById("corr-edit-fac-key");
+  if (keyEl) keyEl.value = item.facility_key || "";
 
   const modal = document.getElementById("modal-correction-order");
   if (modal) {
@@ -4612,102 +4706,99 @@ function openCorrectionOrderModal(id) {
   }
 }
 
-// 시정명령 저장 (수정)
+// 시정명령 저장 (신규/수정) - Supabase DB 직접 저장 후 확인
 async function saveCorrectionOrder() {
   const id = document.getElementById("corr-edit-id").value;
-  const batchRound = document.getElementById("corr-edit-batch").value || currentCorrectionBatch;
-  const orderDate = document.getElementById("corr-edit-date").value.trim();
-  const noticeMethod = document.getElementById("corr-edit-method").value;
-  const facName = document.getElementById("corr-edit-fac-name").value.trim();
-  const address = document.getElementById("corr-edit-address").value.trim();
-  const zip = document.getElementById("corr-edit-zip").value.trim();
-  const target = document.getElementById("corr-edit-target").value.trim();
-  const recipient = document.getElementById("corr-edit-recipient").value.trim();
-  const delivery = document.getElementById("corr-edit-delivery").value;
-  const note = document.getElementById("corr-edit-note").value.trim();
+  const val = elId => (document.getElementById(elId)?.value || "").trim();
+  const batchRound = val("corr-edit-batch") || currentCorrectionBatch;
+  const facName = val("corr-edit-fac-name");
+  if (!facName) { alert("시설명을 입력해주세요."); return; }
 
-  if (!facName) {
-    alert("시설명을 입력해주세요.");
-    return;
+  const sameBatch = allCorrectionOrders.find(o => o.batch_round === batchRound) || {};
+  const payload = {
+    batch_round: batchRound,
+    batch_title: sameBatch.batch_title || `${batchRound} 시정명령`,
+    approval_date: sameBatch.approval_date || null,
+    send_date: sameBatch.send_date || null,
+    order_date: val("corr-edit-date"),
+    notice_method: val("corr-edit-method") || "등기",
+    facility_name: facName,
+    facility_key: val("corr-edit-fac-key").toUpperCase() || null,
+    send_address: val("corr-edit-address"),
+    zip_code: val("corr-edit-zip"),
+    target_name: val("corr-edit-target"),
+    recipient_name: val("corr-edit-recipient"),
+    delivery_status: val("corr-edit-delivery"),
+    compliance_status: val("corr-edit-compliance") || null,
+    note: val("corr-edit-note"),
+    updated_at: new Date().toISOString()
+  };
+  // 신규 건은 시설명으로 시설 KEY 자동 연결 (이행완료 연동용)
+  if (!payload.facility_key && Array.isArray(facilitiesData)) {
+    const n = s => String(s || "").replace(/\s+/g, "").split("(")[0];
+    const m = facilitiesData.filter(f => n(f.facility_name) === n(facName));
+    if (m.length === 1) payload.facility_key = m[0].facility_key;
   }
 
-  const payload = {
-    id: parseInt(id) || id,
-    batch_round: batchRound,
-    order_date: orderDate,
-    notice_method: noticeMethod,
-    facility_name: facName,
-    send_address: address,
-    zip_code: zip,
-    target_name: target,
-    recipient_name: recipient,
-    delivery_status: delivery,
-    note: note
-  };
-
-  // 백엔드 API 저장 호출 (Supabase DB 및 서버 캐시 저장)
   try {
-    const res = await fetch(`${API_BASE_URL}/correction_orders/save`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    const url = id ? `${SUPABASE_REST_URL}/correction_orders?id=eq.${encodeURIComponent(id)}` : `${SUPABASE_REST_URL}/correction_orders`;
+    const res = await fetch(url, {
+      method: id ? "PATCH" : "POST",
+      headers: corrDbHeaders({ "Prefer": "return=representation" }),
+      body: JSON.stringify(id ? payload : [payload])
     });
-    
-    if (res.ok) {
-      const resData = await res.json();
-      if (resData.data && resData.data.id) {
-        payload.id = resData.data.id;
-      }
-      
-      // 로컬 메모리 상태 갱신
-      const idx = allCorrectionOrders.findIndex(o => String(o.id) === String(payload.id) || (id && String(o.id) === String(id)));
-      if (idx !== -1) {
-        allCorrectionOrders[idx] = { ...allCorrectionOrders[idx], ...payload };
-      } else {
-        allCorrectionOrders.push(payload);
-      }
-
-      try {
-        localStorage.setItem("cached_correction_orders", JSON.stringify({
-          meta: correctionMeta,
-          orders: allCorrectionOrders
-        }));
-      } catch(e) {}
-
-      closeModal("modal-correction-order");
-      renderCorrectionBatch(currentCorrectionBatch);
-      alert("시정명령 내용이 데이터베이스에 안전하게 저장되었습니다.");
-    } else {
-      alert("저장 중 서버 오류가 발생했습니다. 다시 시도해주세요.");
+    const rows = res.ok ? await res.json().catch(() => []) : [];
+    if (!res.ok || !rows.length) {
+      const msg = res.ok ? "DB에 해당 건이 없습니다." : await res.text().catch(() => `HTTP ${res.status}`);
+      alert("시정명령 저장에 실패했습니다. 다시 시도해 주세요.\n사유: " + msg);
+      return;
     }
+    const saved = rows[0];
+    const idx = allCorrectionOrders.findIndex(o => String(o.id) === String(saved.id));
+    if (idx !== -1) allCorrectionOrders[idx] = saved; else allCorrectionOrders.push(saved);
+    correctionMeta = buildCorrectionMeta(allCorrectionOrders);
+    try { localStorage.setItem("cached_correction_orders", JSON.stringify({ meta: correctionMeta, orders: allCorrectionOrders })); } catch(e) {}
+    closeModal("modal-correction-order");
+    currentCorrectionBatch = saved.batch_round || currentCorrectionBatch;
+    renderCorrectionBatch(currentCorrectionBatch);
+    alert("시정명령 내용이 저장되었습니다.");
   } catch (err) {
-    console.error("Backend save error:", err);
-    alert("서버 연결에 실패했습니다: " + err.message);
+    console.error("Correction order save error:", err);
+    alert("저장 중 네트워크 오류가 발생했습니다: " + err.message);
   }
 }
 
-// 시정명령 삭제
+// 시정명령 삭제 (모달에서)
 async function deleteCurrentCorrectionOrder() {
   const id = document.getElementById("corr-edit-id").value;
   if (!id) return;
-  if (!confirm("해당 시정명령 건을 삭제하시겠습니까?")) return;
+  const ok = await deleteCorrectionOrderById(id);
+  if (ok) closeModal("modal-correction-order");
+}
 
-  allCorrectionOrders = allCorrectionOrders.filter(o => String(o.id) !== String(id));
+// 시정명령 삭제 (표/모달 공통) - Supabase DB에서 삭제 확인 후 화면 반영
+async function deleteCorrectionOrderById(id) {
+  const item = allCorrectionOrders.find(o => String(o.id) === String(id));
+  const label = item ? `${item.facility_name || ""} / ${item.target_name || ""}` : `ID ${id}`;
+  if (!confirm(`다음 시정명령 건을 삭제하시겠습니까? (되돌릴 수 없음)\n\n${label}`)) return false;
   try {
-    localStorage.setItem("cached_correction_orders", JSON.stringify({
-      meta: correctionMeta,
-      orders: allCorrectionOrders
-    }));
-  } catch(e) {}
-
-  closeModal("modal-correction-order");
-  renderCorrectionBatch(currentCorrectionBatch);
-
-  try {
-    await fetch(`${API_BASE_URL}/correction_orders/delete?id=${id}`, { method: "DELETE" });
-    alert("시정명령 건이 삭제되었습니다.");
-  } catch(e) {
-    console.warn("Backend delete error:", e);
+    const res = await fetch(`${SUPABASE_REST_URL}/correction_orders?id=eq.${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: corrDbHeaders({ "Prefer": "return=representation" })
+    });
+    const rows = res.ok ? await res.json().catch(() => []) : [];
+    if (!res.ok || !rows.length) {
+      alert("삭제에 실패했습니다.\n사유: " + (res.ok ? "DB에 해당 건이 없습니다." : await res.text().catch(() => `HTTP ${res.status}`)));
+      return false;
+    }
+    allCorrectionOrders = allCorrectionOrders.filter(o => String(o.id) !== String(id));
+    correctionMeta = buildCorrectionMeta(allCorrectionOrders);
+    try { localStorage.setItem("cached_correction_orders", JSON.stringify({ meta: correctionMeta, orders: allCorrectionOrders })); } catch(e) {}
+    renderCorrectionBatch(currentCorrectionBatch);
+    return true;
+  } catch (err) {
+    alert("삭제 중 네트워크 오류가 발생했습니다: " + err.message);
+    return false;
   }
 }
 
