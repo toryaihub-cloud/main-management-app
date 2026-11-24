@@ -6423,11 +6423,11 @@ function renderDispositionReport() {
     <div class="dr-title">${drEscape(data.scope)} : ${s.total}개소 <span class="dr-date">(${drEscape(data.base_date)}기준)</span></div>
     <div class="dr-sub">&nbsp;o 시정명령 및 이행현황</div>
     <table class="dr-table">
-      <thead>
-        <tr><th colspan="3" class="dr-purple">총&nbsp;&nbsp;&nbsp;&nbsp;계</th>${head1}<th rowspan="3" class="dr-purple" style="width:8%;">비고</th></tr>
-        <tr>${head2}</tr>
-      </thead>
-      <tbody><tr>${vals}</tr></tbody>
+      <tbody>
+        <tr><th colspan="3" class="dr-purple">총&nbsp;&nbsp;&nbsp;&nbsp;계</th>${head1}<th class="dr-purple" style="width:8%;">비고</th></tr>
+        <tr>${head2}<td rowspan="2"></td></tr>
+        <tr>${vals}</tr>
+      </tbody>
     </table>
 
     <div class="dr-sec">① 미이행 시설 통계</div>

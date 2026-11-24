@@ -62,13 +62,14 @@ def build_disposition_report_hwpx(report):
 
     # 제목: [공공시설 (타기관)], 공동주택, 공중이용시설 : 66개소 ('26. 11. 18.기준)
     p = doc.add_paragraph("")
+    # 글꼴: 아래 '① 미이행 시설 통계' 제목과 동일(굵게, 같은 크기)
     p.add_run(f"{scope} : ", bold=True, size=TITLE_SIZE)
     p.add_run(f"{summary.get('total', 0)}개소", bold=True, size=TITLE_SIZE)
     if base_date:
         p.add_run(f" ({base_date}기준)", size=11)
 
     p = doc.add_paragraph("")
-    p.add_run(" o 시정명령 및 이행현황", size=TITLE_SIZE)
+    p.add_run("o 시정명령 및 이행현황", bold=True, size=TITLE_SIZE)
 
     # ── 표1: 시정명령 및 이행현황 (총계 + 차수별 계/이행/미이행 + 비고)
     n_cols = 3 + 3 * len(rounds) + 1
@@ -97,7 +98,10 @@ def build_disposition_report_hwpx(report):
         _set_cell(t1, 2, 5 + i * 3, _num(r.get("todo")), size=9)
     for g in range(len(rounds) + 1):
         t1.merge_cells(0, g * 3, 0, g * 3 + 2)
-    t1.merge_cells(0, n_cols - 1, 2, n_cols - 1)
+    # 비고: 첫 줄(보라색 머리글)에만 표시, 아래 두 줄은 합쳐서 빈칸으로 마무리
+    _set_cell(t1, 1, n_cols - 1, "")
+    _set_cell(t1, 2, n_cols - 1, "")
+    t1.merge_cells(1, n_cols - 1, 2, n_cols - 1)
     try:
         t1.set_borders(line_type="SOLID", border_width_mm=0.12, color="#000000", inner=True)
     except Exception:
