@@ -12,13 +12,59 @@
   "list": [{"no": 1, "name": "광주시립정신병원", "progress": "시정명령(2차)"}, ...]
 }
 """
+import io
 import math
+import re
+import zipfile
 from hwpx import HwpxDocument
+try:
+    from hwpx.objects.results import CellMargins
+except Exception:  # pragma: no cover
+    CellMargins = None
 
 HEAD_PURPLE = "#EBDEF1"
 HEAD_GRAY = "#D9D9D9"
-TITLE_SIZE = 15
-BODY_SIZE = 10
+# 한 페이지(A4)에 모두 들어가도록 글자 크기와 여백을 줄임
+TITLE_SIZE = 12
+BODY_SIZE = 8
+SMALL_SIZE = 7.5
+MM = 283.465  # 1mm = 283.465 HWPUNIT
+PAGE_MARGINS = dict(left=int(15 * MM), right=int(15 * MM), top=int(10 * MM), bottom=int(10 * MM),
+                    header=int(5 * MM), footer=int(5 * MM), gutter=0)
+LINE_SPACING_PERCENT = 125
+
+
+def _tight_cells():
+    if CellMargins is None:
+        return None
+    try:
+        return CellMargins(left=170, right=170, top=85, bottom=85)
+    except Exception:
+        return None
+
+
+def _add_table(doc, rows, cols):
+    margins = _tight_cells()
+    try:
+        return doc.add_table(rows, cols, in_margins=margins) if margins else doc.add_table(rows, cols)
+    except Exception:
+        return doc.add_table(rows, cols)
+
+
+def _compact_line_spacing(data):
+    """모든 문단 줄간격(160%)을 줄여 표 높이를 줄임"""
+    src = zipfile.ZipFile(io.BytesIO(data))
+    out = io.BytesIO()
+    with zipfile.ZipFile(out, "w") as dst:
+        for info in src.infolist():
+            body = src.read(info.filename)
+            if info.filename == "Contents/header.xml":
+                txt = body.decode("utf-8")
+                txt = re.sub(r'(<hh:lineSpacing type="PERCENT" value=")(\d+)(")',
+                             lambda m: f"{m.group(1)}{min(int(m.group(2)), LINE_SPACING_PERCENT)}{m.group(3)}", txt)
+                body = txt.encode("utf-8")
+            dst.writestr(info, body, compress_type=info.compress_type)
+    return out.getvalue()
 
 
 def _align(para, align):
@@ -59,6 +105,10 @@ def build_disposition_report_hwpx(report):
     base_date = report.get("base_date") or ""
 
     doc = HwpxDocument.new()
+    try:
+        doc.sections[0].properties.set_page_margins(**PAGE_MARGINS)
+    except Exception:
+        pass
 
     # 제목: [공공시설 (타기관)], 공동주택, 공중이용시설 : 66개소 ('26. 11. 18.기준)
     p = doc.add_paragraph("")
@@ -66,36 +116,37 @@ def build_disposition_report_hwpx(report):
     p.add_run(f"{scope} : ", bold=True, size=TITLE_SIZE)
     p.add_run(f"{summary.get('total', 0)}개소", bold=True, size=TITLE_SIZE)
     if base_date:
-        p.add_run(f" ({base_date}기준)", size=11)
+        p.add_run(f" ({base_date}기준)", size=9)
 
     p = doc.add_paragraph("")
     p.add_run("o 시정명령 및 이행현황", bold=True, size=TITLE_SIZE)
 
     # ── 표1: 시정명령 및 이행현황 (총계 + 차수별 계/이행/미이행 + 비고)
     n_cols = 3 + 3 * len(rounds) + 1
-    t1 = doc.add_table(3, n_cols)
+    t1 = _add_table(doc, 3, n_cols)
     try:
-        t1.set_column_widths([1.0] * (n_cols - 1) + [1.6])
+        t1.set_column_widths([1.0] * (n_cols - 1) + [1.3])
     except Exception:
         pass
-    _set_cell(t1, 0, 0, "총    계", bold=True)
+    _set_cell(t1, 0, 0, "총    계", bold=True, size=BODY_SIZE)
     for i, r in enumerate(rounds):
         label = r.get("label", "")
         if r.get("in_progress"):
             label += "\n(진행중)"
-        _set_cell(t1, 0, 3 + i * 3, label, bold=True)
-    _set_cell(t1, 0, n_cols - 1, "비고", bold=True)
+        _set_cell(t1, 0, 3 + i * 3, label, bold=True, size=BODY_SIZE)
+    _set_cell(t1, 0, n_cols - 1, "비고", bold=True, size=BODY_SIZE)
+    # 계/이행/미이행: 작은 글씨로 한 줄(가로) 표시
     for g in range(len(rounds) + 1):
-        _set_cell(t1, 1, g * 3, "계", size=9)
-        _set_cell(t1, 1, g * 3 + 1, "이행", size=9)
-        _set_cell(t1, 1, g * 3 + 2, "미이행", size=9)
-    _set_cell(t1, 2, 0, _num(summary.get("total")), size=9)
-    _set_cell(t1, 2, 1, _num(summary.get("done")), size=9)
-    _set_cell(t1, 2, 2, _num(summary.get("todo")), size=9)
+        _set_cell(t1, 1, g * 3, "계", size=SMALL_SIZE)
+        _set_cell(t1, 1, g * 3 + 1, "이행", size=SMALL_SIZE)
+        _set_cell(t1, 1, g * 3 + 2, "미이행", size=SMALL_SIZE)
+    _set_cell(t1, 2, 0, _num(summary.get("total")), size=BODY_SIZE)
+    _set_cell(t1, 2, 1, _num(summary.get("done")), size=BODY_SIZE)
+    _set_cell(t1, 2, 2, _num(summary.get("todo")), size=BODY_SIZE)
     for i, r in enumerate(rounds):
-        _set_cell(t1, 2, 3 + i * 3, _num(r.get("total")), size=9)
-        _set_cell(t1, 2, 4 + i * 3, _num(r.get("done")), size=9)
-        _set_cell(t1, 2, 5 + i * 3, _num(r.get("todo")), size=9)
+        _set_cell(t1, 2, 3 + i * 3, _num(r.get("total")), size=BODY_SIZE)
+        _set_cell(t1, 2, 4 + i * 3, _num(r.get("done")), size=BODY_SIZE)
+        _set_cell(t1, 2, 5 + i * 3, _num(r.get("todo")), size=BODY_SIZE)
     for g in range(len(rounds) + 1):
         t1.merge_cells(0, g * 3, 0, g * 3 + 2)
     # 비고: 첫 줄(보라색 머리글)에만 표시, 아래 두 줄은 합쳐서 빈칸으로 마무리
@@ -116,19 +167,21 @@ def build_disposition_report_hwpx(report):
     except Exception:
         pass
 
-    doc.add_paragraph("")
+    p = doc.add_paragraph("")
+    p.add_run(" ", size=6)
     p = doc.add_paragraph("")
     p.add_run("① 미이행 시설 통계", bold=True, size=TITLE_SIZE)
 
     # ── 표2: 미이행 시설 통계
     n2 = 1 + len(rounds) + 1
-    t2 = doc.add_table(2, n2)
+    t2 = _add_table(doc, 2, n2)
     _set_cell(t2, 0, 0, "계", bold=True)
     _set_cell(t2, 1, 0, _num(summary.get("todo")))
     for i, r in enumerate(rounds):
         _set_cell(t2, 0, 1 + i, r.get("short", ""), bold=True)
         _set_cell(t2, 1, 1 + i, _num(r.get("todo")))
     _set_cell(t2, 0, n2 - 1, "비고", bold=True)
+    _set_cell(t2, 0, 0, "계", bold=True)
     _set_cell(t2, 1, n2 - 1, "")
     try:
         t2.set_borders(line_type="SOLID", border_width_mm=0.12, color="#000000", inner=True)
@@ -140,15 +193,16 @@ def build_disposition_report_hwpx(report):
         except Exception:
             pass
 
-    doc.add_paragraph("")
+    p = doc.add_paragraph("")
+    p.add_run(" ", size=6)
     p = doc.add_paragraph("")
     p.add_run("② 미이행 시설 목록", bold=True, size=TITLE_SIZE)
 
     # ── 표3: 미이행 시설 목록 (2단: 연번/시설명/진행상황 × 2)
     half = max(1, math.ceil(len(items) / 2))
-    t3 = doc.add_table(half + 1, 6)
+    t3 = _add_table(doc, half + 1, 6)
     try:
-        t3.set_column_widths([0.9, 3.0, 2.3, 0.9, 3.0, 2.3])
+        t3.set_column_widths([0.6, 3.3, 1.9, 0.6, 3.3, 1.9])
     except Exception:
         pass
     for base in (0, 3):
@@ -158,9 +212,9 @@ def build_disposition_report_hwpx(report):
     for idx, it in enumerate(items):
         row = 1 + (idx % half)
         base = 0 if idx < half else 3
-        _set_cell(t3, row, base, str(it.get("no", idx + 1)), size=9)
-        _set_cell(t3, row, base + 1, it.get("name", ""), size=9)
-        _set_cell(t3, row, base + 2, it.get("progress", ""), size=9)
+        _set_cell(t3, row, base, str(it.get("no", idx + 1)), size=SMALL_SIZE)
+        _set_cell(t3, row, base + 1, it.get("name", ""), size=SMALL_SIZE)
+        _set_cell(t3, row, base + 2, it.get("progress", ""), size=SMALL_SIZE)
     try:
         t3.repeat_header = True
     except Exception:
@@ -175,4 +229,4 @@ def build_disposition_report_hwpx(report):
         except Exception:
             pass
 
-    return doc.to_bytes()
+    return _compact_line_spacing(doc.to_bytes())
