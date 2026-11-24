@@ -4639,18 +4639,15 @@ function filterCorrectionOrders() {
 
     const done = isCorrectionOrderCompleted(item);
     const autoDone = done && item.compliance_status !== "이행완료";
-    const complianceCell = `
-      <label style="display:inline-flex; align-items:center; gap:0.3rem; cursor:pointer; font-size:0.8rem; font-weight:700; color:${done ? '#059669' : '#94A3B8'};" title="${autoDone ? '통합시설/행정처분의 이행완료로 자동 표시' : '체크하면 이행완료로 저장'}">
-        <input type="checkbox" ${done ? "checked" : ""} ${autoDone ? "disabled" : ""}
-          onchange="quickUpdateCorrectionOrder(${item.id}, 'compliance_status', this.checked ? '이행완료' : null, this)">
-        ${done ? "이행완료" : "미이행"}${autoDone ? ' <i class="fa-solid fa-link" style="font-size:0.7rem;"></i>' : ""}
-      </label>`;
+    // 이행완료만 표시 (미이행은 빈칸). 변경은 '수정' 창의 이행완료 항목에서
+    const complianceCell = done
+      ? `<span class="badge badge-emerald" style="font-size:0.72rem; padding:0.2rem 0.45rem; font-weight:700;" title="${autoDone ? '통합시설/행정처분의 이행완료로 자동 표시' : '이행완료'}"><i class="fa-solid fa-check"></i> 이행완료${autoDone ? ' <i class="fa-solid fa-link" style="font-size:0.65rem;"></i>' : ''}</span>`
+      : "";
 
-    const noteInput = `
-      <input type="text" class="input-box" value="${esc(item.note)}" placeholder="비고 입력"
-        style="font-size:0.74rem; padding:0.25rem 0.3rem; width:100%;"
-        onkeydown="if(event.key==='Enter'){this.blur();}"
-        onchange="quickUpdateCorrectionOrder(${item.id}, 'note', this.value.trim(), this)">`;
+    // 비고: 내용 전체를 여러 줄로 표시 (수정은 '수정' 창에서)
+    const noteText = item.note
+      ? `<div style="white-space:pre-wrap; word-break:keep-all; overflow-wrap:anywhere; line-height:1.4; color:#334155;">${esc(item.note)}</div>`
+      : `<span style="color:#94A3B8;">-</span>`;
 
     return `
       <tr class="${done ? 'corr-row-done' : ''}">
@@ -4668,7 +4665,7 @@ function filterCorrectionOrders() {
         <td style="font-size:0.83rem; font-weight:700; color:#0F172A;">${esc(item.recipient_name) || '-'}</td>
         <td style="text-align:center;">${deliverySelect}</td>
         <td style="text-align:center;">${complianceCell}</td>
-        <td>${noteInput}</td>
+        <td>${noteText}</td>
         <td style="text-align:center;">
           <div class="corr-actions">
             <button type="button" class="btn btn-secondary" style="padding:0.2rem 0.4rem; font-size:0.72rem;" title="수정" onclick="openCorrectionOrderModal(${item.id})"><i class="fa-solid fa-pen"></i></button>
