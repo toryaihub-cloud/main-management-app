@@ -329,6 +329,9 @@ def save_gwangsan_facility(req_data):
         "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     }
 
+    # 요청에 실제로 포함된 항목만 저장 (빠진 항목을 빈 값/0으로 덮어쓰지 않음)
+    record = {k: v for k, v in record.items() if k in ("facility_key", "updated_at") or k in req_data}
+
     if enc_mgr:
         record["manager_name_encrypted"] = enc_mgr
     if enc_contact:
@@ -1821,7 +1824,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "building_register_num", "permission_date", "approval_date", "is_new_building",
                 "parking_required_cnt", "parking_uninstalled_cnt", "parking_status",
                 "charger_required_cnt", "charger_uninstalled_cnt", "charger_status",
-                "investigation_status", "management_body",
+                "investigation_status", "management_body", "dept_name",
                 "manager_name_encrypted", "manager_contact_encrypted",
                 "parking_ground_cnt", "parking_underground_cnt",
                 "charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt",

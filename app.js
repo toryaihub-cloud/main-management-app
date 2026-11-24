@@ -1224,6 +1224,7 @@ function openFacilityDetailModal(key) {
   safeSetText("detail-manager-name", decName);
   safeSetText("detail-manager-contact", decContact);
   safeSetText("detail-management-body", facility.management_body);
+  safeSetText("detail-dept-name", facility.dept_name || "-");
 
   const totalHh = facility.total_households ? `${facility.total_households}세대` : '-';
   const evReg = facility.ev_registered_cnt ? `${facility.ev_registered_cnt}대` : '-';
@@ -2763,6 +2764,8 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-charger-underground").value = (item.charger_underground_cnt !== undefined && item.charger_underground_cnt !== null) ? item.charger_underground_cnt : (editExtra.charger_underground_cnt ?? 0);
       document.getElementById("fac-charger-location").value = item.charger_location || editExtra.charger_location || "";
       document.getElementById("fac-management-body").value = item.management_body || "";
+      const facDeptEl = document.getElementById("fac-dept-name");
+      if (facDeptEl) facDeptEl.value = item.dept_name || "";
       if (item.manager_name_decrypted) document.getElementById("fac-manager-name").value = item.manager_name_decrypted;
       if (item.manager_contact_decrypted) document.getElementById("fac-manager-contact").value = item.manager_contact_decrypted;
       document.getElementById("fac-total-households").value = (item.total_households !== undefined && item.total_households !== null) ? item.total_households : "";
@@ -2844,6 +2847,7 @@ async function saveFacility() {
     charger_underground_cnt: parseInt(document.getElementById("fac-charger-underground").value) || 0,
     charger_location: (document.getElementById("fac-charger-location").value || "").trim(),
     management_body: document.getElementById("fac-management-body").value.trim(),
+    dept_name: (document.getElementById("fac-dept-name")?.value || "").trim(),
     manager_name_encrypted: encMgrName,
     manager_contact_encrypted: encMgrContact,
     manager_name_decrypted: mgrName,
@@ -2888,6 +2892,7 @@ async function saveFacility() {
         charger_location: payload.charger_location
       },
       management_body: payload.management_body,
+      dept_name: payload.dept_name || null,
       manager_name_encrypted: encMgrName,
       manager_contact_encrypted: encMgrContact,
       total_households: payload.total_households,
@@ -3013,7 +3018,8 @@ async function saveFacility() {
         parking_installed_cnt: payload.parking_installed_cnt,
         charger_required_cnt: payload.charger_required_cnt,
         charger_fast_req_cnt: payload.charger_fast_req_cnt,
-        approval_date: payload.approval_date
+        approval_date: payload.approval_date,
+        ...(payload.dept_name ? { dept_name: payload.dept_name } : {})
       };
       try { localStorage.setItem("cached_gwangsan_facilities", JSON.stringify(gwangsanFacilitiesData)); } catch(e) {}
       if (typeof filterGwangsanFacilities === "function") filterGwangsanFacilities();
@@ -3034,20 +3040,27 @@ async function saveFacility() {
       body: JSON.stringify(sharedSync)
     }).catch(() => {});
 
-    fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(key)}`, {
-      method: "PATCH",
-      headers: dbHeaders,
-      body: JSON.stringify({
-        ...sharedSync,
-        address_jibun: payload.address_jibun,
-        compliance_status: payload.compliance_status,
-        parking_required_cnt: payload.parking_required_cnt,
-        parking_installed_cnt: payload.parking_installed_cnt,
-        charger_required_cnt: payload.charger_required_cnt,
-        charger_fast_req_cnt: payload.charger_fast_req_cnt,
-        approval_date: payload.approval_date
-      })
-    }).catch(() => {});
+    // 광산구 관리시설 테이블에는 평문 관리자 칸(manager_name/manager_contact)이 없으므로 제외
+    const { manager_name: _mn, manager_contact: _mc, ...gwSharedSync } = sharedSync;
+    if (Array.isArray(gwangsanFacilitiesData) && gwangsanFacilitiesData.some(g => g.facility_key === key)) {
+      fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(key)}`, {
+        method: "PATCH",
+        headers: dbHeaders,
+        body: JSON.stringify({
+          ...gwSharedSync,
+          address_jibun: payload.address_jibun,
+          compliance_status: payload.compliance_status,
+          parking_required_cnt: payload.parking_required_cnt,
+          parking_installed_cnt: payload.parking_installed_cnt,
+          charger_required_cnt: payload.charger_required_cnt,
+          charger_fast_req_cnt: payload.charger_fast_req_cnt,
+          approval_date: payload.approval_date || null,
+          ...(payload.dept_name ? { dept_name: payload.dept_name } : {})
+        })
+      }).then(async r => {
+        if (!r.ok) console.warn("광산구 관리시설 연동 저장 실패:", r.status, await r.text().catch(() => ""));
+      }).catch(() => {});
+    }
   } catch(eDbSync) {}
 
   alert("시설 정보가 성공적으로 저장되었습니다.");
@@ -5391,17 +5404,21 @@ async function handleSaveOperation(e) {
         "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
         "Content-Type": "application/json"
       };
+      // facilities / gwangsan_facilities 테이블에는 평문 관리자 칸이 없으므로 제외하고 전송
+      const { manager_name: _opMn, manager_contact: _opMc, ...dbSharedSync } = sharedSync;
       fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
         method: "PATCH",
         headers: dbHeaders,
-        body: JSON.stringify(sharedSync)
+        body: JSON.stringify(dbSharedSync)
       }).catch(() => {});
 
-      fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
-        method: "PATCH",
-        headers: dbHeaders,
-        body: JSON.stringify(sharedSync)
-      }).catch(() => {});
+      if (Array.isArray(gwangsanFacilitiesData) && gwangsanFacilitiesData.some(g => g.facility_key === facilityKey)) {
+        fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+          method: "PATCH",
+          headers: dbHeaders,
+          body: JSON.stringify(dbSharedSync)
+        }).catch(() => {});
+      }
     } catch(eDbSync) {}
 
     closeModal("modal-operation-detail");
@@ -5926,6 +5943,9 @@ function openGwangsanDetailModal(key) {
   const keyInput = document.getElementById("gwangsan-edit-facility-key");
   if (keyInput) keyInput.value = item.facility_key;
 
+  const deptInput = document.getElementById("gwangsan-edit-dept");
+  if (deptInput) deptInput.value = item.dept_name || "";
+
   const planInput = document.getElementById("gwangsan-edit-action-plan");
   if (planInput) planInput.value = item.dept_action_plan || "";
 
@@ -6134,6 +6154,7 @@ async function handleSaveGwangsanFacility(e) {
 
   const payload = {
     facility_key: facilityKey,
+    dept_name: (document.getElementById("gwangsan-edit-dept")?.value || "").trim(),
     dept_action_plan: (document.getElementById("gwangsan-edit-action-plan")?.value || "").trim(),
     subsidy_apply: (document.getElementById("gwangsan-edit-subsidy")?.value || "").trim(),
     compliance_status: (document.getElementById("gwangsan-edit-compliance")?.value || "미이행").trim(),
@@ -6175,37 +6196,31 @@ async function handleSaveGwangsanFacility(e) {
     survey5_note: (document.getElementById("gwangsan-edit-survey5-note")?.value || "").trim()
   };
 
-  try {
-    let saved = false;
-    // 1순위: 백엔드 save API 호출
-    try {
-      const res = await fetch(`${API_BASE_URL}/gwangsan_facilities/save`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) saved = true;
-    } catch (apiErr) {
-      console.warn("Backend gwangsan save failed, fallback to Supabase direct:", apiErr);
-    }
+  if (!payload.dept_name) {
+    alert("관리부서를 입력해 주세요.");
+    return;
+  }
 
-    // 2순위: Supabase DB 직접 PATCH
-    if (!saved) {
-      try {
-        const resDb = await fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
-          method: "PATCH",
-          headers: {
-            "apikey": SUPABASE_SECRET_KEY,
-            "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
-            "Content-Type": "application/json",
-            "Prefer": "return=representation"
-          },
-          body: JSON.stringify(payload)
-        });
-        if (resDb.ok) saved = true;
-      } catch (dbErr) {
-        console.warn("Direct Supabase gwangsan save failed:", dbErr);
-      }
+  try {
+    const dbHeaders = {
+      "apikey": SUPABASE_SECRET_KEY,
+      "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
+      "Content-Type": "application/json"
+    };
+    payload.updated_at = new Date().toISOString();
+
+    // 1. 광산구 관리시설: Supabase DB에 직접 저장 (저장 확인 필수)
+    //    ※ 백엔드 save API는 빠진 항목을 빈 값으로 덮어쓰므로 사용하지 않음
+    const resDb = await fetch(`${SUPABASE_REST_URL}/gwangsan_facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+      method: "PATCH",
+      headers: { ...dbHeaders, "Prefer": "return=representation" },
+      body: JSON.stringify(payload)
+    });
+    const savedRows = resDb.ok ? await resDb.json().catch(() => []) : [];
+    if (!resDb.ok || !Array.isArray(savedRows) || savedRows.length === 0) {
+      const errText = resDb.ok ? "DB에 해당 시설이 없습니다." : await resDb.text().catch(() => `HTTP ${resDb.status}`);
+      alert("광산구 관리시설 저장에 실패했습니다. 다시 시도해 주세요.\n사유: " + errText);
+      return;
     }
 
     // 로컬 메모리 상태 즉시 업데이트
@@ -6215,12 +6230,28 @@ async function handleSaveGwangsanFacility(e) {
     }
     try { localStorage.setItem("cached_gwangsan_facilities", JSON.stringify(gwangsanFacilitiesData)); } catch(e) {}
 
-    // === [연계 동기화] 통합시설관리(facilitiesData) 및 운영현황관리(operationsData) 인메모리 및 DB 연쇄 동기화 ===
+    // 2. 통합시설관리(facilities) 연동: 의무이행 상태 + 관리부서
     const gwSyncPayload = {
-      compliance_status: payload.compliance_status
+      compliance_status: payload.compliance_status,
+      dept_name: payload.dept_name,
+      updated_at: payload.updated_at
     };
+    let facSyncOk = true;
+    try {
+      const resFac = await fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+        method: "PATCH",
+        headers: dbHeaders,
+        body: JSON.stringify(gwSyncPayload)
+      });
+      if (!resFac.ok) {
+        facSyncOk = false;
+        console.warn("통합시설관리 연동 저장 실패:", resFac.status, await resFac.text().catch(() => ""));
+      }
+    } catch (eFac) {
+      facSyncOk = false;
+      console.warn("통합시설관리 연동 저장 오류:", eFac);
+    }
 
-    // 1. facilitiesData 동기화
     if (Array.isArray(facilitiesData)) {
       const fIdx = facilitiesData.findIndex(f => f.facility_key === facilityKey);
       if (fIdx !== -1) {
@@ -6230,20 +6261,9 @@ async function handleSaveGwangsanFacility(e) {
         if (typeof updateDashboardStats === "function") updateDashboardStats();
       }
     }
-
-    // 2. Supabase DB 직접 PATCH
-    try {
-      const dbHeaders = {
-        "apikey": SUPABASE_SECRET_KEY,
-        "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`,
-        "Content-Type": "application/json"
-      };
-      fetch(`${SUPABASE_REST_URL}/facilities?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
-        method: "PATCH",
-        headers: dbHeaders,
-        body: JSON.stringify(gwSyncPayload)
-      }).catch(() => {});
-    } catch(eDbSync) {}
+    if (!facSyncOk) {
+      alert("광산구 관리시설은 저장되었지만 통합시설관리 연동 저장에 실패했습니다. 통합시설관리에서 관리부서를 확인해 주세요.");
+    }
 
     // 리스트 화면 갱신
     filterGwangsanFacilities();
