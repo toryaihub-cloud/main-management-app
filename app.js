@@ -3058,8 +3058,15 @@ async function saveFacility() {
           ...(payload.dept_name ? { dept_name: payload.dept_name } : {})
         })
       }).then(async r => {
-        if (!r.ok) console.warn("광산구 관리시설 연동 저장 실패:", r.status, await r.text().catch(() => ""));
-      }).catch(() => {});
+        if (!r.ok) {
+          const errTxt = await r.text().catch(() => "");
+          console.warn("광산구 관리시설 연동 저장 실패:", r.status, errTxt);
+          alert("통합시설은 저장되었지만 광산구 관리시설 연동 저장에 실패했습니다.\n화면을 새로고침(Ctrl+F5)한 뒤 다시 저장해 주세요.\n사유: " + r.status + " " + errTxt.slice(0, 150));
+        }
+      }).catch((eGw) => {
+        console.warn("광산구 관리시설 연동 저장 오류:", eGw);
+        alert("통합시설은 저장되었지만 광산구 관리시설 연동 저장 중 네트워크 오류가 발생했습니다. 다시 저장해 주세요.");
+      });
     }
   } catch(eDbSync) {}
 
