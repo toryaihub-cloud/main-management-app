@@ -1725,6 +1725,27 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps({"success": success, "message": msg}, ensure_ascii=False).encode('utf-8'))
             return
 
+        elif path == "/api/disposition_report/hwpx":
+            # 행정처분내역 리포트 → 한글(HWPX) 파일 생성
+            try:
+                from disposition_report_hwpx import build_disposition_report_hwpx
+                data = build_disposition_report_hwpx(req_json)
+                from urllib.parse import quote as _q
+                fname = "행정처분_시정명령_이행현황_" + time.strftime("%Y%m%d") + ".hwpx"
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/hwp+zip')
+                self.send_header('Content-Disposition', "attachment; filename=\"disposition_report.hwpx\"; filename*=UTF-8''" + _q(fname))
+                self.send_header('Content-Length', str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+            except Exception as e:
+                print("Disposition HWPX report error:", e)
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "message": str(e)}, ensure_ascii=False).encode('utf-8'))
+            return
+
         elif path == "/api/gwangsan_report/hwpx":
             # 광산구관리시설 리포트 → 한글(HWPX) 파일 생성
             try:

@@ -31,6 +31,22 @@
     .gw-blue { color: #0000FF; font-weight: 700; }
     .gw-purple { color: #9D5CBB; font-weight: 700; }
   </style>
+  <style>
+    .dr-paper { max-width: 900px; margin: 0 auto; color:#000; font-family: "맑은 고딕", "Malgun Gothic", sans-serif; }
+    .dr-title { font-family: "휴먼명조", "HCR Batang", "Batang", serif; font-size: 1.25rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .dr-title .dr-date { font-size: 0.9rem; font-weight: 400; }
+    .dr-sub { font-family: "휴먼명조", "HCR Batang", "Batang", serif; font-size: 1.2rem; margin: 0.6rem 0 0.5rem; }
+    .dr-sec { font-size: 1.15rem; font-weight: 800; margin: 1.6rem 0 0.5rem; }
+    .dr-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; table-layout: fixed; }
+    .dr-table th, .dr-table td { border: 1px solid #000; padding: 0.35rem 0.3rem; text-align: center; vertical-align: middle; white-space: normal !important; word-break: keep-all; overflow-wrap: anywhere; }
+    .dr-table th { font-weight: 800; }
+    .dr-table th.dr-purple { background: #EBDEF1; }
+    .dr-table th.dr-gray { background: #D9D9D9; }
+    .dr-table td.dr-small, .dr-table th.dr-small { font-size: 0.75rem; font-weight: 400; }
+    .dr-table td.dr-name { cursor: pointer; }
+    .dr-table td.dr-name:hover { text-decoration: underline; color: #2563eb; }
+    .dr-table td.dr-progress-etc { color: #B45309; font-weight: 700; }
+  </style>
 </head>
 <body>
 
@@ -103,6 +119,10 @@
         <button id="tab-dispositions" class="tab-btn" onclick="switchTab('dispositions')">
           <i class="fa-solid fa-gavel"></i>
           <span>행정처분 내역 관리</span>
+        </button>
+        <button id="tab-disposition-report" class="tab-btn" onclick="switchTab('disposition-report')">
+          <i class="fa-solid fa-file-contract"></i>
+          <span>행정처분내역 리포트</span>
         </button>
         <button id="tab-correction-orders" class="tab-btn" onclick="switchTab('correction-orders')">
           <i class="fa-solid fa-file-signature"></i>
@@ -332,6 +352,27 @@
       <!-- Disposition Card View (Default & Only View) -->
       <div id="dispositions-card-grid" class="cards-grid">
         <!-- Dynamically Populated Cards -->
+      </div>
+    </section>
+
+    <!-- 행정처분내역 리포트 (한글 보고서 양식) -->
+    <section id="view-disposition-report" class="view-section">
+      <div style="background:#fff; border:1px solid var(--border-color); border-radius:10px; padding:1rem 1.25rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+        <div>
+          <div style="font-weight:800; font-size:1.05rem; color:#1e293b;"><i class="fa-solid fa-file-contract" style="color:#2563eb;"></i> 행정처분내역 리포트</div>
+          <div style="font-size:0.82rem; color:#64748b; margin-top:0.2rem;">시정명령 차수가 지정된 시설의 이행현황을 보고서 양식으로 구성합니다. 인쇄 버튼을 누르면 한글(HWPX) 파일로 저장됩니다.</div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="Promise.all([fetchFacilities(), fetchDispositions()]).then(renderDispositionReport)">
+            <i class="fa-solid fa-rotate"></i> 새로고침
+          </button>
+          <button type="button" id="btn-disposition-report-print" class="btn btn-primary" onclick="downloadDispositionReportHwpx()">
+            <i class="fa-solid fa-print"></i> 인쇄 (한글 저장)
+          </button>
+        </div>
+      </div>
+      <div style="background:#fff; border:1px solid var(--border-color); border-radius:10px; padding:2rem 1.5rem; overflow-x:auto;">
+        <div id="disposition-report-paper" class="dr-paper"></div>
       </div>
     </section>
 
@@ -1989,6 +2030,6 @@
     <option value="시설지원과"></option>
     <option value="청소행정과"></option>
   </datalist>
-  <script src="app.js?v=20261124_v16_disp_round"></script>
+  <script src="app.js?v=20261124_v17_disp_report"></script>
 </body>
 </html>

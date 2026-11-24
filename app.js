@@ -510,7 +510,10 @@ function switchTab(tabName) {
     targetView.classList.add("active");
   }
 
-  if (tabName === 'dispositions') {
+  if (tabName === 'disposition-report') {
+    renderDispositionReport();
+    Promise.all([fetchFacilities(), fetchDispositions()]).then(renderDispositionReport).catch(() => {});
+  } else if (tabName === 'dispositions') {
     filterDispositions();
   } else if (tabName === 'correction-orders') {
     fetchCorrectionOrders();
@@ -6332,6 +6335,163 @@ async function handleSaveGwangsanFacility(e) {
   } catch (err) {
     console.error("Save gwangsan facility error:", err);
     alert("저장 중 오류가 발생했습니다: " + err.message);
+  }
+}
+
+// =========================================================================
+// 19. 행정처분내역 리포트 (시정명령 및 이행현황 + 미이행 시설 통계/목록)
+// =========================================================================
+const DISPOSITION_REPORT_SCOPE = "[공공시설 (타기관)], 공동주택, 공중이용시설";
+
+function drEscape(v) {
+  return String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function buildDispositionReportData() {
+  const disps = Array.isArray(dispositionsData) ? dispositionsData : [];
+  const facs = Array.isArray(facilitiesData) ? facilitiesData : [];
+  const byKey = {};
+  disps.forEach(d => { if (d.facility_key) (byKey[d.facility_key] = byKey[d.facility_key] || []).push(d); });
+
+  // 시설별 대표 레코드('시설' 우선)에서 시정명령 차수가 지정된 시설만 집계
+  const entries = [];
+  Object.keys(byKey).sort().forEach(key => {
+    const recs = byKey[key];
+    const rec = recs.find(d => d.target_type === "시설") || recs[0];
+    const round = (rec.correction_round || "").trim();
+    if (!round) return;
+    const fac = facs.find(f => f.facility_key === key) || {};
+    const status = (rec.current_status || "").trim();
+    const done = fac.compliance_status === "이행완료" || (status.includes("이행") && !status.includes("미이행"));
+    const hasDate = !!rec.correction_round_date;
+    // 차수만 있고 일자가 없으면 '해당 차수 진행중' → 진행상황에 현상태 표시
+    const progress = hasDate ? `시정명령(${round})` : (status || `시정명령(${round} 진행중)`);
+    entries.push({ key, name: fac.facility_name || rec.target_name_decrypted || key, round, roundNo: parseInt(round) || 99, hasDate, done, progress });
+  });
+
+  const roundNames = [...new Set(entries.map(e => e.round))].sort((a, b) => (parseInt(a) || 99) - (parseInt(b) || 99));
+  const rounds = roundNames.map(rn => {
+    const es = entries.filter(e => e.round === rn);
+    const inProgress = es.some(e => !e.hasDate);
+    return {
+      label: `${rn} 시정명령`,
+      short: inProgress ? `시정명령(${rn} 진행중)` : `시정명령(${rn})`,
+      in_progress: inProgress,
+      total: es.length,
+      done: es.filter(e => e.done).length,
+      todo: es.filter(e => !e.done).length
+    };
+  });
+  const todoList = entries.filter(e => !e.done)
+    .sort((a, b) => (a.hasDate === b.hasDate ? 0 : (a.hasDate ? -1 : 1)) || a.key.localeCompare(b.key))
+    .map((e, i) => ({ no: i + 1, key: e.key, name: e.name, progress: e.progress, etc: !e.hasDate }));
+  const t = new Date();
+  return {
+    scope: DISPOSITION_REPORT_SCOPE,
+    base_date: `'${String(t.getFullYear()).slice(2)}. ${t.getMonth() + 1}. ${t.getDate()}.`,
+    summary: { total: entries.length, done: entries.filter(e => e.done).length, todo: entries.filter(e => !e.done).length },
+    rounds,
+    list: todoList
+  };
+}
+
+function renderDispositionReport() {
+  const paper = document.getElementById("disposition-report-paper");
+  if (!paper) return;
+  const data = buildDispositionReportData();
+  if (!data.summary.total) {
+    paper.innerHTML = `<div style="text-align:center; padding:2rem; color:#94a3b8;">시정명령 차수가 지정된 행정처분 데이터가 없거나 불러오는 중입니다.</div>`;
+    return;
+  }
+  const n = v => v ? v : "-";
+  const s = data.summary;
+  const r = data.rounds;
+
+  const head1 = r.map(x => `<th colspan="3" class="dr-purple">${drEscape(x.label)}${x.in_progress ? "<br>(진행중)" : ""}</th>`).join("");
+  const head2 = ["", ...r].map(() => `<th class="dr-small">계</th><th class="dr-small">이행</th><th class="dr-small">미이행</th>`).join("");
+  const vals = `<td class="dr-small">${n(s.total)}</td><td class="dr-small">${n(s.done)}</td><td class="dr-small">${n(s.todo)}</td>` +
+    r.map(x => `<td class="dr-small">${n(x.total)}</td><td class="dr-small">${n(x.done)}</td><td class="dr-small">${n(x.todo)}</td>`).join("");
+
+  const half = Math.max(1, Math.ceil(data.list.length / 2));
+  let listRows = "";
+  const cellsOf = it => it
+    ? `<td>${it.no}</td><td class="dr-name" title="행정처분 상세 보기" onclick="switchTab('dispositions'); openDispositionDetailModal && openDispositionDetailModal('${drEscape(it.key)}')">${drEscape(it.name)}</td><td class="${it.etc ? "dr-progress-etc" : ""}">${drEscape(it.progress)}</td>`
+    : `<td></td><td></td><td></td>`;
+  for (let i = 0; i < half; i++) listRows += `<tr>${cellsOf(data.list[i])}${cellsOf(data.list[i + half])}</tr>`;
+
+  paper.innerHTML = `
+    <div class="dr-title">${drEscape(data.scope)} : ${s.total}개소 <span class="dr-date">(${drEscape(data.base_date)}기준)</span></div>
+    <div class="dr-sub">&nbsp;o 시정명령 및 이행현황</div>
+    <table class="dr-table">
+      <thead>
+        <tr><th colspan="3" class="dr-purple">총&nbsp;&nbsp;&nbsp;&nbsp;계</th>${head1}<th rowspan="3" class="dr-purple" style="width:8%;">비고</th></tr>
+        <tr>${head2}</tr>
+      </thead>
+      <tbody><tr>${vals}</tr></tbody>
+    </table>
+
+    <div class="dr-sec">① 미이행 시설 통계</div>
+    <table class="dr-table">
+      <thead><tr><th class="dr-gray">계</th>${r.map(x => `<th class="dr-gray">${drEscape(x.short)}</th>`).join("")}<th class="dr-gray">비고</th></tr></thead>
+      <tbody><tr><td>${n(s.todo)}</td>${r.map(x => `<td>${n(x.todo)}</td>`).join("")}<td></td></tr></tbody>
+    </table>
+
+    <div class="dr-sec">② 미이행 시설 목록</div>
+    <table class="dr-table">
+      <colgroup><col style="width:7%"><col style="width:25%"><col style="width:18%"><col style="width:7%"><col style="width:25%"><col style="width:18%"></colgroup>
+      <thead><tr>
+        <th class="dr-gray">연번</th><th class="dr-gray">시설명</th><th class="dr-gray">진행상황</th>
+        <th class="dr-gray">연번</th><th class="dr-gray">시설명</th><th class="dr-gray">진행상황</th>
+      </tr></thead>
+      <tbody>${listRows}</tbody>
+    </table>`;
+}
+
+async function downloadDispositionReportHwpx() {
+  const btn = document.getElementById("btn-disposition-report-print");
+  const data = buildDispositionReportData();
+  if (!data.summary.total) {
+    alert("리포트 데이터가 없습니다. 새로고침 후 다시 시도해 주세요.");
+    return;
+  }
+  const original = btn ? btn.innerHTML : "";
+  if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> 한글 파일 만드는 중...`; }
+  try {
+    let res = null;
+    for (let i = 0; i < 3; i++) {
+      try {
+        res = await fetch(`${API_BASE_URL}/disposition_report/hwpx`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        if (res.status === 502 || res.status === 503) throw new Error(`server waking (${res.status})`);
+        break;
+      } catch (netErr) {
+        if (i === 2) throw netErr;
+        await new Promise(r => setTimeout(r, 6000));
+      }
+    }
+    if (!res.ok) {
+      const msg = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${msg.slice(0, 150)}`);
+    }
+    const blob = await res.blob();
+    const now = new Date();
+    const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `행정처분_시정명령_이행현황_${stamp}.hwpx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } catch (err) {
+    console.error("Disposition HWPX report error:", err);
+    alert("한글 파일 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.\n사유: " + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = original; }
   }
 }
 
