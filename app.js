@@ -5611,11 +5611,14 @@ async function fetchGwangsanFacilities(forceRefresh = false) {
 function updateGwangsanStats() {
   const total = gwangsanFacilitiesData.length;
   let compliant = 0;
+  let exempt = 0;
   let nonCompliant = 0;
   let subsidyCount = 0;
 
   gwangsanFacilitiesData.forEach(item => {
-    if (item.compliance_status === "이행완료") compliant++;
+    const st = (item.compliance_status || "").trim();
+    if (st === "이행완료") compliant++;
+    else if (st === "면제") exempt++;      // 면제는 미이행에 포함하지 않음
     else nonCompliant++;
 
     if (item.subsidy_apply === "신청" || (item.subsidy_apply && item.subsidy_apply.includes("신청"))) {
@@ -5629,7 +5632,7 @@ function updateGwangsanStats() {
   const subEl = document.getElementById("stat-gwangsan-subsidy");
 
   if (totalEl) totalEl.innerText = `${total.toLocaleString()}개소`;
-  if (compEl) compEl.innerText = `${compliant.toLocaleString()}개소`;
+  if (compEl) compEl.innerHTML = `완료 ${compliant.toLocaleString()}개소 <span style="font-size:0.6em; color:#64748B; font-weight:700;">/ 면제 ${exempt.toLocaleString()}개소</span>`;
   if (nonCompEl) nonCompEl.innerText = `${nonCompliant.toLocaleString()}개소`;
   if (subEl) subEl.innerText = `${subsidyCount.toLocaleString()}건`;
 }
@@ -5675,7 +5678,8 @@ function renderGwangsanFacilities(data) {
     const items = grouped[dept];
     const deptColor = GWANGSAN_DEPT_COLORS[dept] || { bg: "#F8FAFC", text: "#334155", border: "#E2E8F0", badgeBg: "#64748B" };
     const deptCompliant = items.filter(i => i.compliance_status === "이행완료").length;
-    const deptNonCompliant = items.length - deptCompliant;
+    const deptExempt = items.filter(i => i.compliance_status === "면제").length;
+    const deptNonCompliant = items.length - deptCompliant - deptExempt;
 
     html += `
       <div class="gwangsan-dept-section" style="background:#fff; border:1px solid ${deptColor.border}; border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
@@ -5690,6 +5694,7 @@ function renderGwangsanFacilities(data) {
           </div>
           <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.78rem;">
             <span class="badge badge-emerald" style="padding:0.2rem 0.5rem;"><i class="fa-solid fa-circle-check"></i> 이행완료 ${deptCompliant}</span>
+            ${deptExempt > 0 ? `<span class="badge" style="padding:0.2rem 0.5rem; background:#F1F5F9; color:#475569;"><i class="fa-solid fa-ban"></i> 면제 ${deptExempt}</span>` : ''}
             ${deptNonCompliant > 0 ? `<span class="badge badge-rose" style="padding:0.2rem 0.5rem;"><i class="fa-solid fa-triangle-exclamation"></i> 미이행 ${deptNonCompliant}</span>` : ''}
           </div>
         </div>
