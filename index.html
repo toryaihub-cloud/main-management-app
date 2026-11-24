@@ -552,7 +552,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-header">
-            <span class="stat-title">의무설치 이행완료</span>
+            <span class="stat-title">의무설치 이행완료 / 면제</span>
             <div class="stat-icon"><i class="fa-solid fa-circle-check" style="color: #10b981;"></i></div>
           </div>
           <div class="stat-value" id="stat-gwangsan-compliant" style="color:#059669;">-</div>
@@ -600,6 +600,7 @@
           <select id="gwangsan-filter-compliance" class="select-box" onchange="filterGwangsanFacilities()">
             <option value="ALL">이행상태 전체</option>
             <option value="이행완료">이행완료</option>
+            <option value="면제">면제</option>
             <option value="미이행" selected>미이행</option>
           </select>
 
@@ -1961,6 +1962,6 @@
     <option value="시설지원과"></option>
     <option value="청소행정과"></option>
   </datalist>
-  <script src="app.js?v=20261124_v14_gwangsan_report_wrap"></script>
+  <script src="app.js?v=20261124_v15_gwangsan_exempt"></script>
 </body>
 </html>
