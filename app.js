@@ -518,6 +518,9 @@ function switchTab(tabName) {
     fetchOperations();
   } else if (tabName === 'gwangsan-facilities') {
     fetchGwangsanFacilities();
+  } else if (tabName === 'gwangsan-report') {
+    if (Array.isArray(gwangsanFacilitiesData) && gwangsanFacilitiesData.length) renderGwangsanReport();
+    fetchGwangsanFacilities().then(renderGwangsanReport);
   } else if (tabName === 'users') {
     fetchUsers();
   }
@@ -6282,6 +6285,204 @@ async function handleSaveGwangsanFacility(e) {
   } catch (err) {
     console.error("Save gwangsan facility error:", err);
     alert("저장 중 오류가 발생했습니다: " + err.message);
+  }
+}
+
+// =========================================================================
+// 18. 광산구관리시설 리포트 (한글 보고서 양식 화면 + HWPX 저장)
+// =========================================================================
+const GWANGSAN_REPORT_DEPT_ORDER = ["시민경제과", "체육진흥과", "교통지도과", "시설지원과", "청소행정과", "도시공원과"];
+const GWANGSAN_REPORT_DEPT_NOTE = { "교통지도과": "(특별회계)" };
+
+function gwReportEscape(v) {
+  return String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+// 한 시설의 리포트 행 계산 (보고서 표기 규칙)
+function buildGwangsanReportRow(f) {
+  const n = v => (v === null || v === undefined || v === "" || isNaN(parseInt(v))) ? 0 : parseInt(v);
+  const raw = (f.compliance_status || "").trim();
+  const status = raw === "이행완료" ? "완료" : (raw === "면제" ? "면제" : "미이행");
+  const exempt = status === "면제";
+
+  const pReq = n(f.parking_required_cnt), pInst = n(f.parking_installed_cnt);
+  const pUn = Math.max(n(f.parking_uninstalled_cnt), pReq - pInst, 0);
+  const cReq = n(f.charger_required_cnt), cFastReq = n(f.charger_fast_req_cnt);
+  const cInst = n(f.charger_installed_cnt), cFast = n(f.charger_fast_cnt), cSlow = n(f.charger_slow_cnt);
+  const fastMissing = Math.max(cFastReq - cFast, 0);
+  const totalMissing = Math.max(cReq - cInst, 0);
+  const slowMissing = Math.max(totalMissing - fastMissing, 0);
+
+  let cFix = "-";
+  if (exempt) cFix = "면제";
+  else if (fastMissing || slowMissing) cFix = [fastMissing ? `급속${fastMissing}` : "", slowMissing ? `완속${slowMissing}` : ""].filter(Boolean).join(" ");
+
+  return {
+    key: f.facility_key,
+    name: f.facility_name || "",
+    status,
+    p_fix: exempt ? "면제" : (pUn > 0 ? `${pUn}면` : "-"),
+    p_inst: String(pInst),
+    p_req: String(pReq),
+    c_fix: cFix,
+    c_inst: exempt && cInst === 0 ? "0" : (cInst === 0 ? "0(0)" : `${cInst}(${cFast}/${cSlow})`),
+    c_req: `${cReq}(${cFastReq})`,
+    plan: (f.dept_action_plan || "").trim()
+  };
+}
+
+// 화면/한글 공통 리포트 데이터
+function buildGwangsanReportData() {
+  const list = Array.isArray(gwangsanFacilitiesData) ? gwangsanFacilitiesData : [];
+  const grouped = {};
+  list.forEach(f => {
+    const dept = (f.dept_name || "기타부서").trim();
+    (grouped[dept] = grouped[dept] || []).push(f);
+  });
+  const depts = Object.keys(grouped).sort((a, b) => {
+    const ia = GWANGSAN_REPORT_DEPT_ORDER.indexOf(a), ib = GWANGSAN_REPORT_DEPT_ORDER.indexOf(b);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || a.localeCompare(b, "ko");
+  });
+  const groups = depts.map(dept => ({
+    dept,
+    dept_note: GWANGSAN_REPORT_DEPT_NOTE[dept] || "",
+    rows: grouped[dept]
+      .slice()
+      .sort((a, b) => (a.seq ?? 9999) - (b.seq ?? 9999) || String(a.facility_key).localeCompare(String(b.facility_key)))
+      .map(buildGwangsanReportRow)
+  }));
+  const rows = groups.flatMap(g => g.rows);
+  const summary = {
+    dept_count: groups.length,
+    facility_count: rows.length,
+    non_compliant: rows.filter(r => r.status === "미이행").length,
+    completed: rows.filter(r => r.status === "완료").length,
+    exempt: rows.filter(r => r.status === "면제").length
+  };
+  const today = new Date();
+  const base_date = `${today.getFullYear()}. ${today.getMonth() + 1}. ${today.getDate()}.`;
+  return { title: "광산구 공공시설 전용주차구역 및 충전시설 설치 이행 현황", summary, groups, base_date };
+}
+
+// 부서 조치계획 색 구분 (원본 보고서 표기: 진행내용 파랑, 미선정/검토 등 빨강, 본예산 보라)
+function gwReportPlanHtml(text) {
+  if (!text) return "";
+  return String(text).split(/\r?\n/).map(line => {
+    const parts = line.split(/(\([^)]*\)|[‘'’]?\d{0,2}\.?\s*본예산[^(\n]*(?:\([^)]*\))?|본예산[^(\n]*)/);
+    return parts.filter(p => p).map(p => {
+      let cls = "gw-blue";
+      if (p.includes("예산")) cls = "gw-purple";
+      else if (p.startsWith("(") && /(미선정|검토|현장조사|불가|협소|예정)/.test(p)) cls = "gw-red";
+      return `<span class="${cls}">${gwReportEscape(p)}</span>`;
+    }).join("");
+  }).join("<br>");
+}
+
+function renderGwangsanReport() {
+  const paper = document.getElementById("gwangsan-report-paper");
+  if (!paper) return;
+  const data = buildGwangsanReportData();
+  if (!data.summary.facility_count) {
+    paper.innerHTML = `<div style="text-align:center; padding:2rem; color:#94a3b8;">광산구 관리시설 데이터를 불러오는 중이거나 데이터가 없습니다.</div>`;
+    return;
+  }
+  const s = data.summary;
+  let body = "";
+  data.groups.forEach(g => {
+    g.rows.forEach((r, i) => {
+      const deptCell = i === 0
+        ? `<td class="gw-dept" rowspan="${g.rows.length}">${gwReportEscape(g.dept)}${g.dept_note ? `<br><span class="gw-blue">${gwReportEscape(g.dept_note)}</span>` : ""}</td>`
+        : "";
+      const red = v => (v && v !== "-" && v !== "면제") ? `<span class="gw-red">${gwReportEscape(v)}</span>` : gwReportEscape(v);
+      body += `
+        <tr class="${i === 0 ? "gw-dept-first" : ""}">
+          ${deptCell}
+          <td style="cursor:pointer;" title="광산구 관리시설 상세 보기" onclick="switchTab('gwangsan-facilities'); openGwangsanDetailModal('${gwReportEscape(r.key)}')">${gwReportEscape(r.name)}</td>
+          <td>${r.status === "미이행" ? `<span class="gw-red">미이행</span>` : gwReportEscape(r.status)}</td>
+          <td>${red(r.p_fix)}</td>
+          <td>${gwReportEscape(r.p_inst)}</td>
+          <td>${gwReportEscape(r.p_req)}</td>
+          <td>${red(r.c_fix)}</td>
+          <td>${gwReportEscape(r.c_inst)}</td>
+          <td>${gwReportEscape(r.c_req)}</td>
+          <td class="gw-plan">${gwReportPlanHtml(r.plan)}</td>
+        </tr>`;
+    });
+  });
+
+  paper.innerHTML = `
+    <div class="gw-report-title">□ ${gwReportEscape(data.title)}<span class="gw-sub">[미이행: ${s.non_compliant}개소]</span></div>
+    <div style="text-align:right; font-size:0.75rem; color:#475569; margin:-0.5rem 0 0.4rem;">(${gwReportEscape(data.base_date)} 기준)</div>
+    <table class="gw-report-table">
+      <colgroup>
+        <col style="width:7.8%"><col style="width:22%"><col style="width:9.9%">
+        <col style="width:6.1%"><col style="width:4.9%"><col style="width:4.4%">
+        <col style="width:6.3%"><col style="width:8.4%"><col style="width:8.4%">
+        <col style="width:21.8%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>관리부서</th><th>시설명</th><th>진행사항</th>
+          <th colspan="3">전용주차구역</th><th colspan="3">충전시설</th>
+          <th rowspan="2">부서 조치계획</th>
+        </tr>
+        <tr>
+          <th>${s.dept_count}개</th><th>${s.facility_count}개</th>
+          <th><span class="gw-red">미이행(${s.non_compliant})</span><br>완료(${s.completed})/면제(${s.exempt})</th>
+          <th>보완<br>사항</th><th>설치<br>현황</th><th>의무</th>
+          <th>보완<br>사항</th><th>설치현황<br>(급/완)</th><th>의무<br>(급속)</th>
+        </tr>
+      </thead>
+      <tbody>${body}</tbody>
+    </table>`;
+}
+
+// 인쇄 버튼: 한글(HWPX) 파일 생성 후 저장
+async function downloadGwangsanReportHwpx() {
+  const btn = document.getElementById("btn-gwangsan-report-print");
+  const data = buildGwangsanReportData();
+  if (!data.summary.facility_count) {
+    alert("리포트 데이터가 없습니다. 새로고침 후 다시 시도해 주세요.");
+    return;
+  }
+  const original = btn ? btn.innerHTML : "";
+  if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> 한글 파일 만드는 중...`; }
+  try {
+    let res = null;
+    for (let i = 0; i < 3; i++) {
+      try {
+        res = await fetch(`${API_BASE_URL}/gwangsan_report/hwpx`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        if (res.status === 502 || res.status === 503) throw new Error(`server waking (${res.status})`);
+        break;
+      } catch (netErr) {
+        if (i === 2) throw netErr;
+        await new Promise(r => setTimeout(r, 6000)); // 서버 깨어나는 시간 대기
+      }
+    }
+    if (!res.ok) {
+      const msg = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${msg.slice(0, 150)}`);
+    }
+    const blob = await res.blob();
+    const now = new Date();
+    const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `광산구_관리시설_이행현황_${stamp}.hwpx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } catch (err) {
+    console.error("HWPX report error:", err);
+    alert("한글 파일 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.\n사유: " + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = original; }
   }
 }
 

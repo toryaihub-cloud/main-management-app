@@ -14,6 +14,21 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <!-- FontAwesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .gw-report-paper { max-width: 960px; margin: 0 auto; font-family: "맑은 고딕", "Malgun Gothic", sans-serif; color:#000; }
+    .gw-report-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 0.8rem; }
+    .gw-report-title .gw-sub { font-size: 0.92rem; }
+    .gw-report-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; table-layout: fixed; }
+    .gw-report-table th, .gw-report-table td { border: 1px solid #000; padding: 0.3rem 0.35rem; text-align: center; vertical-align: middle; word-break: keep-all; overflow-wrap: anywhere; }
+    .gw-report-table thead th { font-weight: 800; background: #fff; }
+    .gw-report-table thead tr:nth-child(2) th { font-size: 0.75rem; border-bottom: 2px solid #000; }
+    .gw-report-table td.gw-plan { text-align: left; font-size: 0.76rem; font-weight: 700; line-height: 1.35; }
+    .gw-report-table td.gw-dept { font-size: 0.82rem; }
+    .gw-report-table tr.gw-dept-first td { border-top: 2px solid #000; }
+    .gw-red { color: #FF0000; font-weight: 700; }
+    .gw-blue { color: #0000FF; font-weight: 700; }
+    .gw-purple { color: #9D5CBB; font-weight: 700; }
+  </style>
 </head>
 <body>
 
@@ -78,6 +93,10 @@
         <button id="tab-gwangsan-facilities" class="tab-btn" onclick="switchTab('gwangsan-facilities')">
           <i class="fa-solid fa-landmark"></i>
           <span>광산구 관리시설</span>
+        </button>
+        <button id="tab-gwangsan-report" class="tab-btn" onclick="switchTab('gwangsan-report')">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>광산구관리시설 리포트</span>
         </button>
         <button id="tab-dispositions" class="tab-btn" onclick="switchTab('dispositions')">
           <i class="fa-solid fa-gavel"></i>
@@ -605,6 +624,27 @@
       <!-- Gwangsan Facilities List Container (부서별 리스트 형태) -->
       <div id="gwangsan-facility-list-container" style="display:flex; flex-direction:column; gap:1.2rem; margin-top:0.5rem;">
         <!-- Dynamically rendered departmental facility list -->
+      </div>
+    </section>
+
+    <!-- 광산구관리시설 리포트 (한글 보고서 양식) -->
+    <section id="view-gwangsan-report" class="view-section">
+      <div style="background:#fff; border:1px solid var(--border-color); border-radius:10px; padding:1rem 1.25rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+        <div>
+          <div style="font-weight:800; font-size:1.05rem; color:#1e293b;"><i class="fa-solid fa-file-lines" style="color:#2563eb;"></i> 광산구관리시설 리포트</div>
+          <div style="font-size:0.82rem; color:#64748b; margin-top:0.2rem;">광산구 관리시설 데이터로 보고서 양식을 자동 구성합니다. 인쇄 버튼을 누르면 한글(HWPX) 파일로 저장됩니다.</div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="fetchGwangsanFacilities(true).then(renderGwangsanReport)">
+            <i class="fa-solid fa-rotate"></i> 새로고침
+          </button>
+          <button type="button" id="btn-gwangsan-report-print" class="btn btn-primary" onclick="downloadGwangsanReportHwpx()">
+            <i class="fa-solid fa-print"></i> 인쇄 (한글 저장)
+          </button>
+        </div>
+      </div>
+      <div style="background:#fff; border:1px solid var(--border-color); border-radius:10px; padding:2rem 1.5rem; overflow-x:auto;">
+        <div id="gwangsan-report-paper" class="gw-report-paper"></div>
       </div>
     </section>
 
@@ -1919,6 +1959,6 @@
     <option value="시설지원과"></option>
     <option value="청소행정과"></option>
   </datalist>
-  <script src="app.js?v=20261124_v12_gwangsan_sync_alert"></script>
+  <script src="app.js?v=20261124_v13_gwangsan_report"></script>
 </body>
 </html>

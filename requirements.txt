@@ -3,3 +3,4 @@ pillow
 pycryptodome
 cryptography
 gunicorn
+python-hwpx==7.0.1
