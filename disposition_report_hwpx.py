@@ -31,20 +31,26 @@ SMALL_SIZE = 7.5
 MM = 283.465  # 1mm = 283.465 HWPUNIT
 PAGE_MARGINS = dict(left=int(15 * MM), right=int(15 * MM), top=int(10 * MM), bottom=int(10 * MM),
                     header=int(5 * MM), footer=int(5 * MM), gutter=0)
-LINE_SPACING_PERCENT = 125
+LINE_SPACING_PERCENT = 130
 
 
-def _tight_cells():
+def _cell_margins(lr, tb):
     if CellMargins is None:
         return None
     try:
-        return CellMargins(left=170, right=170, top=85, bottom=85)
+        return CellMargins(left=lr, right=lr, top=tb, bottom=tb)
     except Exception:
         return None
 
 
-def _add_table(doc, rows, cols):
-    margins = _tight_cells()
+# 칸 안쪽 여백(HWPUNIT): 위 두 표는 보통, 미이행 시설 목록은 넉넉하게(1페이지를 거의 채우도록)
+TOP_TABLE_MARGIN = (200, 140)     # 좌우 0.7mm, 위아래 0.5mm
+LIST_TABLE_MARGIN = (285, 310)    # 좌우 1.0mm, 위아래 1.1mm
+LIST_SIZE = 8
+
+
+def _add_table(doc, rows, cols, margin=TOP_TABLE_MARGIN):
+    margins = _cell_margins(*margin)
     try:
         return doc.add_table(rows, cols, in_margins=margins) if margins else doc.add_table(rows, cols)
     except Exception:
@@ -200,7 +206,7 @@ def build_disposition_report_hwpx(report):
 
     # ── 표3: 미이행 시설 목록 (2단: 연번/시설명/진행상황 × 2)
     half = max(1, math.ceil(len(items) / 2))
-    t3 = _add_table(doc, half + 1, 6)
+    t3 = _add_table(doc, half + 1, 6, LIST_TABLE_MARGIN)
     try:
         t3.set_column_widths([0.6, 3.3, 1.9, 0.6, 3.3, 1.9])
     except Exception:
@@ -212,9 +218,9 @@ def build_disposition_report_hwpx(report):
     for idx, it in enumerate(items):
         row = 1 + (idx % half)
         base = 0 if idx < half else 3
-        _set_cell(t3, row, base, str(it.get("no", idx + 1)), size=SMALL_SIZE)
-        _set_cell(t3, row, base + 1, it.get("name", ""), size=SMALL_SIZE)
-        _set_cell(t3, row, base + 2, it.get("progress", ""), size=SMALL_SIZE)
+        _set_cell(t3, row, base, str(it.get("no", idx + 1)), size=LIST_SIZE)
+        _set_cell(t3, row, base + 1, it.get("name", ""), size=LIST_SIZE)
+        _set_cell(t3, row, base + 2, it.get("progress", ""), size=LIST_SIZE)
     try:
         t3.repeat_header = True
     except Exception:
