@@ -4632,7 +4632,7 @@ function filterCorrectionOrders() {
     if (item.delivery_status && !deliveryOpts.includes(item.delivery_status)) deliveryOpts.push(item.delivery_status);
     const dColor = item.delivery_status === "도달" ? "#059669" : (item.delivery_status ? "#E11D48" : "#64748B");
     const deliverySelect = `
-      <select class="select-box" style="font-size:0.78rem; padding:0.2rem 0.3rem; color:${dColor}; font-weight:700; min-width:88px;"
+      <select class="select-box" style="font-size:0.74rem; padding:0.2rem 0.15rem; color:${dColor}; font-weight:700;"
         onchange="quickUpdateCorrectionOrder(${item.id}, 'delivery_status', this.value, this)">
         ${deliveryOpts.map(v => `<option value="${esc(v)}" ${v === (item.delivery_status || "") ? "selected" : ""}>${v || "-"}</option>`).join("")}
       </select>`;
@@ -4648,20 +4648,20 @@ function filterCorrectionOrders() {
 
     const noteInput = `
       <input type="text" class="input-box" value="${esc(item.note)}" placeholder="비고 입력"
-        style="font-size:0.8rem; padding:0.25rem 0.4rem; width:100%; min-width:130px;"
+        style="font-size:0.74rem; padding:0.25rem 0.3rem; width:100%;"
         onkeydown="if(event.key==='Enter'){this.blur();}"
         onchange="quickUpdateCorrectionOrder(${item.id}, 'note', this.value.trim(), this)">`;
 
     return `
-      <tr>
+      <tr class="${done ? 'corr-row-done' : ''}">
         <td style="text-align:center;"><span class="table-no-badge">${idx + 1}</span></td>
-        <td style="text-align:center; font-size:0.83rem; color:#334155; font-weight:600;">${esc(item.order_date) || '-'}</td>
+        <td style="text-align:center; color:#334155; font-weight:600;">${esc(item.order_date) || '-'}</td>
         <td>
           <span class="clickable-fac-name" onclick="openCorrectionOrderModal(${item.id})" title="클릭하여 내용 수정">
             <i class="fa-regular fa-pen-to-square" style="font-size:0.75rem;"></i>${esc(item.facility_name) || '-'}
           </span>
         </td>
-        <td style="font-size:0.83rem; color:#334155; line-height:1.45; word-break:keep-all;">${esc(item.send_address) || '-'}</td>
+        <td style="color:#334155; line-height:1.4; word-break:keep-all;">${esc(item.send_address) || '-'}</td>
         <td style="text-align:center; font-size:0.8rem; color:#64748B; font-family:monospace; font-weight:600;">${esc(item.zip_code) || '-'}</td>
         <td style="font-size:0.83rem; color:#1E293B;">${esc(item.target_name) || '-'}</td>
         <td style="text-align:center;">${methodBadge}</td>
@@ -4669,9 +4669,11 @@ function filterCorrectionOrders() {
         <td style="text-align:center;">${deliverySelect}</td>
         <td style="text-align:center;">${complianceCell}</td>
         <td>${noteInput}</td>
-        <td style="text-align:center; white-space:nowrap;">
-          <button type="button" class="btn btn-secondary" style="padding:0.25rem 0.45rem; font-size:0.75rem;" title="수정" onclick="openCorrectionOrderModal(${item.id})"><i class="fa-solid fa-pen"></i></button>
-          <button type="button" class="btn btn-rose" style="padding:0.25rem 0.45rem; font-size:0.75rem;" title="삭제" onclick="deleteCorrectionOrderById(${item.id})"><i class="fa-solid fa-trash-can"></i></button>
+        <td style="text-align:center;">
+          <div class="corr-actions">
+            <button type="button" class="btn btn-secondary" style="padding:0.2rem 0.4rem; font-size:0.72rem;" title="수정" onclick="openCorrectionOrderModal(${item.id})"><i class="fa-solid fa-pen"></i></button>
+            <button type="button" class="btn btn-rose" style="padding:0.2rem 0.4rem; font-size:0.72rem;" title="삭제" onclick="deleteCorrectionOrderById(${item.id})"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
         </td>
       </tr>
     `;
