@@ -4439,140 +4439,181 @@ function openNewCorrectionOrderModal() {
 }
 
 // 업로드 양식 템플릿 다운로드
-function downloadCorrectionOrdersTemplate() {
-  const csvContent = "\uFEFF차수구분(예: 2026-09-15),시정명령일자,시설명,우편발송 도로명주소,우편번호,시정명령대상,통지방법(등기/공문),수신인,우편도달여부(도달/반송),비고\n" +
-    "2026-09-15,2026.9.15.,샘플시설1,광주광역시 광산구 임방울대로 123,62245,샘플관리단,등기,샘플관리실,도달,샘플비고\n" +
-    "2026-09-15,2026.9.15.,샘플시설2,광주광역시 광산구 무진대로 456,62355,샘플공공기관,공문,샘플기관장,,공문발송\n";
+// 업로드 양식 (엑셀 .xlsx, 모든 칸 텍스트 형식 → 날짜/우편번호 자동변환 방지)
+const CORR_UPLOAD_HEADERS = ["차수구분(예: 2026-09-15)", "시정명령일자", "시설명", "우편발송 도로명주소", "우편번호", "시정명령대상", "통지방법(등기/공문)", "수신인", "우편도달여부(도달/반송)", "비고"];
 
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.setAttribute("download", "시정명령_일괄업로드_표준양식.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+function downloadCorrectionOrdersTemplate() {
+  if (typeof XLSX === "undefined") { alert("엑셀 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요."); return; }
+  const batch = currentCorrectionBatch || "2026-09-15";
+  const rows = [
+    CORR_UPLOAD_HEADERS,
+    [batch, "2026.9.15.", "샘플시설1", "광주광역시 광산구 임방울대로 123", "62245", "샘플관리단", "등기", "샘플관리실", "도달", "샘플비고"],
+    [batch, "2026.9.15.", "샘플시설2", "광주광역시 광산구 무진대로 456", "", "샘플공공기관", "공문", "샘플기관장", "", ""]
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  // 모든 칸을 텍스트(@) 형식으로 지정
+  const range = XLSX.utils.decode_range(ws["!ref"]);
+  range.e.r = 300;
+  for (let r = range.s.r; r <= range.e.r; r++) {
+    for (let c = range.s.c; c <= range.e.c; c++) {
+      const addr = XLSX.utils.encode_cell({ r, c });
+      if (!ws[addr]) ws[addr] = { t: "s", v: "" };
+      ws[addr].t = "s"; ws[addr].z = "@"; ws[addr].v = String(ws[addr].v ?? "");
+    }
+  }
+  ws["!ref"] = XLSX.utils.encode_range(range);
+  ws["!cols"] = [{ wch: 22 }, { wch: 13 }, { wch: 24 }, { wch: 40 }, { wch: 9 }, { wch: 22 }, { wch: 16 }, { wch: 22 }, { wch: 20 }, { wch: 28 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "시정명령");
+  XLSX.writeFile(wb, "시정명령_일괄업로드_표준양식.xlsx");
 }
 
-// 엑셀/CSV 일괄 업로드 처리기
+// 엑셀 값 정리: 날짜/숫자 셀도 글자로 변환
+function corrCellText(v, kind) {
+  if (v === null || v === undefined) return "";
+  if (v instanceof Date) {
+    const d = new Date(v.getTime() + 12 * 3600 * 1000); // 시간대 오차 보정
+    const y = d.getFullYear(), m = d.getMonth() + 1, day = d.getDate();
+    return kind === "batch" ? `${y}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}` : `${y}.${m}.${day}.`;
+  }
+  return String(v).trim();
+}
+
+// 차수구분 정규화: 2026.9.15 / 2026/09/15 / 2026-9-15 → 2026-09-15
+function normalizeCorrBatch(v) {
+  const s = String(v || "").trim();
+  const m = s.match(/(\d{4})\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})/);
+  return m ? `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}` : s;
+}
+
+async function readCorrectionUploadWorkbook(file) {
+  const buf = new Uint8Array(await file.arrayBuffer());
+  if (/\.csv$/i.test(file.name)) {
+    // CSV: UTF-8(BOM) 또는 한글 엑셀 기본(CP949) 모두 처리
+    const hasBom = buf[0] === 0xEF && buf[1] === 0xBB && buf[2] === 0xBF;
+    let text = new TextDecoder("utf-8").decode(buf);
+    if (!hasBom && text.includes("�")) text = new TextDecoder("euc-kr").decode(buf);
+    return XLSX.read(text.replace(/^﻿/, ""), { type: "string", raw: true });
+  }
+  return XLSX.read(buf, { type: "array", cellDates: true });
+}
+
 async function handleCorrectionOrdersUpload(event) {
   const file = event.target.files[0];
+  event.target.value = "";
   if (!file) return;
+  if (typeof XLSX === "undefined") { alert("엑셀 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요."); return; }
 
   try {
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-      const data = new Uint8Array(e.target.result);
-      if (typeof XLSX === 'undefined') {
-        alert("엑셀 파싱 라이브러리를 로드하는 중입니다. 잠시 후 다시 시도해주세요.");
-        return;
+    const workbook = await readCorrectionUploadWorkbook(file);
+    const parsedItems = [];
+    const skipped = [];
+
+    workbook.SheetNames.forEach(sheetName => {
+      const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, defval: "", raw: true });
+      if (!rows || rows.length < 2) return;
+
+      // 머리글 줄 찾기 (앞쪽 10줄 안)
+      let headerRowIdx = -1;
+      const colMap = {};
+      for (let r = 0; r < Math.min(rows.length, 10); r++) {
+        const cells = rows[r].map(c => String(c ?? "").replace(/\s+/g, ""));
+        if (!cells.some(c => c.includes("시설명"))) continue;
+        headerRowIdx = r;
+        cells.forEach((c, i) => {
+          if (c.includes("차수")) colMap.batch = i;
+          else if (c.includes("시설명")) colMap.facility_name = i;
+          else if (c.includes("우편번호")) colMap.zip_code = i;
+          else if (c.includes("도달")) colMap.delivery_status = i;
+          else if (c.includes("주소")) colMap.send_address = i;
+          else if (c.includes("대상")) colMap.target_name = i;
+          else if (c.includes("방법")) colMap.notice_method = i;
+          else if (c.includes("수신인")) colMap.recipient_name = i;
+          else if (c.includes("일자")) colMap.order_date = i;
+          else if (c.includes("비고")) colMap.note = i;
+          else if (c.includes("이행")) colMap.compliance_status = i;
+        });
+        break;
       }
-      const workbook = XLSX.read(data, { type: 'array' });
-      const parsedItems = [];
+      if (headerRowIdx === -1) return;
 
-      workbook.SheetNames.forEach(sheetName => {
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
-        if (!jsonRows || jsonRows.length < 2) return;
+      let defaultBatch = currentCorrectionBatch;
+      const sm = sheetName.match(/\d{4}[.\-_]\d{1,2}[.\-_]\d{1,2}/);
+      if (sm) defaultBatch = normalizeCorrBatch(sm[0].replace(/_/g, "-"));
 
-        // 헤더 인덱스 찾기
-        let headerRowIdx = -1;
-        let colMap = {};
-
-        for (let r = 0; r < Math.min(jsonRows.length, 10); r++) {
-          const row = jsonRows[r];
-          const rowStr = row.join(' ');
-          if (rowStr.includes('시설명') || rowStr.includes('시정명령')) {
-            headerRowIdx = r;
-            row.forEach((cell, cIdx) => {
-              const cStr = String(cell).replace(/\n/g, '').trim();
-              if (cStr.includes('차수')) colMap['batch'] = cIdx;
-              if (cStr.includes('명령일자') || cStr.includes('일자')) colMap['order_date'] = cIdx;
-              if (cStr.includes('시설명')) colMap['facility_name'] = cIdx;
-              if (cStr.includes('주소') || cStr.includes('도로명')) colMap['send_address'] = cIdx;
-              if (cStr.includes('우편번호')) colMap['zip_code'] = cIdx;
-              if (cStr.includes('대상')) colMap['target_name'] = cIdx;
-              if (cStr.includes('통지방법') || cStr.includes('방법')) colMap['notice_method'] = cIdx;
-              if (cStr.includes('수신인')) colMap['recipient_name'] = cIdx;
-              if (cStr.includes('도달')) colMap['delivery_status'] = cIdx;
-              if (cStr.includes('비고')) colMap['note'] = cIdx;
-            });
-            break;
-          }
-        }
-
-        if (headerRowIdx === -1) return;
-
-        // 차수 기본값 추출 (시트명이나 파일명 기준)
-        let defaultBatch = currentCorrectionBatch;
-        if (sheetName.includes('6.30')) defaultBatch = '2026-06-30';
-        else if (sheetName.includes('7.28')) defaultBatch = '2026-07-28';
-        else if (sheetName.includes('8.19')) defaultBatch = '2026-08-19';
-        else {
-          const matchDate = sheetName.match(/\d{4}[.\-_]\d{1,2}[.\-_]\d{1,2}/);
-          if (matchDate) defaultBatch = matchDate[0].replace(/[._]/g, '-');
-        }
-
-        for (let r = headerRowIdx + 1; r < jsonRows.length; r++) {
-          const row = jsonRows[r];
-          if (!row || row.length === 0) continue;
-          
-          const facName = colMap['facility_name'] !== undefined ? String(row[colMap['facility_name']] || '').trim() : '';
-          if (!facName || facName.startsWith('총 ')) continue;
-
-          const batch = (colMap['batch'] !== undefined && row[colMap['batch']]) ? String(row[colMap['batch']]).trim() : defaultBatch;
-          const orderDate = colMap['order_date'] !== undefined ? String(row[colMap['order_date']] || '').trim() : '';
-          const address = colMap['send_address'] !== undefined ? String(row[colMap['send_address']] || '').trim() : '';
-          const zip = colMap['zip_code'] !== undefined ? String(row[colMap['zip_code']] || '').trim() : '';
-          const target = colMap['target_name'] !== undefined ? String(row[colMap['target_name']] || '').trim() : '';
-          const method = colMap['notice_method'] !== undefined ? String(row[colMap['notice_method']] || '등기').trim() : '등기';
-          const recipient = colMap['recipient_name'] !== undefined ? String(row[colMap['recipient_name']] || '').trim() : '';
-          const delivery = colMap['delivery_status'] !== undefined ? String(row[colMap['delivery_status']] || '').trim() : '';
-          const note = colMap['note'] !== undefined ? String(row[colMap['note']] || '').trim() : '';
-
-          parsedItems.push({
-            batch_round: batch,
-            order_date: orderDate,
-            facility_name: facName,
-            send_address: address,
-            zip_code: zip,
-            target_name: target,
-            notice_method: method,
-            recipient_name: recipient,
-            delivery_status: delivery,
-            note: note
-          });
-        }
-      });
-
-      if (parsedItems.length === 0) {
-        alert("엑셀 파일에서 유효한 시정명령 데이터를 찾지 못했습니다.\n양식 헤더(시설명, 주소, 수신인 등)를 확인해주세요.");
-        return;
+      const get = (row, k, kind) => colMap[k] !== undefined ? corrCellText(row[colMap[k]], kind) : "";
+      for (let r = headerRowIdx + 1; r < rows.length; r++) {
+        const row = rows[r];
+        if (!row || row.every(c => String(c ?? "").trim() === "")) continue;
+        const facName = get(row, "facility_name");
+        if (!facName || facName.startsWith("총 ") || facName.startsWith("샘플시설")) { if (facName.startsWith("샘플시설")) skipped.push(`${r + 1}행(샘플)`); continue; }
+        const batch = normalizeCorrBatch(get(row, "batch", "batch") || defaultBatch);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(batch)) { skipped.push(`${r + 1}행(차수구분 '${batch}' 형식 오류)`); continue; }
+        const method = get(row, "notice_method");
+        const comp = get(row, "compliance_status");
+        parsedItems.push({
+          batch_round: batch,
+          order_date: get(row, "order_date"),
+          facility_name: facName,
+          send_address: get(row, "send_address"),
+          zip_code: get(row, "zip_code"),
+          target_name: get(row, "target_name"),
+          notice_method: method.includes("공문") ? "공문" : "등기",
+          recipient_name: get(row, "recipient_name"),
+          delivery_status: get(row, "delivery_status"),
+          note: get(row, "note"),
+          ...(comp ? { compliance_status: comp.includes("이행완료") || comp === "O" ? "이행완료" : null } : {})
+        });
       }
+    });
 
-      // 서버 업로드 전송
-      const res = await fetch(`${API_BASE_URL}/correction_orders/batch_upload`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: parsedItems })
-      });
+    if (parsedItems.length === 0) {
+      alert("엑셀 파일에서 등록할 시정명령 데이터를 찾지 못했습니다.\n업로드 양식의 머리글(시설명 등)과 내용을 확인해주세요." + (skipped.length ? `\n\n제외: ${skipped.slice(0, 5).join(", ")}` : ""));
+      return;
+    }
 
-      if (res.ok) {
-        const result = await res.json();
-        alert(`🎉 엑셀 일괄 업로드 완료!\n- 추가: ${result.added_count}건\n- 갱신: ${result.updated_count}건`);
-        if (parsedItems[0]?.batch_round) {
-          currentCorrectionBatch = parsedItems[0].batch_round;
-        }
-        await fetchCorrectionOrders();
-      } else {
-        alert("서버 업로드 처리 중 오류가 발생했습니다.");
-      }
-    };
-    reader.readAsArrayBuffer(file);
+    // 기존 건과 비교: 같은 차수 + 시설명 + 수신인이면 갱신, 아니면 추가
+    const norm = s => String(s || "").replace(/\s+/g, "");
+    const plan = parsedItems.map(it => {
+      const ex = allCorrectionOrders.find(o => o.batch_round === it.batch_round && norm(o.facility_name) === norm(it.facility_name) && norm(o.recipient_name) === norm(it.recipient_name));
+      return { it, ex };
+    });
+    const addCnt = plan.filter(p => !p.ex).length, updCnt = plan.length - addCnt;
+    const batches = [...new Set(parsedItems.map(i => i.batch_round))].join(", ");
+    if (!confirm(`엑셀에서 ${parsedItems.length}건을 읽었습니다.\n- 차수: ${batches}\n- 신규 추가: ${addCnt}건\n- 기존 건 갱신: ${updCnt}건` + (skipped.length ? `\n- 제외: ${skipped.length}건 (${skipped.slice(0, 3).join(", ")})` : "") + "\n\n데이터베이스에 저장할까요?")) return;
+
+    const facs = Array.isArray(facilitiesData) ? facilitiesData : [];
+    const keyOf = name => { const b = s => norm(s).split("(")[0]; const m = facs.filter(f => b(f.facility_name) === b(name)); return m.length === 1 ? m[0].facility_key : null; };
+    const now = new Date().toISOString();
+    let added = 0, updated = 0;
+    const errors = [];
+
+    // 신규: 한 번에 추가 (차수 제목/결재일은 같은 차수 기존 건을 따름)
+    const newRows = plan.filter(p => !p.ex).map(({ it }) => {
+      const same = allCorrectionOrders.find(o => o.batch_round === it.batch_round) || {};
+      return { ...it, batch_title: same.batch_title || `${it.batch_round} 시정명령`, approval_date: same.approval_date || it.order_date || null, send_date: same.send_date || it.order_date || null, facility_key: keyOf(it.facility_name), updated_at: now };
+    });
+    // PostgREST 일괄 추가는 모든 행의 칸 구성이 같아야 함
+    const allKeys = [...new Set(newRows.flatMap(r => Object.keys(r)))];
+    const newRowsNorm = newRows.map(r => Object.fromEntries(allKeys.map(k => [k, r[k] === undefined ? null : r[k]])));
+    if (newRowsNorm.length) {
+      const res = await fetch(`${SUPABASE_REST_URL}/correction_orders`, { method: "POST", headers: corrDbHeaders({ "Prefer": "return=representation" }), body: JSON.stringify(newRowsNorm) });
+      if (res.ok) added = (await res.json().catch(() => [])).length;
+      else errors.push(`신규 추가 실패: ${res.status} ${(await res.text().catch(() => "")).slice(0, 150)}`);
+    }
+    // 갱신: 건별 PATCH
+    for (const { it, ex } of plan.filter(p => p.ex)) {
+      const res = await fetch(`${SUPABASE_REST_URL}/correction_orders?id=eq.${ex.id}`, { method: "PATCH", headers: corrDbHeaders({ "Prefer": "return=representation" }), body: JSON.stringify({ ...it, facility_key: ex.facility_key || keyOf(it.facility_name), updated_at: now }) });
+      const rows = res.ok ? await res.json().catch(() => []) : [];
+      if (res.ok && rows.length) updated++; else errors.push(`${it.facility_name} 갱신 실패 (${res.status})`);
+    }
+
+    currentCorrectionBatch = parsedItems[0].batch_round;
+    await fetchCorrectionOrders();
+    alert(`엑셀 일괄 업로드 결과\n- 추가: ${added}건\n- 갱신: ${updated}건` + (errors.length ? `\n\n⚠ 오류 ${errors.length}건\n${errors.slice(0, 5).join("\n")}` : ""));
   } catch (err) {
     console.error("Excel upload error:", err);
     alert("파일을 읽는 중 오류가 발생했습니다: " + err.message);
-  } finally {
-    event.target.value = ""; // reset
   }
 }
 
