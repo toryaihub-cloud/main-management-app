@@ -301,6 +301,18 @@
             <option value="">현상태 전체</option>
           </select>
 
+          <!-- 시정명령 차수 조회 필터 -->
+          <select id="disposition-filter-round" class="select-box" onchange="filterDispositions()">
+            <option value="">시정명령 차수 전체</option>
+            <option value="1차">1차 시정명령</option>
+            <option value="2차">2차 시정명령</option>
+            <option value="3차">3차 시정명령</option>
+            <option value="4차">4차 시정명령</option>
+            <option value="5차">5차 시정명령</option>
+            <option value="6차">6차 시정명령</option>
+            <option value="NONE">시정명령 없음</option>
+          </select>
+
           <select id="disposition-filter-target" class="select-box" onchange="filterDispositions()">
             <option value="">구분 전체</option>
             <option value="시설" selected>시설</option>
@@ -1220,6 +1232,21 @@
                 <div id="disp-status-hint" style="font-size:0.72rem; color:#64748B; margin-top:0.25rem; line-height:1.2;"></div>
               </div>
               <div class="form-group">
+                <label class="form-label">시정명령 (차수 / 일자) <span style="font-size:0.75rem; color:#0284C7; font-weight:normal;">(시설에서 일괄 관리)</span></label>
+                <div style="display:flex; gap:0.4rem;">
+                  <select id="disp-correction-round" class="select-box" style="flex:0 0 105px;">
+                    <option value="">선택 안함</option>
+                    <option value="1차">1차</option>
+                    <option value="2차">2차</option>
+                    <option value="3차">3차</option>
+                    <option value="4차">4차</option>
+                    <option value="5차">5차</option>
+                    <option value="6차">6차</option>
+                  </select>
+                  <input type="date" id="disp-correction-round-date" class="input-box" style="flex:1;">
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="form-label">대상자/소유자명 (DB 암호화)</label>
                 <input type="text" id="disp-target-name" class="input-box" placeholder="성명 또는 상호명">
               </div>
@@ -1962,6 +1989,6 @@
     <option value="시설지원과"></option>
     <option value="청소행정과"></option>
   </datalist>
-  <script src="app.js?v=20261124_v15_gwangsan_exempt"></script>
+  <script src="app.js?v=20261124_v16_disp_round"></script>
 </body>
 </html>

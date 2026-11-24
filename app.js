@@ -1026,12 +1026,26 @@ function filterFacilities() {
   renderFacilitiesTable(filtered);
 }
 
+// 시정명령 차수/일자 표시: 2차 ('26.7.27.)
+function formatCorrectionRoundDate(d) {
+  if (!d) return "";
+  const m = String(d).match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (!m) return String(d);
+  return `'${m[1].slice(2)}.${parseInt(m[2])}.${parseInt(m[3])}.`;
+}
+function formatCorrectionRound(rec) {
+  if (!rec || !rec.correction_round) return "";
+  const dt = formatCorrectionRoundDate(rec.correction_round_date);
+  return dt ? `${rec.correction_round} (${dt})` : rec.correction_round;
+}
+
 function filterDispositions() {
   const queryElem = document.getElementById("disposition-search");
   const query = queryElem ? queryElem.value.toLowerCase().trim() : "";
   const categoryFilter = document.getElementById("disposition-filter-category") ? document.getElementById("disposition-filter-category").value : "";
   const statusFilter = document.getElementById("disposition-filter-status") ? document.getElementById("disposition-filter-status").value : "";
   const targetFilter = document.getElementById("disposition-filter-target") ? document.getElementById("disposition-filter-target").value : "";
+  const roundFilter = document.getElementById("disposition-filter-round") ? document.getElementById("disposition-filter-round").value : "";
 
   const filtered = dispositionsData.filter(d => {
     const fac = facilitiesData.find(f => f.facility_key === d.facility_key) || {};
@@ -1046,8 +1060,10 @@ function filterDispositions() {
     const matchStatus = !statusFilter || 
       (statusFilter === "UNASSIGNED_STATUS" ? (!d.current_status || d.current_status.trim() === "" || d.current_status === "현상태 미지정" || d.current_status === "상태미지정") : (d.current_status === statusFilter));
     const matchTarget = !targetFilter || d.target_type === targetFilter;
+    const matchRound = !roundFilter ||
+      (roundFilter === "NONE" ? !d.correction_round : d.correction_round === roundFilter);
 
-    return matchQuery && matchCategory && matchStatus && matchTarget;
+    return matchQuery && matchCategory && matchStatus && matchTarget && matchRound;
   });
 
   const countBadge = document.getElementById("disp-result-count");
@@ -2208,6 +2224,12 @@ function renderDispositionsCards(data) {
 
         <div class="disp-summary-box" style="background: rgba(255,255,255,0.85); border:1px solid rgba(0,0,0,0.08); font-size: 0.88rem; display: flex; flex-direction: column; gap: 0.5rem; padding: 0.95rem; border-radius: 0.6rem;">
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px dashed rgba(0,0,0,0.08); padding-bottom: 0.35rem;">
+            <span style="color:var(--text-muted); font-weight:600;">시정명령:</span>
+            <div style="text-align:right; font-weight:700; color:${facilityRecord.correction_round ? '#E11D48' : 'var(--text-muted)'};">
+              ${formatCorrectionRound(facilityRecord) || '-'}
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px dashed rgba(0,0,0,0.08); padding-bottom: 0.35rem;">
             <span style="color:var(--text-muted); font-weight:600;">시설구분:</span>
             <div style="text-align:right; font-weight:600; color:#0F172A;">
               ${facCategory}
@@ -2377,6 +2399,10 @@ function openDispositionDetailModal(key) {
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="color:var(--text-muted); font-weight:600;">현상태:</span>
               <span class="badge ${mainStatus.includes('시정명령') ? 'badge-rose' : 'badge-warning'}">${mainStatus}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="color:var(--text-muted); font-weight:600;">시정명령:</span>
+              ${fItem.correction_round ? `<span class="badge badge-rose">${formatCorrectionRound(fItem)}</span>` : '<span style="color:var(--text-muted);">-</span>'}
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="color:var(--text-muted); font-weight:600;">이행여부:</span>
@@ -3386,6 +3412,8 @@ function openDispositionModal(id = null) {
         setVal("disp-facility-key", item.facility_key);
         setVal("disp-target-type", item.target_type || "소유자");
         setVal("disp-status", item.current_status);
+        setVal("disp-correction-round", item.correction_round || "");
+        setVal("disp-correction-round-date", item.correction_round_date || "");
         setVal("disp-target-name", targetName);
         resolveAsyncInput("disp-target-name", item.target_name_encrypted, item.target_name_decrypted);
         setVal("disp-notice-target", item.advance_notice_target);
@@ -3575,6 +3603,8 @@ async function saveDisposition() {
     facility_key: facilityKey,
     target_type: document.getElementById("disp-target-type").value,
     current_status: document.getElementById("disp-status").value.trim(),
+    correction_round: (document.getElementById("disp-correction-round")?.value || "").trim() || null,
+    correction_round_date: (document.getElementById("disp-correction-round-date")?.value || "").trim() || null,
     advance_notice_target: document.getElementById("disp-notice-target").value.trim(),
 
     advance_notice_method: document.getElementById("disp-notice-method").value.trim(),
@@ -3664,6 +3694,8 @@ async function saveDisposition() {
       correction_return_details_2: payload.correction_return_details_2,
       correction_public_2: payload.correction_public_2,
       correction_reason_2: payload.correction_reason_2,
+      correction_round: payload.correction_round,
+      correction_round_date: payload.correction_round_date,
       note: payload.note
     };
 
@@ -3717,16 +3749,20 @@ async function saveDisposition() {
 
     // [현상태 일괄 연동] '시설'의 현상태가 변경된 경우, 동일 시설의 모든 하위 처분 레코드(소유자, 관리자 등)의 현상태도 Supabase DB에 일괄 동기화!
     if (payload.target_type === '시설') {
-      if (payload.current_status) {
-        try {
-          await fetch(`${SUPABASE_REST_URL}/dispositions?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
-            method: "PATCH",
-            headers: preferHeaders,
-            body: JSON.stringify({ current_status: payload.current_status })
-          });
-        } catch (errSync) {
-          console.warn("Cascade status update to sub-dispositions failed:", errSync);
-        }
+      // 현상태 + 시정명령(차수/일자)를 동일 시설의 모든 하위 레코드에 일괄 동기화
+      const cascadeBody = {
+        correction_round: payload.correction_round,
+        correction_round_date: payload.correction_round_date
+      };
+      if (payload.current_status) cascadeBody.current_status = payload.current_status;
+      try {
+        await fetch(`${SUPABASE_REST_URL}/dispositions?facility_key=eq.${encodeURIComponent(facilityKey)}`, {
+          method: "PATCH",
+          headers: preferHeaders,
+          body: JSON.stringify(cascadeBody)
+        });
+      } catch (errSync) {
+        console.warn("Cascade status update to sub-dispositions failed:", errSync);
       }
 
       // [대표 시정명령대상 연동] '시설'의 시정명령대상(correction_order)이 수정된 경우 facilitiesData의 대표 시정명령대상에도 동기화!
@@ -3770,10 +3806,12 @@ async function saveDisposition() {
   }
 
   // 시설 상태 변경 시 인메모리의 동일 시설 모든 하위 레코드도 일괄 갱신
-  if (payload.target_type === '시설' && payload.current_status) {
+  if (payload.target_type === '시설') {
     dispositionsData.forEach(d => {
       if (d.facility_key === facilityKey) {
-        d.current_status = payload.current_status;
+        if (payload.current_status) d.current_status = payload.current_status;
+        d.correction_round = payload.correction_round;
+        d.correction_round_date = payload.correction_round_date;
       }
     });
   }
@@ -3822,6 +3860,8 @@ async function saveDisposition() {
       facility_key: facilityKey,
       target_type: subTargetType || '소유자',
       current_status: subStatus || payload.current_status,
+      correction_round: payload.correction_round,
+      correction_round_date: payload.correction_round_date,
       advance_notice_target: subNoticeTarget,
 
       advance_notice_method: subNoticeMethod,
@@ -3890,6 +3930,8 @@ async function saveDisposition() {
         correction_notice_method: subPayload.correction_notice_method,
         correction_return_details: subPayload.correction_return_details,
         correction_public: subPayload.correction_public,
+        correction_round: subPayload.correction_round,
+        correction_round_date: subPayload.correction_round_date,
         note: subPayload.note
       };
       const rSubDirect = await fetch(`${SUPABASE_REST_URL}/dispositions`, {

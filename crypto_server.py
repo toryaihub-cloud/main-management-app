@@ -2041,6 +2041,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "correction_order_2", "correction_order_date_2", "correction_reason_2",
                 "correction_period_2", "correction_notice_method_2",
                 "correction_return_details_2", "correction_public_2",
+                "correction_round", "correction_round_date",
                 "target_name_encrypted", "recipient_name_encrypted",
                 "mail_address_encrypted", "abstract_address_encrypted",
                 "reg_num_encrypted", "contact_encrypted", "note"
