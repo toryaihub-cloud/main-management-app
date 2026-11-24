@@ -6393,16 +6393,17 @@ function renderGwangsanReport() {
       const deptCell = i === 0
         ? `<td class="gw-dept" rowspan="${g.rows.length}">${gwReportEscape(g.dept)}${g.dept_note ? `<br><span class="gw-blue">${gwReportEscape(g.dept_note)}</span>` : ""}</td>`
         : "";
-      const red = v => (v && v !== "-" && v !== "면제") ? `<span class="gw-red">${gwReportEscape(v)}</span>` : gwReportEscape(v);
+      // 보완사항은 항목별 줄바꿈 (예: 급속1 / 완속1)
+      const red = v => (v && v !== "-" && v !== "면제") ? `<span class="gw-red">${gwReportEscape(v).split(" ").join("<br>")}</span>` : gwReportEscape(v);
       body += `
         <tr class="${i === 0 ? "gw-dept-first" : ""}">
           ${deptCell}
-          <td style="cursor:pointer;" title="광산구 관리시설 상세 보기" onclick="switchTab('gwangsan-facilities'); openGwangsanDetailModal('${gwReportEscape(r.key)}')">${gwReportEscape(r.name)}</td>
+          <td class="gw-name" style="cursor:pointer;" title="광산구 관리시설 상세 보기" onclick="switchTab('gwangsan-facilities'); openGwangsanDetailModal('${gwReportEscape(r.key)}')">${gwReportEscape(r.name)}</td>
           <td>${r.status === "미이행" ? `<span class="gw-red">미이행</span>` : gwReportEscape(r.status)}</td>
-          <td>${red(r.p_fix)}</td>
+          <td class="gw-fix">${red(r.p_fix)}</td>
           <td>${gwReportEscape(r.p_inst)}</td>
           <td>${gwReportEscape(r.p_req)}</td>
-          <td>${red(r.c_fix)}</td>
+          <td class="gw-fix">${red(r.c_fix)}</td>
           <td>${gwReportEscape(r.c_inst)}</td>
           <td>${gwReportEscape(r.c_req)}</td>
           <td class="gw-plan">${gwReportPlanHtml(r.plan)}</td>

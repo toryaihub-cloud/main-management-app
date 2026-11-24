@@ -19,10 +19,12 @@
     .gw-report-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 0.8rem; }
     .gw-report-title .gw-sub { font-size: 0.92rem; }
     .gw-report-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; table-layout: fixed; }
-    .gw-report-table th, .gw-report-table td { border: 1px solid #000; padding: 0.3rem 0.35rem; text-align: center; vertical-align: middle; word-break: keep-all; overflow-wrap: anywhere; }
+    .gw-report-table th, .gw-report-table td { border: 1px solid #000; padding: 0.3rem 0.35rem; text-align: center; vertical-align: middle; white-space: normal !important; word-break: keep-all; overflow-wrap: anywhere; overflow: hidden; }
+    .gw-report-table td.gw-fix { font-size: 0.72rem; line-height: 1.3; padding: 0.25rem 0.15rem; }
+    .gw-report-table td.gw-name { font-size: 0.78rem; line-height: 1.3; }
     .gw-report-table thead th { font-weight: 800; background: #fff; }
     .gw-report-table thead tr:nth-child(2) th { font-size: 0.75rem; border-bottom: 2px solid #000; }
-    .gw-report-table td.gw-plan { text-align: left; font-size: 0.76rem; font-weight: 700; line-height: 1.35; }
+    .gw-report-table td.gw-plan { text-align: left; font-size: 0.7rem; font-weight: 700; line-height: 1.35; padding: 0.25rem 0.3rem; }
     .gw-report-table td.gw-dept { font-size: 0.82rem; }
     .gw-report-table tr.gw-dept-first td { border-top: 2px solid #000; }
     .gw-red { color: #FF0000; font-weight: 700; }
@@ -1959,6 +1961,6 @@
     <option value="시설지원과"></option>
     <option value="청소행정과"></option>
   </datalist>
-  <script src="app.js?v=20261124_v13_gwangsan_report"></script>
+  <script src="app.js?v=20261124_v14_gwangsan_report_wrap"></script>
 </body>
 </html>

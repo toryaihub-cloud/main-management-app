@@ -163,18 +163,22 @@ def build_report_hwpx(report):
         start = r
         for row in rows:
             status = row.get("status", "")
-            _set_cell(table, r, 1, row.get("name", ""))
+            p_fix = row.get("p_fix", "") or ""
+            c_fix = row.get("c_fix", "") or ""
+            _set_cell(table, r, 1, row.get("name", ""), size=9)
             _set_cell(table, r, 2, status, bold=(status == "미이행"),
-                      color=COLOR_RED if status == "미이행" else None)
-            _set_cell(table, r, 3, row.get("p_fix", ""), bold=(row.get("p_fix") not in ("", "-")),
-                      color=COLOR_RED if row.get("p_fix") not in ("", "-", "면제") else None)
-            _set_cell(table, r, 4, row.get("p_inst", ""))
-            _set_cell(table, r, 5, row.get("p_req", ""))
-            _set_cell(table, r, 6, row.get("c_fix", ""), bold=(row.get("c_fix") not in ("", "-")),
-                      color=COLOR_RED if row.get("c_fix") not in ("", "-", "면제") else None)
-            _set_cell(table, r, 7, row.get("c_inst", ""))
-            _set_cell(table, r, 8, row.get("c_req", ""))
-            _set_cell(table, r, 9, "", align="LEFT", size=9, segments=plan_segments(row.get("plan", "")))
+                      color=COLOR_RED if status == "미이행" else None, size=9)
+            # 보완사항: 좁은 칸이므로 작은 글씨 + 항목별 줄바꿈 (급속1 / 완속1)
+            _set_cell(table, r, 3, p_fix.replace(" ", "\n"), bold=(p_fix not in ("", "-")),
+                      color=COLOR_RED if p_fix not in ("", "-", "면제") else None, size=8)
+            _set_cell(table, r, 4, row.get("p_inst", ""), size=9)
+            _set_cell(table, r, 5, row.get("p_req", ""), size=9)
+            _set_cell(table, r, 6, c_fix.replace(" ", "\n"), bold=(c_fix not in ("", "-")),
+                      color=COLOR_RED if c_fix not in ("", "-", "면제") else None, size=8)
+            _set_cell(table, r, 7, row.get("c_inst", ""), size=9)
+            _set_cell(table, r, 8, row.get("c_req", ""), size=9)
+            # 부서 조치계획: 작은 글씨, 칸 너비에서 자동 줄바꿈
+            _set_cell(table, r, 9, "", align="LEFT", size=8, segments=plan_segments(row.get("plan", "")))
             r += 1
         dept_spans.append((start, r - 1, g.get("dept", ""), g.get("dept_note", "")))
 
