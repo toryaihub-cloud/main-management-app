@@ -4796,8 +4796,8 @@ function filterCorrectionOrders() {
         <td style="text-align:center;"><span class="table-no-badge">${idx + 1}</span></td>
         <td style="text-align:center; color:#334155; font-weight:600;">${esc(item.order_date) || '-'}</td>
         <td>
-          <span class="clickable-fac-name" onclick="openCorrectionOrderModal(${item.id})" title="클릭하여 내용 수정">
-            <i class="fa-regular fa-pen-to-square" style="font-size:0.75rem;"></i>${esc(item.facility_name) || '-'}
+          <span class="clickable-fac-name" onclick="openFacilityFromCorrectionOrder(${item.id})" title="클릭하여 통합시설 정보 보기">
+            <i class="fa-solid fa-building" style="font-size:0.75rem;"></i>${esc(item.facility_name) || '-'}
           </span>
         </td>
         <td style="color:#334155; line-height:1.4; word-break:keep-all;">${esc(item.send_address) || '-'}</td>
@@ -4817,6 +4817,28 @@ function filterCorrectionOrders() {
       </tr>
     `;
   }).join('');
+}
+
+// 시설명 클릭: 연결된 통합시설 상세 보기 (창을 닫으면 시정명령 화면으로 복귀)
+function openFacilityFromCorrectionOrder(id) {
+  const item = allCorrectionOrders.find(o => String(o.id) === String(id));
+  if (!item) return;
+  const key = (item.facility_key || "").trim();
+  if (!key) {
+    alert("이 시정명령 건은 통합시설과 연결(시설 KEY)되어 있지 않습니다.\n'수정' 버튼에서 연결 시설 KEY를 입력해 주세요.");
+    return;
+  }
+  returnTabAfterFacilityDetail = 'correction-orders';
+  const doOpen = () => {
+    if (!(facilitiesData || []).some(f => f.facility_key === key)) {
+      alert(`통합시설에서 ${key} 시설을 찾을 수 없습니다.`);
+      returnTabAfterFacilityDetail = null;
+      return;
+    }
+    openFacilityDetailModal(key);
+  };
+  if (!facilitiesData || facilitiesData.length === 0) fetchFacilities().then(doOpen).catch(doOpen);
+  else doOpen();
 }
 
 // 시정명령 건별 수정 모달 열기
