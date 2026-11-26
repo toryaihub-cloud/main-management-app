@@ -4337,8 +4337,18 @@ async function syncComplianceAcrossModules(key, status, date, opts = {}) {
   if (!opts.skipGwangsan && (gwangsanFacilitiesData || []).some(g => g.facility_key === key)) {
     await patch("gwangsan_facilities", "광산구 관리시설", { compliance_status: status, compliance_date: cDate, updated_at: now });
   }
-  if ((dispositionsData || []).some(d => d.facility_key === key)) {
-    await patch("dispositions", "행정처분", { compliance_status: status, compliance_date: cDate });
+  // 행정처분: 이행상태/일자 + 이행완료 시 현상태를 'N차 시정명령 이행'(차수 없으면 '시정명령 전 이행완료')로 변경
+  let newDispStatus = null;
+  const keyDisps = (dispositionsData || []).filter(d => d.facility_key === key);
+  if (keyDisps.length) {
+    const dispBody = { compliance_status: status, compliance_date: cDate };
+    if (done) {
+      const rep = keyDisps.find(d => d.target_type === "시설") || keyDisps[0];
+      const round = (rep.correction_round || "").trim();
+      newDispStatus = round ? `${round} 시정명령 이행` : "시정명령 전 이행완료";
+      dispBody.current_status = newDispStatus;
+    }
+    await patch("dispositions", "행정처분", dispBody);
   }
   if ((allCorrectionOrders || []).some(o => o.facility_key === key)) {
     await patch("correction_orders", "시정명령", { compliance_status: done ? "이행완료" : null, compliance_date: cDate, updated_at: now });
@@ -4347,7 +4357,7 @@ async function syncComplianceAcrossModules(key, status, date, opts = {}) {
   // 화면 데이터 즉시 반영
   (facilitiesData || []).forEach(f => { if (f.facility_key === key) { f.compliance_status = status; f.compliance_date = cDate; } });
   (gwangsanFacilitiesData || []).forEach(g => { if (g.facility_key === key) { g.compliance_status = status; g.compliance_date = cDate; } });
-  (dispositionsData || []).forEach(d => { if (d.facility_key === key) { d.compliance_status = status; d.compliance_date = cDate; } });
+  (dispositionsData || []).forEach(d => { if (d.facility_key === key) { d.compliance_status = status; d.compliance_date = cDate; if (newDispStatus) d.current_status = newDispStatus; } });
   (allCorrectionOrders || []).forEach(o => { if (o.facility_key === key) { o.compliance_status = done ? "이행완료" : null; o.compliance_date = cDate; } });
   try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch (e) {}
   try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch (e) {}
