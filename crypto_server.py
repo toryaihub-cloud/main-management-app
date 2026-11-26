@@ -1866,7 +1866,7 @@ class CryptoAPIHandler(http.server.SimpleHTTPRequestHandler):
                 "building_register_num", "permission_date", "approval_date", "is_new_building",
                 "parking_required_cnt", "parking_uninstalled_cnt", "parking_status",
                 "charger_required_cnt", "charger_uninstalled_cnt", "charger_status",
-                "investigation_status", "management_body", "dept_name",
+                "investigation_status", "management_body", "dept_name", "compliance_date",
                 "manager_name_encrypted", "manager_contact_encrypted",
                 "parking_ground_cnt", "parking_underground_cnt",
                 "charger_fast_req_cnt", "charger_fast_cnt", "charger_slow_cnt",

@@ -1236,6 +1236,8 @@ function openFacilityDetailModal(key) {
     compElem.innerText = facility.compliance_status || '-';
     compElem.className = `badge ${facility.compliance_status === '이행완료' ? 'badge-emerald' : (facility.compliance_status === '미이행' ? 'badge-rose' : 'badge-amber')}`;
   }
+  const compDateElem = document.getElementById("detail-compliance-date");
+  if (compDateElem) compDateElem.innerText = (facility.compliance_status === '이행완료' && facility.compliance_date) ? `(${formatComplianceDate(facility.compliance_date)} 이행완료)` : "";
 
   // 2. Render Detail Counts & Slash Info
   updateModalDetailCounts(facility);
@@ -2134,7 +2136,10 @@ function renderDispositionsCards(data) {
     let cardThemeStyle = "background: #FFFFFF; border: 1px solid #E2E8F0; border-top: 4px solid #0284C7;";
     let statusClass = "badge-blue";
 
-    if (currentStatus.includes("시정명령") || currentStatus.includes("미이행") || currentStatus.includes("위반")) {
+    if (currentStatus.includes("이행완료") || /시정명령\s*이행$/.test(currentStatus)) {
+      cardThemeStyle = "background: #FFFFFF; border: 1px solid #E2E8F0; border-top: 4px solid #10B981;";
+      statusClass = "badge-emerald";
+    } else if (currentStatus.includes("시정명령") || currentStatus.includes("미이행") || currentStatus.includes("위반")) {
       cardThemeStyle = "background: #FFFFFF; border: 1px solid #E2E8F0; border-top: 4px solid #F43F5E;";
       statusClass = "badge-rose";
     } else if (currentStatus.includes("사전통지") || currentStatus.includes("의견제출") || currentStatus.includes("진행중")) {
@@ -2215,9 +2220,16 @@ function renderDispositionsCards(data) {
 
     card.innerHTML = `
       <div>
-        <div class="disp-card-header">
+        <div class="disp-card-header" style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
           <span class="facility-card-key">${key}</span>
-          <span class="badge ${statusClass}">${currentStatus}</span>
+          ${(() => {
+            const cs = fac.compliance_status || facilityRecord.compliance_status || "미이행";
+            const cd = fac.compliance_date || facilityRecord.compliance_date || "";
+            if (cs === "이행완료") return `<span class="badge badge-emerald" style="font-weight:800;"><i class="fa-solid fa-circle-check"></i> 이행완료${cd ? ` ${formatComplianceDate(cd)}` : ""}</span>`;
+            if (cs === "면제") return `<span class="badge" style="background:#F1F5F9; color:#475569; font-weight:800;">면제</span>`;
+            return `<span class="badge badge-rose" style="font-weight:800;"><i class="fa-solid fa-triangle-exclamation"></i> 미이행</span>`;
+          })()}
+          <span class="badge ${statusClass}" style="margin-left:auto;">${currentStatus}</span>
         </div>
         <div class="disp-card-title" style="font-size:1.15rem; font-weight:700; margin-bottom:0.25rem;">${facName}</div>
         <div class="facility-card-category" style="font-size:0.8rem; color:#0284C7; font-weight:600; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.35rem;">
@@ -2333,7 +2345,7 @@ function openDispositionDetailModal(key) {
     const statusBadge = document.getElementById("disp-detail-status-badge");
     if (statusBadge) {
       statusBadge.innerText = mainStatus;
-      statusBadge.className = `badge ${mainStatus.includes('시정명령') ? 'badge-rose' : 'badge-warning'}`;
+      statusBadge.className = `badge ${mainStatus.includes('이행완료') ? 'badge-emerald' : (mainStatus.includes('시정명령') ? 'badge-rose' : 'badge-warning')}`;
     }
 
     const modalBody = document.getElementById("disp-detail-modal-body");
@@ -2401,7 +2413,7 @@ function openDispositionDetailModal(key) {
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="color:var(--text-muted); font-weight:600;">현상태:</span>
-              <span class="badge ${mainStatus.includes('시정명령') ? 'badge-rose' : 'badge-warning'}">${mainStatus}</span>
+              <span class="badge ${mainStatus.includes('이행완료') ? 'badge-emerald' : (mainStatus.includes('시정명령') ? 'badge-rose' : 'badge-warning')}">${mainStatus}</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="color:var(--text-muted); font-weight:600;">시정명령:</span>
@@ -2409,7 +2421,7 @@ function openDispositionDetailModal(key) {
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="color:var(--text-muted); font-weight:600;">이행여부:</span>
-              <span class="badge ${fac.compliance_status === '이행완료' ? 'badge-emerald' : 'badge-rose'}">${fac.compliance_status || '-'}</span>
+              <span><span class="badge ${fac.compliance_status === '이행완료' ? 'badge-emerald' : 'badge-rose'}">${fac.compliance_status || '-'}</span>${fac.compliance_status === '이행완료' && fac.compliance_date ? ` <span style="font-size:0.78rem; color:#059669; font-weight:700;">${formatComplianceDate(fac.compliance_date)}</span>` : ''}</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="color:var(--text-muted); font-weight:600;">의무급속:</span>
@@ -2758,6 +2770,8 @@ async function toggleDecrypt(element, encryptedStr, decryptedStr) {
 // 13. Modals & CRUD Logic
 function openFacilityModal(key = null) {
   document.getElementById("form-facility").reset();
+  const facCompWrap = document.getElementById("fac-compliance-date-wrap");
+  if (facCompWrap) facCompWrap.style.display = "none";
   if (key) {
     const item = facilitiesData.find(f => f.facility_key === key);
     if (item) {
@@ -2767,6 +2781,9 @@ function openFacilityModal(key = null) {
       document.getElementById("fac-name").value = item.facility_name || "";
       document.getElementById("fac-category").value = item.facility_category || "";
       document.getElementById("fac-compliance").value = item.compliance_status || "미이행";
+      const facCompDate = document.getElementById("fac-compliance-date");
+      if (facCompDate) facCompDate.value = item.compliance_date || "";
+      toggleComplianceDateInput("fac-compliance", "fac-compliance-date-wrap", "fac-compliance-date");
       document.getElementById("fac-ownership").value = item.facility_ownership_type || "";
       document.getElementById("fac-address-doro").value = item.address_doro || "";
       document.getElementById("fac-address-jibun").value = item.address_jibun || "";
@@ -2854,6 +2871,9 @@ async function saveFacility() {
     facility_name: name,
     facility_category: document.getElementById("fac-category").value.trim(),
     compliance_status: document.getElementById("fac-compliance").value,
+    compliance_date: document.getElementById("fac-compliance").value === "이행완료"
+      ? ((document.getElementById("fac-compliance-date")?.value || "").trim() || todayYmd())
+      : null,
     facility_ownership_type: document.getElementById("fac-ownership").value.trim(),
     address_doro: document.getElementById("fac-address-doro").value.trim(),
     address_jibun: document.getElementById("fac-address-jibun").value.trim(),
@@ -2899,6 +2919,7 @@ async function saveFacility() {
       facility_name: name,
       facility_category: payload.facility_category,
       compliance_status: payload.compliance_status,
+      compliance_date: payload.compliance_date,
       facility_ownership_type: payload.facility_ownership_type,
       address_doro: payload.address_doro,
       address_jibun: payload.address_jibun,
@@ -3102,10 +3123,8 @@ async function saveFacility() {
     }
   } catch(eDbSync) {}
 
-  // 시정명령 연동: 이행여부가 이행완료로 바뀌면 해당 시설의 시정명령 건에도 이행완료 기록
-  if (payload.compliance_status === "이행완료") {
-    await syncCorrectionOrdersCompliance(key, true);
-  }
+  // 이행상태/이행완료일자를 광산구 관리시설·행정처분·시정명령에 일괄 반영
+  await syncComplianceAcrossModules(key, payload.compliance_status, payload.compliance_date, { skipFacility: true });
 
   alert("시설 정보가 성공적으로 저장되었습니다.");
   closeModal('modal-facility');
@@ -3978,9 +3997,6 @@ async function saveDisposition() {
       localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData));
     } catch(e) {}
 
-    if (payload.target_type === '시설' && (payload.current_status || "").includes("이행") && !(payload.current_status || "").includes("미이행")) {
-      await syncCorrectionOrdersCompliance(facilityKey, true);
-    }
     alert("행정처분 정보가 성공적으로 저장되었습니다." + (payload.target_type === '시설' ? "\n(해당 시설의 모든 하위 소유자/관리자의 현상태도 함께 일괄 동기화되었습니다)" : ""));
     closeModal('modal-disposition');
 
@@ -4265,15 +4281,84 @@ async function fetchCorrectionOrders() {
   renderCorrectionBatch(currentCorrectionBatch);
 }
 
+// =========================================================================
+// 의무설치 이행완료 일자 관리 (통합시설관리 → 광산구·행정처분·시정명령 연동)
+// =========================================================================
+function todayYmd() {
+  const t = new Date();
+  return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+}
+
+// 이행완료 일자 표시: 2026-11-26 → '26.11.26.
+function formatComplianceDate(d) {
+  const m = String(d || "").match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  return m ? `'${m[1].slice(2)}.${parseInt(m[2])}.${parseInt(m[3])}.` : "";
+}
+
+// 이행상태 선택값이 '이행완료'일 때만 일자 칸 표시 (비어 있으면 오늘 날짜)
+function toggleComplianceDateInput(selectId, wrapId, inputId) {
+  const sel = document.getElementById(selectId);
+  const wrap = document.getElementById(wrapId);
+  const input = document.getElementById(inputId);
+  if (!sel || !wrap) return;
+  const done = sel.value === "이행완료";
+  wrap.style.display = done ? "block" : "none";
+  if (done && input && !input.value) input.value = todayYmd();
+}
+
+// 시설의 이행상태/이행완료일자 조회 (통합시설 기준)
+function getFacilityCompliance(key) {
+  const fac = (Array.isArray(facilitiesData) ? facilitiesData : []).find(f => f.facility_key === key) || {};
+  return { status: fac.compliance_status || "", date: fac.compliance_date || "" };
+}
+
+// 이행상태 변경을 광산구 관리시설·행정처분·시정명령(필요 시 통합시설)에 일괄 반영
+async function syncComplianceAcrossModules(key, status, date, opts = {}) {
+  if (!key) return [];
+  const done = status === "이행완료";
+  const cDate = done ? (date || null) : null;
+  const headers = { "apikey": SUPABASE_SECRET_KEY, "Authorization": `Bearer ${SUPABASE_SECRET_KEY}`, "Content-Type": "application/json" };
+  const now = new Date().toISOString();
+  const fails = [];
+  const patch = async (table, label, body) => {
+    try {
+      const r = await fetch(`${SUPABASE_REST_URL}/${table}?facility_key=eq.${encodeURIComponent(key)}`, { method: "PATCH", headers, body: JSON.stringify(body) });
+      if (!r.ok) fails.push(`${label}(${r.status})`);
+    } catch (e) { fails.push(`${label}(네트워크)`); }
+  };
+
+  if (!opts.skipFacility) await patch("facilities", "통합시설", { compliance_status: status, compliance_date: cDate, updated_at: now });
+  if (!opts.skipGwangsan && (gwangsanFacilitiesData || []).some(g => g.facility_key === key)) {
+    await patch("gwangsan_facilities", "광산구 관리시설", { compliance_status: status, compliance_date: cDate, updated_at: now });
+  }
+  if ((dispositionsData || []).some(d => d.facility_key === key)) {
+    await patch("dispositions", "행정처분", { compliance_status: status, compliance_date: cDate });
+  }
+  if ((allCorrectionOrders || []).some(o => o.facility_key === key)) {
+    await patch("correction_orders", "시정명령", { compliance_status: done ? "이행완료" : null, compliance_date: cDate, updated_at: now });
+  }
+
+  // 화면 데이터 즉시 반영
+  (facilitiesData || []).forEach(f => { if (f.facility_key === key) { f.compliance_status = status; f.compliance_date = cDate; } });
+  (gwangsanFacilitiesData || []).forEach(g => { if (g.facility_key === key) { g.compliance_status = status; g.compliance_date = cDate; } });
+  (dispositionsData || []).forEach(d => { if (d.facility_key === key) { d.compliance_status = status; d.compliance_date = cDate; } });
+  (allCorrectionOrders || []).forEach(o => { if (o.facility_key === key) { o.compliance_status = done ? "이행완료" : null; o.compliance_date = cDate; } });
+  try { localStorage.setItem("cached_facilities", JSON.stringify(facilitiesData)); } catch (e) {}
+  try { localStorage.setItem("cached_dispositions", JSON.stringify(dispositionsData)); } catch (e) {}
+  try { if (typeof filterGwangsanFacilities === "function") { filterGwangsanFacilities(); updateGwangsanStats(); } } catch (e) {}
+  try { if (typeof filterDispositions === "function") filterDispositions(); } catch (e) {}
+  try { if (typeof filterCorrectionOrders === "function") filterCorrectionOrders(); } catch (e) {}
+
+  if (fails.length) alert("이행상태는 저장되었지만 일부 메뉴에 반영하지 못했습니다: " + fails.join(", ") + "\n잠시 후 다시 저장해 주세요.");
+  return fails;
+}
+
 // 이행완료 판단: 시정명령 건의 이행완료 값 또는 연결 시설(통합시설/행정처분)의 이행여부
 function isCorrectionOrderCompleted(item) {
   if ((item.compliance_status || "") === "이행완료") return true;
   if (!item.facility_key) return false;
   const fac = (Array.isArray(facilitiesData) ? facilitiesData : []).find(f => f.facility_key === item.facility_key);
-  if (fac && fac.compliance_status === "이행완료") return true;
-  const disp = (Array.isArray(dispositionsData) ? dispositionsData : []).find(d => d.facility_key === item.facility_key && d.target_type === "시설");
-  const st = disp ? (disp.current_status || "") : "";
-  return st.includes("이행") && !st.includes("미이행");
+  return !!(fac && fac.compliance_status === "이행완료");
 }
 
 // 통합시설/행정처분에서 이행완료로 바뀌면 시정명령 건에도 이행완료 기록
@@ -4682,7 +4767,7 @@ function filterCorrectionOrders() {
     const autoDone = done && item.compliance_status !== "이행완료";
     // 이행완료만 표시 (미이행은 빈칸). 변경은 '수정' 창의 이행완료 항목에서
     const complianceCell = done
-      ? `<span class="badge badge-emerald" style="font-size:0.72rem; padding:0.2rem 0.45rem; font-weight:700;" title="${autoDone ? '통합시설/행정처분의 이행완료로 자동 표시' : '이행완료'}"><i class="fa-solid fa-check"></i> 이행완료${autoDone ? ' <i class="fa-solid fa-link" style="font-size:0.65rem;"></i>' : ''}</span>`
+      ? `<span class="badge badge-emerald" style="font-size:0.72rem; padding:0.2rem 0.45rem; font-weight:700;" title="${autoDone ? '통합시설의 이행완료로 자동 표시' : '이행완료'}"><i class="fa-solid fa-check"></i> 이행완료${autoDone ? ' <i class="fa-solid fa-link" style="font-size:0.65rem;"></i>' : ''}</span>${(item.compliance_date || getFacilityCompliance(item.facility_key).date) ? `<div style="font-size:0.7rem; color:#059669; font-weight:700; margin-top:0.2rem;">${formatComplianceDate(item.compliance_date || getFacilityCompliance(item.facility_key).date)}</div>` : ""}`
       : "";
 
     // 비고: 내용 전체를 여러 줄로 표시 (수정은 '수정' 창에서)
@@ -5911,9 +5996,12 @@ function renderGwangsanFacilities(data) {
 
                 <!-- 2. 이행완료 여부 (독립 컬럼 세로 일렬 정렬) -->
                 <div style="width:85px; flex-shrink:0; text-align:center; display:flex; justify-content:center; align-items:center;">
-                  <span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-size:0.75rem; font-weight:700; width:68px; text-align:center; display:inline-block; padding:0.25rem 0.4rem; border-radius:6px;">
-                    ${f.compliance_status || '미이행'}
-                  </span>
+                  <div>
+                    <span class="badge ${isComp ? 'badge-emerald' : (f.compliance_status === '면제' ? '' : 'badge-rose')}" style="font-size:0.75rem; font-weight:700; width:68px; text-align:center; display:inline-block; padding:0.25rem 0.4rem; border-radius:6px; ${f.compliance_status === '면제' ? 'background:#F1F5F9; color:#475569;' : ''}">
+                      ${f.compliance_status || '미이행'}
+                    </span>
+                    ${isComp && f.compliance_date ? `<div style="font-size:0.7rem; color:#059669; font-weight:700; margin-top:0.2rem;">${formatComplianceDate(f.compliance_date)}</div>` : ''}
+                  </div>
                 </div>
 
                 <!-- 2. 전용주차구역 현황 -->
@@ -6124,7 +6212,8 @@ function openGwangsanDetailModal(key) {
 
   const viewCompEl = document.getElementById("gwangsan-view-compliance");
   if (viewCompEl) {
-    viewCompEl.innerHTML = `<span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-size:0.8rem; padding:0.2rem 0.55rem;">${item.compliance_status || '미이행'}</span>`;
+    viewCompEl.innerHTML = `<span class="badge ${isComp ? 'badge-emerald' : 'badge-rose'}" style="font-size:0.8rem; padding:0.2rem 0.55rem;">${item.compliance_status || '미이행'}</span>` +
+      (isComp && item.compliance_date ? ` <span style="font-size:0.78rem; color:#059669; font-weight:700;">${formatComplianceDate(item.compliance_date)}</span>` : "");
   }
 
   const viewFinalEl = document.getElementById("gwangsan-view-final-conclusion");
@@ -6145,6 +6234,9 @@ function openGwangsanDetailModal(key) {
 
   const compSelect = document.getElementById("gwangsan-edit-compliance");
   if (compSelect) compSelect.value = item.compliance_status || "미이행";
+  const gwCompDate = document.getElementById("gwangsan-edit-compliance-date");
+  if (gwCompDate) gwCompDate.value = item.compliance_date || getFacilityCompliance(item.facility_key).date || "";
+  toggleComplianceDateInput("gwangsan-edit-compliance", "gwangsan-compliance-date-wrap", "gwangsan-edit-compliance-date");
 
   const finalInput = document.getElementById("gwangsan-edit-final-conclusion");
   if (finalInput) finalInput.value = item.final_conclusion || "";
@@ -6349,6 +6441,9 @@ async function handleSaveGwangsanFacility(e) {
     dept_action_plan: (document.getElementById("gwangsan-edit-action-plan")?.value || "").trim(),
     subsidy_apply: (document.getElementById("gwangsan-edit-subsidy")?.value || "").trim(),
     compliance_status: (document.getElementById("gwangsan-edit-compliance")?.value || "미이행").trim(),
+    compliance_date: (document.getElementById("gwangsan-edit-compliance")?.value === "이행완료")
+      ? ((document.getElementById("gwangsan-edit-compliance-date")?.value || "").trim() || todayYmd())
+      : null,
     final_conclusion: (document.getElementById("gwangsan-edit-final-conclusion")?.value || "").trim(),
 
     survey1_type: (document.getElementById("gwangsan-edit-survey1-type")?.value || "").trim(),
@@ -6424,6 +6519,7 @@ async function handleSaveGwangsanFacility(e) {
     // 2. 통합시설관리(facilities) 연동: 의무이행 상태 + 관리부서
     const gwSyncPayload = {
       compliance_status: payload.compliance_status,
+      compliance_date: payload.compliance_date,
       dept_name: payload.dept_name,
       updated_at: payload.updated_at
     };
@@ -6455,6 +6551,9 @@ async function handleSaveGwangsanFacility(e) {
     if (!facSyncOk) {
       alert("광산구 관리시설은 저장되었지만 통합시설관리 연동 저장에 실패했습니다. 통합시설관리에서 관리부서를 확인해 주세요.");
     }
+
+    // 행정처분·시정명령에도 이행상태/이행완료일자 반영
+    await syncComplianceAcrossModules(facilityKey, payload.compliance_status, payload.compliance_date, { skipFacility: true, skipGwangsan: true });
 
     // 리스트 화면 갱신
     filterGwangsanFacilities();

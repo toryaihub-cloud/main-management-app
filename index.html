@@ -868,6 +868,7 @@
                   <div style="display:flex; align-items:center; gap:0.35rem;">
                     <span style="font-size:0.78rem; font-weight:600; color:#64748B;">상태:</span>
                     <span id="detail-compliance" class="badge badge-emerald" style="font-size:0.78rem; padding:0.15rem 0.5rem;">-</span>
+                    <span id="detail-compliance-date" style="font-size:0.76rem; font-weight:700; color:#059669;"></span>
                   </div>
                 </div>
 
@@ -1069,12 +1070,16 @@
               </div>
               <div class="form-group">
                 <label class="form-label">의무설치 이행상태</label>
-                <select id="fac-compliance" class="select-box">
+                <select id="fac-compliance" class="select-box" onchange="toggleComplianceDateInput('fac-compliance', 'fac-compliance-date-wrap', 'fac-compliance-date')">
                   <option value="이행완료">이행완료</option>
                   <option value="미이행">미이행</option>
                   <option value="부분이행">부분이행</option>
                   <option value="면제">면제</option>
                 </select>
+                <div id="fac-compliance-date-wrap" style="display:none; margin-top:0.4rem;">
+                  <label class="form-label" style="font-size:0.78rem; color:#059669;">이행완료 일자 <span style="font-weight:normal; color:#64748B;">(광산구·행정처분·시정명령에 함께 반영)</span></label>
+                  <input type="date" id="fac-compliance-date" class="input-box">
+                </div>
               </div>
               <div class="form-group">
                 <label class="form-label">공공시설 구분</label>
@@ -1998,10 +2003,14 @@
                 <label style="font-size:0.75rem; font-weight:700; color:#64748B; display:block; margin-bottom:0.3rem;">
                   의무이행 상태
                 </label>
-                <select id="gwangsan-edit-compliance" class="select-box" style="font-size:0.85rem; width:100%;">
+                <select id="gwangsan-edit-compliance" class="select-box" style="font-size:0.85rem; width:100%;" onchange="toggleComplianceDateInput('gwangsan-edit-compliance', 'gwangsan-compliance-date-wrap', 'gwangsan-edit-compliance-date')">
                   <option value="이행완료">이행완료</option>
                   <option value="미이행">미이행</option>
+                  <option value="면제">면제</option>
                 </select>
+                <div id="gwangsan-compliance-date-wrap" style="display:none; margin-top:0.35rem;">
+                  <input type="date" id="gwangsan-edit-compliance-date" class="input-box" style="font-size:0.8rem; width:100%;" title="이행완료 일자">
+                </div>
               </div>
             </div>
 
@@ -2068,6 +2077,6 @@
     <option value="시설지원과"></option>
     <option value="청소행정과"></option>
   </datalist>
-  <script src="app.js?v=20261124_v22_corr_upload"></script>
+  <script src="app.js?v=20261126_v23_compliance_date"></script>
 </body>
 </html>
