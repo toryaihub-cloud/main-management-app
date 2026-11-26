@@ -1530,7 +1530,10 @@
         <!-- Dynamically Populated Disposition Detail Cards and Sub-lists -->
       </div>
       <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <button type="button" class="btn btn-secondary" onclick="jumpToFacilityDetailFromDisp()">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> 통합시설 상세보기
+          </button>
           <button class="btn btn-rose admin-only" id="btn-delete-disposition-all" style="display:none;" onclick="deleteDispositionFromDetail()">
             <i class="fa-solid fa-trash-can"></i> 행정처분 전체 삭제
           </button>
@@ -2077,6 +2080,6 @@
     <option value="시설지원과"></option>
     <option value="청소행정과"></option>
   </datalist>
-  <script src="app.js?v=20261126_v26_corr_fac_link"></script>
+  <script src="app.js?v=20261126_v27_disp_fac_btn"></script>
 </body>
 </html>

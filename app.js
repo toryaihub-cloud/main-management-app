@@ -5756,6 +5756,15 @@ function jumpToFacilityDetail(facilityKey) {
   }
 }
 
+// 행정처분 상세 팝업 → 통합시설 상세보기 (닫으면 행정처분 내역관리로 복귀)
+function jumpToFacilityDetailFromDisp() {
+  const facilityKey = currentDispositionDetailKey;
+  if (!facilityKey) return;
+  closeModal("modal-disposition-detail");
+  jumpToFacilityDetail(facilityKey);
+  returnTabAfterFacilityDetail = 'dispositions';
+}
+
 function jumpToFacilityDetailFromOp() {
   const facilityKey = document.getElementById("op-edit-facility-key")?.value;
   closeModal("modal-operation-detail");
