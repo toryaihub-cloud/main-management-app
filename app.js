@@ -1122,7 +1122,8 @@ function renderFacilitiesCards(data) {
       const sumP = (parseInt(f.parking_ground_cnt) || 0) + (parseInt(f.parking_underground_cnt) || 0);
       actP = sumP > 0 ? sumP : Math.max(0, reqP - unP);
     }
-    if ((f.compliance_status === '이행완료' || unP === 0) && actP < reqP) {
+    // 이행상태(이행완료)만으로 설치 수를 채우지 않음: 미설치 0일 때만 의무 수로 간주
+  if (unP === 0 && actP < reqP) {
       actP = reqP;
     }
     const pctP = reqP > 0 ? Math.min(100, Math.round((actP / reqP) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
@@ -1134,7 +1135,8 @@ function renderFacilitiesCards(data) {
       const sumC = (parseInt(f.charger_fast_cnt) || 0) + (parseInt(f.charger_slow_cnt) || 0);
       actC = sumC > 0 ? sumC : Math.max(0, reqC - unC);
     }
-    if ((f.compliance_status === '이행완료' || unC === 0) && actC < reqC) {
+    // 이행상태(이행완료)만으로 설치 수를 채우지 않음: 미설치 0일 때만 의무 수로 간주
+  if (unC === 0 && actC < reqC) {
       actC = reqC;
     }
     const pctC = reqC > 0 ? Math.min(100, Math.round((actC / reqC) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
@@ -1336,7 +1338,8 @@ function updateModalDetailCounts(facility) {
     const sumP = (parseInt(facility.parking_ground_cnt) || 0) + (parseInt(facility.parking_underground_cnt) || 0);
     actP = sumP > 0 ? sumP : Math.max(0, reqP - unP);
   }
-  if ((facility.compliance_status === '이행완료' || unP === 0) && actP < reqP) {
+  // 이행상태(이행완료)만으로 설치 수를 채우지 않음: 미설치 0일 때만 의무 수로 간주
+  if (unP === 0 && actP < reqP) {
     actP = reqP;
   }
 
@@ -1347,7 +1350,8 @@ function updateModalDetailCounts(facility) {
     const sumC = (parseInt(facility.charger_fast_cnt) || 0) + (parseInt(facility.charger_slow_cnt) || 0);
     actC = sumC > 0 ? sumC : Math.max(0, reqC - unC);
   }
-  if ((facility.compliance_status === '이행완료' || unC === 0) && actC < reqC) {
+  // 이행상태(이행완료)만으로 설치 수를 채우지 않음: 미설치 0일 때만 의무 수로 간주
+  if (unC === 0 && actC < reqC) {
     actC = reqC;
   }
 
@@ -1444,7 +1448,8 @@ function renderModalDetailDonutChart(f) {
     const sumP = (parseInt(f.parking_ground_cnt) || 0) + (parseInt(f.parking_underground_cnt) || 0);
     actP = sumP > 0 ? sumP : Math.max(0, reqP - unP);
   }
-  if ((f.compliance_status === '이행완료' || unP === 0) && actP < reqP) {
+  // 이행상태(이행완료)만으로 설치 수를 채우지 않음: 미설치 0일 때만 의무 수로 간주
+  if (unP === 0 && actP < reqP) {
     actP = reqP;
   }
   const pctP = reqP > 0 ? Math.min(100, Math.round((actP / reqP) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
@@ -1456,7 +1461,8 @@ function renderModalDetailDonutChart(f) {
     const sumC = (parseInt(f.charger_fast_cnt) || 0) + (parseInt(f.charger_slow_cnt) || 0);
     actC = sumC > 0 ? sumC : Math.max(0, reqC - unC);
   }
-  if ((f.compliance_status === '이행완료' || unC === 0) && actC < reqC) {
+  // 이행상태(이행완료)만으로 설치 수를 채우지 않음: 미설치 0일 때만 의무 수로 간주
+  if (unC === 0 && actC < reqC) {
     actC = reqC;
   }
   const pctC = reqC > 0 ? Math.min(100, Math.round((actC / reqC) * 100)) : (f.compliance_status === '이행완료' ? 100 : 0);
